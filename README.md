@@ -2,114 +2,139 @@
 
 [![Atlas CI](https://github.com/Rhodan-lab/Atlas/actions/workflows/ci.yml/badge.svg)](https://github.com/Rhodan-lab/Atlas/actions/workflows/ci.yml)
 
-**Atlas is a local-first knowledge system that turns notes and source material into an inspectable knowledge graph.**
+> **Current status: Phase 0 — Knowledge Foundation**
+>
+> Feature development is intentionally frozen while the product charter, ontology, evidence model, review policy, content contract, and architecture gates are matured.
 
-It is intentionally polyglot. Each language is used where it provides a concrete technical advantage rather than to inflate the repository:
+## What Atlas is
 
-| Layer | Language | Responsibility | Why this language |
-|---|---|---|---|
-| Knowledge engine | C++20 | Graph model, validation, traversal, portable storage | Predictable performance, small native binary, strong control over core invariants |
-| Search service | Rust | Ranking and full-text retrieval over Atlas datasets | Memory safety with native performance; suitable for future concurrent indexing |
-| Ingestion pipeline | Python 3.11+ | Convert structured Markdown into canonical `.atlas` data | Fast parser development and strong data-processing ecosystem |
-| Local API and UI | TypeScript on Node.js 22+ | HTTP boundary, process orchestration, browser interface | Shared web types, ergonomic APIs, and direct browser compatibility |
-| Durable schema | SQL | Future SQLite persistence and migrations | Declarative constraints and portable local storage |
+Atlas is a local-first knowledge environment for an independent learner, researcher, or builder. Its purpose is to make knowledge inspectable:
 
-## What already works
+- what a claim means;
+- what evidence supports or challenges it;
+- how limited or uncertain it is;
+- how it connects to concepts and models;
+- where credible disagreement remains;
+- how understanding changes through revision.
 
-- Parse a folder of Markdown knowledge notes into a deterministic `.atlas` graph.
-- Validate unique concepts, relation targets, weights, tags, and source references.
-- Load, save, inspect, mutate, and traverse the graph with the C++ engine.
-- Return JSON for graph statistics, concepts, neighbors, and shortest paths.
-- Search concepts with a standalone Rust CLI using weighted fields.
-- Expose the native tools through a TypeScript HTTP API.
-- Browse and search the starter graph through a small local web interface.
-- Test each language independently and run an end-to-end integration check in CI.
+Atlas is not merely a notes application, graph visualization, textbook, course platform, or chatbot. The long-term product should allow a user to trace a path from question to synthesis and from every important claim back to evidence and original sources.
 
-## Repository map
+## Why the project returned to Phase 0
+
+The repository already contains an experimental C++, Rust, Python, TypeScript, SQL, and browser prototype. That prototype proves that local ingestion, graph traversal, search, process boundaries, and testing are possible.
+
+It does **not** yet prove that the underlying knowledge model is mature.
+
+The first implementation moved too quickly from an idea to a polyglot architecture. In particular, it treated broad concepts and concept-level source references as the center of the system before defining claim-level evidence, disagreement, review, models, questions, syntheses, and revisions.
+
+The prototype is therefore preserved, tested, and explicitly classified as **non-authoritative experimental work**. The foundation documents now govern future engineering.
+
+## Authority order
+
+During Phase 0, project authority is:
+
+1. [`PROJECT_STATE.md`](PROJECT_STATE.md)
+2. [`docs/foundation/`](docs/foundation/)
+3. accepted architecture decision records
+4. reviewed content contracts and reference fixtures
+5. implementation code and generated artifacts
+
+When code conflicts with the foundation, the code is provisional.
+
+## Canonical knowledge units
+
+The foundation currently distinguishes:
+
+- **Source** — identifiable origin of information
+- **Evidence** — the relevant passage, observation, measurement, or data context
+- **Claim** — an individually evaluable statement
+- **Concept** — an explanatory structure organizing claims and meaning
+- **Relation** — a governed typed and directed connection
+- **Model** — a representation used to explain, calculate, simulate, or predict
+- **Question** — an explicit knowledge need or unresolved problem
+- **Synthesis** — a scoped integration of claims, evidence, models, and disagreement
+- **Revision** — a traceable change and its consequences
+
+These distinctions are more important than any current storage format or language choice.
+
+## Foundational lenses
+
+Atlas is intended to connect knowledge through recurring lenses rather than a rigid school-subject sequence:
+
+- knowledge and evidence;
+- logic and argument;
+- mathematics;
+- statistics and uncertainty;
+- scientific inquiry;
+- systems;
+- computation;
+- language and meaning;
+- human cognition;
+- decision and action;
+- ethics and responsibility.
+
+This is a map for exploration, not a fixed course with grades, scores, streaks, or a final test.
+
+## Foundation reading order
+
+1. [`PROJECT_STATE.md`](PROJECT_STATE.md)
+2. [`docs/foundation/00-charter.md`](docs/foundation/00-charter.md)
+3. [`docs/foundation/01-knowledge-model.md`](docs/foundation/01-knowledge-model.md)
+4. [`docs/foundation/02-evidence-and-editorial-policy.md`](docs/foundation/02-evidence-and-editorial-policy.md)
+5. [`docs/foundation/03-content-contract.md`](docs/foundation/03-content-contract.md)
+6. [`docs/foundation/04-language-and-architecture-policy.md`](docs/foundation/04-language-and-architecture-policy.md)
+7. [`docs/foundation/05-phase-gates.md`](docs/foundation/05-phase-gates.md)
+8. [`docs/foundation/06-current-prototype-audit.md`](docs/foundation/06-current-prototype-audit.md)
+9. [`docs/foundation/07-decision-register.md`](docs/foundation/07-decision-register.md)
+
+Contributors and agents must also follow [`AGENTS.md`](AGENTS.md).
+
+## Current repository structure
 
 ```text
 Atlas/
-├── engine/cpp/          # authoritative graph domain model and CLI
-├── services/search-rs/  # native search executable
-├── tools/ingest-py/     # Markdown -> .atlas compiler
-├── apps/api-ts/         # local HTTP API and browser interface
-├── contracts/           # shared data-format contract
-├── storage/             # future SQLite schema
-├── examples/notes/      # source notes for the ingestion pipeline
-├── data/                # canonical starter graph
-├── docs/                # architecture, decisions, and roadmap
-└── scripts/             # repeatable build and integration commands
+├── docs/foundation/      # authoritative Phase 0 product and knowledge foundation
+├── PROJECT_STATE.md      # active phase, authority, freeze, and exit gate
+├── AGENTS.md             # mandatory contributor and agent rules
+├── engine/cpp/           # experimental graph-engine prototype
+├── services/search-rs/   # experimental search prototype
+├── tools/ingest-py/      # experimental ingestion prototype
+├── apps/api-ts/          # experimental API and browser prototype
+├── contracts/            # provisional derived-format contracts
+├── storage/              # provisional persistence design
+├── examples/notes/       # prototype examples; not yet canonical fixtures
+└── scripts/              # prototype build and integration checks
 ```
 
-## Fast start
+## Development rule
 
-### 1. Build and test the C++ core
+Until the Phase 0 gate is passed:
 
-```bash
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build
-ctest --test-dir build --output-on-failure
+- do not add product features, services, plugins, or languages;
+- do not promote new content beyond `draft` without its required review;
+- do not make `.atlas`, SQL, or runtime models more authoritative than Markdown;
+- do not introduce a language boundary without an ADR, baseline, and measurable need;
+- focus on ontology testing, evidence governance, content fixtures, and decision closure.
+
+## Next milestone
+
+The next milestone is not a larger application. It is a reviewed **reference foundation** containing at least three complete vertical slices:
+
+```text
+question → source → evidence → claim → concept/model → cross-domain relation → synthesis → limitation
 ```
 
-### 2. Compile example notes into a graph
+Only after those examples prove the contract will Atlas select the smallest reference implementation and reassess which parts of the current prototype deserve to survive.
 
-```bash
-PYTHONPATH=tools/ingest-py python3 -m atlas_ingest build examples/notes \
-  --output data/generated.atlas
-```
+## Prototype validation
 
-### 3. Build and test the Rust search service
-
-```bash
-cargo test --manifest-path services/search-rs/Cargo.toml
-cargo build --release --manifest-path services/search-rs/Cargo.toml
-```
-
-### 4. Run the API
-
-```bash
-ATLAS_DATA=data/generated.atlas \
-ATLAS_CORE_BIN=build/engine/cpp/atlas \
-ATLAS_SEARCH_BIN=services/search-rs/target/release/atlas-search \
-node --experimental-strip-types apps/api-ts/src/server.ts
-```
-
-Open `http://127.0.0.1:4242`.
-
-## CLI examples
-
-```bash
-./build/engine/cpp/atlas stats data/starter.atlas
-./build/engine/cpp/atlas stats-json data/starter.atlas
-./build/engine/cpp/atlas list-json data/starter.atlas
-./build/engine/cpp/atlas neighbors-json data/starter.atlas 1
-./build/engine/cpp/atlas path-json data/starter.atlas 4 5
-
-cargo run --manifest-path services/search-rs/Cargo.toml -- \
-  data/starter.atlas "knowledge evidence"
-```
-
-## One-command checks
+The existing prototype remains buildable for comparison and regression testing:
 
 ```bash
 ./scripts/check.sh
 ```
 
-The script tests every installed toolchain and clearly reports optional toolchains that are not present. GitHub Actions verifies all five layers.
-
-## Design principles
-
-1. **Knowledge before interface.** The domain model must remain useful without the UI.
-2. **One canonical contract.** Languages communicate through a documented `.atlas` format and JSON process boundaries.
-3. **Evidence is first-class.** Sources remain attached to the concepts they support.
-4. **Connections before folders.** Concepts can participate in many contexts through typed relations.
-5. **Local-first and portable.** The user owns readable files and can run the system offline.
-6. **Polyglot with restraint.** A language is introduced only when its boundary is independently useful.
-7. **Inspectable over magical.** Ranking, traversal, validation, and persistence remain understandable.
-
-## Current phase
-
-**Phase 2 — Polyglot Foundation.** The repository is a working software kernel and development platform, not yet a finished personal knowledge product. See [the roadmap](docs/roadmap.md).
+Passing prototype tests means the experiment is internally consistent. It does not mean the product foundation is complete.
 
 ## License
 
