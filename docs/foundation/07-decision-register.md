@@ -2,13 +2,13 @@
 
 ## Purpose
 
-This register separates accepted constraints from provisional assumptions and unresolved decisions. Implementation must not silently decide open semantic questions.
+This register separates accepted constraints from provisional assumptions and future decisions. Implementation must not silently decide semantic questions.
 
 ## Decision states
 
-- `accepted` — binding until explicitly revised;
-- `provisional` — usable for fixtures but still under evaluation;
-- `open` — unresolved and potentially blocking;
+- `accepted` — binding for the stated contract version until explicitly revised;
+- `provisional` — usable but still requires calibration or broader evidence;
+- `open` — unresolved for a future phase;
 - `rejected` — considered and excluded for the stated reason;
 - `superseded` — replaced with preserved history.
 
@@ -16,7 +16,7 @@ This register separates accepted constraints from provisional assumptions and un
 
 ### FND-001 — Foundation before feature development
 
-Atlas remains in Phase 0 until knowledge, evidence, editorial, fixture, and migration gates are met. Existing software is experimental and feature-frozen.
+Atlas defines and tests its knowledge foundation before expanding product features. Existing software remains experimental until later architecture gates justify it.
 
 ### FND-002 — Markdown is the authored source of truth
 
@@ -52,11 +52,11 @@ Authoring, derived-data, and application versions are separate. Contract changes
 
 ### FND-010 — Multilingual authored knowledge with language-neutral structure
 
-Canonical structural tokens remain English technical identifiers. Human-readable knowledge may use any declared language. Translations are separate entities sharing a `work` identity and require their own review. See `12-authoring-language-and-translation-policy.md`.
+Canonical structural tokens remain English technical identifiers. Human-readable knowledge may use any declared language. Translations are separate entities sharing a `work` identity and require their own review.
 
 ### FND-011 — Claim atomicity is semantic, not sentence length
 
-A claim is split when its clauses can differ in evidence, scope, confidence, lifecycle, contradiction, or revision. See `13-claim-scope-and-argument-policy.md`.
+A claim is split when its clauses can differ in evidence, scope, confidence, lifecycle, contradiction, or revision.
 
 ### FND-012 — Argument is embedded structure in `0.1`
 
@@ -64,7 +64,7 @@ Arguments use structured premise, assumption, conclusion, alternative, and infer
 
 ### FND-013 — Evidence storage follows minimum-necessary provenance
 
-Atlas stores source identity, precise locator, context, method, limitations, access class, and evidence role. It does not assume full-source redistribution. See `14-evidence-data-and-restricted-source-policy.md`.
+Atlas stores source identity, precise locator, context, method, limitations, access class, and evidence role. It does not assume full-source redistribution.
 
 ### FND-014 — Quantitative evidence has lineage
 
@@ -72,101 +72,114 @@ Values include quantities, units, uncertainty or its absence, methods, transform
 
 ### FND-015 — Review is revision-specific and role-specific
 
-Review records exact entity revision, review types, reviewers, conflicts, findings, and unresolved issues. Reviewer disagreement remains visible. See `15-review-governance-and-disagreement.md`.
+Review records exact entity revision, review types, reviewers, conflicts, findings, and unresolved issues. Reviewer disagreement remains visible.
 
-### FND-016 — Three reference domains are fixed for Phase 0
+### FND-016 — Three reference domains define the Phase 0 stress test
 
-The reference corpus tests empirical biology, formal feedback modeling, and socio-technical recommender governance. The slices are bounded ontology tests, not a general content-production program.
+The canonical corpus tests empirical biology, formal feedback modeling, and socio-technical recommender governance. The slices are bounded ontology tests, not a general content-production program.
 
 ### FND-017 — Invalid fixtures are part of the contract
 
-The validator must report specific deterministic structural and semantic diagnostics and must never silently repair authored meaning.
+The validator reports specific deterministic structural and semantic diagnostics and never silently repairs authored meaning.
+
+### FND-018 — Revision impact uses bounded automatic staleness
+
+Material dependency changes may mark downstream items `possibly-stale` or `review-required`. Automation identifies candidates; human review determines semantic impact. Translation source-revision mismatch is demonstrated by fixture.
+
+### FND-019 — Canonical entity set is sufficient for `0.1`
+
+Source, evidence, claim, concept, relation, model, question, synthesis, and revision are sufficient for the three split canonical slices. Argument remains embedded. A future contract may add an entity only after fixtures show independent identity and lifecycle are necessary.
+
+### FND-020 — Relation vocabulary is executable for `0.1`
+
+`10-relation-vocabulary.md` is the single source of truth. The validator checks relation names, directions, entity pairs, duplicate edges, and missing targets.
+
+### FND-021 — Language-specific IDs and shared work identity are accepted
+
+Canonical entity IDs are language-specific. Equivalent language versions share a language-neutral `work` identifier. Alias, rename, collision, federation, and translation behavior are demonstrated by fixtures.
+
+### FND-022 — Python is the minimum Phase 0 validator baseline
+
+ADR-0001 selects Python 3.11+ with pinned PyYAML for contract verification. The validator is replaceable infrastructure and is not the future product runtime or semantic authority.
+
+### FND-023 — Foundation acceptance is distinct from content review
+
+Phase 0 accepts the versioned knowledge contract, governance, and executable fixture architecture. Phase 1 performs revision-specific independent review of reference content. Machine conformance cannot promote content from `draft`.
+
+### FND-024 — Canonical files replace bundled slices as executable fixtures
+
+The bundled vertical-slice documents remain historical drafting artifacts. Canonical validation uses one file per entity under `content/canonical/` and `content/translations/`.
 
 ## Provisional decisions
 
-### FND-101 — Canonical entity set
+### FND-101 — Qualitative confidence vocabulary
 
 **State:** provisional
 
-Source, evidence, claim, concept, relation, model, question, synthesis, and revision remain sufficient across the first three bundled slices. Argument stays embedded. The entity set is promoted only after the slices are split into canonical files and reviewed.
+`uncertain`, `plausible`, `well-supported`, and `strongly-supported` require rationale and scope. The fixtures demonstrate useful distinctions, but independent reviewer calibration remains a Phase 1 task.
 
-### FND-102 — Controlled relation vocabulary
-
-**State:** provisional
-
-The vocabulary in `10-relation-vocabulary.md` is now the single source of truth and is exercised by the reference slices. Pair compatibility and ambiguous cases still need validator fixtures.
-
-### FND-103 — Human-readable canonical identifiers
+### FND-102 — Independent learner and researcher as initial user
 
 **State:** provisional
 
-Language-specific entity IDs plus shared language-neutral `work` identity are adopted for `0.1`. Alias, rename, federation, and collision behavior still need dedicated fixtures.
+The foundation optimizes for inspectable personal or small-team knowledge. Institutional workflow requirements remain deferred.
 
-### FND-104 — Qualitative confidence vocabulary
-
-**State:** provisional
-
-`uncertain`, `plausible`, `well-supported`, and `strongly-supported` require rationale and scope. The three slices show useful distinctions, but reviewer calibration remains untested.
-
-### FND-105 — Independent learner and researcher as initial user
-
-**State:** provisional
-
-The foundation optimizes for inspectable personal or small-team knowledge. Institutional workflow requirements are deferred.
+## Superseded decisions
 
 ### FND-106 — Bundled vertical slices before canonical file split
 
-**State:** provisional
+**State:** superseded by FND-024
 
-Phase 0 uses one document per slice so reviewers can inspect the entire reasoning chain. Phase 1 should split records mechanically only after the contract passes review.
+Bundled documents were useful for initial reasoning review. The executable contract now uses split canonical records.
 
-## Open decisions
+### FND-207 — Revision impact propagation remained the main semantic blocker
 
-### FND-207 — Revision impact propagation
+**State:** superseded by FND-018
 
-- Which relation types automatically mark dependents stale?
-- How are downstream syntheses re-reviewed?
-- Which warnings can be generated without claiming semantic impact is fully understood?
+Material and navigational dependencies, staleness states, translation mismatch, and human impact review are now defined and demonstrated.
 
-This is the main remaining semantic blocker.
+### FND-209 — First reference implementation remained blocked
 
-### FND-209 — First reference implementation
+**State:** superseded by FND-022
 
-- What is the smallest validator and compiler baseline?
-- Which language minimizes semantic duplication and setup cost?
-- Which prototype components should be retained, compared, or retired?
+The minimum Phase 0 validator was selected through ADR-0001 and passes the fixture matrix on Python 3.11 and 3.13.
 
-This remains intentionally blocked until Phase 0 fixtures and completion assessment are reviewed.
+## Open Phase 1 decisions
+
+These do not block Phase 0 foundation acceptance.
 
 ### FND-210 — Repository structure after Phase 0
 
 - Should prototype code move beneath `prototypes/`?
-- Should canonical content and software remain in one repository?
+- Should canonical content and product software remain in one repository?
 - Where should generated artifacts live?
-
-This is not blocking the current bundled-fixture review.
 
 ### FND-211 — Formal expressions and executable models
 
-- Does `0.1` need typed equations or a separate formal-expression contract?
+- Does a later contract need typed equations or a formal-expression subtype?
 - How are symbolic derivations, simulations, and notebooks compared?
 - Which executable artifacts are reproducibility inputs rather than canonical knowledge?
-
-The feedback slice exposes this question without requiring immediate expansion.
 
 ### FND-212 — Protocol and method representation
 
 - Are experimental protocols sources, models, or a future method entity?
 - How are protocol deviations and instrument calibration represented?
 
-The catalase slice exposes this question.
-
 ### FND-213 — Legal and policy interpretation lifecycle
 
 - How are authoritative guidance, amendments, and case law linked to legal claims?
 - Which changes trigger review of normative syntheses?
 
-The recommender slice exposes this question.
+### FND-214 — Confidence calibration
+
+- How do reviewers apply qualitative confidence consistently across domains?
+- When should a domain-native uncertainty representation replace a qualitative label?
+
+### FND-215 — Operational federation
+
+- How are identifiers exchanged across repositories?
+- Which authority controls aliases and collision resolution?
+- How are trust and access boundaries represented?
 
 ## Rejected decisions
 
@@ -194,6 +207,10 @@ Rejected because translation can alter meaning, scope, terminology, and ambiguit
 
 Rejected for `0.1`; embedded argument structure is sufficient until reuse and independent lifecycle are demonstrated.
 
+### FND-307 — Require reviewed example content before accepting the foundation contract
+
+Rejected because it conflates two authorities. Phase 0 must prove that reviewable content can be represented and validated; Phase 1 must perform and record the independent reviews before promoting particular revisions.
+
 ## Decision procedure
 
 1. State the concrete problem and affected invariants.
@@ -203,4 +220,4 @@ Rejected for `0.1`; embedded argument structure is sufficient until reuse and in
 5. Update contracts, policies, vocabulary, and gates together.
 6. Add migration notes for authored or generated content.
 7. Retain previous decision history.
-8. Reopen an accepted decision when fixtures demonstrate semantic failure.
+8. Reopen an accepted decision when fixtures or review demonstrate semantic failure.

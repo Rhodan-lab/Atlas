@@ -2,82 +2,91 @@
 
 ## Roadmap status
 
-Atlas uses **evidence-based phase gates**, not a feature checklist. The authoritative gate definitions are in [`docs/foundation/05-phase-gates.md`](foundation/05-phase-gates.md).
+Atlas uses **evidence-based phase gates**, not a feature checklist. Authoritative definitions are in [`docs/foundation/05-phase-gates.md`](foundation/05-phase-gates.md).
 
-The earlier roadmap incorrectly described the C++ and polyglot prototypes as completed foundation phases. They are now recorded as experiments that revealed useful engineering possibilities and important semantic gaps.
-
-## Experimental work already present
-
-The repository currently demonstrates:
-
-- a C++ concept-graph engine and CLI;
-- a provisional `.atlas` file format;
-- Python Markdown ingestion;
-- a Rust lexical search process;
-- a TypeScript API and browser explorer;
-- a preliminary SQL schema;
-- per-language and integration CI.
-
-This work remains valuable for comparison and regression testing. It does not satisfy the new Phase 0 exit criteria because the prototype predates the claim, evidence, review, uncertainty, model, synthesis, and revision contracts.
+The C++, Rust, Python ingestion, TypeScript, SQL, `.atlas`, and browser work remains an experimental prototype. It is maintained for regression and comparison, not counted as completed product architecture.
 
 ## Phase 0 — Knowledge foundation
 
-**Status: active**
+**Status: closure candidate for `atlas-content/0.1`**
+
+Completed foundation outputs:
+
+- charter and non-goals;
+- canonical entity model and invariants;
+- claim-level evidence and provenance;
+- evidence, review, disagreement, revision, translation, migration, and staleness governance;
+- governed relation vocabulary;
+- multilingual identity with shared work IDs;
+- versioned authored Markdown contract;
+- three split canonical vertical slices;
+- complete Indonesian translation path;
+- invalid, migration, identity, federation, and stale-translation fixtures;
+- accepted minimum validator ADR;
+- deterministic Python 3.11/3.13 validation matrix;
+- source-verification and review registers;
+- closure report.
+
+Closure condition:
+
+- final PR #3 checks remain green;
+- maintainer accepts the versioned foundation through merge.
+
+Phase 0 acceptance stabilizes the foundation. It does not promote example content from `draft`.
+
+## Phase 1 — Reviewed reference corpus and validator hardening
+
+**Status: next after Phase 0 acceptance**
 
 Primary work:
 
-- finalize the Atlas charter and non-goals;
-- test the canonical entity set;
-- define claim-level provenance;
-- define editorial and scientific review;
-- define uncertainty, disagreement, revision, and dependency impact;
-- stabilize the authoritative Markdown contract;
-- create three complete reference vertical slices;
-- close or explicitly defer blocking foundation decisions;
-- reassess implementation choices through ADRs.
+- conduct revision-specific source, editorial, domain, methodological, reproducibility, ethical, legal-context, conflict, and translation reviews;
+- preserve reviewer disagreement and conflicts;
+- promote only entities that pass required review types;
+- calibrate confidence and domain-native uncertainty;
+- exercise contradiction, deprecation, retraction, and revision impact;
+- harden deterministic diagnostics and provenance reports;
+- expand migration and identity fixtures when review exposes real gaps;
+- reopen Phase 0 decisions when evidence demonstrates ontology failure;
+- derive minimal knowledge-kernel requirements from reviewed workflows.
 
-No feature expansion is permitted during this phase.
+Non-scope:
 
-## Phase 1 — Reference corpus and validator
-
-Build a small, rigorous body of canonical Markdown content and the simplest validator needed to test it.
-
-Expected outcomes:
-
-- valid and invalid fixtures for every entity type;
-- deterministic canonical identity;
-- structural, semantic, editorial, and reproducibility checks;
-- provenance and review reports;
-- tested contradiction, deprecation, and revision behavior;
-- versioned content contract and migration rules.
+- product UI expansion;
+- specialized search architecture;
+- synchronization or plugins;
+- autonomous synthesis;
+- new programming-language boundaries.
 
 ## Phase 2 — Minimal knowledge kernel
 
-Implement only the dependable runtime needed to load and query the accepted model.
+Implement only the dependable runtime required by reviewed Phase 1 workflows.
 
 Expected outcomes:
 
 - canonical-to-runtime compilation;
-- entity lookup and typed relation traversal;
+- read-only entity repository;
+- typed relation traversal;
 - synthesis-to-source provenance queries;
 - dependency and revision-impact queries;
-- measured behavior on representative corpora;
-- one clear owner for each semantic invariant.
+- deterministic command or library interface;
+- compatibility and failure tests;
+- representative performance measurements.
 
-The first baseline should use the smallest reasonable architecture. Polyglot extraction requires separate approval.
+The kernel must remain replaceable without changing authored Markdown.
 
 ## Phase 3 — Retrieval and research trails
 
-Add inspectable retrieval after the knowledge kernel is reliable.
+Add inspectable retrieval after the knowledge kernel is dependable.
 
 Expected outcomes:
 
 - lexical baseline and documented relevance tests;
-- field- and status-aware ranking;
+- field-, status-, and evidence-aware ranking;
 - filters and saved research trails;
 - contradiction and duplicate candidates;
 - ranking explanations;
-- specialized indexing only when benchmarks demonstrate the need.
+- specialized indexing only after benchmark approval.
 
 ## Phase 4 — Interactive atlas
 
@@ -87,8 +96,8 @@ Expected outcomes:
 
 - long-form reading and evidence inspection;
 - concept, claim, prerequisite, timeline, scale, and system views;
-- accessible exploration without a mandatory graph visualization;
-- visible review status, uncertainty, and provenance;
+- accessible exploration without mandatory graph visualization;
+- visible review status, uncertainty, provenance, and staleness;
 - local-first packaging.
 
 ## Phase 5 — Assisted synthesis and extensions
@@ -100,21 +109,21 @@ Possible outcomes:
 - AI-assisted draft extraction and synthesis;
 - citation-aware research workflows;
 - domain-specific validators and model adapters;
-- synchronization that preserves local ownership;
-- carefully permissioned plugins.
+- synchronization preserving local ownership;
+- permissioned plugins.
 
 AI output remains draft until reviewed and cannot bypass source verification.
 
-## Global non-goals until their prerequisites exist
+## Global non-goals until prerequisites exist
 
-- autonomous rewriting of authoritative user knowledge;
+- autonomous rewriting of authoritative knowledge;
 - opaque vector-only retrieval;
 - mandatory cloud accounts;
-- polished visual design before representative content;
-- plugin marketplaces before versioned contracts;
-- adding languages without an independently useful, benchmarked boundary;
-- describing internal consistency as scientific validity.
+- polished visual design before reviewed workflows;
+- plugin marketplaces before versioned contracts and permissions;
+- adding languages without an independently useful, measured boundary;
+- describing machine conformance as scientific validity.
 
 ## Progress rule
 
-A phase is complete only when its exit criteria are demonstrated with reviewed examples, fixtures, and failure cases. Code quantity, language count, screenshots, or build success are not sufficient measures of maturity.
+A phase is complete only when its own authority boundary and exit criteria are demonstrated. Code quantity, language count, screenshots, or build success are not sufficient measures of maturity.

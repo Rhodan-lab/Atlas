@@ -2,7 +2,11 @@
 
 ## Status
 
-This directory is the authoritative Phase 0 foundation. Atlas is now a **verification-ready mature draft**, not a completed phase. Documents are binding or provisional according to their stated status and the decision register.
+This directory is the authoritative Phase 0 foundation for `atlas-content/0.1`.
+
+**Current state:** closure candidate. The specification, canonical fixtures, migrations, multilingual lineage, and validator matrix are mechanically complete. Final acceptance requires green PR #3 checks and maintainer merge.
+
+Canonical example content remains `draft`. Phase 0 acceptance does not substitute machine validation for expert review.
 
 ## Core reading order
 
@@ -15,67 +19,101 @@ This directory is the authoritative Phase 0 foundation. Atlas is now a **verific
 | 5 | [`10-relation-vocabulary.md`](10-relation-vocabulary.md) | Relation meaning, direction, allowed pairs, and validation. |
 | 6 | [`11-contract-versioning-and-migrations.md`](11-contract-versioning-and-migrations.md) | Contract versions, compatibility, migration, and rollback. |
 | 7 | [`12-authoring-language-and-translation-policy.md`](12-authoring-language-and-translation-policy.md) | Multilingual identity, terminology, translation, and review. |
-| 8 | [`13-claim-scope-and-argument-policy.md`](13-claim-scope-and-argument-policy.md) | Claim atomicity, kinds, scope, and embedded argument structure. |
+| 8 | [`13-claim-scope-and-argument-policy.md`](13-claim-scope-and-argument-policy.md) | Claim atomicity, kinds, scope, and embedded arguments. |
 | 9 | [`14-evidence-data-and-restricted-source-policy.md`](14-evidence-data-and-restricted-source-policy.md) | Access classes, copyright, units, datasets, private evidence, and lineage. |
 | 10 | [`15-review-governance-and-disagreement.md`](15-review-governance-and-disagreement.md) | Reviewer roles, conflicts, findings, disagreement, and review staleness. |
 | 11 | [`16-revision-impact-and-staleness.md`](16-revision-impact-and-staleness.md) | Dependency impact, stale states, propagation, and human judgment boundary. |
+| 12 | [`18-phase-0-closure-report.md`](18-phase-0-closure-report.md) | Gate evidence, closure interpretation, and Phase 1 recommendation. |
 
 ## Governance and delivery
 
 | Document | Purpose |
 |---|---|
 | [`04-language-and-architecture-policy.md`](04-language-and-architecture-policy.md) | How implementation and language choices earn approval. |
-| [`05-phase-gates.md`](05-phase-gates.md) | Evidence required before later phases. |
+| [`05-phase-gates.md`](05-phase-gates.md) | Phase 0 closure and later phase evidence requirements. |
 | [`06-current-prototype-audit.md`](06-current-prototype-audit.md) | Evaluation of existing software without architectural lock-in. |
-| [`07-decision-register.md`](07-decision-register.md) | Accepted, provisional, open, and rejected decisions. |
-| [`08-reference-slice-plan.md`](08-reference-slice-plan.md) | Scope of the three ontology tests. |
-| [`09-validation-matrix.md`](09-validation-matrix.md) | Rules mapped to fixtures, diagnostics, review, and phase gates. |
-| [`17-phase-0-maturity-assessment.md`](17-phase-0-maturity-assessment.md) | Current maturity, blockers, and completion work packages. |
+| [`07-decision-register.md`](07-decision-register.md) | Accepted, provisional, superseded, open, and rejected decisions. |
+| [`08-reference-slice-plan.md`](08-reference-slice-plan.md) | Scope of the three ontology stress tests. |
+| [`09-validation-matrix.md`](09-validation-matrix.md) | Rules mapped to fixtures, diagnostics, review, and gates. |
+| [`17-phase-0-maturity-assessment.md`](17-phase-0-maturity-assessment.md) | Pre-closure assessment retained as historical state. |
 
 Repository-level rules are in [`../../PROJECT_STATE.md`](../../PROJECT_STATE.md), [`../../AGENTS.md`](../../AGENTS.md), and [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md).
 
-## Evidence corpus
+## Executable corpus
 
-- [`../../content/reference/README.md`](../../content/reference/README.md) — corpus status and conventions
-- [`../../content/reference/slice-a-catalase.md`](../../content/reference/slice-a-catalase.md) — empirical biology and assay scope
-- [`../../content/reference/slice-b-feedback.md`](../../content/reference/slice-b-feedback.md) — formal model and reproducible derivation
-- [`../../content/reference/slice-c-recommenders.md`](../../content/reference/slice-c-recommenders.md) — socio-technical evidence and normative reasoning
-- [`../../content/fixtures/invalid/README.md`](../../content/fixtures/invalid/README.md) — invalid cases and expected diagnostic codes
+### Canonical English records
 
-All reference content is `draft` until independently reviewed.
+- [`../../content/canonical/catalase/`](../../content/canonical/catalase/) — empirical biology, measurement proxy, and assay scope;
+- [`../../content/canonical/feedback/`](../../content/canonical/feedback/) — formal model, reproducible derivation, and model-to-world limits;
+- [`../../content/canonical/recommenders/`](../../content/canonical/recommenders/) — observational and randomized evidence, legal context, conflicts, and normative reasoning.
+
+Total: 34 split canonical entity files.
+
+### Indonesian translation path
+
+- [`../../content/translations/id/feedback/`](../../content/translations/id/feedback/) — complete question, evidence, claim, concept, model, and synthesis path.
+
+Total: 8 translated entity files with independent lifecycle and staleness.
+
+### Boundary fixtures
+
+- [`../../content/fixtures/invalid/README.md`](../../content/fixtures/invalid/README.md) — 24 required diagnostic scenarios;
+- [`../../content/fixtures/migrations/`](../../content/fixtures/migrations/) — mechanical preservation and semantic claim split;
+- [`../../content/fixtures/identity/`](../../content/fixtures/identity/) — alias, rename, collision, and federation behavior;
+- [`../../content/fixtures/translation/`](../../content/fixtures/translation/) — source-revision mismatch and stale translation.
+
+Bundled files in `content/reference/` remain historical drafting artifacts. Executable validation uses the split canonical and translation directories.
+
+## Validator and ADR
+
+- [`../adr/0001-phase-0-validator-baseline.md`](../adr/0001-phase-0-validator-baseline.md) — accepted minimum validator decision;
+- [`../../tools/foundation-validator/`](../../tools/foundation-validator/) — bounded Python reference validator and 30-test suite;
+- [`../../.github/workflows/foundation.yml`](../../.github/workflows/foundation.yml) — Python 3.11 and 3.13 matrix.
+
+The validator checks conformance only. It cannot judge truth or grant review status.
+
+## Review records
+
+- [`../reviews/phase-0-structural-validation.md`](../reviews/phase-0-structural-validation.md) — machine conformance and reproducibility result;
+- [`../reviews/phase-0-source-verification.md`](../reviews/phase-0-source-verification.md) — bibliographic and locator verification ledger;
+- [`../reviews/phase-0-review-register.md`](../reviews/phase-0-review-register.md) — completed machine/internal checks and pending independent reviews.
+
+All reference content remains `draft` until exact revisions pass required Phase 1 reviews.
 
 ## Authority and conflict handling
 
-- `PROJECT_STATE.md` defines the active phase and freeze.
+- `PROJECT_STATE.md` defines active phase and freeze.
 - This directory defines product and knowledge semantics.
-- The decision register identifies which policies are accepted or provisional.
-- Accepted ADRs define implementation decisions after foundation requirements exist.
-- Reviewed canonical content outranks prototype examples.
+- The decision register identifies accepted and provisional policies.
+- Accepted ADRs define bounded implementation decisions after requirements exist.
+- Reviewed canonical revisions outrank drafts and prototype examples.
 - Prototype code is experimental evidence, not semantic authority.
-- Conflicts between documents are recorded and resolved before implementation depends on them.
+- Conflicts are recorded and resolved before implementation depends on them.
 
 ## Maturity rule
 
-A foundation rule advances only when:
+A foundation rule is mature only when:
 
 - terminology is consistent;
-- at least one representative fixture uses it;
-- invalid behavior and expected diagnostics are specified;
-- reviewers can apply it without reading code;
-- migration and revision consequences are understood;
-- unresolved issues remain visible.
+- representative valid fixtures use it;
+- invalid behavior has deterministic diagnostics;
+- identity, migration, revision, and review consequences are explicit;
+- it remains understandable without implementation code;
+- unresolved questions remain visible.
 
-A long document without fixtures is only defined. A fixture without review is only exercised.
+A fixture passing validation means its structure conforms. It does not mean its claims are reviewed or true.
 
-## Current work sequence
+## Phase transition
 
-1. Split bundled slices into canonical entity files.
-2. Add multilingual, migration, identity, and staleness fixtures.
-3. Verify source metadata and evidence locators.
-4. Record independent review findings.
-5. Compare Phase 1 validator options through the ADR template.
-6. Implement only the selected validator.
-7. Produce the Phase 0 completion report.
+### Before PR #3 merge
+
+- keep product feature development frozen;
+- resolve only closure defects and final CI failures;
+- do not promote canonical content.
+
+### After Phase 0 acceptance
+
+Phase 1 performs independent review of the reference corpus, confidence calibration, contradiction/deprecation/retraction exercises, and validator hardening. Broader product engineering remains outside scope until Phase 1 exit criteria are met.
 
 ## Change rule
 

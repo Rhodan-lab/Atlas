@@ -1,0 +1,8 @@
+{
+  "source_id": "claim:en:stated-delayed-recurrence-oscillates",
+  "translation_id": "claim:id:rekurensi-tertunda-yang-dinyatakan-berosilasi",
+  "source_revision": 2,
+  "translation_source_revision": 1,
+  "expected_state": "possibly-stale",
+  "reason": "The source-language claim changed after the Indonesian translation was authored. Review must determine whether the translation meaning changed."
+}

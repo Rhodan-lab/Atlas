@@ -1,0 +1,34 @@
+{
+  "mode": "mechanical",
+  "from_contract": "atlas-content/0.1",
+  "to_contract": "atlas-content/0.2-fixture",
+  "before": {
+    "id": "claim:en:catalase-optimum-requires-assay-scope",
+    "work": "work:catalase-optimum-requires-assay-scope",
+    "status": "draft",
+    "revision": 1,
+    "source_evidence": [
+      "evidence:en:fluorescent-catalase-assay-neutral-ph"
+    ]
+  },
+  "after": {
+    "id": "claim:en:catalase-optimum-requires-assay-scope",
+    "work": "work:catalase-optimum-requires-assay-scope",
+    "status": "draft",
+    "revision": 1,
+    "source_evidence": [
+      "evidence:en:fluorescent-catalase-assay-neutral-ph"
+    ],
+    "display_hint": "methodological-caution"
+  },
+  "preserve": [
+    "id",
+    "work",
+    "status",
+    "revision",
+    "source_evidence"
+  ],
+  "expected": {
+    "errors": []
+  }
+}
