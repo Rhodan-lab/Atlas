@@ -6,12 +6,21 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-MODULE_PATH = Path(__file__).resolve().parents[1] / "phase1_review_backlog.py"
-SPEC = importlib.util.spec_from_file_location("phase1_review_backlog", MODULE_PATH)
-assert SPEC and SPEC.loader
-backlog = importlib.util.module_from_spec(SPEC)
-sys.modules[SPEC.name] = backlog
-SPEC.loader.exec_module(backlog)
+VALIDATOR_DIR = Path(__file__).resolve().parents[1]
+
+
+def _load_module(name: str, path: Path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+_load_module("phase1_review_gate", VALIDATOR_DIR / "phase1_review_gate.py")
+_load_module("phase1_coverage_report", VALIDATOR_DIR / "phase1_coverage_report.py")
+backlog = _load_module("phase1_review_backlog", VALIDATOR_DIR / "phase1_review_backlog.py")
 
 
 class ReviewerRequirementTests(unittest.TestCase):
