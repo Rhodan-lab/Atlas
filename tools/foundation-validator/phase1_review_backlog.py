@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Generate a deterministic human-review backlog from Atlas coverage results.
+"""Generate a deterministic review backlog from Atlas coverage results.
 
 The backlog is a planning artifact. It never performs review, assigns authority,
 changes lifecycle status, or treats AI-assisted work as accountable approval.
+It distinguishes automation-eligible checks from human-required authority work.
 """
 
 from __future__ import annotations
@@ -18,7 +19,7 @@ import phase1_coverage_report as coverage
 import phase1_review_gate as gate
 
 BACKLOG_CONTRACT = "atlas-review-backlog/0.1"
-PRIORITIES = {"high", "medium", "low"}
+EXECUTION_MODES = {"automation-eligible", "human-required"}
 
 QUALIFICATION_GUIDANCE = {
     "structural": "Atlas contract and schema conformance",
@@ -54,6 +55,12 @@ class ReviewerRequirement:
     accountability_required: bool
     qualification: str
 
+    @property
+    def execution_mode(self) -> str:
+        if "machine" in self.allowed_kinds and not self.accountability_required:
+            return "automation-eligible"
+        return "human-required"
+
     def to_dict(self) -> dict[str, Any]:
         return {
             "allowed_kinds": list(self.allowed_kinds),
@@ -72,6 +79,7 @@ class ReviewTask:
     review_type: str
     track: str
     priority: str
+    execution_mode: str
     required_for_gate: bool
     reviewer_requirement: ReviewerRequirement
     existing_review_ids: tuple[str, ...]
@@ -88,6 +96,7 @@ class ReviewTask:
             "review_type": self.review_type,
             "track": self.track,
             "priority": self.priority,
+            "execution_mode": self.execution_mode,
             "required_for_gate": self.required_for_gate,
             "reviewer_requirement": self.reviewer_requirement.to_dict(),
             "existing_review_ids": list(self.existing_review_ids),
@@ -105,6 +114,10 @@ class BacklogResult:
     task_count: int
     gate_task_count: int
     advisory_task_count: int
+    automation_eligible_task_count: int
+    human_required_task_count: int
+    gate_automation_eligible_task_count: int
+    gate_human_required_task_count: int
     tasks: tuple[ReviewTask, ...]
 
     def to_dict(self) -> dict[str, Any]:
@@ -115,10 +128,16 @@ class BacklogResult:
             "task_count": self.task_count,
             "gate_task_count": self.gate_task_count,
             "advisory_task_count": self.advisory_task_count,
+            "automation_eligible_task_count": self.automation_eligible_task_count,
+            "human_required_task_count": self.human_required_task_count,
+            "gate_automation_eligible_task_count": self.gate_automation_eligible_task_count,
+            "gate_human_required_task_count": self.gate_human_required_task_count,
             "tasks": [task.to_dict() for task in self.tasks],
             "authority_boundary": (
-                "This backlog does not perform review, assign a real reviewer, or grant authority. "
-                "AI-assisted records may inform blockers but cannot satisfy accountable human review."
+                "Automation-eligible means a machine record may satisfy the review policy "
+                "when it passes exact-revision validation. Human-required tasks still need "
+                "an accountable reviewer with the stated independence and qualification. "
+                "This backlog itself performs neither kind of review."
             ),
         }
 
@@ -168,8 +187,6 @@ def _priority(item: coverage.EntityCoverage, required_for_gate: bool) -> str:
         return "low"
     if item.role == "load-bearing" or item.external_dependents:
         return "high"
-    if item.internal_dependents:
-        return "medium"
     return "medium"
 
 
@@ -181,7 +198,11 @@ def _acceptance_criteria(review_type: str, entity: Mapping[str, Any]) -> tuple[s
         "Set a review horizon when the conclusion can become stale.",
         "Do not permit promotion while any critical or major finding remains unresolved.",
     ]
-    if review_type == "reproducibility":
+    if review_type == "structural":
+        criteria.append(
+            "Produce an exact-revision machine or human review record after contract validation."
+        )
+    elif review_type == "reproducibility":
         criteria.append("Provide an independent recalculation or executable reproduction record.")
     elif review_type == "translation":
         criteria.append(
@@ -220,6 +241,7 @@ def build_backlog(
         entity = entities.get((entity_result.entity_id, entity_result.revision), {})
         required_for_gate = requirement == "all" or entity_result.role == "load-bearing"
         for review_type in entity_result.missing_review_types:
+            authority = reviewer_requirement(review_type, entity)
             task_id = (
                 f"review-task:{scope_slug}:"
                 f"{_slug(entity_result.entity_id)}-r{entity_result.revision}:"
@@ -234,8 +256,9 @@ def build_backlog(
                     review_type=review_type,
                     track=TRACK_BY_REVIEW_TYPE.get(review_type, "other"),
                     priority=_priority(entity_result, required_for_gate),
+                    execution_mode=authority.execution_mode,
                     required_for_gate=required_for_gate,
-                    reviewer_requirement=reviewer_requirement(review_type, entity),
+                    reviewer_requirement=authority,
                     existing_review_ids=entity_result.review_ids,
                     blockers=entity_result.blockers,
                     internal_dependents=entity_result.internal_dependents,
@@ -245,25 +268,59 @@ def build_backlog(
             )
 
     priority_order = {"high": 0, "medium": 1, "low": 2}
+    execution_order = {"human-required": 0, "automation-eligible": 1}
     tasks.sort(
         key=lambda task: (
             priority_order[task.priority],
+            execution_order[task.execution_mode],
             task.track,
             task.entity_id,
             task.revision,
             task.review_type,
         )
     )
-    gate_count = sum(task.required_for_gate for task in tasks)
+    gate_tasks = [task for task in tasks if task.required_for_gate]
+    automation_tasks = [task for task in tasks if task.execution_mode == "automation-eligible"]
+    human_tasks = [task for task in tasks if task.execution_mode == "human-required"]
     backlog = BacklogResult(
         coverage_id=coverage_id,
         coverage_decision=result.decision,
         task_count=len(tasks),
-        gate_task_count=gate_count,
-        advisory_task_count=len(tasks) - gate_count,
+        gate_task_count=len(gate_tasks),
+        advisory_task_count=len(tasks) - len(gate_tasks),
+        automation_eligible_task_count=len(automation_tasks),
+        human_required_task_count=len(human_tasks),
+        gate_automation_eligible_task_count=sum(
+            task.required_for_gate for task in automation_tasks
+        ),
+        gate_human_required_task_count=sum(task.required_for_gate for task in human_tasks),
         tasks=tuple(tasks),
     )
     return backlog, diagnostics
+
+
+def _render_task(task: ReviewTask) -> list[str]:
+    authority = task.reviewer_requirement
+    lines = [
+        f"- **{task.priority.upper()}** `{task.entity_id}@{task.revision}` — "
+        f"`{task.review_type}`; mode: `{task.execution_mode}`; "
+        f"kinds: {', '.join(authority.allowed_kinds)}; "
+        f"independence: {', '.join(authority.allowed_independence)}; "
+        f"accountable: {'required' if authority.accountability_required else 'not required'}"
+    ]
+    if task.existing_review_ids:
+        lines.append(
+            "  - Existing records that do not yet satisfy coverage: "
+            + ", ".join(task.existing_review_ids)
+        )
+    for blocker in task.blockers:
+        lines.append(f"  - Blocker: {blocker}")
+    dependents = list(task.internal_dependents) + list(task.external_dependents)
+    if dependents:
+        lines.append(
+            "  - Dependents requiring impact inspection: " + ", ".join(dependents)
+        )
+    return lines
 
 
 def render_report(backlog: BacklogResult) -> str:
@@ -275,43 +332,41 @@ def render_report(backlog: BacklogResult) -> str:
         f"- Open tasks: `{backlog.task_count}`",
         f"- Gate tasks: `{backlog.gate_task_count}`",
         f"- Advisory tasks: `{backlog.advisory_task_count}`",
-        "",
-        "## Reviewer tracks",
+        f"- Automation-eligible tasks: `{backlog.automation_eligible_task_count}` "
+        f"(`{backlog.gate_automation_eligible_task_count}` gate)",
+        f"- Human-required tasks: `{backlog.human_required_task_count}` "
+        f"(`{backlog.gate_human_required_task_count}` gate)",
         "",
     ]
-    grouped: dict[str, list[ReviewTask]] = {}
-    for task in backlog.tasks:
-        grouped.setdefault(task.track, []).append(task)
-    if not grouped:
-        lines.append("- No missing review tasks.")
-    for track in sorted(grouped):
-        lines.extend([f"### {track}", ""])
-        for task in grouped[track]:
-            authority = task.reviewer_requirement
-            lines.append(
-                f"- **{task.priority.upper()}** `{task.entity_id}@{task.revision}` — "
-                f"`{task.review_type}`; kinds: {', '.join(authority.allowed_kinds)}; "
-                f"independence: {', '.join(authority.allowed_independence)}; "
-                f"accountable: {'required' if authority.accountability_required else 'not required'}"
-            )
-            if task.existing_review_ids:
-                lines.append(
-                    f"  - Existing records that do not yet satisfy coverage: "
-                    f"{', '.join(task.existing_review_ids)}"
-                )
-            for blocker in task.blockers:
-                lines.append(f"  - Blocker: {blocker}")
-            dependents = list(task.internal_dependents) + list(task.external_dependents)
-            if dependents:
-                lines.append(f"  - Dependents requiring impact inspection: {', '.join(dependents)}")
-        lines.append("")
+
+    for execution_mode, heading in (
+        ("automation-eligible", "Automation-eligible work"),
+        ("human-required", "Human-required authority work"),
+    ):
+        selected = [task for task in backlog.tasks if task.execution_mode == execution_mode]
+        lines.extend([f"## {heading}", ""])
+        if not selected:
+            lines.append("- None")
+            lines.append("")
+            continue
+        grouped: dict[str, list[ReviewTask]] = {}
+        for task in selected:
+            grouped.setdefault(task.track, []).append(task)
+        for track in sorted(grouped):
+            lines.extend([f"### {track}", ""])
+            for task in grouped[track]:
+                lines.extend(_render_task(task))
+            lines.append("")
+
     lines.extend(
         [
             "## Authority boundary",
             "",
-            "This backlog is deterministic planning output. It does not assign a real reviewer, perform review, resolve findings, or change lifecycle status.",
+            "Automation-eligible does not mean already completed. A valid exact-revision machine review record must still be generated and pass the same contract checks.",
             "",
-            "AI-assisted records may identify defects and remain visible as blockers. They cannot satisfy accountable human authority where the review policy requires it.",
+            "Human-required tasks need an accountable reviewer with the stated qualification and independence. AI-assisted records may identify defects but cannot satisfy that authority.",
+            "",
+            "This backlog is deterministic planning output. It does not assign a reviewer, perform review, resolve findings, or change lifecycle status.",
             "",
         ]
     )
@@ -356,6 +411,10 @@ def main(argv: Sequence[str] | None = None) -> int:
             task_count=0,
             gate_task_count=0,
             advisory_task_count=0,
+            automation_eligible_task_count=0,
+            human_required_task_count=0,
+            gate_automation_eligible_task_count=0,
+            gate_human_required_task_count=0,
             tasks=(),
         )
 
