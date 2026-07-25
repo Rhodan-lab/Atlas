@@ -1,0 +1,28 @@
+{
+  "contract": "atlas-promotion/0.1",
+  "entity": {
+    "id": "synthesis:en:contested-fixture",
+    "revision": 1,
+    "type": "synthesis",
+    "status": "in-review",
+    "staleness": "current"
+  },
+  "requested_status": "contested",
+  "reviews": [],
+  "decision_at": "2026-07-26",
+  "accepted_by": {
+    "display_name": "Fixture maintainer",
+    "kind": "human",
+    "accountable": true
+  },
+  "transition": {
+    "reason": "Credible interpretations remain incompatible under the current evidence.",
+    "positions": [
+      "claim:en:position-a",
+      "claim:en:position-b"
+    ],
+    "unresolved_questions": [
+      "question:en:what-would-resolve-the-dispute"
+    ]
+  }
+}
