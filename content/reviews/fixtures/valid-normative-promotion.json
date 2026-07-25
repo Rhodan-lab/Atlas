@@ -1,0 +1,81 @@
+{
+  "contract": "atlas-promotion/0.1",
+  "entity": {
+    "id": "claim:en:fixture-normative",
+    "revision": 1,
+    "type": "claim",
+    "status": "in-review",
+    "staleness": "current",
+    "claim_kind": "normative",
+    "material_flags": []
+  },
+  "requested_status": "reviewed",
+  "reviews": [
+    {
+      "contract": "atlas-review/0.1",
+      "id": "review:structural:fixture-r1:2026-07-26",
+      "entity": {"id": "claim:en:fixture-normative", "revision": 1},
+      "review_type": "structural",
+      "reviewer": {
+        "display_name": "Fixture validator",
+        "kind": "machine",
+        "independence": "not-applicable",
+        "qualification": "deterministic structural validation",
+        "accountable": false,
+        "conflicts": []
+      },
+      "completed_at": "2026-07-26",
+      "review_horizon": null,
+      "outcome": "pass",
+      "findings": [],
+      "summary": "The exact revision passes structural conformance.",
+      "permits_promotion": false
+    },
+    {
+      "contract": "atlas-review/0.1",
+      "id": "review:editorial:fixture-r1:2026-07-26",
+      "entity": {"id": "claim:en:fixture-normative", "revision": 1},
+      "review_type": "editorial",
+      "reviewer": {
+        "display_name": "Internal editor",
+        "kind": "human",
+        "independence": "internal",
+        "qualification": "editorial review",
+        "accountable": true,
+        "conflicts": []
+      },
+      "completed_at": "2026-07-26",
+      "review_horizon": null,
+      "outcome": "pass",
+      "findings": [],
+      "summary": "The normative statement and qualifiers are clear.",
+      "permits_promotion": true
+    },
+    {
+      "contract": "atlas-review/0.1",
+      "id": "review:ethical:fixture-r1:2026-07-26",
+      "entity": {"id": "claim:en:fixture-normative", "revision": 1},
+      "review_type": "ethical",
+      "reviewer": {
+        "display_name": "Independent ethics reviewer",
+        "kind": "human",
+        "independence": "independent",
+        "qualification": "applied ethics",
+        "accountable": true,
+        "conflicts": []
+      },
+      "completed_at": "2026-07-26",
+      "review_horizon": null,
+      "outcome": "pass",
+      "findings": [],
+      "summary": "Values, alternatives, and affected interests are explicit.",
+      "permits_promotion": true
+    }
+  ],
+  "decision_at": "2026-07-26",
+  "accepted_by": {
+    "display_name": "Fixture maintainer",
+    "kind": "human",
+    "accountable": true
+  }
+}
