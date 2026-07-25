@@ -2,142 +2,151 @@
 
 [![Atlas CI](https://github.com/Rhodan-lab/Atlas/actions/workflows/ci.yml/badge.svg)](https://github.com/Rhodan-lab/Atlas/actions/workflows/ci.yml)
 
-> **Current status: Phase 0 — Knowledge Foundation**
+> **Current status: Phase 0 — Knowledge Foundation, verification-ready mature draft**
 >
-> Feature development is intentionally frozen while the product charter, ontology, evidence model, review policy, content contract, and architecture gates are matured.
+> Product feature development remains frozen. The current work is canonical fixture splitting, independent review, multilingual and migration testing, and selection of the smallest Phase 1 validator.
 
 ## What Atlas is
 
-Atlas is a local-first knowledge environment for an independent learner, researcher, or builder. Its purpose is to make knowledge inspectable:
+Atlas is a local-first knowledge environment for an independent learner, researcher, or builder. It is designed to make reasoning inspectable:
 
-- what a claim means;
-- what evidence supports or challenges it;
-- how limited or uncertain it is;
-- how it connects to concepts and models;
-- where credible disagreement remains;
-- how understanding changes through revision.
+- what a claim states and where it applies;
+- what evidence supports, challenges, or contextualizes it;
+- which model or assumptions produce a conclusion;
+- how certain, limited, contested, or stale an item is;
+- how concepts and questions connect across domains;
+- how a synthesis can be traced back to original sources;
+- why knowledge changed through revision.
 
-Atlas is not merely a notes application, graph visualization, textbook, course platform, or chatbot. The long-term product should allow a user to trace a path from question to synthesis and from every important claim back to evidence and original sources.
+Atlas is not merely a notes app, graph visualization, textbook, course platform, or chatbot.
 
-## Why the project returned to Phase 0
+## Why the project is still in Phase 0
 
-The repository already contains an experimental C++, Rust, Python, TypeScript, SQL, and browser prototype. That prototype proves that local ingestion, graph traversal, search, process boundaries, and testing are possible.
+The repository contains an experimental C++, Rust, Python, TypeScript, SQL, and browser prototype. It proves several engineering ideas are possible, but it was created before the knowledge model and review governance were mature.
 
-It does **not** yet prove that the underlying knowledge model is mature.
-
-The first implementation moved too quickly from an idea to a polyglot architecture. In particular, it treated broad concepts and concept-level source references as the center of the system before defining claim-level evidence, disagreement, review, models, questions, syntheses, and revisions.
-
-The prototype is therefore preserved, tested, and explicitly classified as **non-authoritative experimental work**. The foundation documents now govern future engineering.
+The prototype is preserved for testing and comparison. It does not own the ontology, dictate the final languages, or count as a completed product foundation.
 
 ## Authority order
-
-During Phase 0, project authority is:
 
 1. [`PROJECT_STATE.md`](PROJECT_STATE.md)
 2. [`docs/foundation/`](docs/foundation/)
 3. accepted architecture decision records
-4. reviewed content contracts and reference fixtures
+4. reviewed canonical content and fixtures
 5. implementation code and generated artifacts
 
-When code conflicts with the foundation, the code is provisional.
+When code conflicts with the foundation, code is provisional.
 
 ## Canonical knowledge units
 
-The foundation currently distinguishes:
+Atlas currently distinguishes:
 
 - **Source** — identifiable origin of information
-- **Evidence** — the relevant passage, observation, measurement, or data context
-- **Claim** — an individually evaluable statement
-- **Concept** — an explanatory structure organizing claims and meaning
+- **Evidence** — the relevant passage, observation, measurement, data subset, or derived result
+- **Claim** — one evaluable and qualified statement
+- **Concept** — an explanatory structure organizing meaning and claims
 - **Relation** — a governed typed and directed connection
-- **Model** — a representation used to explain, calculate, simulate, or predict
+- **Model** — a representation used to explain, calculate, simulate, classify, or predict
 - **Question** — an explicit knowledge need or unresolved problem
-- **Synthesis** — a scoped integration of claims, evidence, models, and disagreement
-- **Revision** — a traceable change and its consequences
+- **Synthesis** — a scoped integration of claims, evidence, models, disagreement, and values
+- **Revision** — a traceable change and its downstream consequences
 
-These distinctions are more important than any current storage format or language choice.
+Arguments are structured blocks in `atlas-content/0.1`, not independent entities unless later fixtures prove that independent identity is necessary.
 
-## Foundational lenses
+## Contract and governance now defined
 
-Atlas is intended to connect knowledge through recurring lenses rather than a rigid school-subject sequence:
+The mature draft includes:
 
-- knowledge and evidence;
-- logic and argument;
-- mathematics;
-- statistics and uncertainty;
-- scientific inquiry;
-- systems;
-- computation;
-- language and meaning;
-- human cognition;
-- decision and action;
-- ethics and responsibility.
+- `atlas-content/0.1` authored Markdown contract;
+- multilingual `id` and shared language-neutral `work` identities;
+- claim-level provenance and scoped confidence rationale;
+- controlled relation vocabulary and entity compatibility;
+- evidence access, copyright, private-source, unit, dataset, and transformation-lineage rules;
+- structural, editorial, source, domain, methodological, reproducibility, ethics, and translation review;
+- reviewer conflict and disagreement handling;
+- contract migration and rollback invariants;
+- dependency impact and staleness propagation;
+- invalid fixtures with deterministic expected diagnostics;
+- architecture policy preventing premature polyglot expansion.
 
-This is a map for exploration, not a fixed course with grades, scores, streaks, or a final test.
+## Reference corpus
 
-## Foundation reading order
+Three bundled draft slices now test the ontology:
+
+1. [`Catalase and assay conditions`](content/reference/slice-a-catalase.md) — empirical evidence, synthetic observation, measurement proxies, and biological scope.
+2. [`Delayed feedback and oscillation`](content/reference/slice-b-feedback.md) — formal model, exact derived evidence, assumptions, and analogy limits.
+3. [`Recommendation systems, exposure, and user choice`](content/reference/slice-c-recommenders.md) — observational and randomized evidence, legal context, conflicts, and normative reasoning.
+
+The corpus index is [`content/reference/README.md`](content/reference/README.md). Invalid contract examples are in [`content/fixtures/invalid/README.md`](content/fixtures/invalid/README.md).
+
+All reference material remains `draft`. It is ontology evidence, not reviewed educational content.
+
+## Foundation reading path
+
+Start with:
 
 1. [`PROJECT_STATE.md`](PROJECT_STATE.md)
-2. [`docs/foundation/00-charter.md`](docs/foundation/00-charter.md)
-3. [`docs/foundation/01-knowledge-model.md`](docs/foundation/01-knowledge-model.md)
-4. [`docs/foundation/02-evidence-and-editorial-policy.md`](docs/foundation/02-evidence-and-editorial-policy.md)
+2. [`docs/foundation/README.md`](docs/foundation/README.md)
+3. [`docs/foundation/00-charter.md`](docs/foundation/00-charter.md)
+4. [`docs/foundation/01-knowledge-model.md`](docs/foundation/01-knowledge-model.md)
 5. [`docs/foundation/03-content-contract.md`](docs/foundation/03-content-contract.md)
-6. [`docs/foundation/04-language-and-architecture-policy.md`](docs/foundation/04-language-and-architecture-policy.md)
-7. [`docs/foundation/05-phase-gates.md`](docs/foundation/05-phase-gates.md)
-8. [`docs/foundation/06-current-prototype-audit.md`](docs/foundation/06-current-prototype-audit.md)
-9. [`docs/foundation/07-decision-register.md`](docs/foundation/07-decision-register.md)
-10. [`docs/foundation/08-reference-slice-plan.md`](docs/foundation/08-reference-slice-plan.md)
-11. [`docs/foundation/09-validation-matrix.md`](docs/foundation/09-validation-matrix.md)
-12. [`docs/foundation/10-relation-vocabulary.md`](docs/foundation/10-relation-vocabulary.md)
+6. [`docs/foundation/07-decision-register.md`](docs/foundation/07-decision-register.md)
+7. [`docs/foundation/17-phase-0-maturity-assessment.md`](docs/foundation/17-phase-0-maturity-assessment.md)
 
-Contributors and agents must also follow [`AGENTS.md`](AGENTS.md). Architecture proposals use [`docs/adr/0000-template.md`](docs/adr/0000-template.md).
+Contributors and agents must follow [`AGENTS.md`](AGENTS.md) and [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
-## Current repository structure
+## Current repository map
 
 ```text
 Atlas/
-├── docs/foundation/      # authoritative Phase 0 product and knowledge foundation
-├── PROJECT_STATE.md      # active phase, authority, freeze, and exit gate
-├── AGENTS.md             # mandatory contributor and agent rules
-├── engine/cpp/           # experimental graph-engine prototype
-├── services/search-rs/   # experimental search prototype
-├── tools/ingest-py/      # experimental ingestion prototype
-├── apps/api-ts/          # experimental API and browser prototype
-├── contracts/            # provisional derived-format contracts
-├── storage/              # provisional persistence design
-├── examples/notes/       # prototype examples; not yet canonical fixtures
-└── scripts/              # prototype build and integration checks
+├── PROJECT_STATE.md
+├── AGENTS.md
+├── docs/foundation/       # authoritative Phase 0 semantics and governance
+├── docs/adr/              # architecture decision process
+├── content/reference/     # bundled draft vertical slices
+├── content/fixtures/      # valid/invalid contract evidence
+├── engine/cpp/            # experimental prototype
+├── services/search-rs/    # experimental prototype
+├── tools/ingest-py/       # experimental prototype
+├── apps/api-ts/           # experimental prototype
+├── contracts/             # provisional derived-format work
+├── storage/               # provisional persistence work
+└── scripts/               # prototype checks
 ```
 
-## Development rule
+## What is allowed now
 
-Until the Phase 0 gate is passed:
+- split bundled slices into canonical entity files;
+- verify sources and locators;
+- record independent review findings;
+- add Indonesian translation and stale-translation fixtures;
+- add migration, identity, and dependency-impact fixtures;
+- compare validator implementation options through an ADR;
+- fix prototype defects needed for inspection.
 
-- do not add product features, services, plugins, or languages;
-- do not promote new content beyond `draft` without its required review;
-- do not make `.atlas`, SQL, or runtime models more authoritative than Markdown;
-- do not introduce a language boundary without an ADR, baseline, and measurable need;
-- focus on ontology testing, evidence governance, content fixtures, and decision closure.
+## What remains frozen
 
-## Next milestone
+- product UI expansion;
+- additional services or languages;
+- plugin and synchronization systems;
+- AI-generated authoritative content;
+- promotion of `.atlas`, SQL, or runtime structures as canonical;
+- optimization without accepted requirements and measurements.
 
-The next milestone is not a larger application. It is a reviewed **reference foundation** containing at least three complete vertical slices:
+## Phase 0 completion condition
 
-```text
-question → source → evidence → claim → concept/model → cross-domain relation → synthesis → limitation
-```
+Phase 0 is not complete until canonical fixtures are split, reviewed, migrated, translated, and validated; no critical or major review issue remains; and the smallest Phase 1 validator is selected through an accepted ADR.
 
-Only after those examples prove the contract will Atlas select the smallest reference implementation and reassess which parts of the current prototype deserve to survive.
+See [`docs/foundation/17-phase-0-maturity-assessment.md`](docs/foundation/17-phase-0-maturity-assessment.md) for the current gate assessment.
 
 ## Prototype validation
 
-The existing prototype remains buildable for comparison and regression testing:
+The experimental prototype remains available for comparison:
 
 ```bash
 ./scripts/check.sh
 ```
 
-Passing prototype tests means the experiment is internally consistent. It does not mean the product foundation is complete.
+Passing prototype tests means the experiment is internally consistent. It does not certify the knowledge foundation or reference content.
 
 ## License
 

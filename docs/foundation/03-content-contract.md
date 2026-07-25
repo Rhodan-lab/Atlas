@@ -2,20 +2,22 @@
 
 ## Status
 
-Draft authoring contract for Phase 0. Markdown remains authoritative; database rows, `.atlas` files, indexes, JSON, and UI views are derived artifacts.
+**Provisional contract: `atlas-content/0.1`.** Markdown is authoritative. Database rows, `.atlas` files, indexes, JSON, and interface views are derived artifacts.
+
+This document defines the common authored structure. Detailed rules live in the linked foundation policies.
 
 ## Contract goals
 
-The content format must be:
+Canonical content must be:
 
-- readable and editable without Atlas software;
+- readable without Atlas software;
 - version-controllable with meaningful diffs;
 - strict enough to validate identity, provenance, review, and relations;
-- expressive enough for uncertainty and disagreement;
-- independent of a specific programming language or database;
-- reproducibly compilable into runtime formats.
+- expressive enough for scope, uncertainty, disagreement, translation, and revision;
+- independent of one programming language or database;
+- reproducibly compilable into disposable runtime formats.
 
-## Proposed source layout
+## Proposed canonical layout
 
 ```text
 content/
@@ -26,24 +28,27 @@ content/
 ├── models/
 ├── questions/
 ├── syntheses/
+├── translations/
 └── vocabularies/
 ```
 
-The folders separate semantic roles. They are not the only navigation structure; derived views may reorganize the same entities by topic, question, prerequisite, scale, timeline, or relation.
+Folders separate semantic roles but do not define navigation. Derived views may organize the same entities by question, topic, prerequisite, time, scale, model, or relation.
 
 ## Common metadata
 
-Every canonical item begins with front matter:
+Every canonical entity begins with front matter:
 
 ```yaml
 ---
-id: concept:feedback-loop
+contract: atlas-content/0.1
+id: concept:en:feedback-loop
+work: work:feedback-loop
 type: concept
 title: Feedback loop
 status: draft
 revision: 1
-created: 2026-07-25
-updated: 2026-07-25
+created: 2026-07-26
+updated: 2026-07-26
 language: en
 tags:
   - systems
@@ -51,48 +56,65 @@ tags:
 ---
 ```
 
-Required common fields:
+### Required common fields
 
-- `id` — stable canonical identifier;
+- `contract` — supported authoring-contract version;
+- `id` — stable identity for this language-specific authored entity;
+- `work` — language-neutral identity shared by valid translations;
 - `type` — one accepted entity type;
-- `title` — readable title;
-- `status` — lifecycle state defined by the editorial policy;
+- `title` — human-readable label;
+- `status` — lifecycle state from the editorial policy;
 - `revision` — monotonic authored revision number;
 - `created` and `updated` — ISO dates;
-- `language` — language of the authored item;
-- `tags` — optional controlled or provisional descriptors.
+- `language` — BCP 47 language tag.
 
-Review information is added only when review has occurred:
+`tags` are optional descriptors and are not canonical relations.
+
+### Identity rules
+
+- IDs are not based only on file order or title.
+- Renaming a title does not automatically change identity.
+- Meaningful semantic replacement creates a new ID and a traceable supersession record.
+- Two translations share `work`, not `id`.
+- Generated numeric IDs are allowed only as disposable runtime identifiers.
+
+See [`12-authoring-language-and-translation-policy.md`](12-authoring-language-and-translation-policy.md).
+
+## Review metadata
+
+Review applies to one exact revision:
 
 ```yaml
 review:
-  version: 1
+  entity_revision: 2
   status: reviewed
+  completed_at: 2026-08-10
   types:
-    - structural
-    - source
-    - domain
-  reviewed_at: 2026-08-10
+    structural: pass
+    source: pass
+    domain: pass-with-notes
   reviewers:
-    - role: domain-reviewer
-      name: Example Reviewer
+    - reviewer:example-domain-01
+  findings:
+    - finding:scope-limited-to-stated-assay
+  unresolved: []
 ```
 
-The review record applies to one explicit revision. Later material changes return affected material to the appropriate review state.
+A later material edit does not inherit this review automatically. See [`15-review-governance-and-disagreement.md`](15-review-governance-and-disagreement.md).
 
 ## Source record
 
-A source record identifies a citable object. It does not contain extracted claims as if they were properties of the source.
-
 ```yaml
 ---
-id: src:example-2025-feedback
+contract: atlas-content/0.1
+id: src:en:example-feedback-paper
+work: work:example-feedback-paper
 type: source
-title: Feedback and Stability in Dynamic Systems
+title: Example Feedback Paper
 status: draft
 revision: 1
-created: 2026-07-25
-updated: 2026-07-25
+created: 2026-07-26
+updated: 2026-07-26
 language: en
 source:
   kind: primary-research
@@ -101,101 +123,107 @@ source:
   published: 2025-04-12
   locator: https://example.org/paper
   version: published
+access:
+  class: public-locator
 ---
 ```
+
+A source identifies an origin. It does not automatically support any claim.
 
 Recommended body sections:
 
 1. Source description
 2. Relevance
 3. Access and version notes
-4. Known limitations or conflicts of interest
+4. Conflicts or limitations
 5. Related evidence records
 
 ## Evidence record
 
-Evidence identifies the relevant material and context from a source. Evidence-to-claim relations point from the evidence toward the claim because the evidence performs the supporting, challenging, or contextualizing role.
-
 ```yaml
 ---
-id: evidence:example-feedback-result-1
+contract: atlas-content/0.1
+id: evidence:en:example-result-1
+work: work:example-result-1
 type: evidence
-title: Amplification result under delayed correction
+title: Example result under delayed correction
 status: draft
 revision: 1
-created: 2026-07-25
-updated: 2026-07-25
+created: 2026-07-26
+updated: 2026-07-26
 language: en
-source: src:example-2025-feedback
+source: src:en:example-feedback-paper
 locator:
   kind: page-range
-  value: pp. 14–16
+  value: pp. 14-16
 extraction:
   method: manual
   checked: false
 relations:
   - type: supports
-    target: claim:delayed-negative-feedback-can-oscillate
+    target: claim:en:delayed-feedback-can-oscillate
+    note: The reported result is relevant within the stated model and protocol.
 ---
 ```
 
-The body explains:
+The body records:
 
-- the observation, measurement, excerpt summary, or structured value;
-- surrounding context needed to avoid distortion;
-- extraction or collection method;
-- limitations;
-- why the stated evidence role is appropriate.
+- relevant observation, result, excerpt summary, or value;
+- context needed to avoid distortion;
+- extraction, collection, or transformation method;
+- evidence appraisal and limitations;
+- rationale for its relation role.
 
-Long copyrighted passages should not be copied into the repository. Store a precise locator and a limited lawful excerpt or summary when appropriate.
+Long copyrighted material is not copied. Restricted and quantitative evidence follow [`14-evidence-data-and-restricted-source-policy.md`](14-evidence-data-and-restricted-source-policy.md).
 
 ## Claim record
 
 ```yaml
 ---
-id: claim:delayed-negative-feedback-can-oscillate
+contract: atlas-content/0.1
+id: claim:en:delayed-feedback-can-oscillate
+work: work:delayed-feedback-can-oscillate
 type: claim
-title: Delayed negative feedback can produce oscillation
+title: Delayed feedback can produce oscillation in a stated model
 status: draft
 revision: 1
-created: 2026-07-25
-updated: 2026-07-25
+created: 2026-07-26
+updated: 2026-07-26
 language: en
 claim:
-  kind: causal
-  statement: Under specified response delays and gain conditions, negative feedback can produce oscillatory behavior.
-  scope: Dynamic systems represented by the stated model assumptions.
-  confidence: plausible
+  kind: model-derived
+  statement: For the stated recurrence and parameter values, the state follows an oscillatory sequence.
+  scope:
+    model: model:en:delayed-correction-recurrence
+  confidence: strongly-supported
+  confidence_rationale: The sequence can be recalculated exactly for the stated values.
+model: model:en:delayed-correction-recurrence
 ---
 ```
 
-The body contains:
+The body records definitions, reasoning, limitations, alternatives, and relevant links. Material qualifiers remain inside the statement or structured scope.
 
-- definitions needed to interpret the statement;
-- reasoning;
-- confidence rationale;
-- limitations and alternative explanations;
-- links to relevant evidence, concepts, models, and competing claims.
-
-The statement must preserve qualifiers. A claim that contains several independently disputable assertions should be split.
+Claim kinds and argument blocks follow [`13-claim-scope-and-argument-policy.md`](13-claim-scope-and-argument-policy.md).
 
 ## Concept record
 
 ```yaml
 ---
-id: concept:feedback-loop
+contract: atlas-content/0.1
+id: concept:en:feedback-loop
+work: work:feedback-loop
 type: concept
 title: Feedback loop
 status: draft
 revision: 1
-created: 2026-07-25
-updated: 2026-07-25
+created: 2026-07-26
+updated: 2026-07-26
 language: en
 claims:
-  - claim:delayed-negative-feedback-can-oscillate
+  - claim:en:delayed-feedback-can-oscillate
 relations:
   - type: prerequisite-of
-    target: concept:dynamic-stability
+    target: concept:en:closed-loop-stability
 ---
 ```
 
@@ -206,7 +234,7 @@ Recommended body sections:
 3. Why it matters
 4. Prerequisites
 5. Key claims
-6. Models and representations
+6. Models
 7. Examples and counterexamples
 8. Misconceptions
 9. Applications
@@ -214,150 +242,208 @@ Recommended body sections:
 11. Open questions
 12. Revision notes
 
-A concept organizes claims; it does not convert all prose into one untraceable assertion.
+A concept organizes claims; it does not turn a page of prose into one untraceable assertion.
 
 ## Model record
 
-A model record identifies:
+```yaml
+---
+contract: atlas-content/0.1
+id: model:en:delayed-correction-recurrence
+work: work:delayed-correction-recurrence
+type: model
+title: Delayed correction recurrence
+status: draft
+revision: 1
+created: 2026-07-26
+updated: 2026-07-26
+language: en
+purpose: Demonstrate how a delayed state enters a corrective recurrence.
+formal_structure: x[t+1] = x[t] - k*x[t-d]
+inputs:
+  - state history
+parameters:
+  - gain k
+  - delay d
+outputs:
+  - next state
+assumptions:
+  - scalar state
+  - discrete time
+  - fixed parameters
+validation:
+  - evidence:en:delayed-recurrence-sequence
+failure_modes:
+  - nonlinear response
+  - changing parameters
+  - saturation
+---
+```
 
-- purpose;
-- assumptions;
-- inputs and outputs;
-- formal or conceptual structure;
-- parameters and their sources;
-- validation evidence;
-- known failure modes;
-- claims derived from using the model.
-
-Executable files may accompany the model, but the Markdown record remains the explanation and provenance authority.
+Models expose purpose, assumptions, inputs, outputs, formal or conceptual structure, parameters, validation, and failure modes.
 
 ## Question record
 
-A question includes:
+```yaml
+---
+contract: atlas-content/0.1
+id: question:en:when-can-delayed-correction-oscillate
+work: work:when-can-delayed-correction-oscillate
+type: question
+title: When can delayed correction oscillate?
+status: draft
+revision: 1
+created: 2026-07-26
+updated: 2026-07-26
+language: en
+state: partially-answered
+resolution_criteria:
+  - formal conditions are stated
+  - real-system applicability is separated from model behavior
+---
+```
 
-- scope;
-- motivation;
-- current state;
-- related concepts, claims, evidence, and models;
-- blockers;
-- criteria for considering the question resolved within its scope.
+Questions record scope, motivation, state, blockers, related entities, and resolution criteria.
 
 ## Synthesis record
 
-A synthesis identifies:
+```yaml
+---
+contract: atlas-content/0.1
+id: synthesis:en:delayed-feedback-synthesis
+work: work:delayed-feedback-synthesis
+type: synthesis
+title: Delayed feedback and oscillation
+status: draft
+revision: 1
+created: 2026-07-26
+updated: 2026-07-26
+language: en
+question: question:en:when-can-delayed-correction-oscillate
+material_claims:
+  - claim:en:delayed-feedback-can-oscillate
+relations:
+  - type: derived-from
+    target: claim:en:delayed-feedback-can-oscillate
+---
+```
 
-- the question it addresses;
-- intended audience;
-- included and excluded scope;
-- material claims;
-- evidence selection method;
-- models used;
-- supporting and challenging material;
-- disagreements;
-- conclusion and confidence rationale;
-- unresolved questions;
-- revision trigger conditions.
+A synthesis records audience, scope, evidence-selection method, claims, models, disagreement, conclusion, confidence rationale, open questions, and revision triggers. It never replaces its dependencies.
 
-A synthesis is derived knowledge and must expose its dependencies.
+## Revision record
+
+Revision is represented by entity history plus explicit change metadata:
+
+```yaml
+revision_note:
+  previous_revision: 1
+  change_kind: scope-change
+  reason: New evidence showed the conclusion applies only to one assay protocol.
+  triggered_by:
+    - evidence:en:new-assay-comparison
+  downstream_review:
+    - synthesis:en:catalase-assay-synthesis
+```
+
+Supersession across durable IDs uses the governed relation vocabulary. Staleness and dependency behavior follow [`16-revision-impact-and-staleness.md`](16-revision-impact-and-staleness.md).
+
+## Argument block
+
+Arguments remain embedded in `0.1`:
+
+```yaml
+argument:
+  mode: inductive
+  premises:
+    - claim:en:premise-one
+    - claim:en:premise-two
+  assumptions:
+    - claim:en:scope-matches
+  conclusion: claim:en:conclusion
+  alternatives:
+    - claim:en:alternative-explanation
+```
+
+Premises reference claims, not raw source URLs.
 
 ## Relation representation
-
-Relations use canonical IDs and an accepted vocabulary:
 
 ```yaml
 relations:
   - type: explains
-    target: concept:oscillation
-    note: Explains how repeated correction can create periodic behavior.
+    target: concept:en:oscillation
+    note: Identifies the stated mechanism under the model assumptions.
 ```
 
-Direction is semantic. For example:
+Relation direction and compatible pairs come only from [`10-relation-vocabulary.md`](10-relation-vocabulary.md). A prose link is not automatically a canonical relation.
 
-- evidence `supports` a claim;
-- one claim `contradicts` another claim;
-- one concept is `prerequisite-of` another concept;
-- a synthesis is `derived-from` material claims.
-
-A link in prose does not automatically create a canonical relation.
-
-## Body links
-
-Canonical links use stable IDs rather than relative filenames in authored semantics:
+## Canonical body links
 
 ```text
-See [[concept:feedback-loop]] and [[claim:delayed-negative-feedback-can-oscillate]].
+See [[concept:en:feedback-loop]] and [[claim:en:delayed-feedback-can-oscillate]].
 ```
 
-A renderer may later create human-friendly URLs.
-
-## Invalid fixture example
-
-Malformed content belongs in a dedicated invalid-fixture directory and must be clearly marked. It must never be presented beside valid authoring examples without a label.
-
-```yaml
-# INVALID: missing stable id and unsupported status
----
-type: claim
-title: An invalid fixture
-status: finished
-revision: 1
----
-```
-
-A validator should report each violated rule specifically rather than silently repairing the file.
+A renderer may create localized human-friendly URLs later.
 
 ## Deterministic compilation
 
 A compiler may:
 
-- validate front matter and controlled vocabularies;
-- resolve stable IDs;
-- build reverse links;
-- generate numeric internal IDs;
-- emit graph, database, search-index, and API artifacts;
-- produce review and provenance reports.
+- validate metadata and controlled vocabularies;
+- resolve IDs and build reverse links;
+- generate numeric runtime IDs;
+- emit graph, database, index, API, review, provenance, and staleness artifacts.
 
 A compiler must not:
 
-- invent missing evidence;
-- change claim meaning;
-- remove qualifiers;
+- invent evidence;
+- alter claim meaning or remove qualifiers;
 - promote review status;
-- discard unknown fields without error;
-- overwrite authoritative Markdown from a derived artifact;
-- assign canonical identity based only on file order.
+- infer normative values;
+- silently translate content;
+- ignore unknown fields;
+- overwrite authoritative Markdown from derived output;
+- assign durable identity from file order;
+- decide that a semantic revision is unaffected without a recorded rule or review.
 
 ## Validation levels
 
-### Structural validation
+### Structural
 
-Checks syntax, required fields, unique IDs, valid entity types, dates, and references.
+Syntax, contract version, common fields, identity, dates, references, and field types.
 
-### Semantic validation
+### Semantic
 
-Checks relation compatibility, direction, claim scope, evidence roles, lifecycle rules, and revision consistency.
+Entity compatibility, relation direction, claim kind, scope, evidence role, translation, lifecycle, revision, and staleness rules.
 
-### Editorial validation
+### Editorial
 
-Checks required sections, unresolved placeholders, citation completeness, confidence rationale, and review records.
+Claim atomicity, qualifier preservation, confidence rationale, citation completeness, required sections, and unresolved placeholders.
 
-### Reproducibility validation
+### Reproducibility
 
-Rebuilds derived artifacts from a clean checkout and compares deterministic output and provenance.
+Clean rebuild and deterministic comparison of derived artifacts, transformations, diagnostics, and provenance reports.
 
-## Compatibility principle
+## Invalid fixtures
 
-The authoring contract is versioned separately from any database or binary format. Migrations must preserve identity, meaning, provenance, review, and revision history. Storage optimization is never sufficient reason to weaken the authored contract.
+Invalid examples live in [`../../content/fixtures/invalid/README.md`](../../content/fixtures/invalid/README.md) with expected diagnostics. Validators report errors rather than silently repairing authored semantics.
 
-## Phase 0 fixtures
+## Compatibility
 
-Before implementation is approved, the contract must be tested with:
+Versioning and migration follow [`11-contract-versioning-and-migrations.md`](11-contract-versioning-and-migrations.md). A migration preserves identity, meaning, provenance, evidence roles, review, uncertainty, and revision history.
 
-- valid minimal records for every entity type;
-- a complete source-to-synthesis vertical slice;
-- contradictory claims from credible sources;
-- a model with assumptions and failure modes;
-- a revised and superseded claim;
-- multilingual metadata or content behavior;
-- malformed examples that validators must reject;
-- content whose generated order changes while canonical identity remains stable.
+## Phase 0 evidence
+
+The bundled reference slices in [`../../content/reference/`](../../content/reference/) exercise:
+
+- empirical and synthetic observation;
+- formal model-derived evidence;
+- observational and randomized platform evidence;
+- legal context;
+- descriptive, causal, methodological, interpretive, and normative claims;
+- argument blocks;
+- uncertainty and scope;
+- source conflict disclosure;
+- revision triggers.
+
+They remain draft until split, validated, and independently reviewed.
