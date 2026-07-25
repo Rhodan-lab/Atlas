@@ -86,8 +86,11 @@ This is a map for exploration, not a fixed course with grades, scores, streaks, 
 7. [`docs/foundation/05-phase-gates.md`](docs/foundation/05-phase-gates.md)
 8. [`docs/foundation/06-current-prototype-audit.md`](docs/foundation/06-current-prototype-audit.md)
 9. [`docs/foundation/07-decision-register.md`](docs/foundation/07-decision-register.md)
+10. [`docs/foundation/08-reference-slice-plan.md`](docs/foundation/08-reference-slice-plan.md)
+11. [`docs/foundation/09-validation-matrix.md`](docs/foundation/09-validation-matrix.md)
+12. [`docs/foundation/10-relation-vocabulary.md`](docs/foundation/10-relation-vocabulary.md)
 
-Contributors and agents must also follow [`AGENTS.md`](AGENTS.md).
+Contributors and agents must also follow [`AGENTS.md`](AGENTS.md). Architecture proposals use [`docs/adr/0000-template.md`](docs/adr/0000-template.md).
 
 ## Current repository structure
 
