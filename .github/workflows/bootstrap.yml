@@ -1,3 +1,4 @@
+# Retriggered after all verified archive parts were uploaded.
 name: Bootstrap Atlas
 
 on:
