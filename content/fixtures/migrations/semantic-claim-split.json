@@ -1,0 +1,27 @@
+{
+  "mode": "semantic-split",
+  "from_contract": "atlas-content/0.1",
+  "to_contract": "atlas-content/0.2-fixture",
+  "inputs": [
+    "claim:en:ranking-changes-exposure-and-users-need-control"
+  ],
+  "outputs": [
+    "claim:en:ranking-can-change-exposure",
+    "claim:en:users-should-have-recommender-explanation-and-choice"
+  ],
+  "mappings": {
+    "claim:en:ranking-changes-exposure-and-users-need-control": [
+      "claim:en:ranking-can-change-exposure",
+      "claim:en:users-should-have-recommender-explanation-and-choice"
+    ]
+  },
+  "reason": "Split one compound empirical-and-normative statement into independently reviewable claims.",
+  "preservation_notes": [
+    "The empirical output requires evidence.",
+    "The normative output requires explicit values and ethical review.",
+    "The old identifier remains in the migration ledger and is not silently reused."
+  ],
+  "expected": {
+    "errors": []
+  }
+}
