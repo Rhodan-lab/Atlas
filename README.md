@@ -1,5 +1,7 @@
 # Atlas
 
+[![Atlas CI](https://github.com/Rhodan-lab/Atlas/actions/workflows/ci.yml/badge.svg)](https://github.com/Rhodan-lab/Atlas/actions/workflows/ci.yml)
+
 **Atlas is a local-first knowledge system that turns notes and source material into an inspectable knowledge graph.**
 
 It is intentionally polyglot. Each language is used where it provides a concrete technical advantage rather than to inflate the repository:
