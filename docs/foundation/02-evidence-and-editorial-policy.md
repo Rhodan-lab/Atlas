@@ -26,11 +26,11 @@ Rules:
 - all newly created modules begin as `draft`;
 - drafts must not be described as scientifically reviewed;
 - missing evidence and unresolved questions remain visible;
-- derived public views must clearly distinguish drafts.
+- derived views clearly distinguish drafts.
 
 ### `in-review`
 
-The item is undergoing editorial, domain, scientific, or methodological review.
+The item is undergoing one or more defined review types.
 
 Rules:
 
@@ -40,16 +40,16 @@ Rules:
 
 ### `reviewed`
 
-The item has passed the defined review for its type and scope.
+The item has passed the required review for its type, version, and scope.
 
-Reviewed means the item is adequately supported, scoped, and presented under the current policy. It does **not** mean permanently or universally true.
+Reviewed means adequately supported, scoped, and presented under the current policy. It does **not** mean permanently or universally true.
 
 Required:
 
 - review date;
-- review type;
+- review types;
 - reviewer or review authority;
-- version reviewed;
+- exact version reviewed;
 - evidence and limitations checked;
 - remaining uncertainty recorded.
 
@@ -60,19 +60,19 @@ Credible, materially different interpretations or findings remain unresolved.
 Rules:
 
 - competing claims and evidence remain visible;
-- the item must explain the source of disagreement;
-- contested status is not treated as a defect to hide;
-- a synthesis may still be possible if it states the dispute honestly.
+- the source of disagreement is explained;
+- contested status is not hidden as a defect;
+- a synthesis may still be reviewed if it represents the dispute honestly.
 
 ### `deprecated`
 
-The item should no longer be used as current guidance because it is obsolete, misleading, duplicated, or replaced.
+The item is no longer recommended as current because it is obsolete, misleading, duplicated, or replaced.
 
 Rules:
 
-- retain the item for provenance;
+- retain it for provenance;
 - link to the replacement when available;
-- record the reason and effective date;
+- record reason and effective date;
 - identify dependent items requiring review.
 
 ### `retracted`
@@ -81,38 +81,51 @@ The item contains a serious error or integrity problem and must not support curr
 
 Rules:
 
-- do not delete the historical record;
-- explain the reason without obscuring the original impact;
+- retain the historical record;
+- state the reason clearly;
 - propagate review flags to dependent claims and syntheses.
 
 ## Review types
 
 Review is not one universal action. Atlas distinguishes:
 
-- **structural review** — contract completeness, identifiers, links, and schema validity;
+- **structural review** — contract completeness, identifiers, links, and syntax;
 - **editorial review** — clarity, scope, terminology, and faithful summarization;
 - **source review** — citation identity, locator accuracy, and contextual use;
 - **domain review** — subject-matter accuracy and important omissions;
-- **methodological review** — design, measurement, statistical reasoning, and inference;
+- **methodological review** — design, measurement, statistics, and inference;
 - **reproducibility review** — calculations, transformations, or code can be repeated;
 - **ethical review** — risks, affected groups, consent, power, and responsible use where relevant.
 
-An item records which review types it has passed. One review type must not imply the others.
+An item records which review types it has passed. One review type does not imply the others.
 
-## Evidence roles
+## Epistemic relation roles
 
-Evidence-to-claim links use an explicit role:
+The governed relation vocabulary is defined in [`10-relation-vocabulary.md`](10-relation-vocabulary.md). Important editorial distinctions include:
 
-- `supports` — increases reason to accept the claim within a stated scope;
-- `challenges` — weakens or limits the claim;
-- `contradicts` — materially conflicts with the claim under comparable definitions and conditions;
-- `contextualizes` — adds background or interpretation without directly testing the claim;
-- `illustrates` — provides an example but is not sufficient support;
-- `motivates` — explains why the claim or question is worth investigating;
-- `replicates` — independently reproduces an important result;
-- `fails-to-replicate` — reports a relevant non-replication.
+### Evidence to claim
 
-Evidence roles are assertions that can themselves be reviewed and revised.
+- `supports` — increases reason to accept the target claim within a defined scope;
+- `challenges` — weakens, narrows, or raises a material problem for the target claim;
+- `contextualizes` — adds relevant background without directly testing the claim;
+- `replicates` — independently reproduces a material result;
+- `fails-to-replicate` — records a relevant non-replication.
+
+### Claim to claim
+
+- `challenges` — one claim weakens or limits another without being its direct opposite;
+- `contradicts` — two claims cannot both hold under comparable definitions, scope, and conditions;
+- `refines` — one claim makes another more precise while preserving a meaningful core.
+
+### Evidence or concept to concept
+
+- `illustrates` — provides an example useful for understanding but not sufficient proof.
+
+### Source, evidence, claim, or concept to question
+
+- `motivates` — explains why the question is worth investigating without answering it.
+
+These relations are authored judgments. Their direction, rationale, and compatibility can themselves be reviewed and revised.
 
 ## Source classification
 
@@ -136,7 +149,7 @@ Atlas must not infer truth solely from type, prestige, or citation count.
 
 ## Evidence appraisal
 
-Evidence appraisal is structured but not reduced to a single universal number. Relevant dimensions include:
+Evidence appraisal is structured but not reduced to one universal number. Relevant dimensions include:
 
 - directness to the claim;
 - methodological fit;
@@ -150,7 +163,7 @@ Evidence appraisal is structured but not reduced to a single universal number. R
 - applicability to the stated scope;
 - uncertainty and missing data.
 
-Each appraisal records a concise rationale. Numeric values may be used within a domain-specific model, but Atlas does not present one global “truth score.”
+Each appraisal records a concise rationale. Numeric measures may be used inside domain-specific models, but Atlas does not present one global truth score.
 
 ## Confidence language
 
@@ -161,13 +174,13 @@ Claims and syntheses may use qualitative confidence labels only with a written r
 - `well-supported`
 - `strongly-supported`
 
-These labels describe the current evidence state for a defined scope. They are not permanent properties of a claim.
+These labels describe the current evidence state for a defined scope. They are not permanent properties.
 
-Where the domain already has accepted statistical or formal uncertainty measures, preserve those measures rather than translating them into a vague label.
+Where a domain has accepted statistical, formal, or measurement uncertainty, preserve those measures rather than replacing them with a vague label.
 
 ## Claim requirements
 
-A reviewed empirical claim should include:
+A reviewed empirical claim includes:
 
 - statement;
 - claim kind;
@@ -176,12 +189,12 @@ A reviewed empirical claim should include:
 - supporting and challenging evidence;
 - confidence rationale;
 - limitations;
-- review status and review record;
+- review record;
 - revision history.
 
-A normative claim must additionally identify the value assumptions or ethical principles involved. It must not be presented as if empirical evidence alone logically determines the conclusion.
+A normative claim additionally identifies the values or ethical principles involved. Empirical evidence may inform a recommendation but cannot alone logically determine what ought to be done.
 
-A prediction must state its time horizon, conditions, model or reasoning basis, and evaluation criterion.
+A prediction states its time horizon, conditions, model or reasoning basis, and evaluation criterion.
 
 ## Contradiction handling
 
@@ -191,10 +204,10 @@ When credible conflict appears:
 
 1. confirm that terms, populations, timeframes, and methods are comparable;
 2. preserve each claim and its evidence;
-3. record the contradiction or challenge relation;
+3. record the appropriate `contradicts` or `challenges` relation;
 4. identify possible reasons for divergence;
 5. mark affected syntheses for review;
-6. update the synthesis only after the disagreement is represented honestly.
+6. update synthesis only after the disagreement is represented honestly.
 
 ## Revision and dependency impact
 
@@ -218,9 +231,9 @@ Requirements:
 - generated material begins as `draft`;
 - the model and prompt or procedure are recorded when practical;
 - source locators are independently checked;
-- AI output cannot create a reviewed status;
-- generated claims must not cite the AI as evidence when the underlying source is available;
-- uncertainty and disagreement must not be silently normalized away.
+- AI output cannot create reviewed status;
+- generated claims do not cite the AI as evidence when the underlying source is available;
+- uncertainty and disagreement are not silently normalized away.
 
 ## Minimum review gate for publication
 
