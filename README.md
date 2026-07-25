@@ -1,10 +1,11 @@
 # Atlas
 
 [![Atlas CI](https://github.com/Rhodan-lab/Atlas/actions/workflows/ci.yml/badge.svg)](https://github.com/Rhodan-lab/Atlas/actions/workflows/ci.yml)
+[![Foundation Contract](https://github.com/Rhodan-lab/Atlas/actions/workflows/foundation.yml/badge.svg)](https://github.com/Rhodan-lab/Atlas/actions/workflows/foundation.yml)
 
-> **Current status: Phase 0 — Knowledge Foundation, verification-ready mature draft**
+> **Current status: Phase 0 — Knowledge Foundation, closure candidate for `atlas-content/0.1`**
 >
-> Product feature development remains frozen. The current work is canonical fixture splitting, independent review, multilingual and migration testing, and selection of the smallest Phase 1 validator.
+> The versioned foundation and executable fixtures are mechanically complete. Final acceptance requires green PR #3 checks and maintainer merge. Canonical example content remains `draft` pending revision-specific expert review in Phase 1.
 
 ## What Atlas is
 
@@ -12,141 +13,159 @@ Atlas is a local-first knowledge environment for an independent learner, researc
 
 - what a claim states and where it applies;
 - what evidence supports, challenges, or contextualizes it;
-- which model or assumptions produce a conclusion;
-- how certain, limited, contested, or stale an item is;
-- how concepts and questions connect across domains;
-- how a synthesis can be traced back to original sources;
+- which model, assumptions, argument, or values lead to a conclusion;
+- how certain, limited, contested, translated, or stale an item is;
+- how a synthesis traces back to original sources;
 - why knowledge changed through revision.
 
 Atlas is not merely a notes app, graph visualization, textbook, course platform, or chatbot.
-
-## Why the project is still in Phase 0
-
-The repository contains an experimental C++, Rust, Python, TypeScript, SQL, and browser prototype. It proves several engineering ideas are possible, but it was created before the knowledge model and review governance were mature.
-
-The prototype is preserved for testing and comparison. It does not own the ontology, dictate the final languages, or count as a completed product foundation.
 
 ## Authority order
 
 1. [`PROJECT_STATE.md`](PROJECT_STATE.md)
 2. [`docs/foundation/`](docs/foundation/)
-3. accepted architecture decision records
+3. accepted ADRs
 4. reviewed canonical content and fixtures
 5. implementation code and generated artifacts
 
-When code conflicts with the foundation, code is provisional.
+When code conflicts with the accepted foundation, the code is provisional.
 
-## Canonical knowledge units
+## Phase 0 foundation
 
-Atlas currently distinguishes:
+The foundation now defines:
 
-- **Source** — identifiable origin of information
-- **Evidence** — the relevant passage, observation, measurement, data subset, or derived result
-- **Claim** — one evaluable and qualified statement
-- **Concept** — an explanatory structure organizing meaning and claims
-- **Relation** — a governed typed and directed connection
-- **Model** — a representation used to explain, calculate, simulate, classify, or predict
-- **Question** — an explicit knowledge need or unresolved problem
-- **Synthesis** — a scoped integration of claims, evidence, models, disagreement, and values
-- **Revision** — a traceable change and its downstream consequences
+- versioned `atlas-content/0.1` authored Markdown;
+- source, evidence, claim, concept, relation, model, question, synthesis, and revision semantics;
+- stable language-specific `id` and shared language-neutral `work` identity;
+- claim-level provenance, scope, confidence rationale, and explicit normative values;
+- controlled relation vocabulary, direction, and entity compatibility;
+- source access, copyright, private evidence, measurement, unit, and transformation lineage;
+- review roles, reviewer conflicts, disagreement, lifecycle, dependency impact, and staleness;
+- translation lineage and independent translation review;
+- mechanical and semantic migration rules;
+- architecture policy preventing premature polyglot expansion;
+- deterministic invalid-fixture diagnostics.
 
-Arguments are structured blocks in `atlas-content/0.1`, not independent entities unless later fixtures prove that independent identity is necessary.
+Arguments remain structured blocks in `0.1`; they do not become independent entities until fixtures demonstrate that independent identity and lifecycle are necessary.
 
-## Contract and governance now defined
+## Executable reference corpus
 
-The mature draft includes:
+### Canonical English entities
 
-- `atlas-content/0.1` authored Markdown contract;
-- multilingual `id` and shared language-neutral `work` identities;
-- claim-level provenance and scoped confidence rationale;
-- controlled relation vocabulary and entity compatibility;
-- evidence access, copyright, private-source, unit, dataset, and transformation-lineage rules;
-- structural, editorial, source, domain, methodological, reproducibility, ethics, and translation review;
-- reviewer conflict and disagreement handling;
-- contract migration and rollback invariants;
-- dependency impact and staleness propagation;
-- invalid fixtures with deterministic expected diagnostics;
-- architecture policy preventing premature polyglot expansion.
+`content/canonical/` contains **34 entity files** across three complete vertical slices:
 
-## Reference corpus
+1. **Catalase and assay conditions** — empirical evidence, measurement proxies, assay scope, and methodological limitations.
+2. **Delayed feedback and oscillation** — formal model, reproducible derived evidence, assumptions, and model-to-world limits.
+3. **Recommendation systems and user choice** — observational and randomized evidence, legal context, conflicts, and explicit normative reasoning.
 
-Three bundled draft slices now test the ontology:
+Each slice supports:
 
-1. [`Catalase and assay conditions`](content/reference/slice-a-catalase.md) — empirical evidence, synthetic observation, measurement proxies, and biological scope.
-2. [`Delayed feedback and oscillation`](content/reference/slice-b-feedback.md) — formal model, exact derived evidence, assumptions, and analogy limits.
-3. [`Recommendation systems, exposure, and user choice`](content/reference/slice-c-recommenders.md) — observational and randomized evidence, legal context, conflicts, and normative reasoning.
+```text
+question → source → evidence → claim → concept/model → synthesis → revision trigger
+```
 
-The corpus index is [`content/reference/README.md`](content/reference/README.md). Invalid contract examples are in [`content/fixtures/invalid/README.md`](content/fixtures/invalid/README.md).
+### Indonesian translation path
 
-All reference material remains `draft`. It is ontology evidence, not reviewed educational content.
+`content/translations/id/feedback/` contains **8 translated entities** forming a complete delayed-feedback path. Every translation has:
 
-## Foundation reading path
+- a language-specific canonical ID;
+- shared `work` identity with the English entity;
+- source entity and revision lineage;
+- its own lifecycle and staleness;
+- no inherited reviewed status.
 
-Start with:
+### Boundary fixtures
+
+`content/fixtures/` contains:
+
+- 24 invalid diagnostic scenarios;
+- mechanical and semantic migration cases;
+- alias, rename, collision, and federation behavior;
+- stale-translation behavior.
+
+## Foundation validator
+
+ADR-0001 selects a small Python 3.11+ validator solely for Phase 0 conformance. It does not judge truth, rewrite content, assign confidence, or promote review status.
+
+```bash
+python -m pip install -r tools/foundation-validator/requirements.txt
+python -m unittest discover -s tools/foundation-validator/tests -v
+python tools/foundation-validator/atlas_foundation_validator.py validate \
+  content/canonical content/translations
+```
+
+Validated matrix:
+
+- Python 3.11: passed;
+- Python 3.13: passed;
+- 30 tests: passed;
+- canonical and translated corpus: 0 errors, 0 warnings;
+- migration, identity, and stale-translation fixtures: passed.
+
+See [`docs/reviews/phase-0-structural-validation.md`](docs/reviews/phase-0-structural-validation.md).
+
+## Foundation acceptance versus content review
+
+Phase 0 accepts the **contract, governance, and executable fixture architecture**.
+
+It does not claim that every example is independently reviewed knowledge. All example entities remain `draft`. Phase 1 performs revision-specific biochemical, methodological, control-systems, recommender, legal-context, ethical, editorial, and translation review.
+
+Review status is tracked in [`docs/reviews/phase-0-review-register.md`](docs/reviews/phase-0-review-register.md).
+
+## Reading path
 
 1. [`PROJECT_STATE.md`](PROJECT_STATE.md)
 2. [`docs/foundation/README.md`](docs/foundation/README.md)
 3. [`docs/foundation/00-charter.md`](docs/foundation/00-charter.md)
 4. [`docs/foundation/01-knowledge-model.md`](docs/foundation/01-knowledge-model.md)
 5. [`docs/foundation/03-content-contract.md`](docs/foundation/03-content-contract.md)
-6. [`docs/foundation/07-decision-register.md`](docs/foundation/07-decision-register.md)
-7. [`docs/foundation/17-phase-0-maturity-assessment.md`](docs/foundation/17-phase-0-maturity-assessment.md)
+6. [`docs/foundation/05-phase-gates.md`](docs/foundation/05-phase-gates.md)
+7. [`docs/foundation/07-decision-register.md`](docs/foundation/07-decision-register.md)
+8. [`docs/foundation/18-phase-0-closure-report.md`](docs/foundation/18-phase-0-closure-report.md)
 
 Contributors and agents must follow [`AGENTS.md`](AGENTS.md) and [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
-## Current repository map
+## Repository map
 
 ```text
 Atlas/
 ├── PROJECT_STATE.md
-├── AGENTS.md
-├── docs/foundation/       # authoritative Phase 0 semantics and governance
-├── docs/adr/              # architecture decision process
-├── content/reference/     # bundled draft vertical slices
-├── content/fixtures/      # valid/invalid contract evidence
-├── engine/cpp/            # experimental prototype
-├── services/search-rs/    # experimental prototype
-├── tools/ingest-py/       # experimental prototype
-├── apps/api-ts/           # experimental prototype
-├── contracts/             # provisional derived-format work
-├── storage/               # provisional persistence work
-└── scripts/               # prototype checks
+├── docs/foundation/            # authoritative knowledge and governance foundation
+├── docs/adr/                   # accepted and proposed architecture decisions
+├── docs/reviews/               # explicit machine, internal, and pending review records
+├── content/canonical/          # split canonical English fixtures
+├── content/translations/       # first-class multilingual fixtures
+├── content/fixtures/           # invalid, migration, identity, and staleness tests
+├── tools/foundation-validator/ # bounded Phase 0 reference validator
+├── engine/cpp/                 # experimental prototype
+├── services/search-rs/         # experimental prototype
+├── tools/ingest-py/            # experimental prototype
+├── apps/api-ts/                # experimental prototype
+├── contracts/                  # provisional derived-format work
+└── storage/                    # provisional persistence work
 ```
 
-## What is allowed now
-
-- split bundled slices into canonical entity files;
-- verify sources and locators;
-- record independent review findings;
-- add Indonesian translation and stale-translation fixtures;
-- add migration, identity, and dependency-impact fixtures;
-- compare validator implementation options through an ADR;
-- fix prototype defects needed for inspection.
-
-## What remains frozen
+## Work remains frozen during closure
 
 - product UI expansion;
-- additional services or languages;
-- plugin and synchronization systems;
+- new services or programming languages;
+- specialized retrieval architecture;
+- plugins and synchronization;
 - AI-generated authoritative content;
-- promotion of `.atlas`, SQL, or runtime structures as canonical;
+- promotion of `.atlas`, SQL, or prototype runtime structures as canonical;
 - optimization without accepted requirements and measurements.
 
-## Phase 0 completion condition
+## Closure report
 
-Phase 0 is not complete until canonical fixtures are split, reviewed, migrated, translated, and validated; no critical or major review issue remains; and the smallest Phase 1 validator is selected through an accepted ADR.
+[`docs/foundation/18-phase-0-closure-report.md`](docs/foundation/18-phase-0-closure-report.md) recommends accepting the Phase 0 foundation after final green checks and merge of PR #3.
 
-See [`docs/foundation/17-phase-0-maturity-assessment.md`](docs/foundation/17-phase-0-maturity-assessment.md) for the current gate assessment.
-
-## Prototype validation
-
-The experimental prototype remains available for comparison:
+The experimental prototype remains available for regression comparison:
 
 ```bash
 ./scripts/check.sh
 ```
 
-Passing prototype tests means the experiment is internally consistent. It does not certify the knowledge foundation or reference content.
+Passing prototype tests confirms only tested implementation behavior. It does not grant authority to content or architecture.
 
 ## License
 
