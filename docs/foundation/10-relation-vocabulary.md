@@ -8,10 +8,11 @@ Provisional controlled vocabulary for Phase 0. Each relation has one direction a
 
 - The subject is the entity containing the relation.
 - The `target` is the object of the relation.
-- Direction is never inferred from English grammar alone; it is defined here.
+- Direction is defined here and is not inferred from wording alone.
 - Inverse relations may be generated for navigation but are not independently authored unless listed.
 - Symmetric relations are explicitly marked.
 - A relation does not replace explanatory prose or evidence appraisal.
+- Initial pairs use only canonical entity types: source, evidence, claim, concept, model, question, synthesis, and revisioned versions of those entities.
 
 ## Structural relations
 
@@ -19,7 +20,7 @@ Provisional controlled vocabulary for Phase 0. Each relation has one direction a
 
 **Meaning:** the subject is a constituent or bounded component of the target.
 
-**Initial pairs:** concept → concept; model component → model.
+**Initial pairs:** concept → concept; model → model.
 
 **Counterexample:** a topic merely discussed near another topic.
 
@@ -29,7 +30,7 @@ Provisional controlled vocabulary for Phase 0. Each relation has one direction a
 
 **Initial pairs:** concept → concept; model → concept.
 
-**Counterexample:** two similar concepts.
+**Counterexample:** two concepts that are only similar.
 
 ### `prerequisite-of`
 
@@ -63,7 +64,7 @@ Provisional controlled vocabulary for Phase 0. Each relation has one direction a
 
 **Symmetry:** semantically symmetric; one authored edge may generate the reverse view.
 
-**Required check:** confirm that apparent conflict is not caused only by different scope, terminology, timeframe, or method.
+**Required check:** confirm the apparent conflict is not caused only by different scope, terminology, timeframe, or method.
 
 ### `contextualizes`
 
@@ -76,6 +77,12 @@ Provisional controlled vocabulary for Phase 0. Each relation has one direction a
 **Meaning:** the subject is an example that makes the target easier to understand but is not sufficient evidence for it.
 
 **Initial pairs:** evidence → concept; concept → concept.
+
+### `motivates`
+
+**Meaning:** the subject explains why the target question is worth investigating, without by itself answering the question.
+
+**Initial pairs:** source → question; evidence → question; claim → question; concept → question.
 
 ### `replicates`
 
@@ -95,7 +102,7 @@ Provisional controlled vocabulary for Phase 0. Each relation has one direction a
 
 **Meaning:** the subject provides a mechanism, account, or framework that makes the target intelligible.
 
-**Initial pairs:** concept → concept; model → claim; model → concept; claim → phenomenon concept.
+**Initial pairs:** concept → concept; model → claim; model → concept; claim → concept.
 
 **Counterexample:** simple correlation or chronological order.
 
@@ -103,7 +110,7 @@ Provisional controlled vocabulary for Phase 0. Each relation has one direction a
 
 **Meaning:** the subject was produced through a stated transformation, inference, calculation, or integration using the target.
 
-**Initial pairs:** claim → model; synthesis → claim; evidence → dataset source; model output evidence → model.
+**Initial pairs:** claim → model; synthesis → claim; evidence → source; evidence → model.
 
 **Required note:** derivation method or transformation reference.
 
@@ -111,13 +118,13 @@ Provisional controlled vocabulary for Phase 0. Each relation has one direction a
 
 **Meaning:** the subject makes the target more precise, scoped, or detailed while preserving a meaningful core.
 
-**Initial pairs:** claim → claim; concept → concept; model → model.
+**Initial pairs:** claim → claim; concept → concept; model → model; question → question; synthesis → synthesis.
 
 ### `supersedes`
 
 **Meaning:** the subject replaces the target as the current item for the stated purpose while preserving the target for history.
 
-**Initial pairs:** revisioned entity → same entity type.
+**Initial pairs:** source → source; evidence → evidence; claim → claim; concept → concept; model → model; question → question; synthesis → synthesis.
 
 **Required note:** reason and effective revision.
 
@@ -127,7 +134,7 @@ Provisional controlled vocabulary for Phase 0. Each relation has one direction a
 
 **Meaning:** the subject contributes causally to the target under stated conditions and supported reasoning.
 
-**Initial pairs:** concept → concept; claim → claim; model variable concept → outcome concept.
+**Initial pairs:** concept → concept; claim → claim.
 
 **Required caution:** this relation requires stronger justification than temporal order or association.
 
@@ -135,15 +142,15 @@ Provisional controlled vocabulary for Phase 0. Each relation has one direction a
 
 **Meaning:** the subject and target vary together under a stated measurement and scope without asserting causation.
 
-**Initial pairs:** concept ↔ concept; measured variable concept ↔ measured variable concept.
+**Initial pairs:** concept ↔ concept; claim ↔ claim.
 
 **Symmetry:** semantically symmetric.
 
 ### `measured-by`
 
-**Meaning:** the subject is operationalized or observed using the target measure, instrument, or method.
+**Meaning:** the subject is operationalized, estimated, or observed using the target model or measurement representation.
 
-**Initial pairs:** concept → model; concept → evidence method concept; claim → model.
+**Initial pairs:** concept → model; claim → model.
 
 ### `applies-to`
 
@@ -184,9 +191,11 @@ A validator should reject:
 - self-relations unless explicitly permitted;
 - duplicate authored edges with the same semantic key;
 - missing notes for relations that require rationale;
-- contradictory directions such as a claim `supports` evidence;
-- `causes` used where the rationale establishes only correlation;
-- `analogous-to` treated as supporting evidence.
+- reversed directions such as a claim `supports` evidence;
+- `causes` where the rationale establishes only correlation;
+- `analogous-to` used as supporting evidence;
+- `illustrates` treated as sufficient support;
+- `motivates` treated as an answer to a question.
 
 ## Vocabulary revision procedure
 
