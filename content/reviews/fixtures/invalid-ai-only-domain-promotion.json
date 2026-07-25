@@ -1,0 +1,79 @@
+{
+  "contract": "atlas-promotion/0.1",
+  "entity": {
+    "id": "concept:en:fixture",
+    "revision": 1,
+    "type": "concept",
+    "status": "in-review",
+    "staleness": "current"
+  },
+  "requested_status": "reviewed",
+  "reviews": [
+    {
+      "contract": "atlas-review/0.1",
+      "id": "review:structural:fixture-r1:2026-07-26",
+      "entity": {"id": "concept:en:fixture", "revision": 1},
+      "review_type": "structural",
+      "reviewer": {
+        "display_name": "Fixture validator",
+        "kind": "machine",
+        "independence": "not-applicable",
+        "qualification": "structural validation",
+        "accountable": false,
+        "conflicts": []
+      },
+      "completed_at": "2026-07-26",
+      "review_horizon": null,
+      "outcome": "pass",
+      "findings": [],
+      "summary": "Structural conformance passed.",
+      "permits_promotion": false
+    },
+    {
+      "contract": "atlas-review/0.1",
+      "id": "review:editorial:fixture-r1:2026-07-26",
+      "entity": {"id": "concept:en:fixture", "revision": 1},
+      "review_type": "editorial",
+      "reviewer": {
+        "display_name": "Internal editor",
+        "kind": "human",
+        "independence": "internal",
+        "qualification": "editorial review",
+        "accountable": true,
+        "conflicts": []
+      },
+      "completed_at": "2026-07-26",
+      "review_horizon": null,
+      "outcome": "pass",
+      "findings": [],
+      "summary": "Editorial review passed.",
+      "permits_promotion": true
+    },
+    {
+      "contract": "atlas-review/0.1",
+      "id": "review:domain:fixture-r1:2026-07-26",
+      "entity": {"id": "concept:en:fixture", "revision": 1},
+      "review_type": "domain",
+      "reviewer": {
+        "display_name": "AI domain assistant",
+        "kind": "ai-assisted",
+        "independence": "internal",
+        "qualification": "AI-assisted domain scan",
+        "accountable": false,
+        "conflicts": []
+      },
+      "completed_at": "2026-07-26",
+      "review_horizon": null,
+      "outcome": "pass",
+      "findings": [],
+      "summary": "AI-assisted scan found no issue.",
+      "permits_promotion": false
+    }
+  ],
+  "decision_at": "2026-07-26",
+  "accepted_by": {
+    "display_name": "Fixture maintainer",
+    "kind": "human",
+    "accountable": true
+  }
+}
