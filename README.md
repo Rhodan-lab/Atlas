@@ -2,10 +2,11 @@
 
 [![Atlas CI](https://github.com/Rhodan-lab/Atlas/actions/workflows/ci.yml/badge.svg)](https://github.com/Rhodan-lab/Atlas/actions/workflows/ci.yml)
 [![Foundation Contract](https://github.com/Rhodan-lab/Atlas/actions/workflows/foundation.yml/badge.svg)](https://github.com/Rhodan-lab/Atlas/actions/workflows/foundation.yml)
+[![Phase 1 Review Gate](https://github.com/Rhodan-lab/Atlas/actions/workflows/phase1-review.yml/badge.svg)](https://github.com/Rhodan-lab/Atlas/actions/workflows/phase1-review.yml)
 
-> **Current status: Phase 0 — Knowledge Foundation, closure candidate for `atlas-content/0.1`**
+> **Current status: Phase 1 — Reference Corpus and Review Gate**
 >
-> The versioned foundation and executable fixtures are mechanically complete. Final acceptance requires green PR #3 checks and maintainer merge. Canonical example content remains `draft` pending revision-specific expert review in Phase 1.
+> Phase 0 was accepted through merged PR #3. The active work is exact-revision review, reviewer-ready packets, deterministic promotion gating, and lifecycle integrity. Product feature expansion remains frozen.
 
 ## What Atlas is
 
@@ -14,8 +15,9 @@ Atlas is a local-first knowledge environment for an independent learner, researc
 - what a claim states and where it applies;
 - what evidence supports, challenges, or contextualizes it;
 - which model, assumptions, argument, or values lead to a conclusion;
-- how certain, limited, contested, translated, or stale an item is;
+- how certain, limited, contested, translated, stale, deprecated, or retracted an item is;
 - how a synthesis traces back to original sources;
+- what was reviewed, by whom, for which revision, and with which unresolved findings;
 - why knowledge changed through revision.
 
 Atlas is not merely a notes app, graph visualization, textbook, course platform, or chatbot.
@@ -23,18 +25,18 @@ Atlas is not merely a notes app, graph visualization, textbook, course platform,
 ## Authority order
 
 1. [`PROJECT_STATE.md`](PROJECT_STATE.md)
-2. [`docs/foundation/`](docs/foundation/)
+2. accepted foundation documents in [`docs/foundation/`](docs/foundation/)
 3. accepted ADRs
-4. reviewed canonical content and fixtures
-5. implementation code and generated artifacts
+4. canonical authored content and revision-specific review records
+5. generated reports and indexes
+6. experimental implementation code
 
-When code conflicts with the accepted foundation, the code is provisional.
+Machine validation can establish conformance. It cannot establish scientific truth, legal correctness, ethical acceptability, or translation equivalence.
 
-## Phase 0 foundation
+## Accepted Phase 0 foundation
 
-The foundation now defines:
+The accepted `atlas-content/0.1` foundation defines:
 
-- versioned `atlas-content/0.1` authored Markdown;
 - source, evidence, claim, concept, relation, model, question, synthesis, and revision semantics;
 - stable language-specific `id` and shared language-neutral `work` identity;
 - claim-level provenance, scope, confidence rationale, and explicit normative values;
@@ -46,7 +48,7 @@ The foundation now defines:
 - architecture policy preventing premature polyglot expansion;
 - deterministic invalid-fixture diagnostics.
 
-Arguments remain structured blocks in `0.1`; they do not become independent entities until fixtures demonstrate that independent identity and lifecycle are necessary.
+Arguments remain structured blocks in `0.1`; they do not become independent entities until fixtures demonstrate that separate identity and lifecycle are necessary.
 
 ## Executable reference corpus
 
@@ -74,7 +76,7 @@ question → source → evidence → claim → concept/model → synthesis → r
 - its own lifecycle and staleness;
 - no inherited reviewed status.
 
-### Boundary fixtures
+### Foundation boundary fixtures
 
 `content/fixtures/` contains:
 
@@ -83,45 +85,84 @@ question → source → evidence → claim → concept/model → synthesis → r
 - alias, rename, collision, and federation behavior;
 - stale-translation behavior.
 
-## Foundation validator
+## Phase 1 review system
 
-ADR-0001 selects a small Python 3.11+ validator solely for Phase 0 conformance. It does not judge truth, rewrite content, assign confidence, or promote review status.
+Phase 1 adds `atlas-review/0.1` and `atlas-promotion/0.1` governance.
+
+The review system records:
+
+- exact entity ID and revision;
+- review type;
+- reviewer kind, independence, qualification, accountability, and conflicts;
+- outcome and review horizon;
+- findings with severity and resolution status;
+- whether the bounded review recommends promotion.
+
+The promotion gate independently evaluates coverage and authority. It blocks:
+
+- AI-only or machine-only authority where accountable human review is required;
+- wrong-revision reviews;
+- stale translations;
+- expired time-sensitive reviews;
+- unresolved critical or major findings;
+- hidden conflicts;
+- incomplete contested, deprecated, or retracted transitions.
+
+Review records are in `content/reviews/records/`. Lifecycle and promotion fixtures are in `content/reviews/fixtures/`.
+
+## Reviewer packets
+
+Reviewer-ready scopes are in [`docs/phase-1/packets/`](docs/phase-1/packets/):
+
+- catalase and assay methodology;
+- delayed-feedback mathematics and terminology;
+- recommender evidence, DSA context, and ethical governance;
+- English–Indonesian feedback translation equivalence.
+
+AI-assisted findings remain internal review preparation and cannot grant authority.
+
+## Validation
+
+Install the pinned dependency and run all tests:
 
 ```bash
 python -m pip install -r tools/foundation-validator/requirements.txt
 python -m unittest discover -s tools/foundation-validator/tests -v
+```
+
+Validate authored content:
+
+```bash
 python tools/foundation-validator/atlas_foundation_validator.py validate \
   content/canonical content/translations
 ```
 
-Validated matrix:
+Validate a review record:
 
-- Python 3.11: passed;
-- Python 3.13: passed;
-- 30 tests: passed;
-- canonical and translated corpus: 0 errors, 0 warnings;
-- migration, identity, and stale-translation fixtures: passed.
+```bash
+python tools/foundation-validator/phase1_review_gate.py validate-record \
+  content/reviews/records/feedback-domain-ai-assisted.json
+```
 
-See [`docs/reviews/phase-0-structural-validation.md`](docs/reviews/phase-0-structural-validation.md).
+Evaluate a promotion fixture and generate a report:
 
-## Foundation acceptance versus content review
+```bash
+python tools/foundation-validator/phase1_review_gate.py promotion \
+  content/reviews/fixtures/valid-normative-promotion.json \
+  --report phase1-report.md
+```
 
-Phase 0 accepts the **contract, governance, and executable fixture architecture**.
-
-It does not claim that every example is independently reviewed knowledge. All example entities remain `draft`. Phase 1 performs revision-specific biochemical, methodological, control-systems, recommender, legal-context, ethical, editorial, and translation review.
-
-Review status is tracked in [`docs/reviews/phase-0-review-register.md`](docs/reviews/phase-0-review-register.md).
+The command produces governance output only. It never edits lifecycle status automatically.
 
 ## Reading path
 
 1. [`PROJECT_STATE.md`](PROJECT_STATE.md)
 2. [`docs/foundation/README.md`](docs/foundation/README.md)
-3. [`docs/foundation/00-charter.md`](docs/foundation/00-charter.md)
-4. [`docs/foundation/01-knowledge-model.md`](docs/foundation/01-knowledge-model.md)
-5. [`docs/foundation/03-content-contract.md`](docs/foundation/03-content-contract.md)
-6. [`docs/foundation/05-phase-gates.md`](docs/foundation/05-phase-gates.md)
-7. [`docs/foundation/07-decision-register.md`](docs/foundation/07-decision-register.md)
-8. [`docs/foundation/18-phase-0-closure-report.md`](docs/foundation/18-phase-0-closure-report.md)
+3. [`docs/foundation/18-phase-0-closure-report.md`](docs/foundation/18-phase-0-closure-report.md)
+4. [`docs/phase-1/README.md`](docs/phase-1/README.md)
+5. [`docs/phase-1/review-protocol.md`](docs/phase-1/review-protocol.md)
+6. [`docs/phase-1/promotion-policy.md`](docs/phase-1/promotion-policy.md)
+7. [`docs/phase-1/packets/README.md`](docs/phase-1/packets/README.md)
 
 Contributors and agents must follow [`AGENTS.md`](AGENTS.md) and [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
@@ -130,13 +171,15 @@ Contributors and agents must follow [`AGENTS.md`](AGENTS.md) and [`CONTRIBUTING.
 ```text
 Atlas/
 ├── PROJECT_STATE.md
-├── docs/foundation/            # authoritative knowledge and governance foundation
+├── docs/foundation/            # accepted knowledge and governance foundation
+├── docs/phase-1/               # review protocol, promotion policy, and packets
 ├── docs/adr/                   # accepted and proposed architecture decisions
-├── docs/reviews/               # explicit machine, internal, and pending review records
+├── docs/reviews/               # Phase 0 validation and review records
 ├── content/canonical/          # split canonical English fixtures
 ├── content/translations/       # first-class multilingual fixtures
-├── content/fixtures/           # invalid, migration, identity, and staleness tests
-├── tools/foundation-validator/ # bounded Phase 0 reference validator
+├── content/fixtures/           # contract, migration, identity, and staleness tests
+├── content/reviews/            # Phase 1 review records and lifecycle fixtures
+├── tools/foundation-validator/ # bounded content and review validators
 ├── engine/cpp/                 # experimental prototype
 ├── services/search-rs/         # experimental prototype
 ├── tools/ingest-py/            # experimental prototype
@@ -145,7 +188,7 @@ Atlas/
 └── storage/                    # provisional persistence work
 ```
 
-## Work remains frozen during closure
+## Still frozen during Phase 1
 
 - product UI expansion;
 - new services or programming languages;
@@ -155,17 +198,11 @@ Atlas/
 - promotion of `.atlas`, SQL, or prototype runtime structures as canonical;
 - optimization without accepted requirements and measurements.
 
-## Closure report
+## Phase boundary
 
-[`docs/foundation/18-phase-0-closure-report.md`](docs/foundation/18-phase-0-closure-report.md) recommends accepting the Phase 0 foundation after final green checks and merge of PR #3.
+Phase 1 closes only when review records and promotion decisions are executable, lifecycle transitions preserve history, dishonest authority paths fail, reviewer packets are usable without code knowledge, and at least one complete vertical slice has sufficient revision-specific review coverage for its intended state.
 
-The experimental prototype remains available for regression comparison:
-
-```bash
-./scripts/check.sh
-```
-
-Passing prototype tests confirms only tested implementation behavior. It does not grant authority to content or architecture.
+Passing a validator confirms only the checks it performs. It never turns a draft into authoritative knowledge by itself.
 
 ## License
 

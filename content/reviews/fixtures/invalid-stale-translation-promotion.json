@@ -1,0 +1,25 @@
+{
+  "contract": "atlas-promotion/0.1",
+  "entity": {
+    "id": "claim:id:fixture",
+    "revision": 1,
+    "type": "claim",
+    "status": "in-review",
+    "staleness": "possibly-stale",
+    "claim_kind": "model-derived",
+    "translation_of": "claim:en:fixture",
+    "translation_source_revision": 1,
+    "source_current_revision": 2,
+    "material_flags": [
+      "fully-specified-reproducibility"
+    ]
+  },
+  "requested_status": "reviewed",
+  "reviews": [],
+  "decision_at": "2026-07-26",
+  "accepted_by": {
+    "display_name": "Fixture maintainer",
+    "kind": "human",
+    "accountable": true
+  }
+}

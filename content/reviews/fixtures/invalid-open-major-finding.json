@@ -1,0 +1,88 @@
+{
+  "contract": "atlas-promotion/0.1",
+  "entity": {
+    "id": "concept:en:open-major",
+    "revision": 1,
+    "type": "concept",
+    "status": "in-review",
+    "staleness": "current"
+  },
+  "requested_status": "reviewed",
+  "reviews": [
+    {
+      "contract": "atlas-review/0.1",
+      "id": "review:structural:open-major-r1:2026-07-26",
+      "entity": {"id": "concept:en:open-major", "revision": 1},
+      "review_type": "structural",
+      "reviewer": {
+        "display_name": "Fixture validator",
+        "kind": "machine",
+        "independence": "not-applicable",
+        "qualification": "structural validation",
+        "accountable": false,
+        "conflicts": []
+      },
+      "completed_at": "2026-07-26",
+      "review_horizon": null,
+      "outcome": "pass",
+      "findings": [],
+      "summary": "Structural validation passed.",
+      "permits_promotion": false
+    },
+    {
+      "contract": "atlas-review/0.1",
+      "id": "review:editorial:open-major-r1:2026-07-26",
+      "entity": {"id": "concept:en:open-major", "revision": 1},
+      "review_type": "editorial",
+      "reviewer": {
+        "display_name": "Internal editor",
+        "kind": "human",
+        "independence": "internal",
+        "qualification": "editorial review",
+        "accountable": true,
+        "conflicts": []
+      },
+      "completed_at": "2026-07-26",
+      "review_horizon": null,
+      "outcome": "pass",
+      "findings": [],
+      "summary": "Editorial review passed.",
+      "permits_promotion": true
+    },
+    {
+      "contract": "atlas-review/0.1",
+      "id": "review:domain:open-major-r1:2026-07-26",
+      "entity": {"id": "concept:en:open-major", "revision": 1},
+      "review_type": "domain",
+      "reviewer": {
+        "display_name": "Independent domain reviewer",
+        "kind": "human",
+        "independence": "independent",
+        "qualification": "relevant domain",
+        "accountable": true,
+        "conflicts": []
+      },
+      "completed_at": "2026-07-26",
+      "review_horizon": null,
+      "outcome": "changes-required",
+      "findings": [
+        {
+          "id": "finding:fixture:scope",
+          "severity": "major",
+          "status": "open",
+          "summary": "The concept scope exceeds the available evidence.",
+          "rationale": "The current definition generalizes beyond the reviewed domain.",
+          "suggested_action": "Narrow the definition before promotion."
+        }
+      ],
+      "summary": "A material scope defect remains unresolved.",
+      "permits_promotion": false
+    }
+  ],
+  "decision_at": "2026-07-26",
+  "accepted_by": {
+    "display_name": "Fixture maintainer",
+    "kind": "human",
+    "accountable": true
+  }
+}

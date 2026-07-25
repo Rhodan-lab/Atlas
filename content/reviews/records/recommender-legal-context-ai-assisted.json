@@ -1,0 +1,55 @@
+{
+  "contract": "atlas-review/0.1",
+  "id": "review:legal-context:eu-recommender-r1:2026-07-26",
+  "entity": {
+    "id": "claim:en:transparency-and-nonprofiling-are-eu-governance-responses",
+    "revision": 1
+  },
+  "review_type": "legal-context",
+  "reviewer": {
+    "display_name": "GPT-5.6 Thinking internal review",
+    "kind": "ai-assisted",
+    "independence": "internal",
+    "qualification": "AI-assisted legal-context and recency scan",
+    "accountable": false,
+    "conflicts": [
+      "not a lawyer",
+      "generated within the project workflow"
+    ]
+  },
+  "completed_at": "2026-07-26",
+  "review_horizon": "2026-10-26",
+  "outcome": "changes-required",
+  "findings": [
+    {
+      "id": "finding:recommender:legal-review-required",
+      "severity": "major",
+      "status": "open",
+      "summary": "The Article 27 and 38 description requires accountable legal-context review before promotion.",
+      "rationale": "The official text supports the descriptive claim, but applicability, guidance, enforcement, and authoritative interpretation can change and require qualified review.",
+      "affected_fields": [
+        "claim.statement",
+        "claim.scope",
+        "review_horizon"
+      ],
+      "suggested_action": "Obtain a qualified legal-context review against the official consolidated text and current guidance."
+    },
+    {
+      "id": "finding:recommender:enforcement-context",
+      "severity": "minor",
+      "status": "open",
+      "summary": "Recent DSA enforcement activity shows that recommender governance also operates through systemic-risk and design obligations beyond Articles 27 and 38.",
+      "rationale": "The canonical claim is correctly limited to Articles 27 and 38, but reviewers should avoid treating those provisions as the complete DSA recommender-governance framework.",
+      "affected_fields": [
+        "limitations"
+      ],
+      "suggested_action": "Keep the current claim narrow and add enforcement context only in a separately sourced revision or synthesis."
+    }
+  ],
+  "summary": "The legal-descriptive wording is appropriately narrow, but promotion remains blocked pending qualified legal review and current applicability checks.",
+  "permits_promotion": false,
+  "metadata": {
+    "model": "openai/gpt-5.6",
+    "procedure": "official-text and current-enforcement challenge scan"
+  }
+}

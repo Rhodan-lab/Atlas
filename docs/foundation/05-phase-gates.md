@@ -8,7 +8,9 @@ A buildable component is not automatically a mature knowledge system. A machine-
 
 ## Phase 0 — Knowledge foundation
 
-**Status: closure candidate for `atlas-content/0.1`**
+**Status: accepted for `atlas-content/0.1`**
+
+Accepted through merged PR #3 at commit `34afe253fc8c9cefb61adfe2831f6da82aa07e16`.
 
 ### Purpose
 
@@ -67,50 +69,86 @@ The slices must be individually traceable and mechanically valid. They are ontol
 - a closure report recommends entry into Phase 1;
 - no unresolved critical or major **foundation-definition** issue blocks the reference-review phase.
 
+All Phase 0 exit criteria passed for the accepted contract version. Passing them did not promote the reference content beyond `draft`.
+
 ### Acceptance boundary
 
 Phase 0 acceptance stabilizes the knowledge contract and executable fixture architecture.
 
 It does not promote fixture content from `draft`. Independent domain, methodological, ethical, legal-context, and translation review belong to Phase 1 and remain revision-specific.
 
-### Forbidden expansion
+### Reopening rule
 
-No product UI expansion, retrieval service, plugin system, AI synthesis workflow, synchronization layer, new language boundary, or canonical runtime storage design.
+Phase 0 may be reopened only when a representative review, migration, or lifecycle fixture demonstrates a real contract or ontology failure. Implementation convenience alone is not sufficient.
 
-## Phase 1 — Reviewed reference corpus and validator hardening
+## Phase 1 — Reference corpus and review gate
+
+**Status: active**
 
 ### Purpose
 
-Test the accepted foundation through independent review of real canonical revisions and harden the smallest validator without turning it into the product runtime.
+Test the accepted foundation through revision-specific review of real canonical content and harden the bounded validators without turning them into the product runtime.
+
+### Accepted Phase 1 contracts
+
+Phase 1 initially exercises:
+
+- `atlas-review/0.1` — exact-revision review records;
+- `atlas-promotion/0.1` — deterministic promotion and lifecycle decisions.
+
+The contracts preserve reviewer kind, independence, qualification, accountability, conflicts, outcomes, findings, review horizons, and transition history.
 
 ### Scope
 
 - conduct source, editorial, domain, methodological, reproducibility, ethical, legal-context, conflict, and translation review as applicable;
 - preserve reviewer disagreement and conflicts;
 - promote only exact revisions that pass their required review types;
+- reject machine-only or AI-only authority where accountable human judgment is required;
+- generate reviewer-ready packets and deterministic coverage reports;
 - test confidence vocabulary and domain-native uncertainty;
-- add contradiction, deprecation, retraction, and revision-impact cases;
+- exercise contested, deprecation, retraction, and revision-impact cases;
 - expand migration and identity fixtures when real review exposes gaps;
 - improve diagnostics and provenance reports;
 - document where `atlas-content/0.1` is too rigid or too vague;
-- reopen Phase 0 decisions when fixture or review evidence demonstrates semantic failure.
+- reopen Phase 0 decisions only when fixture or review evidence demonstrates semantic failure.
+
+### Initial review packets
+
+- catalase and assay methodology;
+- delayed-feedback mathematics and control-systems terminology;
+- recommender evidence, current DSA context, and ethical governance;
+- English–Indonesian feedback translation equivalence.
+
+Packet locations: `docs/phase-1/packets/`.
 
 ### Architecture posture
 
-Use the ADR-0001 Python validator as a bounded reference baseline. Do not reuse it as product architecture by default. One semantic owner and versioned fixtures remain mandatory.
+Use the ADR-0001 Python validator as a bounded reference baseline. `phase1_review_gate.py` owns review and lifecycle conformance for the current contract versions. Neither tool becomes product architecture by implication.
+
+One semantic owner, versioned fixtures, deterministic diagnostics, and explicit migrations remain mandatory.
 
 ### Exit criteria
 
-- required independent reviews are recorded for the reference corpus;
-- no reviewed item has unresolved critical or major findings;
-- reviewer conflicts and disagreement are visible;
-- source-to-synthesis provenance reports are usable without reading implementation code;
-- contradiction, deprecation, retraction, and staleness workflows are demonstrated;
+- `atlas-review/0.1` and `atlas-promotion/0.1` are explicit and executable;
+- review records validate deterministically across supported environments;
+- machine and AI assistance cannot grant accountable authority where human review is required;
+- exact-revision, conflict, review-horizon, and staleness rules are enforced;
+- reviewer packets and coverage reports are usable without reading implementation code;
+- contested, deprecation, retraction, and stale-review workflows are demonstrated;
 - confidence and uncertainty language receives reviewer calibration;
+- at least one complete vertical slice has review coverage sufficient for its intended lifecycle state;
+- no reviewed item has unresolved critical or major findings;
+- remaining independent-review gaps remain visible and are not reported as passes;
 - migration and identity behavior survives representative contract evolution;
 - canonical IDs survive file reordering and generated-storage changes;
-- validator results are deterministic across supported environments;
-- the first minimal knowledge-kernel requirements are derived from reviewed workflows rather than the prototype.
+- the first minimal knowledge-kernel requirements are derived from reviewed workflows rather than the prototype;
+- a Phase 1 completion report recommends or rejects entry into Phase 2.
+
+### Current authority boundary
+
+AI-assisted and machine records may identify defects and block promotion. They may not satisfy independent domain, methodological, ethical, legal-context, or translation authority.
+
+Canonical reference entities remain `draft` until the promotion gate has acceptable review coverage and an accountable human accepts the exact lifecycle transition.
 
 ### Non-scope
 
