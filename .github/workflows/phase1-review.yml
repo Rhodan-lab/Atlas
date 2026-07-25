@@ -1,0 +1,93 @@
+name: Phase 1 Review Gate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "PROJECT_STATE.md"
+      - "content/reviews/**"
+      - "docs/phase-1/**"
+      - "tools/foundation-validator/phase1_review_gate.py"
+      - "tools/foundation-validator/tests/test_phase1_review_gate.py"
+      - ".github/workflows/phase1-review.yml"
+  pull_request:
+    paths:
+      - "PROJECT_STATE.md"
+      - "content/reviews/**"
+      - "docs/phase-1/**"
+      - "tools/foundation-validator/phase1_review_gate.py"
+      - "tools/foundation-validator/tests/test_phase1_review_gate.py"
+      - ".github/workflows/phase1-review.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  review-gate:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+
+      - name: Install validator dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+
+      - name: Run all foundation and review tests
+        run: python -m unittest discover -s tools/foundation-validator/tests -v
+
+      - name: Validate Phase 1 review records
+        run: |
+          for record in content/reviews/records/*.json; do
+            python tools/foundation-validator/phase1_review_gate.py validate-record "$record"
+          done
+
+      - name: Validate eligible promotion and lifecycle fixtures
+        run: |
+          mkdir -p phase1-reports
+          python tools/foundation-validator/phase1_review_gate.py promotion \
+            content/reviews/fixtures/valid-normative-promotion.json \
+            --report phase1-reports/valid-normative-promotion.md
+          python tools/foundation-validator/phase1_review_gate.py promotion \
+            content/reviews/fixtures/valid-contested-transition.json \
+            --report phase1-reports/valid-contested-transition.md
+          python tools/foundation-validator/phase1_review_gate.py promotion \
+            content/reviews/fixtures/valid-deprecation-transition.json \
+            --report phase1-reports/valid-deprecation-transition.md
+          python tools/foundation-validator/phase1_review_gate.py promotion \
+            content/reviews/fixtures/valid-retraction-transition.json \
+            --report phase1-reports/valid-retraction-transition.md
+
+      - name: Confirm blocked promotion fixtures fail
+        run: |
+          mkdir -p phase1-reports
+          for fixture in \
+            content/reviews/fixtures/invalid-ai-only-domain-promotion.json \
+            content/reviews/fixtures/invalid-stale-translation-promotion.json \
+            content/reviews/fixtures/invalid-open-major-finding.json; do
+            name="$(basename "$fixture" .json)"
+            if python tools/foundation-validator/phase1_review_gate.py promotion \
+              "$fixture" --report "phase1-reports/${name}.md"; then
+              echo "Expected blocked fixture to fail: $fixture" >&2
+              exit 1
+            fi
+          done
+
+      - name: Upload deterministic review reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase1-review-reports-python-${{ matrix.python-version }}
+          path: phase1-reports
+          if-no-files-found: warn
+          retention-days: 14
