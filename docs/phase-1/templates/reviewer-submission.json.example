@@ -1,0 +1,41 @@
+{
+  "contract": "atlas-review/0.1",
+  "id": "review:REVIEW-TYPE:TARGET-SLUG-r1:YYYY-MM-DD",
+  "entity": {
+    "id": "ENTITY-ID",
+    "revision": 1
+  },
+  "review_type": "domain",
+  "reviewer": {
+    "display_name": "REVIEWER OR ACCOUNTABLE ORGANIZATION",
+    "kind": "human",
+    "independence": "independent",
+    "qualification": "WHY THIS REVIEWER IS QUALIFIED FOR THIS BOUNDED REVIEW",
+    "accountable": true,
+    "conflicts": []
+  },
+  "completed_at": "YYYY-MM-DD",
+  "review_horizon": null,
+  "outcome": "changes-required",
+  "findings": [
+    {
+      "id": "finding:TARGET-SLUG:FINDING-SLUG",
+      "severity": "major",
+      "status": "open",
+      "summary": "CONCISE FINDING",
+      "rationale": "WHY THE FINDING MATTERS FOR THE REVIEWED ENTITY AND REVISION",
+      "affected_fields": [
+        "claim.statement"
+      ],
+      "suggested_action": "CONCRETE REVISION OR FOLLOW-UP REVIEW",
+      "references": []
+    }
+  ],
+  "summary": "BOUNDED REVIEW SUMMARY",
+  "permits_promotion": false,
+  "supersedes": [],
+  "metadata": {
+    "packet": "docs/phase-1/packets/RELEVANT-PACKET.md",
+    "ai_assistance": "none or disclosed description"
+  }
+}
