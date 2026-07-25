@@ -198,8 +198,7 @@ def validate_review_record(
     record: Mapping[str, Any], path: str = "<review>"
 ) -> list[Diagnostic]:
     diagnostics: list[Diagnostic] = []
-    unknown = sorted(set(record) - REVIEW_FIELDS)
-    for field in unknown:
+    for field in sorted(set(record) - REVIEW_FIELDS):
         diagnostics.append(
             _diag(path, "E-REVIEW-FIELD-UNKNOWN", f"unknown field {field!r}")
         )
@@ -374,6 +373,7 @@ def validate_review_record(
             )
         else:
             seen_findings.add(finding_id)
+
         severity = finding.get("severity")
         status = finding.get("status")
         if severity not in FINDING_SEVERITIES:
@@ -504,49 +504,41 @@ def validate_review_record(
 
 
 def required_review_types(entity: Mapping[str, Any]) -> set[str]:
+    """Return the minimum review classes for an entity's declared semantics."""
+
     entity_type = entity.get("type")
     required: set[str] = {"structural"}
     translated = bool(entity.get("translation_of"))
     flags = set(_as_list(entity.get("material_flags")))
 
     if entity_type == "source":
-        required |= {"source"}
+        required.add("source")
     elif entity_type == "evidence":
-        required |= {"source"}
-        if (
-            "empirical-method" in flags
-            or "measurement" in flags
-            or "transformation" in flags
-        ):
+        required.add("source")
+        if flags & {"empirical-method", "measurement", "transformation"}:
             required.add("methodological")
-        if "generated" in flags or "derived" in flags:
+        if flags & {"generated", "derived"}:
             required.add("reproducibility")
     elif entity_type == "claim":
         required.add("editorial")
         kind = entity.get("claim_kind")
-        if kind in {
-            "factual",
-            "descriptive",
-            "definitional",
-            "interpretive",
-            "methodological",
-        }:
+        if kind in {"factual", "descriptive", "definitional", "interpretive"}:
             required |= {"source", "domain"}
-        elif kind in {"causal", "correlational"}:
+        elif kind == "methodological":
+            required |= {"source", "domain", "methodological"}
+        elif kind in {"causal", "correlational", "predictive"}:
             required |= {"source", "domain", "methodological"}
         elif kind == "model-derived":
             required |= {"domain", "methodological", "reproducibility"}
         elif kind == "normative":
             required.add("ethical")
-        elif kind == "predictive":
-            required |= {"source", "domain", "methodological"}
         if "legal" in flags:
             required.add("legal-context")
     elif entity_type == "concept":
         required |= {"editorial", "domain"}
     elif entity_type == "model":
         required |= {"editorial", "domain", "methodological"}
-        if "executable" in flags or "derived" in flags:
+        if flags & {"executable", "derived"}:
             required.add("reproducibility")
     elif entity_type == "question":
         required.add("editorial")
@@ -554,7 +546,7 @@ def required_review_types(entity: Mapping[str, Any]) -> set[str]:
             required.add("domain")
     elif entity_type == "synthesis":
         required |= {"editorial", "source", "domain"}
-        if "empirical-inference" in flags or "model-inference" in flags:
+        if flags & {"empirical-inference", "model-inference"}:
             required.add("methodological")
         if "normative" in flags:
             required.add("ethical")
@@ -594,9 +586,8 @@ def _review_authority_satisfies(
         "ethical",
         "translation",
         "legal-context",
+        "reproducibility",
     }:
-        return kind == "human" and accountable and independence == "independent"
-    if review_type == "reproducibility":
         return kind == "human" and accountable and independence == "independent"
     return False
 
@@ -697,6 +688,14 @@ def evaluate_promotion(
                 path,
                 "E-PROMOTION-STALENESS",
                 f"unsupported staleness {staleness!r}",
+            )
+        )
+    if entity_type == "claim" and entity.get("claim_kind") not in CLAIM_KINDS:
+        diagnostics.append(
+            _diag(
+                path,
+                "E-PROMOTION-CLAIM-KIND",
+                f"unsupported claim kind {entity.get('claim_kind')!r}",
             )
         )
 
