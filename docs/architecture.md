@@ -1,102 +1,179 @@
-# Atlas Architecture
+# Atlas Prototype Architecture
 
-## System goal
+## Status
 
-Atlas converts human-authored notes and evidence into a graph that can be queried by meaning, relationship, and provenance. The architecture keeps the domain model independent from ingestion, search, transport, and interface concerns.
+**Experimental; not the approved Atlas architecture.**
 
-## Runtime flow
+This document records how the current prototype works so its behavior can be tested and compared. Authoritative product and knowledge decisions live in [`docs/foundation/`](foundation/). The prototype must not define the ontology merely because it already exists.
+
+## Purpose of preserving the prototype
+
+The existing implementation is useful for:
+
+- testing whether authored notes can produce deterministic artifacts;
+- exploring graph traversal and process boundaries;
+- comparing single-language and polyglot alternatives later;
+- identifying missing contracts and failure modes;
+- preserving engineering work without turning it into sunk-cost architecture.
+
+It is not evidence that Atlas needs four languages, multiple native binaries, an HTTP process, or the current `.atlas` record model.
+
+## Current experimental flow
 
 ```text
-Markdown notes
-      |
-      v
-Python ingestion + validation
-      |
-      v
-portable .atlas contract
-      |
-      +-----------------------+
-      |                       |
-      v                       v
-C++ graph engine        Rust search service
-(traversal/invariants)  (ranking/retrieval)
-      |                       |
-      +-----------+-----------+
-                  |
-                  v
-          TypeScript local API
-                  |
-                  v
-             Browser UI
+Prototype Markdown notes
+          |
+          v
+Python ingestion and validation
+          |
+          v
+provisional .atlas format
+          |
+          +-----------------------+
+          |                       |
+          v                       v
+C++ concept graph          Rust lexical search
+          |                       |
+          +-----------+-----------+
+                      |
+                      v
+             TypeScript local API
+                      |
+                      v
+                Browser demo
 ```
 
-## Component boundaries
+The flow is internally coherent for its original concept-graph model. It is incomplete for the canonical Phase 0 model, which distinguishes source, evidence, claim, concept, relation, model, question, synthesis, and revision.
 
-### C++ knowledge engine
+## Current component behavior
 
-The engine is the authority for graph validity and structural operations. It owns:
+### C++ graph engine
 
-- concepts, tags, source references, and relations;
-- referential integrity;
-- graph mutation;
-- incoming and outgoing adjacency queries;
-- shortest-path traversal;
-- reading and writing the `.atlas` format;
-- stable JSON command output for other processes.
+Current responsibilities:
 
-It does **not** parse Markdown, host HTTP, or own browser state.
+- load and save the provisional `.atlas` format;
+- validate concepts, source references, and relations;
+- expose adjacency and shortest-path operations;
+- emit JSON for command-line integration.
 
-### Rust search service
+Current limitations:
 
-The Rust executable is an isolated retrieval component. It loads the same portable contract, builds an in-memory representation, scores query terms across fields, and emits JSON. Its boundary allows the search implementation to evolve toward inverted indexes, Tantivy, incremental indexing, or background concurrency without destabilizing the graph core.
+- concept is too broad to be the canonical domain object;
+- evidence and claims are not first-class;
+- review, uncertainty, disagreement, and revision are absent;
+- the need for a native core has not been benchmarked.
 
-It does **not** mutate the graph.
+### Rust search executable
 
-### Python ingestion pipeline
+Current responsibilities:
 
-The Python tool treats a knowledge folder as source code and `.atlas` as a compiled artifact. It provides:
+- load the provisional file format;
+- rank terms across title, summary, tags, and source references;
+- emit JSON results.
 
-- deterministic file discovery and ID assignment;
-- front-matter parsing;
-- duplicate-slug detection;
-- relation-target validation;
-- source and tag normalization;
-- reproducible `.atlas` generation.
+Current limitations:
 
-It does **not** serve queries at runtime.
+- no documented relevance test collection;
+- no representative corpus scale or performance target;
+- no proof that a separate process is needed;
+- ranking cannot expose claim-level provenance because the model lacks it.
 
-### TypeScript API and UI
+### Python ingestion tool
 
-The Node process is a thin orchestration boundary. It maps HTTP routes to the native executables, validates request parameters, exposes errors consistently, and serves static browser files. It should not duplicate ranking or graph algorithms.
+Current responsibilities:
+
+- discover prototype Markdown notes;
+- parse simple front matter;
+- assign reproducible numeric IDs from sorted slugs;
+- validate relation targets;
+- compile the provisional format.
+
+Current limitations:
+
+- the note format is not the authoritative Phase 0 content contract;
+- sorted numeric IDs are reproducible but not sufficient canonical identity;
+- content types, editorial lifecycle, and review rules are incomplete;
+- the parser may be replaced by the simplest Phase 1 validator.
+
+### TypeScript API and browser demo
+
+Current responsibilities:
+
+- map HTTP routes to prototype executables;
+- validate basic request parameters;
+- serve a small browser interface.
+
+Current limitations:
+
+- the most important Atlas workflows do not exist yet;
+- the interface can create a false appearance of product maturity;
+- the need for an HTTP boundary has not been established;
+- domain logic must never migrate into the orchestration layer.
 
 ### SQL schema
 
-`storage/schema.sql` defines the intended durable relational representation for a later SQLite adapter. The current runtime deliberately uses the portable file contract first, keeping migration risk low while the domain model stabilizes.
+The existing schema is a design sketch for the concept graph. It is not an approved durable ontology. Persistence design must wait until identity, revision, claim, evidence, and review semantics stabilize.
 
-## Shared contracts
+## Prototype contracts
 
-Processes communicate through two deliberately small contracts:
+The current implementation uses:
 
-1. `.atlas` for persistent graph exchange;
-2. JSON on stdout for executable-to-API communication.
+1. `.atlas` as a portable tabular record format;
+2. JSON on stdout for process integration.
 
-The file contract is documented in [`contracts/atlas-format.md`](../contracts/atlas-format.md). Native tools write diagnostics to stderr and machine-readable results to stdout.
+Both are provisional. The authoritative Phase 0 contract is human-authored Markdown. Derived formats must be evaluated only after representative content fixtures exist.
 
-## Failure isolation
+## Existing strengths worth retaining
 
-- Invalid source notes fail during ingestion before runtime.
-- Invalid graph records fail atomically during C++ loading.
-- Search failures do not corrupt the graph because the Rust service is read-only.
-- API process errors expose a bounded JSON error rather than raw command output.
-- Each language has its own tests, and CI adds an integration path across boundaries.
+- local-first operation;
+- inspectable files and algorithms;
+- deterministic intent;
+- bounded process outputs;
+- independent tests;
+- failure isolation;
+- cross-platform CI;
+- the ability to replace components.
 
-## Why not a single language?
+## Existing assumptions requiring proof
 
-A single language would reduce toolchain count but create less natural boundaries:
+- that graph traversal belongs in a native core;
+- that search requires Rust and a separate process;
+- that ingestion should be Python;
+- that browser delivery should use a Node API;
+- that SQL should mirror the current concept structure;
+- that the `.atlas` format should remain the runtime contract;
+- that the operational cost of several toolchains is justified.
 
-- C++ is excellent for a stable engine but inefficient for rapidly evolving content parsers and browser delivery.
-- Python is excellent for ingestion but not the preferred long-lived native core.
-- TypeScript is excellent for web boundaries but should not own all graph invariants.
-- Rust is a strong fit for a future concurrent indexer without forcing a rewrite of the existing C++ engine.
+## Architecture work permitted during Phase 0
 
-The trade-off is explicit: more build tooling in exchange for clear, independently replaceable components.
+- document observed prototype behavior;
+- repair defects that block tests or inspection;
+- create ADR templates and comparison criteria;
+- build fixtures independent of the prototype;
+- identify duplicated rules and hidden assumptions;
+- measure the prototype only when measurements inform an open foundation decision.
+
+## Architecture work prohibited during Phase 0
+
+- adding prototype features;
+- expanding the UI;
+- adding languages or services;
+- evolving `.atlas` as if it were canonical;
+- encoding the new ontology directly into SQL before fixtures;
+- implementing AI synthesis;
+- optimizing unmeasured workloads.
+
+## Path to an approved architecture
+
+After the Phase 0 gate:
+
+1. create canonical valid and invalid content fixtures;
+2. implement the smallest validator and compiler baseline;
+3. measure representative workflows;
+4. identify stable semantic ownership;
+5. compare the baseline with relevant prototype components;
+6. write ADRs for retained or extracted boundaries;
+7. version contracts and add compatibility tests;
+8. promote only the justified architecture.
+
+The approved architecture may reuse much of the prototype, use only part of it, or replace it. Authoritative knowledge must survive any of those outcomes.
