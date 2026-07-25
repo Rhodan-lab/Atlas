@@ -1,0 +1,21 @@
+{
+  "canonical_ids": [
+    "claim:en:stated-delayed-recurrence-oscillates",
+    "claim:en:model-oscillation-does-not-prove-real-system"
+  ],
+  "aliases": {
+    "claim:en:delay-one-recurrence-oscillates": "claim:en:stated-delayed-recurrence-oscillates"
+  },
+  "rename_case": {
+    "old_id": "claim:en:delay-one-recurrence-oscillates",
+    "new_id": "claim:en:stated-delayed-recurrence-oscillates",
+    "rule": "Old ID remains a resolvable alias and cannot be reassigned."
+  },
+  "federated_ids": [
+    "atlas://rhodan-lab/claim:en:stated-delayed-recurrence-oscillates",
+    "atlas://rhodan-lab/claim:en:model-oscillation-does-not-prove-real-system"
+  ],
+  "expected": {
+    "errors": []
+  }
+}
