@@ -29,6 +29,7 @@ class ReviewerRequirementTests(unittest.TestCase):
         self.assertEqual(requirement.allowed_kinds, ("human",))
         self.assertEqual(requirement.allowed_independence, ("independent",))
         self.assertTrue(requirement.accountability_required)
+        self.assertEqual(requirement.execution_mode, "human-required")
 
     def test_fully_specified_reproduction_can_be_machine_checked(self) -> None:
         requirement = backlog.reviewer_requirement(
@@ -37,11 +38,18 @@ class ReviewerRequirementTests(unittest.TestCase):
         )
         self.assertIn("machine", requirement.allowed_kinds)
         self.assertFalse(requirement.accountability_required)
+        self.assertEqual(requirement.execution_mode, "automation-eligible")
 
     def test_domain_review_cannot_be_ai_authority(self) -> None:
         requirement = backlog.reviewer_requirement("domain", {})
         self.assertNotIn("ai-assisted", requirement.allowed_kinds)
         self.assertEqual(requirement.allowed_kinds, ("human",))
+        self.assertEqual(requirement.execution_mode, "human-required")
+
+    def test_structural_review_is_automation_eligible_not_completed(self) -> None:
+        requirement = backlog.reviewer_requirement("structural", {})
+        self.assertEqual(requirement.execution_mode, "automation-eligible")
+        self.assertIn("machine", requirement.allowed_kinds)
 
 
 class BacklogTests(unittest.TestCase):
@@ -117,6 +125,22 @@ class BacklogTests(unittest.TestCase):
             {"domain", "editorial", "methodological", "reproducibility"},
         )
 
+    def test_separates_human_and_automation_counts(self) -> None:
+        with patch.object(
+            backlog.coverage,
+            "evaluate_coverage",
+            return_value=(self._coverage_result(), []),
+        ):
+            result, _ = backlog.build_backlog(self._manifest(), [])
+        self.assertEqual(result.automation_eligible_task_count, 1)
+        self.assertEqual(result.human_required_task_count, 3)
+        self.assertEqual(result.gate_automation_eligible_task_count, 1)
+        self.assertEqual(result.gate_human_required_task_count, 3)
+        reproduction = next(
+            task for task in result.tasks if task.review_type == "reproducibility"
+        )
+        self.assertEqual(reproduction.execution_mode, "automation-eligible")
+
     def test_existing_non_authoritative_review_remains_visible(self) -> None:
         with patch.object(
             backlog.coverage,
@@ -148,6 +172,8 @@ class BacklogTests(unittest.TestCase):
             )
         self.assertEqual(result.gate_task_count, 0)
         self.assertEqual(result.advisory_task_count, 4)
+        self.assertEqual(result.gate_automation_eligible_task_count, 0)
+        self.assertEqual(result.gate_human_required_task_count, 0)
         self.assertTrue(all(task.priority == "low" for task in result.tasks))
 
     def test_backlog_and_report_are_deterministic(self) -> None:
@@ -160,6 +186,8 @@ class BacklogTests(unittest.TestCase):
             second, _ = backlog.build_backlog(self._manifest(), [])
         self.assertEqual(first.to_dict(), second.to_dict())
         self.assertEqual(backlog.render_report(first), backlog.render_report(second))
+        self.assertIn("Automation-eligible work", backlog.render_report(first))
+        self.assertIn("Human-required authority work", backlog.render_report(first))
 
     def test_load_bearing_dependents_receive_high_priority(self) -> None:
         with patch.object(
