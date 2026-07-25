@@ -1,0 +1,26 @@
+{
+  "contract": "atlas-review-coverage/0.1",
+  "id": "coverage:packet:catalase-methodology",
+  "title": "Catalase assay methodology packet coverage",
+  "intended_status": "reviewed",
+  "decision_at": "2026-07-26",
+  "coverage_requirement": "all",
+  "entities": [
+    {
+      "id": "claim:en:catalase-optimum-requires-assay-scope",
+      "revision": 1,
+      "type": "claim",
+      "status": "draft",
+      "staleness": "current",
+      "claim_kind": "methodological",
+      "material_flags": [],
+      "role": "load-bearing",
+      "depends_on": []
+    }
+  ],
+  "external_dependents": [],
+  "metadata": {
+    "packet": "docs/phase-1/packets/catalase-methodology.md",
+    "scope": "review-packet target only; not full vertical-slice closure"
+  }
+}
