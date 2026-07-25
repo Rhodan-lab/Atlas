@@ -4,17 +4,18 @@
 
 Draft ontology for Phase 0. It defines the meaning Atlas must preserve before storage schemas, APIs, or programming-language models are finalized.
 
-## Why the current concept graph is insufficient
+## Why a concept graph is not enough
 
-A graph containing only concepts, broad source references, and relations cannot reliably answer:
+A graph containing only concepts, broad source references, and edges cannot reliably answer:
 
 - which exact statement a source supports;
-- which passage or observation counts as evidence;
+- which passage, observation, or measurement counts as evidence;
 - whether a statement is disputed or limited in scope;
+- which assumptions belong to a model;
 - how a synthesis was formed;
-- what must be reconsidered when a source, claim, or model changes.
+- what must be reconsidered when knowledge changes.
 
-Atlas therefore requires several distinct knowledge units. They may later share storage mechanisms, but they must not be collapsed semantically.
+Atlas therefore requires distinct knowledge units. They may share storage mechanisms later, but they must not be collapsed semantically.
 
 ## Canonical entities
 
@@ -22,7 +23,7 @@ Atlas therefore requires several distinct knowledge units. They may later share 
 
 A source is an identifiable origin of information: a paper, book, dataset, interview, standard, webpage, experiment record, archival document, or other citable object.
 
-Required meaning:
+A source record preserves:
 
 - stable identity;
 - title or human-readable label;
@@ -40,22 +41,22 @@ Evidence identifies the specific material taken from a source and the context in
 
 Examples include:
 
-- a page range or quoted passage;
+- a page range or limited excerpt;
 - a table, figure, or dataset slice;
 - an experimental observation;
 - a measured result;
 - an interview segment;
-- a reproducible calculation.
+- a reproducible calculation or model output.
 
-Evidence records must preserve:
+Evidence records preserve:
 
 - source identity;
-- precise locator;
-- excerpt, observation, or structured value when legally and practically appropriate;
+- precise locator or observation context;
+- excerpt summary, observation, or structured value when appropriate;
 - surrounding context needed to avoid distortion;
-- collection or extraction method;
+- collection, extraction, or transformation method;
 - limitations;
-- which claims the evidence supports, challenges, or merely contextualizes.
+- explicit relation to the claims or questions for which it is relevant.
 
 ### 3. Claim
 
@@ -66,16 +67,16 @@ A good claim is:
 - clear enough to inspect independently;
 - scoped by population, place, time, conditions, or definitions where needed;
 - separated from its supporting argument;
-- not overloaded with several unrelated assertions;
-- linked to evidence or explicitly marked as an assumption, interpretation, or open hypothesis.
+- not overloaded with unrelated assertions;
+- linked to evidence or explicitly marked as an assumption, interpretation, value judgment, prediction, or open hypothesis.
 
-Claim kinds may include factual, causal, definitional, methodological, interpretive, predictive, normative, and hypothetical. These kinds must not be treated as if they require identical evidence.
+Claim kinds may include factual, causal, definitional, methodological, interpretive, predictive, normative, and hypothetical. These kinds do not require identical evidence or review.
 
 ### 4. Concept
 
 A concept is an explanatory unit that organizes meaning around a term, mechanism, pattern, principle, or phenomenon.
 
-A concept may contain or link to:
+A concept may link to:
 
 - a concise definition;
 - boundaries and common confusions;
@@ -90,40 +91,33 @@ A concept does not own truth. It provides structure around individually traceabl
 
 ### 5. Relation
 
-A relation is a typed, directed connection between compatible entities. Direction and meaning must be explicit.
+A relation is a typed, directed connection between compatible entities. Its direction, meaning, allowed entity pairs, and validation rules must be explicit.
 
-The initial controlled relation set is intentionally small:
+The single authoritative provisional vocabulary is [`10-relation-vocabulary.md`](10-relation-vocabulary.md). Other foundation documents may show relation examples but must not maintain independent competing lists.
 
-- `prerequisite-of`
-- `part-of`
-- `instance-of`
-- `explains`
-- `supports`
-- `challenges`
-- `contradicts`
-- `refines`
-- `causes`
-- `correlates-with`
-- `measured-by`
-- `applies-to`
-- `analogous-to`
-- `derived-from`
-- `supersedes`
+New relation types require:
 
-New relation types require a definition, allowed entity pairs, direction, examples, counterexamples, and migration consequences.
+- a real fixture that existing relations cannot express;
+- definition and direction;
+- allowed subject-target pairs;
+- examples and counterexamples;
+- inverse or symmetry behavior;
+- validation requirements;
+- overlap analysis;
+- migration consequences.
 
 ### 6. Model
 
 A model is a structured representation used to explain, calculate, simulate, classify, or predict.
 
-A model record must distinguish:
+A model record distinguishes:
 
 - purpose;
 - inputs and outputs;
 - assumptions;
 - scope of validity;
 - mechanism or formal structure;
-- calibration or parameter source;
+- calibration or parameter sources;
 - validation evidence;
 - known failure modes;
 - claims derived from using the model.
@@ -143,22 +137,23 @@ Question states may include:
 - resolved for a stated scope;
 - superseded by a better question.
 
-Questions can connect research activity, concepts, claims, models, and syntheses.
+Questions connect research activity, concepts, claims, models, evidence, and syntheses.
 
 ### 8. Synthesis
 
 A synthesis is a reasoned integration of claims, evidence, models, and unresolved tensions for a defined question and scope.
 
-A synthesis must expose:
+A synthesis exposes:
 
 - the question and intended audience;
 - included and excluded scope;
 - supporting and challenging claims;
 - evidence selection rationale;
+- models and assumptions used;
 - disagreements and uncertainty;
 - conclusions;
 - open questions;
-- revision history.
+- revision history and trigger conditions.
 
 A synthesis is derived knowledge. It must never become an untraceable replacement for its supporting structure.
 
@@ -166,7 +161,7 @@ A synthesis is derived knowledge. It must never become an untraceable replacemen
 
 A revision records meaningful change to an authoritative knowledge unit.
 
-It must state:
+It states:
 
 - what changed;
 - why it changed;
@@ -180,18 +175,20 @@ Version history is part of knowledge provenance, not merely repository history.
 
 ## Core invariants
 
-1. Every canonical entity has a stable identifier that is not derived solely from its title.
+1. Every canonical entity has a stable identifier not derived solely from its title or file order.
 2. Generated numeric IDs may exist internally but are never the sole durable identity.
 3. Evidence always points to a source and a precise locator or observation context.
-4. Reviewed factual claims must have evidence or an explicit reason why direct evidence is unavailable.
-5. Claims preserve scope and qualifiers; summaries must not silently remove them.
-6. Support and contradiction occur primarily at claim level, not only concept level.
-7. A relation type has one documented semantic meaning across the project.
-8. A synthesis identifies all claims that materially support its conclusion.
-9. Revisions preserve prior versions and the reason for change.
-10. Generated files can be deleted and rebuilt without losing authored meaning.
-11. No interface or implementation language may introduce hidden canonical fields.
-12. Review status belongs to the knowledge item and its revision, not merely to a folder.
+4. Reviewed factual claims have evidence or an explicit reason direct evidence is unavailable.
+5. Claims preserve scope and qualifiers; summaries do not silently remove them.
+6. Support, challenge, and contradiction occur primarily at claim level, not only concept level.
+7. Every relation type has one documented semantic meaning and direction.
+8. A synthesis identifies all claims that materially support or challenge its conclusion.
+9. Models expose assumptions, scope, and failure modes.
+10. Revisions preserve prior versions and reasons for change.
+11. Generated files can be deleted and rebuilt without losing authored meaning.
+12. No interface or implementation language may introduce hidden canonical fields.
+13. Review status belongs to an entity revision, not merely to a folder or interface view.
+14. Credible disagreement remains visible until it is resolved for an explicit scope.
 
 ## Identity model
 
@@ -199,6 +196,7 @@ Canonical IDs should be human-inspectable and stable, for example:
 
 ```text
 src:doe-2025-system-models
+evidence:doe-2025-delay-result
 claim:feedback-loops-can-amplify-change
 concept:feedback-loop
 model:basic-stock-flow
@@ -206,26 +204,29 @@ question:when-does-local-feedback-create-instability
 synthesis:feedback-and-stability-v1
 ```
 
-Titles may change without changing identity. When meaning changes so substantially that continuity would mislead, create a new entity and connect it with `supersedes`, `refines`, or another accepted relation.
+Titles may change without changing identity. When meaning changes so substantially that continuity would mislead, create a new entity and connect it through the accepted revision or refinement semantics.
 
 ## Layer separation
 
-The canonical flow is not strictly linear, but this separation must remain visible:
+The canonical flow is not strictly linear, but the distinctions remain visible:
 
 ```text
-Source → Evidence → Claim → Concept/Model → Synthesis
-                    ↘ Question ↗
+Source → Evidence → Claim → Concept or Model → Synthesis
+                    ↘          ↑             ↗
+                       Question
 ```
 
-Concepts organize claims. Models transform assumptions and inputs. Questions expose gaps. Syntheses integrate the current state. None of these should be used as a universal replacement for the others.
+Concepts organize claims. Models transform assumptions and inputs. Questions expose needs and gaps. Syntheses integrate the current state. None is a universal replacement for the others.
 
-## What remains open
+## Open ontology tests
 
 Phase 0 must still test:
 
 - the minimum required fields for each entity type;
-- how evidence fragments are stored without violating copyright restrictions;
-- how qualitative and quantitative evidence share a contract;
-- how normative claims are separated from empirical claims;
-- which relation types are essential for the first reference corpus;
-- how review applies when a synthesis contains items with different statuses.
+- how evidence fragments are stored without violating copyright or access restrictions;
+- how qualitative and quantitative evidence share a common core;
+- whether argument requires its own entity type;
+- how normative claims remain distinct from empirical claims;
+- which relation types are essential for the reference corpus;
+- how review applies when a synthesis depends on mixed-status material;
+- how multilingual versions share identity and revision history.
