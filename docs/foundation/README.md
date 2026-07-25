@@ -2,64 +2,89 @@
 
 ## Status
 
-This directory is the authoritative Phase 0 foundation. Documents are drafts unless their own status and review record state otherwise.
+This directory is the authoritative Phase 0 foundation. Atlas is now a **verification-ready mature draft**, not a completed phase. Documents are binding or provisional according to their stated status and the decision register.
 
-## Reading order
+## Core reading order
 
 | Order | Document | Purpose |
 |---:|---|---|
-| 1 | [`00-charter.md`](00-charter.md) | Defines what Atlas is, who it serves, its principles, and non-goals. |
-| 2 | [`01-knowledge-model.md`](01-knowledge-model.md) | Defines canonical entities and invariants. |
-| 3 | [`02-evidence-and-editorial-policy.md`](02-evidence-and-editorial-policy.md) | Defines lifecycle, review, evidence appraisal, disagreement, and revision. |
-| 4 | [`03-content-contract.md`](03-content-contract.md) | Defines authoritative Markdown records and compilation limits. |
-| 5 | [`10-relation-vocabulary.md`](10-relation-vocabulary.md) | Defines relation meanings, direction, compatibility, and validation. |
-| 6 | [`04-language-and-architecture-policy.md`](04-language-and-architecture-policy.md) | Defines how implementation and language choices earn approval. |
-| 7 | [`05-phase-gates.md`](05-phase-gates.md) | Defines evidence required before moving to later phases. |
-| 8 | [`06-current-prototype-audit.md`](06-current-prototype-audit.md) | Evaluates existing software without treating it as final. |
-| 9 | [`07-decision-register.md`](07-decision-register.md) | Separates accepted, provisional, open, and rejected decisions. |
-| 10 | [`08-reference-slice-plan.md`](08-reference-slice-plan.md) | Defines the three representative ontology tests. |
-| 11 | [`09-validation-matrix.md`](09-validation-matrix.md) | Maps foundation rules to positive fixtures, negative fixtures, and review. |
+| 1 | [`00-charter.md`](00-charter.md) | Product purpose, users, principles, and non-goals. |
+| 2 | [`01-knowledge-model.md`](01-knowledge-model.md) | Canonical entities and invariants. |
+| 3 | [`02-evidence-and-editorial-policy.md`](02-evidence-and-editorial-policy.md) | Lifecycle, evidence appraisal, uncertainty, disagreement, and AI limits. |
+| 4 | [`03-content-contract.md`](03-content-contract.md) | `atlas-content/0.1` authored Markdown structure. |
+| 5 | [`10-relation-vocabulary.md`](10-relation-vocabulary.md) | Relation meaning, direction, allowed pairs, and validation. |
+| 6 | [`11-contract-versioning-and-migrations.md`](11-contract-versioning-and-migrations.md) | Contract versions, compatibility, migration, and rollback. |
+| 7 | [`12-authoring-language-and-translation-policy.md`](12-authoring-language-and-translation-policy.md) | Multilingual identity, terminology, translation, and review. |
+| 8 | [`13-claim-scope-and-argument-policy.md`](13-claim-scope-and-argument-policy.md) | Claim atomicity, kinds, scope, and embedded argument structure. |
+| 9 | [`14-evidence-data-and-restricted-source-policy.md`](14-evidence-data-and-restricted-source-policy.md) | Access classes, copyright, units, datasets, private evidence, and lineage. |
+| 10 | [`15-review-governance-and-disagreement.md`](15-review-governance-and-disagreement.md) | Reviewer roles, conflicts, findings, disagreement, and review staleness. |
+| 11 | [`16-revision-impact-and-staleness.md`](16-revision-impact-and-staleness.md) | Dependency impact, stale states, propagation, and human judgment boundary. |
+
+## Governance and delivery
+
+| Document | Purpose |
+|---|---|
+| [`04-language-and-architecture-policy.md`](04-language-and-architecture-policy.md) | How implementation and language choices earn approval. |
+| [`05-phase-gates.md`](05-phase-gates.md) | Evidence required before later phases. |
+| [`06-current-prototype-audit.md`](06-current-prototype-audit.md) | Evaluation of existing software without architectural lock-in. |
+| [`07-decision-register.md`](07-decision-register.md) | Accepted, provisional, open, and rejected decisions. |
+| [`08-reference-slice-plan.md`](08-reference-slice-plan.md) | Scope of the three ontology tests. |
+| [`09-validation-matrix.md`](09-validation-matrix.md) | Rules mapped to fixtures, diagnostics, review, and phase gates. |
+| [`17-phase-0-maturity-assessment.md`](17-phase-0-maturity-assessment.md) | Current maturity, blockers, and completion work packages. |
 
 Repository-level rules are in [`../../PROJECT_STATE.md`](../../PROJECT_STATE.md), [`../../AGENTS.md`](../../AGENTS.md), and [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md).
 
+## Evidence corpus
+
+- [`../../content/reference/README.md`](../../content/reference/README.md) — corpus status and conventions
+- [`../../content/reference/slice-a-catalase.md`](../../content/reference/slice-a-catalase.md) — empirical biology and assay scope
+- [`../../content/reference/slice-b-feedback.md`](../../content/reference/slice-b-feedback.md) — formal model and reproducible derivation
+- [`../../content/reference/slice-c-recommenders.md`](../../content/reference/slice-c-recommenders.md) — socio-technical evidence and normative reasoning
+- [`../../content/fixtures/invalid/README.md`](../../content/fixtures/invalid/README.md) — invalid cases and expected diagnostic codes
+
+All reference content is `draft` until independently reviewed.
+
 ## Authority and conflict handling
 
-- `PROJECT_STATE.md` defines the active phase and development freeze.
+- `PROJECT_STATE.md` defines the active phase and freeze.
 - This directory defines product and knowledge semantics.
-- Accepted ADRs define approved implementation decisions.
-- Prototype code demonstrates experiments but is not semantically authoritative.
-- When two foundation documents conflict, record the conflict in the decision register and resolve it before implementation depends on either interpretation.
+- The decision register identifies which policies are accepted or provisional.
+- Accepted ADRs define implementation decisions after foundation requirements exist.
+- Reviewed canonical content outranks prototype examples.
+- Prototype code is experimental evidence, not semantic authority.
+- Conflicts between documents are recorded and resolved before implementation depends on them.
 
-## Document maturity
+## Maturity rule
 
-A foundation document is not mature because it is long or detailed. It advances only when:
+A foundation rule advances only when:
 
-- terminology is consistent with the other documents;
-- representative positive and negative fixtures exist;
-- reviewers can apply the rule without reading implementation code;
-- failure behavior is defined;
-- unresolved decisions are visible;
-- changes preserve decision history and migration consequences.
+- terminology is consistent;
+- at least one representative fixture uses it;
+- invalid behavior and expected diagnostics are specified;
+- reviewers can apply it without reading code;
+- migration and revision consequences are understood;
+- unresolved issues remain visible.
 
-## Phase 0 working sequence
+A long document without fixtures is only defined. A fixture without review is only exercised.
 
-1. Run cross-document consistency review.
-2. Resolve blocking open decisions for the reference corpus.
-3. Author the three vertical slices as `draft` content.
-4. Create valid and invalid fixtures.
-5. Apply the validation matrix.
-6. Revise ontology and contracts based on actual failures.
-7. Produce a Phase 0 completion report.
-8. Select the smallest Phase 1 validator implementation.
+## Current work sequence
+
+1. Split bundled slices into canonical entity files.
+2. Add multilingual, migration, identity, and staleness fixtures.
+3. Verify source metadata and evidence locators.
+4. Record independent review findings.
+5. Compare Phase 1 validator options through the ADR template.
+6. Implement only the selected validator.
+7. Produce the Phase 0 completion report.
 
 ## Change rule
 
-Substantive changes must identify:
+Substantive changes state:
 
-- the problem exposed by a fixture, review, or decision;
+- the fixture, review finding, or decision exposing the problem;
 - affected invariants and documents;
-- compatibility or migration impact;
+- compatibility, migration, and review impact;
 - unresolved consequences;
-- validation used.
+- validation performed.
 
-Do not change a definition merely to make the existing prototype easier to preserve.
+Do not change a semantic definition merely to preserve prototype code or make parsing easier.
