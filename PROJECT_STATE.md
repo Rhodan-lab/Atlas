@@ -2,124 +2,121 @@
 
 ## Current status
 
-**Phase 0 — Knowledge Foundation (active)**
+**Phase 0 — Knowledge Foundation (verification-ready mature draft)**
 
-Atlas is not yet treated as a finished software architecture. The existing C++, Rust, Python, TypeScript, SQL, and UI work is preserved as an **experimental prototype**. It may inform later decisions, but it is not the authoritative foundation and must not determine the knowledge model by accident.
+Atlas has a substantially defined knowledge and editorial foundation, but Phase 0 is not complete. The project has moved from broad conceptual design into verification, fixture splitting, and independent review.
+
+The existing C++, Rust, Python, TypeScript, SQL, and UI work remains an **experimental prototype**. It may inform later architecture comparisons but is not authoritative and remains feature-frozen.
 
 ## Development freeze
 
-Until Phase 0 is complete:
+Until Phase 0 closes:
 
-- do not add product features, services, interfaces, plugins, or programming languages;
-- do not expand the current `.atlas` format as if it were final;
-- do not duplicate domain rules across language implementations;
-- do not describe prototype components as completed product phases;
-- keep authored knowledge and foundation documents in Markdown as the source of truth.
+- do not add product features, interfaces, services, plugins, or programming languages;
+- do not expand `.atlas`, SQL, or runtime models as canonical contracts;
+- do not duplicate semantic rules across implementations;
+- do not promote reference content beyond `draft` without required review;
+- keep authored Markdown and foundation decisions authoritative.
 
-Bug fixes that prevent repository validation are allowed. New behavior requires a documented foundation decision first.
+Allowed work:
 
-## Authoritative material
+- fixture splitting and validation;
+- source, editorial, domain, method, reproducibility, ethics, and translation review;
+- contract consistency corrections;
+- migration and staleness fixtures;
+- ADR comparison for the smallest Phase 1 validator;
+- prototype bug fixes needed for inspection or comparison.
 
-During Phase 0, authority is ordered as follows:
+## Authority order
 
 1. `PROJECT_STATE.md`
 2. `docs/foundation/`
-3. accepted architecture decision records
-4. reviewed content contracts and reference examples
+3. accepted ADRs
+4. reviewed canonical content and fixtures
 5. implementation code and generated artifacts
 
-When code conflicts with the foundation documents, the code is considered provisional.
+When code conflicts with the foundation, code is provisional.
 
-## Phase 0 objectives
+## Foundation now defined
 
-1. Define exactly what Atlas is and is not.
-2. Define the units of knowledge Atlas must represent.
-3. Separate sources, evidence, claims, concepts, relations, models, questions, syntheses, and revisions.
-4. Define provenance, uncertainty, contradiction, revision, and scientific review rules.
-5. Define a stable authoring contract before a compiled storage format.
-6. Build representative reference material that tests the model across different domains.
-7. Choose implementation languages only after boundaries and measurable needs are established.
-
-## Current foundation progress
-
-### Drafted
-
-- product charter and non-goals;
-- canonical knowledge model and invariants;
-- evidence and editorial policy;
-- authoritative Markdown contract;
-- controlled relation vocabulary;
-- language and architecture decision policy;
+- product charter and explicit non-goals;
+- canonical entity set and invariants;
+- `atlas-content/0.1` authoring contract;
+- claim-level evidence and provenance;
+- controlled relation direction and compatibility;
+- lifecycle, review roles, conflicts, and reviewer disagreement;
+- multilingual identity and translation review;
+- claim granularity and embedded argument structure;
+- evidence access, copyright, private sources, units, data, and transformation lineage;
+- confidence and domain-appropriate uncertainty;
+- contract versioning and migration invariants;
+- revision impact, dependency propagation, and staleness states;
+- architecture and language-admission policy;
 - evidence-based phase gates;
-- current-prototype audit;
+- prototype audit;
 - decision register;
-- reference-slice plan;
-- validation matrix;
-- ADR template;
-- contributor and agent governance.
+- invalid fixture catalog with expected diagnostics.
 
-### Not yet complete
+## Reference corpus
 
-- representative canonical content fixtures;
-- three complete vertical slices;
-- cross-document editorial review;
-- domain review of the reference slices;
-- contract version and migration policy;
-- Phase 0 completion report;
-- accepted decision for the first validator implementation.
+Three bundled draft vertical slices now exercise the model:
 
-Drafted means the material exists for review. It does not mean the foundation has passed its gate.
+1. **Catalase and assay conditions** — empirical and synthetic observation, measurement proxies, biological scope, and method limitations.
+2. **Delayed feedback and oscillation** — formal model, exact derived evidence, assumptions, reproducibility, and analogy limits.
+3. **Recommendation systems and user choice** — observational and randomized evidence, platform conflicts, legal context, contested interpretation, and normative values.
 
-## Current blocking decisions
+Location: `content/reference/`.
 
-The most important unresolved items are recorded in `docs/foundation/07-decision-register.md`. Before the reference corpus grows, Phase 0 should resolve or deliberately constrain:
+These slices are ontology tests, not reviewed educational content.
 
-- canonical authoring-language and translation policy;
+## Resolved former blockers
+
+Accepted policies now resolve:
+
+- authoring language and translation identity;
 - evidence excerpt and restricted-source handling;
 - claim granularity;
-- whether argument needs a separate entity type;
-- quantitative dataset and transformation metadata;
+- argument representation for `0.1`;
+- quantitative evidence and transformation lineage;
 - review authority and reviewer disagreement;
 - revision-impact propagation;
-- exact scope of the first three vertical slices.
+- exact scope of the first three vertical slices;
+- initial contract version and migration policy.
 
-Implementation-language selection is intentionally blocked until the content and validation work exposes stable requirements.
+## Remaining major blockers
 
-## Required foundation outputs
-
-- product charter and non-goals;
-- canonical knowledge model and invariants;
-- evidence and editorial policy;
-- Markdown content contract;
-- governed relation vocabulary;
-- language and architecture decision policy;
-- phased delivery gates;
-- audit of the current prototype;
-- unresolved decision register;
-- reference vertical slices covering source → evidence → claim → concept or model → relation → synthesis;
-- foundation validation report.
+1. Split bundled slices into one canonical file per entity without semantic change.
+2. Independently verify source metadata, locators, and evidence descriptions.
+3. Record structural, editorial, domain, methodological, reproducibility, ethics, and translation review.
+4. Create a complete Indonesian translation path and stale-translation fixture.
+5. Create concrete mechanical and semantic migration fixtures.
+6. Execute invalid fixtures through a deterministic validator.
+7. Test identifier alias, rename, collision, and federation behavior.
+8. Resolve open questions on formal expressions, protocol representation, and legal interpretation lifecycle where required by fixtures.
+9. Compare validator implementation options and accept one ADR.
+10. Produce a signed Phase 0 completion report.
 
 ## Phase 0 exit gate
 
-Phase 0 is complete only when:
+Phase 0 closes only when:
 
-- every canonical entity has a clear purpose, required fields, lifecycle, and identity rule;
-- evidence can support or challenge individual claims rather than only whole concepts;
-- uncertainty and disagreement can be represented without forcing false certainty;
-- Markdown examples express at least three complete cross-domain knowledge trails;
-- a reviewer can trace every reviewed factual claim back to its source material;
-- relation direction and compatibility are validated consistently;
-- generated formats are explicitly derived and reproducible;
-- the minimum runtime boundary is selected through an architecture decision, not preference;
-- no unresolved critical or major issue blocks the first reference implementation.
+- canonical records are split and structurally valid;
+- every material factual claim can be traced to reviewed evidence and source;
+- relation direction and pair compatibility pass fixtures;
+- multilingual, migration, and staleness behavior are demonstrated;
+- required review findings contain no unresolved critical or major issue;
+- derived-output reproducibility requirements are implementable without changing authored meaning;
+- the smallest Phase 1 validator is selected through an accepted ADR;
+- a completion report recommends entry into Phase 1.
 
-## Next permitted work
+## Next work order
 
-1. Review the foundation documents for internal consistency.
-2. Resolve the blocking decisions needed by the three reference slices.
-3. Author questions and source records before claims or concepts.
-4. Build valid and invalid Markdown fixtures.
-5. Apply the validation matrix and revise the ontology based on failures.
-6. Produce the Phase 0 completion report.
+1. Split the three bundles into canonical records.
+2. Add the Indonesian translation and stale-source case.
+3. Add migration and identity fixtures.
+4. Conduct manual review and record findings.
+5. Write the validator ADR from fixture requirements.
+6. Build only the approved Phase 1 validator.
+7. Run the completion gate.
 
-Full software development resumes only after the Phase 0 gate is passed.
+**Product development remains frozen. Phase 0 is mature enough for verification, not complete enough for implementation expansion.**
