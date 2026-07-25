@@ -3,7 +3,7 @@ contract: atlas-content/0.1
 id: src:astrom-murray-2008-feedback-systems
 work: work:astrom-murray-2008-feedback-systems
 type: source
-title: Feedback Systems: An Introduction for Scientists and Engineers
+title: "Feedback Systems: An Introduction for Scientists and Engineers"
 status: draft
 revision: 1
 created: 2026-07-26
@@ -14,7 +14,7 @@ source:
   authors:
     - Karl J. Åström
     - Richard M. Murray
-  title: Feedback Systems: An Introduction for Scientists and Engineers
+  title: "Feedback Systems: An Introduction for Scientists and Engineers"
   publisher: Princeton University Press
   published: 2008
   locator: https://authors.library.caltech.edu/records/yzs24-xsx88
