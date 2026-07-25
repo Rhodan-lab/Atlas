@@ -1,0 +1,33 @@
+{
+  "contract": "atlas-review-coverage/0.1",
+  "id": "coverage:packet:recommender-governance",
+  "title": "Recommender legal-context packet coverage",
+  "intended_status": "reviewed",
+  "decision_at": "2026-07-26",
+  "coverage_requirement": "all",
+  "entities": [
+    {
+      "id": "claim:en:transparency-and-nonprofiling-are-eu-governance-responses",
+      "revision": 1,
+      "type": "claim",
+      "status": "draft",
+      "staleness": "current",
+      "claim_kind": "descriptive",
+      "material_flags": [],
+      "role": "load-bearing",
+      "depends_on": [],
+      "required_review_types": [
+        "structural",
+        "editorial",
+        "source",
+        "domain",
+        "legal-context"
+      ]
+    }
+  ],
+  "external_dependents": [],
+  "metadata": {
+    "packet": "docs/phase-1/packets/recommender-governance.md",
+    "scope": "review-packet target only; legal-context requirement is explicit because the canonical claim is legal-descriptive"
+  }
+}
