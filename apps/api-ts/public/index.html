@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Local explorer for the Atlas knowledge graph">
+    <title>Atlas Knowledge Explorer</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header class="shell hero">
+        <p class="eyebrow">LOCAL-FIRST KNOWLEDGE SYSTEM</p>
+        <h1>Atlas</h1>
+        <p class="lede">Explore concepts, evidence, and relationships without surrendering your knowledge to a hosted platform.</p>
+        <div id="stats" class="stats" aria-live="polite">Loading graph…</div>
+    </header>
+
+    <main class="shell layout">
+        <section class="panel search-panel" aria-labelledby="search-title">
+            <div>
+                <p class="eyebrow">RETRIEVAL</p>
+                <h2 id="search-title">Search the graph</h2>
+            </div>
+            <form id="search-form">
+                <label for="query">Concept, tag, summary, or source</label>
+                <div class="search-row">
+                    <input id="query" name="query" value="knowledge evidence" autocomplete="off">
+                    <button type="submit">Search</button>
+                </div>
+            </form>
+            <div id="search-results" class="cards" aria-live="polite"></div>
+        </section>
+
+        <section class="panel" aria-labelledby="concepts-title">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">CANONICAL GRAPH</p>
+                    <h2 id="concepts-title">Concepts</h2>
+                </div>
+                <button id="reload" class="secondary" type="button">Reload</button>
+            </div>
+            <div id="concepts" class="cards" aria-live="polite"></div>
+        </section>
+    </main>
+
+    <footer class="shell footer">
+        <span>C++ graph core</span><span>Rust search</span><span>Python ingestion</span><span>TypeScript interface</span>
+    </footer>
+    <script type="module" src="/app.js"></script>
+</body>
+</html>

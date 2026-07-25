@@ -1,0 +1,26 @@
+# Build outputs
+/build/
+/dist/
+/target/
+*.o
+*.obj
+*.exe
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+
+# Node
+node_modules/
+*.tsbuildinfo
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Generated Atlas data
+/data/generated.atlas

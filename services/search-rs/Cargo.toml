@@ -1,0 +1,11 @@
+[package]
+name = "atlas-search"
+version = "0.2.0"
+edition = "2021"
+description = "Read-only native search service for Atlas knowledge graphs"
+license = "MIT"
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
