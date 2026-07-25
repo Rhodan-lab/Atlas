@@ -1,0 +1,26 @@
+{
+  "contract": "atlas-review-coverage/0.1",
+  "id": "coverage:packet:feedback-domain",
+  "title": "Delayed-feedback domain packet coverage",
+  "intended_status": "reviewed",
+  "decision_at": "2026-07-26",
+  "coverage_requirement": "all",
+  "entities": [
+    {
+      "id": "claim:en:stated-delayed-recurrence-oscillates",
+      "revision": 1,
+      "type": "claim",
+      "status": "draft",
+      "staleness": "current",
+      "claim_kind": "model-derived",
+      "material_flags": [],
+      "role": "load-bearing",
+      "depends_on": []
+    }
+  ],
+  "external_dependents": [],
+  "metadata": {
+    "packet": "docs/phase-1/packets/feedback-domain.md",
+    "scope": "review-packet target only; not full vertical-slice closure"
+  }
+}
