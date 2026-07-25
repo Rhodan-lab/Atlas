@@ -1,0 +1,27 @@
+{
+  "contract": "atlas-promotion/0.1",
+  "entity": {
+    "id": "claim:en:deprecated-fixture",
+    "revision": 1,
+    "type": "claim",
+    "status": "reviewed",
+    "staleness": "current",
+    "claim_kind": "descriptive"
+  },
+  "requested_status": "deprecated",
+  "reviews": [],
+  "decision_at": "2026-07-26",
+  "accepted_by": {
+    "display_name": "Fixture maintainer",
+    "kind": "human",
+    "accountable": true
+  },
+  "transition": {
+    "reason": "A narrower replacement preserves the supported scope more accurately.",
+    "effective_date": "2026-07-26",
+    "replacement": "claim:en:replacement-fixture",
+    "affected_dependents": [
+      "synthesis:en:dependent-fixture"
+    ]
+  }
+}
