@@ -1,0 +1,30 @@
+{
+  "contract": "atlas-promotion/0.1",
+  "entity": {
+    "id": "evidence:en:retracted-fixture",
+    "revision": 1,
+    "type": "evidence",
+    "status": "reviewed",
+    "staleness": "current"
+  },
+  "requested_status": "retracted",
+  "reviews": [],
+  "decision_at": "2026-07-26",
+  "accepted_by": {
+    "display_name": "Fixture maintainer",
+    "kind": "human",
+    "accountable": true
+  },
+  "transition": {
+    "reason": "An integrity failure invalidates current evidentiary use.",
+    "effective_date": "2026-07-26",
+    "replacement": null,
+    "affected_dependents": [
+      "claim:en:dependent-fixture"
+    ],
+    "evidence": [
+      "review:source:fixture-r1:2026-07-26"
+    ],
+    "current_use_prohibited": true
+  }
+}
