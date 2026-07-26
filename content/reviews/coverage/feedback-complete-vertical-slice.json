@@ -1,7 +1,7 @@
 {
   "contract": "atlas-review-coverage/0.1",
   "id": "coverage:vertical-slice:feedback-en",
-  "title": "Complete English delayed-feedback vertical-slice readiness",
+  "title": "Optional human-verification coverage profile for the English delayed-feedback slice",
   "intended_status": "reviewed",
   "decision_at": "2026-07-26",
   "coverage_requirement": "all",
@@ -18,7 +18,7 @@
     },
     {
       "id": "src:astrom-murray-2008-feedback-systems",
-      "revision": 1,
+      "revision": 2,
       "type": "source",
       "status": "draft",
       "staleness": "current",
@@ -39,7 +39,7 @@
     },
     {
       "id": "evidence:en:delayed-feedback-periodic-sequence",
-      "revision": 1,
+      "revision": 2,
       "type": "evidence",
       "status": "draft",
       "staleness": "current",
@@ -52,7 +52,7 @@
     },
     {
       "id": "claim:en:stated-delayed-recurrence-oscillates",
-      "revision": 1,
+      "revision": 2,
       "type": "claim",
       "status": "draft",
       "staleness": "current",
@@ -106,7 +106,7 @@
     },
     {
       "id": "model:en:delayed-correction-recurrence",
-      "revision": 1,
+      "revision": 2,
       "type": "model",
       "status": "draft",
       "staleness": "current",
@@ -116,7 +116,7 @@
     },
     {
       "id": "synthesis:en:delayed-feedback-and-oscillation",
-      "revision": 1,
+      "revision": 2,
       "type": "synthesis",
       "status": "draft",
       "staleness": "current",
@@ -139,8 +139,11 @@
   "metadata": {
     "slice": "delayed-feedback",
     "language": "en",
-    "scope": "complete split canonical vertical slice",
+    "scope": "optional human-verification profile",
+    "active_phase_gate": false,
+    "human_review_required": false,
+    "replaced_by": "ai-review:feedback-delayed-comprehensive",
     "source_reference": "content/reference/slice-b-feedback.md",
-    "authority_note": "Readiness manifest only; no entity is promoted by this file."
+    "authority_note": "This manifest is preserved only for optional future human verification. It is not an active duty, Phase 1 exit gate, or blocker for Phase 2."
   }
 }

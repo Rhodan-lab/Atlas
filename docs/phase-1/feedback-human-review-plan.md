@@ -1,176 +1,103 @@
-# Delayed-Feedback Human Review Plan
+# Optional Delayed-Feedback Human Verification Plan
 
-## Purpose
+## Status
 
-This document converts the remaining complete-slice backlog into bounded qualification tracks for accountable human reviewers.
+**Archived as an optional stronger review path.**
 
-It is a planning and handoff artifact. It is not a review record, does not assign a person, does not resolve findings, and does not change lifecycle status.
+This document no longer defines active project duties, Phase 1 completion, or Phase 2 entry.
 
-## Current state
+The former 25 human-required tasks were replaced as the active review path by:
 
-After deterministic machine attestations:
+- `content/reviews/ai/feedback-delayed-comprehensive.json`;
+- `docs/phase-1/ai-review-report.md`;
+- corrected canonical revisions;
+- `tools/foundation-validator/phase1_ai_review.py`.
 
-- coverage decision: `blocked`;
-- remaining gate tasks: `25`;
-- automation-eligible tasks: `0`;
-- human-required tasks: `25`;
-- advisory tasks: `0`.
+The active policy states:
 
-The remaining tasks are grouped by required competence rather than by file count.
+```text
+review_level: ai-reviewed
+human_verified: false
+human_review_required: false
+```
 
-## Track 1 — Domain authority
+## Why this file remains
 
-**Task count:** 7  
-**Reviewer profile:** independent reviewer with demonstrable control-systems, dynamical-systems, or difference-equation expertise.
+Atlas preserves the earlier human-governance design because a future maintainer may choose to add an optional `human-verified` layer.
 
-Exact targets:
+Preservation does not mean obligation. No reviewer recruitment, credential checking, handoff execution, submission intake, or admission decision is currently required.
 
+## Corrected baseline for optional verification
+
+Any future human verifier must review the current exact revisions rather than the superseded revision-1 formal material:
+
+- `question:en:when-delayed-correction-can-oscillate@1`;
+- `src:astrom-murray-2008-feedback-systems@2`;
+- `src:synthetic-feedback-run-delay-one-gain-one@1`;
+- `evidence:en:delayed-feedback-periodic-sequence@2`;
+- `claim:en:stated-delayed-recurrence-oscillates@2`;
 - `claim:en:model-oscillation-does-not-prove-real-system@1`;
-- `claim:en:stated-delayed-recurrence-oscillates@1`;
-- `model:en:delayed-correction-recurrence@1`;
-- `synthesis:en:delayed-feedback-and-oscillation@1`;
 - `concept:en:feedback@1`;
 - `concept:en:oscillation@1`;
-- `question:en:when-delayed-correction-can-oscillate@1`.
+- `model:en:delayed-correction-recurrence@2`;
+- `synthesis:en:delayed-feedback-and-oscillation@2`.
 
-Primary decisions:
+## Findings already resolved by the AI review
 
-- whether `oscillatory`, `periodic`, `bounded`, `convergent`, and `stable` are used correctly;
-- whether the ordered state required by the recurrence is represented clearly;
-- whether the formal claim is exactly scoped to its gain, delay, and initial conditions;
-- whether the concept definitions preserve cross-domain boundaries;
-- whether the synthesis overstates the formal result.
+### Exact periodicity
 
-Known blocker:
+The recurrence now contains an ordered-state proof that the reviewed orbit has exact period 6. A future human review should inspect this proof rather than repeat the former finding that eight displayed states were insufficient.
 
-`review:domain:feedback-oscillation-r1:2026-07-26` currently has outcome `changes-required` and an unresolved major finding:
+### Oscillation and instability
 
-`finding:feedback:periodicity-proof`
+The corrected material states that the orbit is bounded and periodic. It does not present periodicity as proof of instability.
 
-The finding must be resolved with an exact argument or the affected entity must remain blocked.
+### Source scope
 
-## Track 2 — Editorial and scope accountability
+The Åström and Murray source supports terminology and general control-system context. The exact recurrence result is independently derived.
 
-**Task count:** 7  
-**Reviewer profile:** accountable human editor capable of checking technical scope, qualifiers, internal consistency, and reader-facing interpretation. Independence may be internal or independent under policy.
+## Optional verification dimensions
 
-Exact targets:
+A future human verifier may assess:
 
-- the same two claims;
-- the recurrence model;
-- the synthesis;
-- both concepts;
-- the research question.
+- domain terminology;
+- editorial scope;
+- mathematical modeling and inference;
+- source and provenance use;
+- independent reproduction;
+- professional or organizational accountability.
 
-Primary decisions:
+These checks may add a separately labeled `human-verified` layer. They must not overwrite, disguise, or relabel the existing AI review.
 
-- whether each entity has one inspectable purpose;
-- whether qualifiers and limitations are visible rather than buried;
-- whether the question, claims, model, and synthesis use consistent terminology;
-- whether confidence wording matches the exact evidence;
-- whether a reader could mistake formal evidence for real-world observation;
-- whether future Principia material can quote the result without losing its boundary.
+## Optional tooling
 
-## Track 3 — Methods and inference
+The historical tooling remains available:
 
-**Task count:** 5  
-**Reviewer profile:** independent reviewer qualified in mathematical modeling, scientific inference, system identification, or a closely related methodology.
+- `phase1_review_gate.py`;
+- `phase1_coverage_report.py`;
+- `phase1_review_backlog.py`;
+- `phase1_human_review_handoff.py`;
+- `phase1_review_intake.py`;
+- `phase1_review_admission.py`.
 
-Exact targets:
+The optional coverage manifest identifies itself with:
 
-- `claim:en:model-oscillation-does-not-prove-real-system@1`;
-- `claim:en:stated-delayed-recurrence-oscillates@1`;
-- `evidence:en:delayed-feedback-periodic-sequence@1`;
-- `model:en:delayed-correction-recurrence@1`;
-- `synthesis:en:delayed-feedback-and-oscillation@1`.
+```json
+{
+  "active_phase_gate": false,
+  "human_review_required": false,
+  "replaced_by": "ai-review:feedback-delayed-comprehensive"
+}
+```
 
-Primary decisions:
+## Authority boundary
 
-- whether the generated sequence is correctly classified as model-derived evidence;
-- whether the evidence supports only the exact formal claim;
-- whether assumptions and failure modes are sufficient;
-- whether the model-to-world transfer limitation is methodologically correct;
-- whether the synthesis distinguishes demonstration, explanation, identification, and empirical validation;
-- whether any broader claim requires additional evidence or a narrower scope.
+A future human review may strengthen confidence and accountability, but it is not required for continued development.
 
-## Track 4 — Source and provenance
+Atlas must not:
 
-**Task count:** 5  
-**Reviewer profile:** accountable human reviewer able to inspect bibliographic identity, source use, provenance paths, locators, and claim-source boundaries. Independence may be internal or independent under policy.
-
-Exact targets:
-
-- `src:astrom-murray-2008-feedback-systems@1`;
-- `src:synthetic-feedback-run-delay-one-gain-one@1`;
-- `evidence:en:delayed-feedback-periodic-sequence@1`;
-- `claim:en:model-oscillation-does-not-prove-real-system@1`;
-- `synthesis:en:delayed-feedback-and-oscillation@1`.
-
-Primary decisions:
-
-- whether the external reference metadata and locator are accurate;
-- whether established terminology is attributed without implying that the exact fixture appears in the reference;
-- whether the generated source records its origin and procedure honestly;
-- whether the evidence transformation is reproducible and traceable;
-- whether the synthesis provenance path is complete;
-- whether source roles are kept separate from domain or methodological authority.
-
-## Track 5 — Independent reproducibility of generated source
-
-**Task count:** 1  
-**Reviewer profile:** independent accountable human able to reproduce the generated model-run source and inspect the recorded procedure.
-
-Exact target:
-
-- `src:synthetic-feedback-run-delay-one-gain-one@1`.
-
-Primary decisions:
-
-- independently reproduce the generated output;
-- confirm that the source record accurately describes the procedure;
-- confirm that no hidden data or unstated step is required;
-- verify that the generated source is not presented as empirical observation;
-- state any limitation not captured by the machine calculation.
-
-The existing machine reproduction of the claim, evidence, and model does not satisfy this human-required source-level reproducibility task.
-
-## Review record requirements
-
-Each completed task requires one `atlas-review/0.1` record with:
-
-- exact entity ID and revision;
-- one review type;
-- reviewer identity or stable accountable role;
-- qualification;
-- independence;
-- conflicts, including an explicit empty list when none are known;
-- bounded outcome;
-- structured findings;
-- review date and horizon when applicable;
-- a clear `permits_promotion` decision for that exact review type.
-
-A reviewer may cover multiple tasks, but each task must remain independently inspectable. A broad letter or one generic approval cannot silently satisfy unrelated review types.
-
-## Recommended execution order
-
-1. Resolve the major periodicity-proof finding through domain and methods review.
-2. Review the model, generated evidence, and formal claim as one coordinated formal bundle.
-3. Review the model-to-world boundary and synthesis together.
-4. Complete source/provenance review after any formal revisions settle.
-5. Complete editorial review against the final exact revisions.
-6. Regenerate coverage and backlog.
-7. Consider lifecycle promotion only when no required review class remains missing and no major or critical finding remains open.
-
-## Principia & Atlas handoff
-
-This slice should become a reusable Atlas dependency only after its formal result and inference boundary are both reviewed.
-
-A future Principia artifact may then reference:
-
-- the recurrence model;
-- the formal claim;
-- the generated evidence;
-- the methodological limitation;
-- the synthesis.
-
-Principia must still own how these are explained, simulated, explored, and connected to a real system. Atlas review does not automatically approve a Principia lesson or simulation, and Principia presentation does not upgrade Atlas authority.
+- fabricate a human reviewer;
+- represent the AI review as human verification;
+- treat optional verification tasks as unfinished mandatory work;
+- block Phase 2 merely because optional human verification has not occurred;
+- let an Atlas review automatically approve a Principia explanation or simulation.

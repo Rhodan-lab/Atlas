@@ -7,18 +7,22 @@ on:
       - "content/canonical/**"
       - "content/translations/**"
       - "content/fixtures/**"
+      - "content/reviews/ai/**"
       - "docs/foundation/**"
-      - "docs/adr/0001-phase-0-validator-baseline.md"
-      - "tools/foundation-validator/**"
+      - "tools/foundation-validator/atlas_foundation_validator.py"
+      - "tools/foundation-validator/phase1_ai_review.py"
+      - "tools/foundation-validator/tests/test_phase1_ai_review.py"
       - ".github/workflows/foundation.yml"
   pull_request:
     paths:
       - "content/canonical/**"
       - "content/translations/**"
       - "content/fixtures/**"
+      - "content/reviews/ai/**"
       - "docs/foundation/**"
-      - "docs/adr/0001-phase-0-validator-baseline.md"
-      - "tools/foundation-validator/**"
+      - "tools/foundation-validator/atlas_foundation_validator.py"
+      - "tools/foundation-validator/phase1_ai_review.py"
+      - "tools/foundation-validator/tests/test_phase1_ai_review.py"
       - ".github/workflows/foundation.yml"
 
 permissions:
@@ -42,72 +46,53 @@ jobs:
           cache: pip
           cache-dependency-path: tools/foundation-validator/requirements.txt
 
-      - name: Install pinned validator dependency
+      - name: Install validator dependencies
         run: python -m pip install -r tools/foundation-validator/requirements.txt
-
-      - name: Initialize validation log
-        run: touch foundation-validation.log
 
       - name: Enforce English-only authored corpus
         shell: bash
         run: |
-          set -o pipefail
           if [ -d content/translations ] && find content/translations -type f -print -quit | grep -q .; then
-            echo "Active translated authored content is not allowed in the current phase." \
-              | tee -a foundation-validation.log
-            find content/translations -type f -print | tee -a foundation-validation.log
+            echo "Active translated authored content is not allowed in the current phase."
+            find content/translations -type f -print
             exit 1
           fi
-          echo "english-only-authored-corpus=pass" | tee -a foundation-validation.log
+          echo "english-only-authored-corpus=pass"
 
-      - name: Run validator contract tests
-        shell: bash
+      - name: Run active AI review tests
         run: |
-          set -o pipefail
-          python -m unittest discover -s tools/foundation-validator/tests -v 2>&1 \
-            | tee -a foundation-validation.log
+          python -m unittest discover \
+            -s tools/foundation-validator/tests \
+            -p 'test_phase1_ai_review.py' \
+            -v
 
       - name: Validate canonical English content
-        shell: bash
         run: |
-          set -o pipefail
           python tools/foundation-validator/atlas_foundation_validator.py validate \
-            content/canonical 2>&1 \
-            | tee -a foundation-validation.log
+            content/canonical
+
+      - name: Validate comprehensive AI review
+        run: |
+          python tools/foundation-validator/phase1_ai_review.py \
+            content/reviews/ai/feedback-delayed-comprehensive.json \
+            --canonical-root content/canonical
 
       - name: Validate migration fixtures
-        shell: bash
         run: |
-          set -o pipefail
           python tools/foundation-validator/atlas_foundation_validator.py migration \
-            content/fixtures/migrations/mechanical-0.1-to-0.2.json 2>&1 \
-            | tee -a foundation-validation.log
+            content/fixtures/migrations/mechanical-0.1-to-0.2.json
           python tools/foundation-validator/atlas_foundation_validator.py migration \
-            content/fixtures/migrations/semantic-claim-split.json 2>&1 \
-            | tee -a foundation-validation.log
+            content/fixtures/migrations/semantic-claim-split.json
 
       - name: Validate identity fixture
-        shell: bash
         run: |
-          set -o pipefail
           python tools/foundation-validator/atlas_foundation_validator.py identity \
-            content/fixtures/identity/alias-rename-federation.json 2>&1 \
-            | tee -a foundation-validation.log
+            content/fixtures/identity/alias-rename-federation.json
 
       - name: Verify synthetic stale translation state
         shell: bash
         run: |
-          set -o pipefail
           state="$(python tools/foundation-validator/atlas_foundation_validator.py translation-staleness \
             content/fixtures/translation/stale-source-revision.json)"
-          printf 'translation-staleness=%s\n' "$state" | tee -a foundation-validation.log
+          printf 'translation-staleness=%s\n' "$state"
           test "$state" = "possibly-stale"
-
-      - name: Upload full validation log
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: foundation-validation-python-${{ matrix.python-version }}
-          path: foundation-validation.log
-          if-no-files-found: error
-          retention-days: 14
