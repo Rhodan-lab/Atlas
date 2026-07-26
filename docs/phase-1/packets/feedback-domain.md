@@ -16,14 +16,14 @@
 ## Linked records in scope
 
 - `src:astrom-murray-2008-feedback-systems`
-- `src:synthetic-delayed-feedback-run`
-- `evidence:en:delayed-recurrence-periodic-sequence`
+- `src:synthetic-feedback-run-delay-one-gain-one`
+- `evidence:en:delayed-feedback-periodic-sequence`
 - `model:en:delayed-correction-recurrence`
-- `claim:en:model-oscillation-does-not-prove-real-system-oscillation`
+- `claim:en:model-oscillation-does-not-prove-real-system`
 - `concept:en:feedback`
 - `concept:en:oscillation`
 - `synthesis:en:delayed-feedback-and-oscillation`
-- `question:en:delayed-correction-oscillation`
+- `question:en:when-delayed-correction-can-oscillate`
 
 ## Formal object
 
@@ -97,6 +97,6 @@ A passing domain review should:
 - preserve the model-to-world limitation;
 - disclose conflicts and qualifications.
 
-## Translation handoff
+## Language boundary
 
-Any accepted English terminology should be handed to the Indonesian translation packet before the translated entities are promoted.
+This packet reviews the English canonical slice only. No language-specific handoff or translated promotion path is active in Phase 1.
