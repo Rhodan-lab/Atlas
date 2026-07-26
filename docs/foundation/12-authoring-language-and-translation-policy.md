@@ -2,161 +2,135 @@
 
 ## Status
 
-**Accepted for `atlas-content/0.1`.** Revisit only if reference fixtures expose a material failure.
+**Accepted for `atlas-content/0.1`, amended during Phase 1.**
+
+The amendment narrows the active reference corpus to English while preserving language-neutral translation semantics for future use.
 
 ## Decision
 
-Atlas supports multilingual authored knowledge from the beginning while keeping identifiers and structural vocabulary language-neutral.
+Atlas uses **English as the only active authored language** for the current foundation, reference corpus, review program, generated reports, and future Principia compatibility work.
 
-- Canonical IDs use lowercase ASCII prefixes and stable slugs.
-- Metadata keys, entity-type values, lifecycle states, relation types, and contract identifiers use English technical tokens.
-- Human-readable titles, statements, explanations, limitations, and syntheses may be authored in any declared language.
-- A translation is a separate authored entity linked to the same language-neutral `work` identity.
-- Translation does not automatically inherit review status from the source-language entity.
+- Canonical metadata keys, entity types, lifecycle states, relation types, contract identifiers, and authored reference content use English.
+- Current canonical IDs use English language tags where a language-qualified ID is required.
+- No translated vertical slice is part of the active corpus.
+- No translation packet, translation review queue, or bilingual terminology program is active in Phase 1.
+- Translation capability remains represented by language-neutral contracts and synthetic fixtures only.
 
-This balances international interoperability with the ability to author serious knowledge in Indonesian or another language without forcing translation before review.
+This prevents language review from expanding the scope before the English knowledge and governance foundation is mature.
 
-## Identity layers
+## Active-corpus rule
 
-Each authored entity has:
-
-```yaml
-id: claim:id:delayed-feedback-can-oscillate
-work: work:delayed-feedback-can-oscillate
-language: id
-```
-
-A corresponding English translation may use:
+For the current project phase:
 
 ```yaml
-id: claim:en:delayed-feedback-can-oscillate
-work: work:delayed-feedback-can-oscillate
 language: en
-translation_of: claim:id:delayed-feedback-can-oscillate
 ```
 
-`work` identifies the shared intellectual item across languages. `id` identifies one authored linguistic expression and its revision history.
+is the only accepted language for authored canonical and learner-facing knowledge content.
 
-## Why translations are separate entities
+New authored files under language-specific translation directories are out of scope. A future phase may reopen multilingual authoring through an explicit ADR and migration plan.
 
-Translation can change:
-
-- ambiguity;
-- technical precision;
-- implied scope;
-- cultural interpretation;
-- examples and terminology;
-- confidence or review of phrasing.
-
-Therefore, a translation is not merely a display layer. It requires its own editorial and, when meaning could shift, domain review.
-
-## Canonical structural vocabulary
+## Language-neutral structure
 
 The following remain language-neutral technical tokens:
 
-- entity types such as `claim`, `evidence`, and `synthesis`;
-- statuses such as `draft`, `reviewed`, and `contested`;
-- relations such as `supports`, `contradicts`, and `derived-from`;
-- confidence labels when used as controlled metadata;
+- entity types such as `claim`, `evidence`, `model`, and `synthesis`;
+- lifecycle states such as `draft`, `reviewed`, and `contested`;
+- relation types such as `supports`, `contradicts`, and `derived-from`;
+- confidence labels and material flags;
 - review-type identifiers;
 - contract versions;
-- date and identifier formats.
+- date, revision, and federation formats.
 
-Interfaces may localize their labels, but stored authored semantics retain canonical tokens.
+The storage model must not require redesign if multilingual authoring is introduced later.
 
-## Language declaration
+## Dormant translation capability
 
-Use BCP 47 language tags where possible:
-
-```yaml
-language: id
-```
-
-Examples:
-
-- `id` — Indonesian;
-- `en` — English;
-- `en-US` — U.S. English when the regional distinction matters;
-- `jv` — Javanese.
-
-Do not add a regional subtag unless it changes interpretation or editorial expectations.
-
-## Terminology records
-
-Important technical terms may use terminology records:
+Atlas retains the ability to represent a translation as a separate authored entity with:
 
 ```yaml
-id: term:id:umpan-balik
-work: term:feedback
-language: id
-preferred: umpan balik
-alternatives:
-  - feedback
-avoid:
-  - balikan
-scope_note: Preferred systems-science term in this corpus.
-```
-
-Terminology records help distinguish:
-
-- preferred translations;
-- accepted alternatives;
-- misleading near-synonyms;
-- domain-specific usage;
-- terms intentionally retained in another language.
-
-Terminology guidance does not erase legitimate variation in quoted or historical material.
-
-## Translation lifecycle
-
-1. Source-language item is authored and assigned a `work` identity.
-2. Translation begins as `draft`.
-3. Translator records the source revision used.
-4. Editorial review checks clarity and fidelity.
-5. Domain review checks technical meaning when necessary.
-6. Translation status records the exact source revision it matches.
-7. A material source revision marks translations as potentially stale.
-
-## Review fields
-
-```yaml
+id: claim:fr:synthetic-example
+work: work:synthetic-example
+language: fr
+translation_of: claim:en:synthetic-example
 translation:
-  source: claim:id:delayed-feedback-can-oscillate
-  source_revision: 2
-  method: human
-  checked_by:
-    - role: bilingual-editor
+  source_revision: 1
+  method: fixture
 ```
 
-AI-assisted translation is allowed only as a draft transformation and must record the method. It cannot inherit or create `reviewed` status.
+This example is a **synthetic contract fixture**, not active corpus content.
 
-## Cross-language relations
+Translation semantics continue to require:
 
-Canonical semantic relations normally connect `work` identities in derived views, while authored files reference the specific language entity they actually discuss.
+- a distinct language-qualified entity ID;
+- a shared language-neutral `work` identity;
+- an exact source entity and source revision;
+- independent staleness tracking;
+- no automatic inheritance of lifecycle or review status;
+- explicit editorial and domain review if multilingual authoring is later activated.
 
-This prevents a translation mismatch from being hidden while still allowing a reader to navigate the same intellectual structure across languages.
+## Why capability is preserved
 
-## Search and interface behavior
+Removing active translated content does not justify deleting the underlying semantics. Future international use may still require:
 
-Later implementations should:
+- stable cross-language identity;
+- source-revision pinning;
+- stale-translation detection;
+- translation-specific review authority;
+- protection against semantic drift;
+- independent lifecycle decisions.
 
-- search the user’s preferred language first;
-- expose available translations;
-- show when a translation is stale or less reviewed;
-- avoid combining sentences from different translations into one synthesis without disclosure;
-- preserve original-language source titles and provide optional translated labels.
+The current phase tests those rules only with bounded synthetic fixtures.
 
-## Initial corpus policy
+## Synthetic fixture boundary
 
-The Phase 0 reference corpus may use English metadata tokens and English primary records for interoperability. At least one complete vertical slice must include an Indonesian authored or translated entity to test multilingual identity, terminology, and review behavior.
+Translation fixtures may exist only when they:
+
+- are clearly identified as test or migration fixtures;
+- do not appear in the authored reference corpus;
+- do not create a reviewer packet or promotion backlog;
+- do not imply a supported product language;
+- use minimal content needed to exercise the contract;
+- cannot be mistaken for reviewed knowledge.
+
+## Review boundary
+
+Machine validation may establish that translation metadata is structurally valid or stale.
+
+It cannot establish:
+
+- translation equivalence;
+- cultural or technical appropriateness;
+- bilingual editorial quality;
+- domain fidelity;
+- authority to promote a translated entity.
+
+No translated entity can become reviewed without a future policy reopening multilingual authoring and defining accountable human authority.
+
+## Future reopening gate
+
+Multilingual authored content may return only when an accepted decision records:
+
+1. why another language is required;
+2. which corpus or vertical slice is in scope;
+3. contributor and reviewer qualifications;
+4. terminology governance;
+5. source-revision and staleness behavior;
+6. migration effects on IDs, search, and interfaces;
+7. resource requirements that do not weaken English review quality;
+8. rollback and deprecation procedures.
+
+Until that gate is passed, English remains the only active authored language.
 
 ## Invalid patterns
 
 Reject or flag:
 
-- two language files sharing the same `id`;
+- non-English authored canonical content in the active corpus;
+- translated content presented as a product-supported language;
 - a translation without `translation_of` and source revision;
-- inherited review status without translation review;
+- inherited review status across languages;
 - machine translation presented as reviewed human authorship;
-- changing a `work` identity merely because the title is translated;
-- silently translating source quotations or legal language as if verbatim.
+- a language-specific review backlog created without an accepted reopening decision;
+- changing a `work` identity merely because language changes;
+- silently translating quoted source material as if verbatim.
