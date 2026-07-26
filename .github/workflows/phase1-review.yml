@@ -13,11 +13,13 @@ on:
       - "tools/foundation-validator/phase1_review_backlog.py"
       - "tools/foundation-validator/phase1_machine_attestations.py"
       - "tools/foundation-validator/phase1_human_review_handoff.py"
+      - "tools/foundation-validator/phase1_review_intake.py"
       - "tools/foundation-validator/tests/test_phase1_review_gate.py"
       - "tools/foundation-validator/tests/test_phase1_coverage_report.py"
       - "tools/foundation-validator/tests/test_phase1_review_backlog.py"
       - "tools/foundation-validator/tests/test_phase1_machine_attestations.py"
       - "tools/foundation-validator/tests/test_phase1_human_review_handoff.py"
+      - "tools/foundation-validator/tests/test_phase1_review_intake.py"
       - ".github/workflows/phase1-review.yml"
   pull_request:
     paths:
@@ -30,11 +32,13 @@ on:
       - "tools/foundation-validator/phase1_review_backlog.py"
       - "tools/foundation-validator/phase1_machine_attestations.py"
       - "tools/foundation-validator/phase1_human_review_handoff.py"
+      - "tools/foundation-validator/phase1_review_intake.py"
       - "tools/foundation-validator/tests/test_phase1_review_gate.py"
       - "tools/foundation-validator/tests/test_phase1_coverage_report.py"
       - "tools/foundation-validator/tests/test_phase1_review_backlog.py"
       - "tools/foundation-validator/tests/test_phase1_machine_attestations.py"
       - "tools/foundation-validator/tests/test_phase1_human_review_handoff.py"
+      - "tools/foundation-validator/tests/test_phase1_review_intake.py"
       - ".github/workflows/phase1-review.yml"
 
 permissions:
@@ -146,6 +150,122 @@ jobs:
           print("human-review-handoff=pass; tasks=25; tracks=5; snapshots=10")
           PY
 
+      - name: Build synthetic exact-snapshot review submission
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          handoff_path = Path("phase1-reports/human-review-handoff/handoff.json")
+          handoff = json.loads(handoff_path.read_text(encoding="utf-8"))
+          tasks = [task for track in handoff["tracks"] for task in track["tasks"]]
+          task = next(
+              task for task in tasks
+              if task["review_type"] == "editorial"
+              and "internal" in task["reviewer_requirement"]["allowed_independence"]
+          )
+          entity = task["entity"]
+          snapshot = task["entity_snapshot"]
+          submission = {
+              "contract": "atlas-review-submission/0.1",
+              "coverage_id": handoff["coverage_id"],
+              "task_id": task["id"],
+              "snapshot": {
+                  "entity_id": entity["id"],
+                  "revision": entity["revision"],
+                  "sha256": snapshot["sha256"],
+              },
+              "submitted_at": "2026-07-26",
+              "reviewed_exact_snapshot": True,
+              "ai_assistance": {
+                  "used": True,
+                  "description": "Synthetic CI fixture: AI wording assistance only; no real reviewer authority is claimed.",
+              },
+              "review_record": {
+                  "contract": "atlas-review/0.1",
+                  "id": "review:editorial:synthetic-intake-r1:2026-07-26",
+                  "entity": {
+                      "id": entity["id"],
+                      "revision": entity["revision"],
+                  },
+                  "review_type": "editorial",
+                  "reviewer": {
+                      "display_name": "Synthetic CI fixture reviewer",
+                      "kind": "human",
+                      "independence": "internal",
+                      "qualification": "Synthetic test qualification; not a real review or reviewer.",
+                      "accountable": True,
+                      "conflicts": [],
+                  },
+                  "completed_at": "2026-07-26",
+                  "review_horizon": None,
+                  "outcome": "pass",
+                  "findings": [],
+                  "summary": "Synthetic CI fixture for intake validation only.",
+                  "permits_promotion": True,
+              },
+          }
+          Path("phase1-reports/synthetic-review-submission.json").write_text(
+              json.dumps(submission, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+
+          digest = hashlib.sha256()
+          for path in sorted(Path("content/reviews/records").glob("*.json")):
+              digest.update(path.name.encode("utf-8"))
+              digest.update(b"\0")
+              digest.update(path.read_bytes())
+              digest.update(b"\0")
+          Path("phase1-reports/review-records-before.sha256").write_text(
+              digest.hexdigest() + "\n", encoding="utf-8"
+          )
+          print(f"synthetic-intake-task={task['id']}")
+          PY
+
+      - name: Validate and extract synthetic review submission
+        run: |
+          python tools/foundation-validator/phase1_review_intake.py validate \
+            phase1-reports/synthetic-review-submission.json \
+            --handoff phase1-reports/human-review-handoff/handoff.json
+          python tools/foundation-validator/phase1_review_intake.py extract \
+            phase1-reports/synthetic-review-submission.json \
+            --handoff phase1-reports/human-review-handoff/handoff.json \
+            --out phase1-reports/synthetic-extracted-review.json
+          python tools/foundation-validator/phase1_review_gate.py validate-record \
+            phase1-reports/synthetic-extracted-review.json
+
+      - name: Confirm intake lineage and no automatic repository write
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          submission = json.loads(
+              Path("phase1-reports/synthetic-review-submission.json").read_text(encoding="utf-8")
+          )
+          record = json.loads(
+              Path("phase1-reports/synthetic-extracted-review.json").read_text(encoding="utf-8")
+          )
+          lineage = record["metadata"]["intake"]
+          assert lineage["task_id"] == submission["task_id"], lineage
+          assert lineage["snapshot"] == submission["snapshot"], lineage
+          assert lineage["reviewed_exact_snapshot"] is True, lineage
+          assert lineage["ai_assistance"]["used"] is True, lineage
+
+          digest = hashlib.sha256()
+          for path in sorted(Path("content/reviews/records").glob("*.json")):
+              digest.update(path.name.encode("utf-8"))
+              digest.update(b"\0")
+              digest.update(path.read_bytes())
+              digest.update(b"\0")
+          before = Path("phase1-reports/review-records-before.sha256").read_text(encoding="utf-8").strip()
+          assert digest.hexdigest() == before, "intake modified content/reviews/records"
+          assert not Path("content/reviews/records/synthetic-extracted-review.json").exists()
+          print("review-intake=pass; exact-snapshot-lineage=preserved; repository-write=none")
+          PY
+
       - name: Validate eligible promotion and lifecycle fixtures
         run: |
           mkdir -p phase1-reports
@@ -189,7 +309,7 @@ jobs:
               --report "phase1-reports/coverage-${name}.md"
           done
 
-      - name: Upload deterministic review reports and handoff bundles
+      - name: Upload deterministic review reports, handoff, and intake fixtures
         if: always()
         uses: actions/upload-artifact@v4
         with:

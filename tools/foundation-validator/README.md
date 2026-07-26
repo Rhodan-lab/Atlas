@@ -2,18 +2,9 @@
 
 ## Scope
 
-These bounded Python tools verify accepted Atlas contracts, deterministic fixtures, machine attestations, and reviewer handoff preparation.
+These bounded Python tools verify accepted Atlas contracts, deterministic fixtures, machine attestations, reviewer handoffs, and returned submission consistency.
 
-They do **not**:
-
-- decide whether a scientific claim is true;
-- decide whether a source interpretation is adequate;
-- assign confidence automatically;
-- rewrite authored content;
-- grant `reviewed` status;
-- create or assign human accountability;
-- resolve findings;
-- define the future Atlas runtime.
+They do **not** decide scientific truth, assign confidence, rewrite authored content, grant `reviewed` status, create or assign human accountability, resolve findings, accept returned reviews automatically, or define the future Atlas runtime.
 
 ## Setup
 
@@ -32,25 +23,16 @@ python tools/foundation-validator/atlas_foundation_validator.py validate \
   content/canonical
 ```
 
-The active authored corpus is English-only. Translation identity and staleness are tested through neutral synthetic fixtures, not authored files under `content/translations/`.
+The active authored corpus is English-only. Translation identity and staleness are tested through neutral synthetic fixtures.
 
 ## Review gate
-
-Validate one exact-revision record:
 
 ```bash
 python tools/foundation-validator/phase1_review_gate.py validate-record \
   content/reviews/records/<record>.json
 ```
 
-Evaluate a bounded promotion fixture:
-
-```bash
-python tools/foundation-validator/phase1_review_gate.py promotion \
-  content/reviews/fixtures/valid-normative-promotion.json
-```
-
-The gate enforces reviewer kind, qualification, independence, accountability, conflicts, review horizon, findings, exact revision, and lifecycle requirements.
+The gate enforces reviewer kind, qualification, independence, accountability, conflicts, horizon, findings, exact revision, and lifecycle requirements.
 
 ## Coverage reporter
 
@@ -79,30 +61,14 @@ The backlog separates automation-eligible and human-required tasks. It does not 
 
 ## Machine attestations
 
-Generate the exact permitted machine records:
-
-```bash
-python tools/foundation-validator/phase1_machine_attestations.py generate \
-  --records-dir content/reviews/records
-```
-
-Verify committed records:
-
 ```bash
 python tools/foundation-validator/phase1_machine_attestations.py check \
   --records-dir content/reviews/records
 ```
 
-The generator is limited to:
-
-- structural conformance for all ten entities in the complete delayed-feedback slice;
-- fully specified recurrence reproduction for the formal claim, generated evidence, and model.
-
-Every generated record is machine-only, non-accountable, and unable to permit promotion.
+The generator is limited to structural conformance and explicitly permitted fully specified recurrence reproduction. Every generated record is machine-only, non-accountable, and unable to permit promotion.
 
 ## Human review handoff
-
-Generate the self-contained accountable-human handoff:
 
 ```bash
 python tools/foundation-validator/phase1_human_review_handoff.py \
@@ -114,19 +80,40 @@ python tools/foundation-validator/phase1_human_review_handoff.py \
   --expect-track-count 5
 ```
 
-The package contains:
+The package contains `atlas-review-handoff/0.1`, five qualification-track bundles, all 25 human tasks exactly once, ten exact Markdown snapshots, original paths and SHA-256 digests, blockers and dependents, and no reviewer assignment.
 
-- `handoff.json` under contract `atlas-review-handoff/0.1`;
-- five JSON and Markdown qualification-track bundles;
-- all 25 human-required tasks exactly once;
-- ten exact canonical Markdown snapshots;
-- original paths and SHA-256 digests;
-- existing records, blockers, dependents, and acceptance criteria;
-- no reviewer assignment.
+## Review submission intake
 
-Generation fails when machine-eligible work remains, a task permits nonhuman authority, an exact canonical revision is missing, or a task is duplicated.
+Validate a returned `atlas-review-submission/0.1` envelope:
 
-The handoff is reviewer preparation only. It performs no review and cannot satisfy coverage.
+```bash
+python tools/foundation-validator/phase1_review_intake.py validate \
+  reviewer-submission.json \
+  --handoff phase1-reports/human-review-handoff/handoff.json
+```
+
+Extract the proposed nested review record with intake lineage:
+
+```bash
+python tools/foundation-validator/phase1_review_intake.py extract \
+  reviewer-submission.json \
+  --handoff phase1-reports/human-review-handoff/handoff.json \
+  --out phase1-reports/extracted-review.json
+```
+
+Intake verifies:
+
+- active coverage and task identity;
+- exact entity revision and snapshot SHA-256;
+- matching review type;
+- human reviewer kind and accountability;
+- required independence;
+- qualification and conflicts;
+- nested `atlas-review/0.1` validity;
+- AI-assistance disclosure;
+- completion and submission date order.
+
+The extracted record adds `metadata.intake` provenance. The tool never writes to `content/reviews/records/` automatically and does not accept the review into authority.
 
 ## Run all tests
 
@@ -134,7 +121,7 @@ The handoff is reviewer preparation only. It performs no review and cannot satis
 python -m unittest discover -s tools/foundation-validator/tests -v
 ```
 
-The suite covers valid corpus behavior, deterministic diagnostics, migrations, identity, synthetic translation staleness, review authority, lifecycle transitions, coverage, backlog generation, machine-attestation drift, handoff task uniqueness, snapshot integrity, blocker preservation, and deterministic bundle output.
+The suite covers corpus validation, deterministic diagnostics, migrations, identity, synthetic translation staleness, review authority, lifecycle transitions, coverage, backlog generation, machine-attestation drift, handoff task uniqueness, snapshot integrity, blocker preservation, return-envelope matching, human authority, independence, AI disclosure, intake lineage, and no automatic repository writes.
 
 ## Migration and identity fixtures
 
@@ -162,4 +149,4 @@ Diagnostics contain severity, stable code, path, and deterministic message. Tool
 
 When tool behavior conflicts with an accepted foundation decision, the tool is wrong. Update implementation and fixtures through review; do not weaken the authored contract merely to make a test pass.
 
-Machine conformance, arithmetic reproduction, backlogs, and reviewer bundles are evidence or planning artifacts about bounded procedures. They are not scientific, editorial, methodological, source, legal, ethical, human, or lifecycle authority.
+Machine conformance, arithmetic reproduction, backlogs, reviewer bundles, valid submission envelopes, and extracted proposed records are bounded evidence-transfer or planning artifacts. They are not scientific, editorial, methodological, source, legal, ethical, human, or lifecycle authority.

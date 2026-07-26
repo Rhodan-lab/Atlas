@@ -1,0 +1,39 @@
+{
+  "contract": "atlas-review-submission/0.1",
+  "coverage_id": "<copy from handoff.json>",
+  "task_id": "<copy exact task ID from the selected track bundle>",
+  "snapshot": {
+    "entity_id": "<copy exact entity ID>",
+    "revision": 1,
+    "sha256": "<copy exact SHA-256 from the handoff task>"
+  },
+  "submitted_at": "YYYY-MM-DD",
+  "reviewed_exact_snapshot": true,
+  "ai_assistance": {
+    "used": false,
+    "description": null
+  },
+  "review_record": {
+    "contract": "atlas-review/0.1",
+    "id": "review:<review-type>:<bounded-subject>-r1:YYYY-MM-DD",
+    "entity": {
+      "id": "<same exact entity ID>",
+      "revision": 1
+    },
+    "review_type": "<same review type requested by the task>",
+    "reviewer": {
+      "display_name": "<real reviewer or stable accountable role>",
+      "kind": "human",
+      "independence": "<internal or independent as required by the task>",
+      "qualification": "<specific qualification for this review type and subject>",
+      "accountable": true,
+      "conflicts": []
+    },
+    "completed_at": "YYYY-MM-DD",
+    "review_horizon": null,
+    "outcome": "<pass | pass-with-minor-findings | changes-required | blocked | not-applicable>",
+    "findings": [],
+    "summary": "<bounded review conclusion for this exact revision and review type>",
+    "permits_promotion": false
+  }
+}
