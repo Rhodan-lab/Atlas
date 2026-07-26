@@ -1,16 +1,17 @@
-# Atlas Foundation Validator
+# Atlas Foundation and Review Validators
 
 ## Scope
 
-This is the minimum validator selected by ADR-0001 for Phase 0 verification. It checks whether authored files conform to `atlas-content/0.1` and whether fixture expectations are deterministic.
+These bounded Python tools verify accepted Atlas contracts and deterministic fixtures.
 
-It does **not**:
+They do **not**:
 
 - decide whether a scientific claim is true;
-- decide whether a source is credible enough;
-- assign confidence;
-- rewrite content;
+- decide whether a source interpretation is adequate;
+- assign confidence automatically;
+- rewrite authored content;
 - grant `reviewed` status;
+- create human accountability;
 - define the future Atlas runtime.
 
 ## Setup
@@ -23,24 +24,94 @@ python -m pip install -r tools/foundation-validator/requirements.txt
 
 On Windows PowerShell, activate with `.venv\Scripts\Activate.ps1`.
 
-## Validate the canonical corpus
+## Foundation validator
+
+Validate the English canonical corpus:
 
 ```bash
 python tools/foundation-validator/atlas_foundation_validator.py validate \
-  content/canonical content/translations
+  content/canonical
 ```
 
 Warnings remain visible but do not fail the command unless `--warnings-as-errors` is supplied.
 
-## Run the diagnostic contract
+The active authored corpus is English-only. Translation identity and staleness are tested through neutral synthetic fixtures, not authored files under `content/translations/`.
+
+## Review gate
+
+Validate one exact-revision review record:
+
+```bash
+python tools/foundation-validator/phase1_review_gate.py validate-record \
+  content/reviews/records/feedback-domain-ai-assisted.json
+```
+
+Evaluate a bounded promotion fixture:
+
+```bash
+python tools/foundation-validator/phase1_review_gate.py promotion \
+  content/reviews/fixtures/valid-normative-promotion.json
+```
+
+The review gate enforces reviewer kind, qualification, independence, accountability, conflicts, review horizon, findings, exact revision, and lifecycle requirements.
+
+## Coverage reporter
+
+```bash
+python tools/foundation-validator/phase1_coverage_report.py coverage \
+  content/reviews/coverage/feedback-complete-vertical-slice.json \
+  --records-dir content/reviews/records \
+  --expect blocked \
+  --report phase1-coverage.md
+```
+
+Coverage reports required, satisfied, and missing review classes plus dependency impact. They never promote content.
+
+## Review backlog
+
+```bash
+python tools/foundation-validator/phase1_review_backlog.py \
+  content/reviews/coverage/feedback-complete-vertical-slice.json \
+  --records-dir content/reviews/records \
+  --expect blocked \
+  --json-out phase1-backlog.json \
+  --report phase1-backlog.md
+```
+
+The backlog separates automation-eligible and human-required tasks and records qualification requirements. It does not assign reviewers or count as completed review.
+
+## Machine attestations
+
+Generate the exact permitted machine records:
+
+```bash
+python tools/foundation-validator/phase1_machine_attestations.py generate \
+  --records-dir content/reviews/records
+```
+
+Verify committed records against deterministic output:
+
+```bash
+python tools/foundation-validator/phase1_machine_attestations.py check \
+  --records-dir content/reviews/records
+```
+
+The generator is intentionally limited to:
+
+- structural conformance for all ten entities in the complete delayed-feedback slice;
+- fully specified recurrence reproducibility for the formal claim, generated evidence, and model.
+
+Every generated record is machine-only, non-accountable, and unable to permit promotion.
+
+## Run all tests
 
 ```bash
 python -m unittest discover -s tools/foundation-validator/tests -v
 ```
 
-The test suite exercises the 24 invalid scenarios documented in `content/fixtures/invalid/README.md`, plus valid corpus, migration, identity, translation-staleness, and feedback-reproduction cases.
+The suite covers valid corpus behavior, deterministic diagnostics, migrations, identity, synthetic translation staleness, review authority, lifecycle transitions, coverage, backlog generation, and machine-attestation drift.
 
-## Validate migration and identity fixtures
+## Migration and identity fixtures
 
 ```bash
 python tools/foundation-validator/atlas_foundation_validator.py migration \
@@ -56,7 +127,7 @@ python tools/foundation-validator/atlas_foundation_validator.py translation-stal
   content/fixtures/translation/stale-source-revision.json
 ```
 
-The last command must return `possibly-stale`.
+The last command must return `possibly-stale` for the synthetic fixture.
 
 ## Diagnostic contract
 
@@ -67,8 +138,10 @@ Diagnostics contain:
 - path;
 - deterministic message.
 
-They are sorted by path, code, and message. The validator reports safely independent findings in one pass and never edits authored files.
+They are sorted by path, code, and message. Validators report safely independent findings in one pass and never edit authored meaning.
 
 ## Authority boundary
 
-When validator behavior conflicts with an accepted foundation decision, the validator is wrong. Update the implementation and fixtures through review; do not weaken the authored contract merely to make a test pass.
+When validator behavior conflicts with an accepted foundation decision, the validator is wrong. Update implementation and fixtures through review; do not weaken the authored contract merely to make a test pass.
+
+Machine conformance and arithmetic reproduction are evidence about bounded procedures. They are not scientific, editorial, methodological, legal, ethical, or lifecycle authority.

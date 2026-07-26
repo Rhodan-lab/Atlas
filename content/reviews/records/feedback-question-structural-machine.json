@@ -1,0 +1,30 @@
+{
+  "completed_at": "2026-07-26",
+  "contract": "atlas-review/0.1",
+  "entity": {
+    "id": "question:en:when-delayed-correction-can-oscillate",
+    "revision": 1
+  },
+  "findings": [],
+  "id": "review:structural:feedback-question-r1:2026-07-26",
+  "metadata": {
+    "authority_limit": "structural conformance only",
+    "canonical_path": "content/canonical/feedback/question-delayed-correction.md",
+    "generator": "phase1_machine_attestations.py",
+    "procedure": "python tools/foundation-validator/atlas_foundation_validator.py validate content/canonical",
+    "result": "pass"
+  },
+  "outcome": "pass",
+  "permits_promotion": false,
+  "review_horizon": null,
+  "review_type": "structural",
+  "reviewer": {
+    "accountable": false,
+    "conflicts": [],
+    "display_name": "Atlas Foundation Validator",
+    "independence": "not-applicable",
+    "kind": "machine",
+    "qualification": "Deterministic atlas-content/0.1 structural validation"
+  },
+  "summary": "The exact revision passed the repository's deterministic atlas-content/0.1 structural validation. This attestation does not judge scientific meaning or permit promotion."
+}

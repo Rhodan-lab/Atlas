@@ -1,0 +1,46 @@
+{
+  "completed_at": "2026-07-26",
+  "contract": "atlas-review/0.1",
+  "entity": {
+    "id": "model:en:delayed-correction-recurrence",
+    "revision": 1
+  },
+  "findings": [],
+  "id": "review:reproducibility:feedback-model-r1:2026-07-26",
+  "metadata": {
+    "authority_limit": "fully specified arithmetic fixture only",
+    "generator": "phase1_machine_attestations.py",
+    "inputs": {
+      "delay_steps": 1,
+      "gain": 1,
+      "x0": 1,
+      "x1": 0
+    },
+    "observed_sequence": [
+      1,
+      0,
+      -1,
+      -1,
+      0,
+      1,
+      1,
+      0
+    ],
+    "procedure": "recalculate x[t+1] = x[t] - x[t-1] from x0=1 and x1=0",
+    "result": "pass",
+    "steps": 8
+  },
+  "outcome": "pass",
+  "permits_promotion": false,
+  "review_horizon": null,
+  "review_type": "reproducibility",
+  "reviewer": {
+    "accountable": false,
+    "conflicts": [],
+    "display_name": "Atlas Feedback Reproducibility Check",
+    "independence": "not-applicable",
+    "kind": "machine",
+    "qualification": "Deterministic recurrence recalculation for a fully specified fixture"
+  },
+  "summary": "The exact delayed-feedback sequence was recalculated from the stated recurrence, parameters, and initial values. This does not establish behavior of any real system or permit promotion."
+}

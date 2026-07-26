@@ -2,19 +2,21 @@
 
 ## Current status
 
-**Phase 1 — English Reference Corpus, Coverage, and Vertical-Slice Review (active)**
+**Phase 1 — English Reference Corpus and Accountable Vertical-Slice Review (active)**
 
 Phase 0 was accepted through merged PR #3 at commit `34afe253fc8c9cefb61adfe2831f6da82aa07e16`. It established `atlas-content/0.1`, canonical entity semantics, provenance, revision identity, migrations, federation fixtures, and deterministic conformance validation.
 
 The initial Phase 1 review and promotion infrastructure was merged through PR #4 at commit `09488b76c43fdbe46f94fcb14a27637472adfa38`.
 
-Phase 1 coverage and dependency reporting was merged through PR #5 at commit `c67457ae2c369d57b00b1cd22f454245ebf6ac13`.
+Coverage and dependency reporting was merged through PR #5 at commit `c67457ae2c369d57b00b1cd22f454245ebf6ac13`.
 
-Complete delayed-feedback vertical-slice readiness and deterministic review backlog generation were merged through PR #6 at commit `786bdaf4141be032554fe1b73439dfacb67c806d`.
+Complete delayed-feedback vertical-slice readiness and deterministic backlog generation were merged through PR #6 at commit `786bdaf4141be032554fe1b73439dfacb67c806d`.
 
-The active authored corpus is now English-only. Language-neutral translation semantics remain available only through synthetic contract fixtures and are not part of the Phase 1 corpus, review queue, or product scope.
+The English-only authored and review corpus policy was merged through PR #7 at commit `92b2cec5fbc310e065bdeca4486ca98d1dc5a7f2`.
 
-All reference entities remain `draft`. No AI-assisted record, validator pass, coverage report, readiness manifest, generated backlog, or synthetic fixture grants scientific, methodological, legal, ethical, editorial, or translation authority.
+Current work records the complete set of machine-authorized structural and fully specified reproducibility attestations for the English delayed-feedback slice. Human-required review remains blocked and cannot be replaced by machine or AI-assisted work.
+
+All canonical reference entities remain `draft`. No validator pass, machine attestation, AI-assisted record, coverage report, readiness manifest, generated backlog, or synthetic fixture grants scientific, methodological, editorial, source, legal, ethical, or human authority.
 
 ## Authority order
 
@@ -25,7 +27,13 @@ All reference entities remain `draft`. No AI-assisted record, validator pass, co
 5. generated reports, indexes, coverage manifests, and backlogs
 6. experimental prototype code
 
-A validator can establish conformance. It cannot establish scientific truth, legal correctness, ethical acceptability, editorial quality, reviewer accountability, or translation equivalence.
+A validator can establish bounded conformance or a fully specified calculation. It cannot establish scientific truth, domain adequacy, model applicability, source interpretation, legal correctness, ethical acceptability, editorial quality, reviewer accountability, or translation equivalence.
+
+## Language policy
+
+The active authored corpus and review program are English-only.
+
+Language-neutral translation identity, source-revision lineage, independent lifecycle, and staleness semantics remain dormant contract capabilities exercised only through synthetic fixtures. They do not represent a supported authored language or active review queue.
 
 ## Phase 0 accepted baseline
 
@@ -36,16 +44,10 @@ A validator can establish conformance. It cannot establish scientific truth, leg
 - language-neutral work identity and dormant translation-lineage semantics;
 - mechanical and semantic migration rules;
 - alias, rename, collision, and federation fixtures;
-- deterministic validator and Phase 0 test suite;
+- deterministic validator and test suite;
 - source-verification, structural-validation, review-register, and closure records.
 
-### Phase 0 language amendment
-
-The foundation still supports language-qualified identities and source-revision staleness. The active reference corpus, however, is English-only.
-
-Translation behavior may be tested only with synthetic fixtures that cannot be mistaken for authored or supported product content.
-
-Phase 0 may be reopened only when a representative review, migration, lifecycle fixture, or future multilingual reopening exposes an actual contract failure.
+Phase 0 may be reopened only when representative review, migration, lifecycle behavior, or a future multilingual reopening demonstrates a real contract failure.
 
 ## Phase 1 implemented baseline
 
@@ -53,7 +55,7 @@ Phase 0 may be reopened only when a representative review, migration, lifecycle 
 
 - `atlas-review/0.1` exact-revision review records;
 - `atlas-promotion/0.1` deterministic lifecycle decisions;
-- accountable reviewer, qualification, independence, and conflict fields;
+- reviewer kind, qualification, independence, accountability, and conflict fields;
 - critical and major finding blockers;
 - review horizons and expiration behavior;
 - AI and machine authority boundaries;
@@ -62,12 +64,12 @@ Phase 0 may be reopened only when a representative review, migration, lifecycle 
 
 ### Coverage and provenance
 
-- `atlas-review-coverage/0.1` packet and slice manifests;
+- `atlas-review-coverage/0.1` packet and complete-slice manifests;
 - `all` and `load-bearing` coverage policies;
 - exact-revision required, satisfied, and missing review classes;
 - internal reverse-dependency impact;
 - optional opaque external dependents;
-- deterministic Markdown and JSON reporting;
+- deterministic Markdown and JSON reports;
 - CI proof that known gaps remain blocked rather than masquerading as passes.
 
 ### Review backlog
@@ -85,8 +87,8 @@ Phase 0 may be reopened only when a representative review, migration, lifecycle 
 ### Bounded packets
 
 1. catalase assay methodology;
-2. delayed-feedback domain review;
-3. recommender legal context.
+2. delayed-feedback mathematics, terminology, and inference limits;
+3. recommender evidence, legal context, and governance.
 
 These packet scopes remain intentionally blocked pending accountable review.
 
@@ -104,19 +106,51 @@ These packet scopes remain intentionally blocked pending accountable review.
 
 The manifest uses `coverage_requirement: all`. Every listed entity must obtain acceptable exact-revision coverage before the slice can become coverage-complete.
 
-The formal result and its model-to-world inference boundary are both load-bearing. A future Principia experience must not consume one while hiding the other.
+The formal recurrence result and the model-to-world inference boundary are both load-bearing. A future Principia explanation, investigation, simulation, or system dossier must not consume the formal result while hiding its limitation.
+
+## Machine attestations
+
+`tools/foundation-validator/phase1_machine_attestations.py` deterministically generates and checks exactly 13 machine review records:
+
+- 10 structural attestations, one for every entity in the complete slice;
+- 3 reproducibility attestations for the formal claim, generated evidence, and executable model marked `fully-specified-reproducibility`.
+
+Every machine attestation:
+
+- targets one exact entity revision;
+- uses reviewer kind `machine`;
+- uses independence `not-applicable`;
+- sets `accountable: false`;
+- sets `permits_promotion: false`;
+- has no authority beyond its declared bounded procedure;
+- is checked against deterministic generator output in CI.
+
+The recurrence check recalculates:
+
+```text
+x[t+1] = x[t] - x[t-1]
+x[0] = 1
+x[1] = 0
+```
+
+and confirms the eight-state sequence:
+
+```text
+1, 0, -1, -1, 0, 1, 1, 0
+```
+
+This establishes arithmetic reproducibility only. It does not establish periodicity terminology, stability classification, model adequacy, or behavior of any real system.
 
 ## Current English backlog
 
-The generated backlog for the complete delayed-feedback slice currently contains:
+After the 13 machine attestations are counted, the complete delayed-feedback slice remains `blocked` with:
 
-- 38 gate tasks;
-- 13 automation-eligible tasks;
-- 25 human-required tasks.
+- 25 gate tasks;
+- 0 automation-eligible tasks;
+- 25 human-required tasks;
+- 0 advisory-only tasks.
 
-These are entity/review-type tasks, not a required number of distinct people. One qualified reviewer may cover several tasks only when each exact-revision judgment, finding, conflict, and promotion permission is recorded separately.
-
-Automation-eligible does not mean completed. It still requires a valid review record that passes the review contract.
+These are exact entity/review-type tasks, not a required number of distinct people. A qualified reviewer may cover several tasks only when each exact-revision judgment, qualification, independence state, conflict, finding, and promotion recommendation is recorded separately.
 
 ## Phase 1 work packages
 
@@ -134,7 +168,7 @@ Automation-eligible does not mean completed. It still requires a valid review re
 - calculate required review types;
 - reject wrong-revision records;
 - reject unresolved critical or major findings;
-- reject authority derived only from AI or machine review where human judgment is required;
+- reject machine or AI authority where accountable human judgment is required;
 - reject stale synthetic translation fixtures and expired time-sensitive reviews;
 - preserve disagreement and conflicts;
 - require explicit transition records for reviewed, contested, deprecated, and retracted states.
@@ -162,14 +196,24 @@ Automation-eligible does not mean completed. It still requires a valid review re
 - CI artifacts for coverage and backlog reports;
 - no lifecycle promotion.
 
-### F. Review execution — active next work
+### F. Machine attestations — implementation in review
 
-- generate valid structural and reproducibility attestations where automation is permitted;
-- prepare consolidated human reviewer packets by qualification track;
-- obtain accountable source, domain, methodological, and editorial reviews;
-- record every finding against the exact revision;
+- deterministic generator and exact committed outputs;
+- ten structural records;
+- three fully specified reproducibility records;
+- generator drift detection in CI;
+- post-attestation backlog assertion;
+- no human authority or lifecycle promotion.
+
+### G. Accountable human review — next work
+
+- consolidate the 25 tasks into reviewer qualification tracks;
+- prepare source/provenance, editorial/scope, domain, and methods/inference packets;
+- obtain accountable exact-revision reviews;
+- preserve conflicts, disagreements, and findings;
+- resolve or retain every major finding honestly;
 - regenerate coverage without weakening requirements;
-- keep the slice blocked until all load-bearing requirements pass.
+- keep the slice blocked until every required review class passes.
 
 ## Future Principia & Atlas boundary
 
@@ -178,7 +222,7 @@ Atlas is being prepared to serve as the knowledge and governance layer of a futu
 - Atlas owns canonical knowledge identity, evidence, provenance, revision, review, lifecycle, and staleness.
 - Principia will own causal explanation, pedagogy, pathways, systems, investigations, simulations, and design experiences.
 - A future Principia artifact may appear as an opaque external dependent of an Atlas entity.
-- Atlas may report that an external artifact is affected by an Atlas revision, deprecation, or retraction.
+- Atlas may report that a Principia artifact is affected by revision, deprecation, or retraction.
 - Atlas does not validate or inherit Principia's pedagogical or release status.
 - Principia does not inherit Atlas review status automatically.
 - No live Principia dependency is declared during Phase 1.
@@ -189,8 +233,8 @@ This is compatibility preparation, not repository merger or product UI work.
 
 Phase 1 is complete only when:
 
-- review, promotion, coverage, and backlog semantics are explicit and executable;
-- review records, coverage manifests, and generated plans validate deterministically;
+- review, promotion, coverage, backlog, and attestation semantics are explicit and executable;
+- review records, coverage manifests, committed attestations, and generated plans validate deterministically;
 - promotion cannot occur from machine or AI review alone where human authority is required;
 - review coverage, blockers, and reviewer work can be generated without reading validator code;
 - contradiction, contested, deprecation, retraction, stale-review, and dependency-impact fixtures pass;
@@ -214,22 +258,22 @@ Still frozen:
 
 Allowed:
 
-- review-contract, promotion, coverage, provenance, backlog, and validator work;
+- review-contract, promotion, coverage, provenance, backlog, attestation, and validator work;
 - English reviewer packets, submission templates, and reports;
 - source and literature challenge scans;
-- accountable domain, methodological, ethical, legal-context, and editorial review records;
-- synthetic translation fixtures that test language-neutral contracts only;
+- accountable domain, methodological, ethical, legal-context, source, and editorial review records;
+- synthetic translation fixtures testing language-neutral contracts only;
 - fixture-driven corrections to accepted foundation decisions;
 - compatibility boundaries that do not create a live cross-repository dependency;
 - prototype regression maintenance.
 
 ## Immediate next actions
 
-1. remove language-specific corpus and review artifacts from the active repository state;
-2. verify English-only CI and synthetic translation fixtures;
-3. generate valid automation-eligible review records for the English delayed-feedback slice;
-4. consolidate the 25 human-required tasks into reviewer-ready qualification tracks;
-5. obtain and record accountable exact-revision reviews;
+1. verify all 13 machine attestations against deterministic generator output;
+2. confirm the remaining backlog is exactly 25 human-required gate tasks;
+3. consolidate those tasks into bounded qualification tracks;
+4. obtain accountable source, editorial, domain, and methodological reviews;
+5. record findings against exact revisions;
 6. resolve or preserve every major finding honestly;
 7. regenerate coverage and determine whether the English slice can reach `reviewed`;
 8. produce a Phase 1 completion report before entering Phase 2.

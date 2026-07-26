@@ -10,9 +10,11 @@ on:
       - "tools/foundation-validator/phase1_review_gate.py"
       - "tools/foundation-validator/phase1_coverage_report.py"
       - "tools/foundation-validator/phase1_review_backlog.py"
+      - "tools/foundation-validator/phase1_machine_attestations.py"
       - "tools/foundation-validator/tests/test_phase1_review_gate.py"
       - "tools/foundation-validator/tests/test_phase1_coverage_report.py"
       - "tools/foundation-validator/tests/test_phase1_review_backlog.py"
+      - "tools/foundation-validator/tests/test_phase1_machine_attestations.py"
       - ".github/workflows/phase1-review.yml"
   pull_request:
     paths:
@@ -22,9 +24,11 @@ on:
       - "tools/foundation-validator/phase1_review_gate.py"
       - "tools/foundation-validator/phase1_coverage_report.py"
       - "tools/foundation-validator/phase1_review_backlog.py"
+      - "tools/foundation-validator/phase1_machine_attestations.py"
       - "tools/foundation-validator/tests/test_phase1_review_gate.py"
       - "tools/foundation-validator/tests/test_phase1_coverage_report.py"
       - "tools/foundation-validator/tests/test_phase1_review_backlog.py"
+      - "tools/foundation-validator/tests/test_phase1_machine_attestations.py"
       - ".github/workflows/phase1-review.yml"
 
 permissions:
@@ -60,6 +64,11 @@ jobs:
             python tools/foundation-validator/phase1_review_gate.py validate-record "$record"
           done
 
+      - name: Verify deterministic machine attestations
+        run: |
+          python tools/foundation-validator/phase1_machine_attestations.py check \
+            --records-dir content/reviews/records
+
       - name: Validate Phase 1 coverage manifests
         run: |
           python tools/foundation-validator/phase1_coverage_report.py validate-manifest \
@@ -76,6 +85,21 @@ jobs:
             --expect blocked \
             --json-out "phase1-reports/backlog-${name}.json" \
             --report "phase1-reports/backlog-${name}.md"
+
+      - name: Confirm only accountable human review remains
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("phase1-reports/backlog-feedback-complete-vertical-slice.json")
+          payload = json.loads(path.read_text(encoding="utf-8"))
+          assert payload["gate_task_count"] == 25, payload
+          assert payload["gate_automation_eligible_task_count"] == 0, payload
+          assert payload["gate_human_required_task_count"] == 25, payload
+          assert payload["advisory_task_count"] == 0, payload
+          print("remaining-gate-tasks=25; automation-eligible=0; human-required=25")
+          PY
 
       - name: Validate eligible promotion and lifecycle fixtures
         run: |
