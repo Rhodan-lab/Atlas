@@ -4,7 +4,7 @@ import copy
 import unittest
 from pathlib import Path
 
-from tools.phase2_kernel.kernel import (
+from tools.phase2_kernel import (
     KernelError,
     KernelRepository,
     compile_canonical,
@@ -27,7 +27,10 @@ class Phase2KernelTests(unittest.TestCase):
 
     def test_compilation_is_deterministic_and_covers_three_slices(self) -> None:
         second = compile_canonical(CANONICAL)
+        relative = compile_canonical(Path("content/canonical"))
         self.assertEqual(render_json(self.runtime), render_json(second))
+        self.assertEqual(render_json(self.runtime), render_json(relative))
+        self.assertEqual(self.runtime["source_root"], "content/canonical")
         syntheses = [
             entity for entity in self.runtime["entities"] if entity["type"] == "synthesis"
         ]
