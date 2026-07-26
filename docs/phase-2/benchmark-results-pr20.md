@@ -2,7 +2,7 @@
 
 ## Scope
 
-These measurements were produced by the Phase 2 Knowledge Kernel workflow for commit `82ce19f02695f74093fc348053deb8458fb934a6` using the current 34-entity canonical corpus and the pinned `principia-atlas-external-dependent/0.2` fixture.
+These measurements were produced by the Phase 2 Knowledge Kernel workflow for commit `4bf5078147ce46c7071997c1420f8e3817f9c8e0` using the current 34-entity canonical corpus and the pinned `principia-atlas-external-dependent/0.2` fixture.
 
 They are operational evidence for regression detection only. They are not canonical knowledge, production capacity claims, or projections for a larger corpus.
 
@@ -10,11 +10,11 @@ They are operational evidence for regression detection only. They are not canoni
 
 | Operation | Python 3.11 median | Python 3.11 p95 | Python 3.13 median | Python 3.13 p95 | Budget p95 |
 |---|---:|---:|---:|---:|---:|
-| Canonical compilation | 69.292 ms | 69.292 ms | 73.353 ms | 73.353 ms | 5,000 ms |
-| Exact lookup | 0.000341 ms | 0.000401 ms | 0.000361 ms | 0.000411 ms | 5 ms |
-| Provenance traversal | 0.013364 ms | 0.014477 ms | 0.012533 ms | 0.013576 ms | 25 ms |
-| Principia bridge import | 0.109804 ms | 0.189683 ms | 0.119714 ms | 0.174295 ms | 25 ms |
-| Lifecycle impact report | 0.009848 ms | 0.011041 ms | 0.010290 ms | 0.010960 ms | 25 ms |
+| Canonical compilation | 46.258 ms | 47.056 ms | 84.903 ms | 86.857 ms | 5,000 ms |
+| Exact lookup | 0.000240 ms | 0.000320 ms | 0.000361 ms | 0.000411 ms | 5 ms |
+| Provenance traversal | 0.009003 ms | 0.009574 ms | 0.014627 ms | 0.023704 ms | 25 ms |
+| Principia bridge import | 0.075392 ms | 0.084095 ms | 0.120015 ms | 0.161954 ms | 25 ms |
+| Lifecycle impact report | 0.007301 ms | 0.007681 ms | 0.010450 ms | 0.011973 ms | 25 ms |
 
 ## Reproducibility markers
 
@@ -24,9 +24,10 @@ canonical source digest: 684d08f23db50c2d994ea07293c6aaea2cbcb24492b062663b2e431
 fixture contract: principia-atlas-external-dependent/0.2
 compile iterations: 3
 operation iterations: 200
+p95 method: nearest-rank
 ```
 
-The raw JSON reports remain GitHub Actions artifacts for Python 3.11 and Python 3.13. Timing values should be regenerated when the corpus, runtime contract, benchmark operations, or CI environment materially changes.
+The raw JSON reports remain GitHub Actions artifacts for Python 3.11 and Python 3.13. Timing values should be regenerated when the corpus, runtime contract, benchmark operations, percentile method, or CI environment materially changes.
 
 ## Interpretation
 
