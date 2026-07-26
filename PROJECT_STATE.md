@@ -14,9 +14,11 @@ Complete delayed-feedback vertical-slice readiness and deterministic backlog gen
 
 The English-only authored and review corpus policy was merged through PR #7 at commit `92b2cec5fbc310e065bdeca4486ca98d1dc5a7f2`.
 
-Current work records the complete set of machine-authorized structural and fully specified reproducibility attestations for the English delayed-feedback slice. Human-required review remains blocked and cannot be replaced by machine or AI-assisted work.
+Deterministic machine attestations were merged through PR #8 at commit `a4d73fc4dfc7f8fa03aa7f913473110943b41f9e`. All machine-authorized structural and fully specified reproducibility work for the complete English delayed-feedback slice is complete.
 
-All canonical reference entities remain `draft`. No validator pass, machine attestation, AI-assisted record, coverage report, readiness manifest, generated backlog, or synthetic fixture grants scientific, methodological, editorial, source, legal, ethical, or human authority.
+Current work generates a self-contained accountable-human review handoff from the live remaining backlog. The handoff assigns no reviewer, performs no review, resolves no finding, permits no promotion, and changes no lifecycle state.
+
+All canonical reference entities remain `draft`. No validator pass, machine attestation, AI-assisted record, coverage report, readiness manifest, backlog, reviewer bundle, or synthetic fixture grants scientific, methodological, editorial, source, legal, ethical, or human authority.
 
 ## Authority order
 
@@ -24,7 +26,7 @@ All canonical reference entities remain `draft`. No validator pass, machine atte
 2. accepted foundation documents in `docs/foundation/`
 3. accepted ADRs
 4. canonical authored content and exact-revision review records
-5. generated reports, indexes, coverage manifests, and backlogs
+5. generated reports, indexes, coverage manifests, backlogs, and handoff bundles
 6. experimental prototype code
 
 A validator can establish bounded conformance or a fully specified calculation. It cannot establish scientific truth, domain adequacy, model applicability, source interpretation, legal correctness, ethical acceptability, editorial quality, reviewer accountability, or translation equivalence.
@@ -82,15 +84,16 @@ Phase 0 may be reopened only when representative review, migration, lifecycle be
 - priority and dependency-impact reporting;
 - no automatic assignment, review, finding resolution, or promotion.
 
-## Active review scopes
+### Machine attestations
 
-### Bounded packets
+- deterministic generation and drift checking;
+- 10 structural exact-revision records;
+- 3 fully specified recurrence-reproducibility records;
+- every record uses reviewer kind `machine`;
+- every record sets `accountable: false` and `permits_promotion: false`;
+- no authority outside the declared deterministic procedure.
 
-1. catalase assay methodology;
-2. delayed-feedback mathematics, terminology, and inference limits;
-3. recommender evidence, legal context, and governance.
-
-These packet scopes remain intentionally blocked pending accountable review.
+## Active review scope
 
 ### Complete English delayed-feedback vertical slice
 
@@ -108,40 +111,7 @@ The manifest uses `coverage_requirement: all`. Every listed entity must obtain a
 
 The formal recurrence result and the model-to-world inference boundary are both load-bearing. A future Principia explanation, investigation, simulation, or system dossier must not consume the formal result while hiding its limitation.
 
-## Machine attestations
-
-`tools/foundation-validator/phase1_machine_attestations.py` deterministically generates and checks exactly 13 machine review records:
-
-- 10 structural attestations, one for every entity in the complete slice;
-- 3 reproducibility attestations for the formal claim, generated evidence, and executable model marked `fully-specified-reproducibility`.
-
-Every machine attestation:
-
-- targets one exact entity revision;
-- uses reviewer kind `machine`;
-- uses independence `not-applicable`;
-- sets `accountable: false`;
-- sets `permits_promotion: false`;
-- has no authority beyond its declared bounded procedure;
-- is checked against deterministic generator output in CI.
-
-The recurrence check recalculates:
-
-```text
-x[t+1] = x[t] - x[t-1]
-x[0] = 1
-x[1] = 0
-```
-
-and confirms the eight-state sequence:
-
-```text
-1, 0, -1, -1, 0, 1, 1, 0
-```
-
-This establishes arithmetic reproducibility only. It does not establish periodicity terminology, stability classification, model adequacy, or behavior of any real system.
-
-## Current English backlog
+## Current human-required backlog
 
 After the 13 machine attestations are counted, the complete delayed-feedback slice remains `blocked` with:
 
@@ -150,7 +120,44 @@ After the 13 machine attestations are counted, the complete delayed-feedback sli
 - 25 human-required tasks;
 - 0 advisory-only tasks.
 
-These are exact entity/review-type tasks, not a required number of distinct people. A qualified reviewer may cover several tasks only when each exact-revision judgment, qualification, independence state, conflict, finding, and promotion recommendation is recorded separately.
+The 25 tasks are grouped into five qualification tracks:
+
+| Track | Tasks | Required authority |
+|---|---:|---|
+| Domain authority | 7 | independent control-systems, dynamical-systems, or difference-equation expertise |
+| Editorial and scope | 7 | accountable human technical editing and scope review |
+| Methods and inference | 5 | independent mathematical-modeling or scientific-inference expertise |
+| Source and provenance | 5 | accountable source, locator, and provenance review |
+| Independent reproducibility | 1 | independent human reproduction of the generated source procedure |
+
+These are exact entity/review-type tasks, not a required number of distinct people. One qualified reviewer may cover several tasks only when each exact-revision judgment, qualification, independence state, conflict, finding, and promotion recommendation is recorded separately.
+
+## Human review handoff
+
+`tools/foundation-validator/phase1_human_review_handoff.py` generates `atlas-review-handoff/0.1` bundles from live coverage data.
+
+The generated package contains:
+
+- `handoff.json` with all 25 remaining human tasks;
+- five JSON and Markdown qualification-track packets;
+- byte-for-byte snapshots of all ten exact canonical Markdown entities;
+- original repository paths and SHA-256 digests;
+- existing non-satisfying records and blockers;
+- internal and external dependency impact;
+- acceptance criteria and submission worksheets;
+- no reviewer assignment.
+
+Generation fails when:
+
+- automation-eligible tasks still remain;
+- advisory tasks are mixed into the gate handoff;
+- a task permits nonhuman authority;
+- accountability is not required;
+- an exact canonical entity revision cannot be found;
+- a task appears more than once;
+- an unsupported qualification track appears.
+
+The existing major finding `finding:feedback:periodicity-proof` remains visible in the domain-authority packet. The handoff cannot hide or resolve it.
 
 ## Phase 1 work packages
 
@@ -173,30 +180,23 @@ These are exact entity/review-type tasks, not a required number of distinct peop
 - preserve disagreement and conflicts;
 - require explicit transition records for reviewed, contested, deprecated, and retracted states.
 
-### C. Reviewer packets and submission — implemented baseline
-
-- bounded English packets for catalase, delayed feedback, and recommender governance;
-- code-independent reviewer guide and JSON example;
-- explicit prohibition on fabricated reviewers or hidden AI authority.
-
-### D. Coverage and dependency reporting — implemented baseline
+### C. Coverage, backlog, and dependency reporting — implemented baseline
 
 - packet and complete-slice coverage manifests;
-- deterministic missing-review reports;
+- deterministic missing-review reports and tasks;
 - internal reverse-dependency impact;
 - optional external impact references;
 - future-safe boundary for Principia artifacts.
 
-### E. Complete English vertical-slice readiness — implemented baseline
+### D. Complete English vertical-slice readiness — implemented baseline
 
 - complete delayed-feedback manifest;
-- deterministic review backlog generation;
 - reviewer-track and priority grouping;
 - automation-versus-human classification;
 - CI artifacts for coverage and backlog reports;
 - no lifecycle promotion.
 
-### F. Machine attestations — implementation in review
+### E. Machine attestations — implemented baseline
 
 - deterministic generator and exact committed outputs;
 - ten structural records;
@@ -205,13 +205,22 @@ These are exact entity/review-type tasks, not a required number of distinct peop
 - post-attestation backlog assertion;
 - no human authority or lifecycle promotion.
 
-### G. Accountable human review — next work
+### F. Accountable-human review handoff — implementation in review
 
-- consolidate the 25 tasks into reviewer qualification tracks;
-- prepare source/provenance, editorial/scope, domain, and methods/inference packets;
-- obtain accountable exact-revision reviews;
-- preserve conflicts, disagreements, and findings;
-- resolve or retain every major finding honestly;
+- `atlas-review-handoff/0.1` generated package;
+- exact canonical snapshots and SHA-256 integrity;
+- five bounded qualification-track bundles;
+- proof that all 25 tasks appear exactly once;
+- preservation of existing blockers and dependents;
+- no reviewer assignment, review decision, finding resolution, or promotion.
+
+### G. Accountable human review execution — external next work
+
+- identify real qualified reviewers;
+- disclose qualifications, independence, and conflicts honestly;
+- obtain exact-revision review records;
+- preserve disagreements and findings;
+- resolve content defects through new canonical revisions;
 - regenerate coverage without weakening requirements;
 - keep the slice blocked until every required review class passes.
 
@@ -227,16 +236,16 @@ Atlas is being prepared to serve as the knowledge and governance layer of a futu
 - Principia does not inherit Atlas review status automatically.
 - No live Principia dependency is declared during Phase 1.
 
-This is compatibility preparation, not repository merger or product UI work.
+The handoff reviews Atlas knowledge only. It cannot approve a future Principia explanation, lesson, simulation, investigation, or system dossier.
 
 ## Phase 1 exit gate
 
 Phase 1 is complete only when:
 
-- review, promotion, coverage, backlog, and attestation semantics are explicit and executable;
-- review records, coverage manifests, committed attestations, and generated plans validate deterministically;
+- review, promotion, coverage, backlog, attestation, and handoff semantics are explicit and executable;
+- review records, manifests, committed attestations, generated plans, and handoff bundles validate deterministically;
 - promotion cannot occur from machine or AI review alone where human authority is required;
-- review coverage, blockers, and reviewer work can be generated without reading validator code;
+- every remaining review task is tied to an exact entity revision and accountable authority requirement;
 - contradiction, contested, deprecation, retraction, stale-review, and dependency-impact fixtures pass;
 - the complete English delayed-feedback slice has sufficient accountable exact-revision review coverage for its intended lifecycle state;
 - remaining review gaps are visible and do not masquerade as passes;
@@ -253,15 +262,16 @@ Still frozen:
 - additional implementation languages;
 - active translated corpus or language-specific review programs;
 - autonomous or authoritative AI synthesis;
+- automatic reviewer assignment;
 - direct Principia integration or repository merger;
 - promotion of experimental `.atlas`, SQL, C++, Rust, or TypeScript structures as the final runtime.
 
 Allowed:
 
-- review-contract, promotion, coverage, provenance, backlog, attestation, and validator work;
+- review-contract, promotion, coverage, provenance, backlog, attestation, handoff, and validator work;
 - English reviewer packets, submission templates, and reports;
 - source and literature challenge scans;
-- accountable domain, methodological, ethical, legal-context, source, and editorial review records;
+- accountable domain, methodological, ethical, legal-context, source, and editorial review records supplied by real reviewers;
 - synthetic translation fixtures testing language-neutral contracts only;
 - fixture-driven corrections to accepted foundation decisions;
 - compatibility boundaries that do not create a live cross-repository dependency;
@@ -269,11 +279,11 @@ Allowed:
 
 ## Immediate next actions
 
-1. verify all 13 machine attestations against deterministic generator output;
-2. confirm the remaining backlog is exactly 25 human-required gate tasks;
-3. consolidate those tasks into bounded qualification tracks;
-4. obtain accountable source, editorial, domain, and methodological reviews;
-5. record findings against exact revisions;
+1. verify the generated handoff contains exactly 25 tasks in five tracks;
+2. verify all ten canonical snapshots and SHA-256 digests;
+3. publish the handoff package as a CI artifact;
+4. identify real qualified reviewers outside the generator;
+5. receive and validate exact-revision review records;
 6. resolve or preserve every major finding honestly;
 7. regenerate coverage and determine whether the English slice can reach `reviewed`;
 8. produce a Phase 1 completion report before entering Phase 2.
