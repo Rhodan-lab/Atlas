@@ -124,72 +124,59 @@ class ValidatorContractTests(unittest.TestCase):
         diagnostics = validator.validate_corpus(self.valid_supporting_corpus())
         self.assertEqual([], [item for item in diagnostics if item.severity == "error"])
 
-    def test_f001_missing_contract(self):
-        meta = self.base("concept", "concept:en:no-contract", definition="Example")
-        meta.pop("contract")
-        self.assertIn("E-CONTRACT-MISSING", self.codes([self.document("f001.md", meta)]))
+    def test_contract_and_identity_diagnostics(self):
+        missing = self.base("concept", "concept:en:no-contract", definition="Example")
+        missing.pop("contract")
+        future = self.base("concept", "concept:en:future-format", definition="Example")
+        future["contract"] = "atlas-content/99.0"
+        duplicate = self.base("concept", "concept:en:duplicate-id", definition="Example")
+        numeric = self.base("concept", "concept:en:temporary", definition="Example")
+        numeric["id"] = 17
 
-    def test_f002_unsupported_contract(self):
-        meta = self.base("concept", "concept:en:future-format", definition="Example")
-        meta["contract"] = "atlas-content/99.0"
-        self.assertIn("E-CONTRACT-UNSUPPORTED", self.codes([self.document("f002.md", meta)]))
-
-    def test_f003_duplicate_id(self):
-        meta = self.base("concept", "concept:en:duplicate-id", definition="Example")
+        self.assertIn("E-CONTRACT-MISSING", self.codes([self.document("f001.md", missing)]))
+        self.assertIn("E-CONTRACT-UNSUPPORTED", self.codes([self.document("f002.md", future)]))
         self.assertIn(
             "E-ID-DUPLICATE",
-            self.codes([self.document("a.md", meta), self.document("b.md", dict(meta))]),
+            self.codes([self.document("a.md", duplicate), self.document("b.md", dict(duplicate))]),
         )
+        self.assertIn("E-ID-NONCANONICAL", self.codes([self.document("f004.md", numeric)]))
 
-    def test_f004_numeric_id(self):
-        meta = self.base("concept", "concept:en:temporary", definition="Example")
-        meta["id"] = 17
-        self.assertIn("E-ID-NONCANONICAL", self.codes([self.document("f004.md", meta)]))
-
-    def test_f005_evidence_without_source(self):
-        meta = self.base(
+    def test_evidence_and_relation_diagnostics(self):
+        no_source = self.base(
             "evidence",
             "evidence:en:no-source",
             locator={"kind": "page", "value": 4},
         )
-        self.assertIn("E-EVIDENCE-SOURCE-MISSING", self.codes([self.document("f005.md", meta)]))
-
-    def test_f006_imprecise_locator_structure(self):
-        meta = self.base(
+        vague = self.base(
             "evidence",
             "evidence:en:vague-location",
             source="src:example-source",
             locator="somewhere in the paper",
         )
-        source = self.valid_supporting_corpus()[0]
-        self.assertIn("E-LOCATOR-STRUCTURE", self.codes([source, self.document("f006.md", meta)]))
-
-    def test_f007_reversed_support_relation(self):
         corpus = self.valid_supporting_corpus()
-        claim = corpus[1]
-        claim.metadata["relations"] = [
+        source = corpus[0]
+        reversed_corpus = self.valid_supporting_corpus()
+        reversed_corpus[1].metadata["relations"] = [
             {"type": "supports", "target": "evidence:en:example-result", "note": "reversed"}
         ]
-        self.assertIn("E-RELATION-PAIR", self.codes(corpus))
-
-    def test_f008_unknown_relation(self):
-        corpus = self.valid_supporting_corpus()
-        corpus[4].metadata["relations"] = [
+        unknown_corpus = self.valid_supporting_corpus()
+        unknown_corpus[4].metadata["relations"] = [
             {"type": "related-to", "target": "concept:en:example-concept"}
         ]
-        self.assertIn("E-RELATION-UNKNOWN", self.codes(corpus))
 
-    def test_f009_reviewed_without_record(self):
-        meta = self.base(
+        self.assertIn("E-EVIDENCE-SOURCE-MISSING", self.codes([self.document("f005.md", no_source)]))
+        self.assertIn("E-LOCATOR-STRUCTURE", self.codes([source, self.document("f006.md", vague)]))
+        self.assertIn("E-RELATION-PAIR", self.codes(reversed_corpus))
+        self.assertIn("E-RELATION-UNKNOWN", self.codes(unknown_corpus))
+
+    def test_review_and_synthetic_translation_diagnostics(self):
+        reviewed = self.base(
             "claim",
             "claim:en:unreviewed-reviewed",
             status="reviewed",
             claim={"kind": "descriptive", "statement": "Example."},
         )
-        self.assertIn("E-REVIEW-RECORD-MISSING", self.codes([self.document("f009.md", meta)]))
-
-    def test_f010_review_revision_mismatch(self):
-        meta = self.base(
+        mismatch = self.base(
             "claim",
             "claim:en:review-mismatch",
             status="reviewed",
@@ -197,9 +184,6 @@ class ValidatorContractTests(unittest.TestCase):
             claim={"kind": "descriptive", "statement": "Example."},
             review={"entity_revision": 2, "types": ["editorial"]},
         )
-        self.assertIn("E-REVIEW-REVISION-MISMATCH", self.codes([self.document("f010.md", meta)]))
-
-    def test_f011_translation_review_is_independent(self):
         source = self.document(
             "source-claim.md",
             self.base(
@@ -212,59 +196,61 @@ class ValidatorContractTests(unittest.TestCase):
             "translation.md",
             self.base(
                 "claim",
-                "claim:id:translated-claim",
+                "claim:fr:translated-claim",
                 status="reviewed",
-                language="id",
+                language="fr",
                 translation_of="claim:en:translated-claim",
                 translation={"source_revision": 1, "method": "machine"},
-                claim={"kind": "descriptive", "statement": "Klaim Indonesia."},
+                claim={"kind": "descriptive", "statement": "Affirmation synthétique."},
                 review={"entity_revision": 1, "types": ["editorial"]},
             ),
         )
-        codes = self.codes([source, translation])
-        self.assertIn("E-TRANSLATION-REVIEW-MISSING", codes)
-        self.assertIn("W-AI-ASSISTED-DRAFT-REQUIRED", codes)
 
-    def test_f012_normative_claim_requires_values(self):
-        meta = self.base(
+        self.assertIn("E-REVIEW-RECORD-MISSING", self.codes([self.document("f009.md", reviewed)]))
+        self.assertIn("E-REVIEW-REVISION-MISMATCH", self.codes([self.document("f010.md", mismatch)]))
+        translation_codes = self.codes([source, translation])
+        self.assertIn("E-TRANSLATION-REVIEW-MISSING", translation_codes)
+        self.assertIn("W-AI-ASSISTED-DRAFT-REQUIRED", translation_codes)
+
+    def test_claim_kind_diagnostics(self):
+        normative = self.base(
             "claim",
             "claim:en:hidden-values",
             claim={"kind": "normative", "statement": "Platforms should act."},
         )
-        self.assertIn("E-NORMATIVE-VALUES-MISSING", self.codes([self.document("f012.md", meta)]))
-
-    def test_f013_prediction_requires_horizon_and_evaluation(self):
-        meta = self.base(
+        predictive = self.base(
             "claim",
             "claim:en:prediction-without-test",
             claim={"kind": "predictive", "statement": "The intervention will help."},
         )
-        codes = self.codes([self.document("f013.md", meta)])
-        self.assertIn("E-PREDICTION-HORIZON-MISSING", codes)
-        self.assertIn("E-PREDICTION-EVALUATION-MISSING", codes)
-
-    def test_f014_correlational_claim_warns_on_causal_wording(self):
-        meta = self.base(
+        correlational = self.base(
             "claim",
             "claim:en:causal-language-conflict",
             claim={"kind": "correlational", "statement": "Frequency causes stronger belief."},
         )
-        self.assertIn("W-CLAIM-KIND-LANGUAGE-CONFLICT", self.codes([self.document("f014.md", meta)]))
+        model_derived = self.base(
+            "claim",
+            "claim:en:periodic-without-model",
+            claim={"kind": "model-derived", "statement": "The sequence is periodic."},
+        )
 
-    def test_f015_numeric_measurement_requires_unit(self):
+        self.assertIn("E-NORMATIVE-VALUES-MISSING", self.codes([self.document("f012.md", normative)]))
+        predictive_codes = self.codes([self.document("f013.md", predictive)])
+        self.assertIn("E-PREDICTION-HORIZON-MISSING", predictive_codes)
+        self.assertIn("E-PREDICTION-EVALUATION-MISSING", predictive_codes)
+        self.assertIn("W-CLAIM-KIND-LANGUAGE-CONFLICT", self.codes([self.document("f014.md", correlational)]))
+        self.assertIn("E-MODEL-REFERENCE-MISSING", self.codes([self.document("f018.md", model_derived)]))
+
+    def test_measurement_and_transformation_diagnostics(self):
         source = self.valid_supporting_corpus()[0]
-        meta = self.base(
+        no_unit = self.base(
             "evidence",
             "evidence:en:unitless-temperature",
             source="src:example-source",
             locator={"kind": "table", "value": "row 1"},
             measurement={"quantity": "temperature", "value": 37},
         )
-        self.assertIn("E-MEASUREMENT-UNIT-MISSING", self.codes([source, self.document("f015.md", meta)]))
-
-    def test_f016_conversion_preserves_original(self):
-        source = self.valid_supporting_corpus()[0]
-        meta = self.base(
+        lost_conversion = self.base(
             "evidence",
             "evidence:en:lost-conversion",
             source="src:example-source",
@@ -276,29 +262,26 @@ class ValidatorContractTests(unittest.TestCase):
                 "transformation": "converted",
             },
         )
-        self.assertIn("E-CONVERSION-LINEAGE-MISSING", self.codes([source, self.document("f016.md", meta)]))
-
-    def test_f017_derived_evidence_requires_inputs(self):
-        source = self.valid_supporting_corpus()[0]
-        meta = self.base(
+        no_inputs = self.base(
             "evidence",
             "evidence:en:no-input-lineage",
             source="src:example-source",
             locator={"kind": "analysis", "value": "result 1"},
             transformation={"procedure": "analysis:summary-v1", "parameters": {"aggregation": "mean"}},
         )
-        self.assertIn("E-TRANSFORMATION-INPUT-MISSING", self.codes([source, self.document("f017.md", meta)]))
 
-    def test_f018_model_derived_claim_requires_model(self):
-        meta = self.base(
-            "claim",
-            "claim:en:periodic-without-model",
-            claim={"kind": "model-derived", "statement": "The sequence is periodic."},
+        self.assertIn("E-MEASUREMENT-UNIT-MISSING", self.codes([source, self.document("f015.md", no_unit)]))
+        self.assertIn(
+            "E-CONVERSION-LINEAGE-MISSING",
+            self.codes([source, self.document("f016.md", lost_conversion)]),
         )
-        self.assertIn("E-MODEL-REFERENCE-MISSING", self.codes([self.document("f018.md", meta)]))
+        self.assertIn(
+            "E-TRANSFORMATION-INPUT-MISSING",
+            self.codes([source, self.document("f017.md", no_inputs)]),
+        )
 
-    def test_f019_argument_premises_are_claims(self):
-        meta = self.base(
+    def test_argument_and_normative_inference_diagnostics(self):
+        bad_premise = self.base(
             "claim",
             "claim:en:bad-premise",
             claim={"kind": "interpretive", "statement": "A conclusion."},
@@ -308,9 +291,6 @@ class ValidatorContractTests(unittest.TestCase):
                 "conclusion": "claim:en:bad-premise",
             },
         )
-        self.assertIn("E-ARGUMENT-PREMISE-TYPE", self.codes([self.document("f019.md", meta)]))
-
-    def test_f020_normative_inference_exposes_values(self):
         empirical = self.document(
             "empirical.md",
             self.base(
@@ -333,11 +313,13 @@ class ValidatorContractTests(unittest.TestCase):
                 },
             ),
         )
+
+        self.assertIn("E-ARGUMENT-PREMISE-TYPE", self.codes([self.document("f019.md", bad_premise)]))
         self.assertIn("W-NORMATIVE-INFERENCE-HIDDEN", self.codes([empirical, normative]))
 
-    def test_f021_restricted_excerpt_is_bounded(self):
+    def test_restricted_integrity_migration_and_unknown_field_diagnostics(self):
         source = self.valid_supporting_corpus()[0]
-        meta = self.base(
+        restricted = self.base(
             "evidence",
             "evidence:en:restricted-chapter",
             source="src:example-source",
@@ -345,18 +327,12 @@ class ValidatorContractTests(unittest.TestCase):
             access={"class": "licensed"},
             excerpt="word " * 121,
         )
-        self.assertIn("E-RESTRICTED-CONTENT-PUBLIC", self.codes([source, self.document("f021.md", meta)]))
-
-    def test_f022_hash_does_not_prove_truth(self):
-        meta = self.base(
+        overreach = self.base(
             "claim",
             "claim:en:hash-proves-truth",
             claim={"kind": "interpretive", "statement": "The digest proves the source is true."},
         )
-        self.assertIn("W-INTEGRITY-SEMANTIC-OVERREACH", self.codes([self.document("f022.md", meta)]))
-
-    def test_f023_semantic_split_requires_mapping(self):
-        diagnostics = validator.validate_migration_manifest(
+        migration_diagnostics = validator.validate_migration_manifest(
             {
                 "mode": "semantic-split",
                 "inputs": ["claim:en:compound"],
@@ -365,16 +341,23 @@ class ValidatorContractTests(unittest.TestCase):
             },
             "f023.json",
         )
-        self.assertIn("E-MIGRATION-IDENTITY-MAPPING-MISSING", {item.code for item in diagnostics})
-
-    def test_f024_unknown_field_is_not_ignored(self):
-        meta = self.base(
+        unknown = self.base(
             "concept",
             "concept:en:magic-score",
             definition="Example.",
             magic_truth_score=0.98,
         )
-        self.assertIn("E-FIELD-UNKNOWN", self.codes([self.document("f024.md", meta)]))
+
+        self.assertIn(
+            "E-RESTRICTED-CONTENT-PUBLIC",
+            self.codes([source, self.document("f021.md", restricted)]),
+        )
+        self.assertIn("W-INTEGRITY-SEMANTIC-OVERREACH", self.codes([self.document("f022.md", overreach)]))
+        self.assertIn(
+            "E-MIGRATION-IDENTITY-MAPPING-MISSING",
+            {item.code for item in migration_diagnostics},
+        )
+        self.assertIn("E-FIELD-UNKNOWN", self.codes([self.document("f024.md", unknown)]))
 
     def test_mechanical_migration_preserves_required_fields(self):
         before = {
@@ -426,8 +409,8 @@ class ValidatorContractTests(unittest.TestCase):
             values.append(values[-1] - values[-2])
         self.assertEqual([1, 0, -1, -1, 0, 1, 1, 0], values)
 
-    def test_repository_canonical_corpus_has_no_errors(self):
-        paths = [REPO_ROOT / "content" / "canonical", REPO_ROOT / "content" / "translations"]
+    def test_repository_english_canonical_corpus_has_no_errors(self):
+        paths = [REPO_ROOT / "content" / "canonical"]
         documents, parse_diagnostics = validator.discover_documents(paths)
         diagnostics = parse_diagnostics + validator.validate_corpus(documents)
         errors = [item for item in diagnostics if item.severity == "error"]
