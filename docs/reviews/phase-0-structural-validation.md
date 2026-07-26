@@ -10,7 +10,7 @@
 - **Validator:** ADR-0001 Python baseline
 - **Outcome:** pass
 
-This record certifies machine conformance to the Phase 0 contract and fixtures. It does not certify scientific truth, source quality, ethical acceptability, or reviewed lifecycle status.
+This record certifies machine conformance to the Phase 0 contract and fixtures. It does not certify scientific truth, source quality, ethical acceptability, editorial quality, or reviewed lifecycle status.
 
 ## Environment matrix
 
@@ -23,35 +23,30 @@ This record certifies machine conformance to the Phase 0 contract and fixtures. 
 
 ### Unit and diagnostic contract
 
-- 30 tests executed;
-- all 24 invalid scenarios from `content/fixtures/invalid/README.md` produced their required diagnostic behavior;
-- valid minimal source-to-synthesis corpus passed;
-- duplicate identity, alias, federation, translation, migration, and argument boundaries were exercised;
-- delayed-feedback sequence was independently recalculated.
+- validator contract tests executed successfully;
+- required invalid scenarios produced their expected diagnostic behavior;
+- a valid minimal source-to-synthesis corpus passed;
+- duplicate identity, alias, federation, synthetic translation, migration, and argument boundaries were exercised;
+- the delayed-feedback sequence was independently recalculated.
 
-Result: **30 passed, 0 failed**.
-
-### Canonical corpus
+### Canonical English corpus
 
 Validated:
 
 - `content/canonical/catalase/`
 - `content/canonical/feedback/`
 - `content/canonical/recommenders/`
-- `content/translations/id/feedback/`
 
 Result:
 
 - zero error diagnostics;
-- zero warning diagnostics in the successful validation log;
 - every canonical relation target resolved;
-- every translated `translation_of` target resolved;
 - required entity fields were present;
 - controlled relation direction and pair compatibility passed.
 
 ### Migration fixtures
 
-- mechanical `0.1` to synthetic `0.2` optional-field migration preserved declared invariant fields;
+- mechanical optional-field migration preserved declared invariant fields;
 - semantic one-to-many claim split included explicit identity mappings.
 
 Result: pass.
@@ -65,49 +60,56 @@ Result: pass.
 
 Result: pass.
 
-### Translation staleness
+### Synthetic translation staleness
 
 Fixture source revision: `2`  
-Translation source revision: `1`
+Fixture translation source revision: `1`
 
 Computed result: `possibly-stale`.
 
-The system did not automatically rewrite or invalidate the translation.
+The system did not automatically rewrite, approve, or invalidate the synthetic translation fixture.
+
+## English-only amendment
+
+The original closure validation included authored translation examples. Phase 1 later narrowed the active corpus to English-only.
+
+Current enforcement:
+
+- authored files under `content/translations/` are rejected by CI;
+- canonical validation targets `content/canonical/` only;
+- translation identity and staleness remain covered through neutral synthetic fixtures;
+- no active language-specific corpus or review queue exists.
+
+This amendment changes project scope without weakening the tested contract semantics.
 
 ## Defect discovered and corrected
 
-The first validation run failed because the YAML title `Feedback Systems: An Introduction for Scientists and Engineers` was unquoted. The colon caused a YAML parse error.
-
-Correction:
-
-- quoted the title at the root and nested source metadata;
-- reran the entire matrix;
-- both supported Python versions passed.
+The first validation run failed because a YAML title containing a colon was unquoted. The title was quoted, the full matrix reran, and both supported Python versions passed.
 
 The contract was not weakened to accommodate the defect.
 
 ## Prototype regression status
 
-On the same validated commit, the existing prototype jobs completed successfully for:
+The existing prototype jobs completed successfully for:
 
 - TypeScript API;
-- Python ingestion on 3.11, 3.12, and 3.13;
+- Python ingestion;
 - Rust search;
 - C++ on Linux, macOS, and Windows.
 
-The prototype remains experimental; these results only show that Phase 0 additions did not break its tested behavior.
+The prototype remains experimental. These results only show that foundation changes did not break its tested behavior.
 
 ## Review limitations
 
-This machine validation cannot determine:
+Machine validation cannot determine:
 
 - whether biochemical interpretation is scientifically sufficient;
 - whether control-system terminology is optimal;
 - whether platform-study generalization is defensible;
-- whether DSA interpretation covers later guidance or case law;
-- whether the Indonesian translation is equivalent for expert readers;
-- whether the normative recommender claim is ethically justified.
+- whether legal interpretation covers later guidance or case law;
+- whether normative recommendations are ethically justified;
+- whether any future translation is technically equivalent.
 
 ## Conclusion
 
-The structural, diagnostic, migration, identity, multilingual-lineage, and reproducibility gates are mechanically satisfied for the Phase 0 closure candidate. Canonical content remains `draft` pending its appropriate human reviews.
+The structural, diagnostic, migration, identity, dormant translation-lineage, and reproducibility gates are mechanically satisfied. The active authored corpus is English-only, and all canonical content remains `draft` pending appropriate human reviews.
