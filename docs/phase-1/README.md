@@ -9,11 +9,12 @@ Active after:
 - coverage and dependency-reporting merge at `c67457ae2c369d57b00b1cd22f454245ebf6ac13`;
 - complete delayed-feedback readiness merge at `786bdaf4141be032554fe1b73439dfacb67c806d`;
 - English-only corpus correction at `92b2cec5fbc310e065bdeca4486ca98d1dc5a7f2`;
-- deterministic machine attestations at `a4d73fc4dfc7f8fa03aa7f913473110943b41f9e`.
+- deterministic machine attestations at `a4d73fc4dfc7f8fa03aa7f913473110943b41f9e`;
+- accountable-human handoff bundles at `5dcd4964b04617d1c40a4458b2c646c43ebd09ed`.
 
 The active authored and review corpus is English-only. Translation contracts remain dormant language-neutral infrastructure exercised only through neutral synthetic fixtures.
 
-Phase 1 turns the accepted knowledge contract into an exact-revision review workflow. It does not build the general product and does not promote content merely because it parses, passes a machine check, generates a report, or appears in a reviewer bundle.
+Phase 1 turns the accepted knowledge contract into an exact-revision review workflow. It does not build the general product and does not promote content merely because it parses, passes a machine check, generates a report, appears in a reviewer bundle, or passes intake validation.
 
 ## Core question
 
@@ -26,8 +27,8 @@ Can Atlas prove, for an exact authored revision:
 - which findings remain open;
 - whether the review is still current;
 - which review classes remain missing;
-- which work may be automated and which requires accountable humans;
 - which exact content snapshot was handed to a reviewer;
+- whether the returned submission matches that active task and snapshot;
 - which internal or external dependents may be affected;
 - which lifecycle transition is permitted;
 - why promotion or slice closure remains blocked?
@@ -36,42 +37,33 @@ Can Atlas prove, for an exact authored revision:
 
 | Workstream | Output |
 |---|---|
-| Review contract | `atlas-review/0.1` schema and validation |
-| Promotion gate | deterministic lifecycle decision with reasons |
-| Coverage contract | `atlas-review-coverage/0.1` packet and slice reporting |
+| Review contract | `atlas-review/0.1` exact-revision records |
+| Promotion gate | `atlas-promotion/0.1` lifecycle decisions |
+| Coverage | `atlas-review-coverage/0.1` packet and slice reporting |
 | Review backlog | `atlas-review-backlog/0.1` missing-review tasks |
-| Machine attestations | deterministic structural and fully specified reproducibility records |
+| Machine attestations | deterministic structural and bounded reproducibility records |
 | Human handoff | `atlas-review-handoff/0.1` self-contained qualification-track bundles |
-| Review packets | bounded English domain, methods, source, editorial, and legal-context packets |
+| Review intake | `atlas-review-submission/0.1` exact-task and exact-snapshot return envelopes |
 | Lifecycle fixtures | reviewed, contested, deprecated, retracted, and stale cases |
 | Dependency impact | internal reverse links and optional opaque external dependents |
-| Contract challenge | reopen Phase 0 only when a representative fixture fails |
 
 ## Authority boundary
 
-Machine validation may satisfy:
+Machine validation may satisfy structural conformance and explicitly permitted fully specified reproducibility.
 
-- structural conformance;
-- reproducibility only where inputs, procedure, and expected calculation are fully specified and policy explicitly permits a machine record.
+AI-assisted work may identify defects, compare terminology, draft questions, flag evidence gaps, summarize limitations, and prepare planning artifacts.
 
-AI-assisted review may identify candidate defects, compare terminology, draft questions, flag evidence gaps, summarize limitations, and generate planning artifacts.
+Handoff and intake tools may transfer exact snapshots and verify return-package consistency.
 
-Machines, AI-assisted work, and handoff generators may not independently satisfy:
+None of those tools may independently satisfy final editorial accountability, source interpretation, domain review, methods review, ethical or legal-context review, reviewer identity, reviewer qualification, or lifecycle acceptance.
 
-- final editorial accountability;
-- source interpretation requiring human judgment;
-- domain review;
-- methodological or model-to-world inference review;
-- ethical or legal-context review;
-- accountable lifecycle acceptance.
-
-Every machine and AI-assisted record sets `accountable: false` and `permits_promotion: false`. The handoff generator creates no review record and assigns no reviewer.
+The handoff generator assigns no reviewer. Intake validation accepts no authority and writes no review record automatically.
 
 ## Phase 1 artifacts
 
 ```text
 content/reviews/
-  records/            # exact-revision machine, AI-assisted, and human records
+  records/            # committed exact-revision records
   fixtures/           # promotion and lifecycle test cases
   coverage/           # bounded packets and complete English slice manifests
 
@@ -84,6 +76,7 @@ docs/phase-1/
   machine-attestations.md
   feedback-human-review-plan.md
   human-review-handoff.md
+  review-intake.md
   templates/
   packets/
   reports/
@@ -94,34 +87,29 @@ tools/foundation-validator/
   phase1_review_backlog.py
   phase1_machine_attestations.py
   phase1_human_review_handoff.py
+  phase1_review_intake.py
   tests/
 ```
 
 ## Complete delayed-feedback slice
 
-`content/reviews/coverage/feedback-complete-vertical-slice.json`:
+`content/reviews/coverage/feedback-complete-vertical-slice.json` contains all ten split English entities, uses `coverage_requirement: all`, preserves the complete dependency path, and keeps the formal result plus model-to-world limitation load-bearing.
 
-- contains all ten split English entities;
-- uses `coverage_requirement: all`;
-- records the complete governance dependency graph;
-- keeps the formal result and model-to-world inference boundary load-bearing;
-- remains `draft` and `blocked`.
-
-See [`feedback-vertical-slice-readiness.md`](feedback-vertical-slice-readiness.md).
+The slice remains `draft` and `blocked`.
 
 ## Completed machine work
 
-The deterministic generator commits and checks:
+The repository commits and checks:
 
 - 10 structural machine records;
-- 3 fully specified reproducibility machine records.
+- 3 fully specified recurrence-reproducibility records.
 
 ```bash
 python tools/foundation-validator/phase1_machine_attestations.py check \
   --records-dir content/reviews/records
 ```
 
-See [`machine-attestations.md`](machine-attestations.md).
+Every machine record is non-accountable and cannot permit promotion.
 
 ## Remaining human work
 
@@ -132,15 +120,13 @@ After machine attestations:
 - 25 human-required tasks;
 - 0 advisory-only tasks.
 
-The tasks group into:
+Tracks:
 
 - 7 domain-authority tasks;
 - 7 editorial-and-scope tasks;
 - 5 methods-and-inference tasks;
 - 5 source-and-provenance tasks;
 - 1 independent reproducibility task.
-
-See [`feedback-human-review-plan.md`](feedback-human-review-plan.md).
 
 ## Generate the self-contained handoff
 
@@ -154,54 +140,71 @@ python tools/foundation-validator/phase1_human_review_handoff.py \
   --expect-track-count 5
 ```
 
-The generated package contains:
-
-- all 25 tasks exactly once;
-- five JSON and Markdown qualification-track bundles;
-- ten exact canonical Markdown snapshots;
-- original repository paths and SHA-256 digests;
-- existing records, blockers, dependents, and acceptance criteria;
-- submission worksheets;
-- `reviewer_assignment: null`.
+The package contains all 25 tasks exactly once, five qualification-track bundles, ten exact canonical snapshots, original paths and SHA-256 digests, existing blockers and dependents, acceptance criteria, worksheets, and `reviewer_assignment: null`.
 
 See [`human-review-handoff.md`](human-review-handoff.md).
 
-## Reviewer submission
+## Return a review through exact-snapshot intake
 
-A real qualified reviewer returns one `atlas-review/0.1` record per exact entity revision and review type.
+Start from [`templates/reviewer-submission-envelope.json.example`](templates/reviewer-submission-envelope.json.example).
+
+Validate:
 
 ```bash
-python tools/foundation-validator/phase1_review_gate.py validate-record \
-  content/reviews/records/<record>.json
+python tools/foundation-validator/phase1_review_intake.py validate \
+  reviewer-submission.json \
+  --handoff phase1-reports/human-review-handoff/handoff.json
 ```
 
-A valid record may still fail coverage when authority, independence, horizon, promotion permission, findings, or another required review type remains insufficient.
+Extract a normalized proposed review record:
+
+```bash
+python tools/foundation-validator/phase1_review_intake.py extract \
+  reviewer-submission.json \
+  --handoff phase1-reports/human-review-handoff/handoff.json \
+  --out phase1-reports/extracted-review.json
+```
+
+Intake verifies coverage ID, active task ID, exact entity revision, snapshot digest, review type, human accountability, independence, qualification, conflicts, date order, and AI-assistance disclosure.
+
+The extracted record preserves `metadata.intake` lineage. It is not written to `content/reviews/records/` automatically and is not accepted merely because intake validation passes.
+
+See [`review-intake.md`](review-intake.md) and [`reviewer-submission-guide.md`](reviewer-submission-guide.md).
+
+## Maintainer acceptance
+
+A maintainer must still:
+
+1. inspect the real reviewer identity and qualification;
+2. verify independence and conflicts;
+3. inspect findings and promotion permission;
+4. commit an acceptable record through normal review;
+5. regenerate coverage, backlog, and handoff;
+6. create a new canonical revision when findings require content changes;
+7. preserve unresolved serious findings.
 
 ## Future Principia & Atlas compatibility
 
-A future Principia artifact may be listed as an opaque dependent of an Atlas revision without making Atlas import or validate Principia's pedagogical status.
-
 - Atlas owns knowledge identity, evidence, provenance, review, lifecycle, and staleness.
-- Principia may depend on models, claims, concepts, and syntheses.
+- Principia may depend on exact Atlas revisions.
 - Atlas reports upstream knowledge impact.
 - Principia owns explanation, investigation, simulation, pedagogy, and release status.
 - Neither system inherits authority automatically.
 
-The current handoff reviews Atlas knowledge only. No live Principia dependency is declared during Phase 1.
+The current handoff and intake review Atlas knowledge only. No live Principia dependency is declared during Phase 1.
 
 ## Exit evidence
 
-Phase 1 does not close because files, reports, or bundles exist. It closes when:
+Phase 1 closes only when:
 
-- review, promotion, coverage, backlog, attestation, and handoff semantics are executable;
+- review, promotion, coverage, backlog, attestation, handoff, and intake semantics are executable;
 - deterministic machine work is complete and bounded honestly;
 - every human task is tied to an exact snapshot and accountable authority requirement;
+- returned submissions preserve exact-snapshot provenance;
 - dishonest authority paths fail fixtures;
-- lifecycle transitions preserve history;
 - real reviewer records are valid and sufficient;
 - the complete English delayed-feedback slice reaches its intended lifecycle state;
-- dependency impact is visible;
-- all remaining gaps are explicit;
+- all remaining gaps remain explicit;
 - a completion report recommends or rejects Phase 2.
 
 ## Non-goals
@@ -211,7 +214,7 @@ Phase 1 does not close because files, reports, or bundles exist. It closes when:
 - search or retrieval redesign;
 - active translated corpus;
 - autonomous review approval;
-- automatic reviewer assignment;
+- automatic reviewer assignment or record acceptance;
 - replacing domain experts with AI;
 - direct Principia integration or repository merger;
 - selecting final runtime architecture.
