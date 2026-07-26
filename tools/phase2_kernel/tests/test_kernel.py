@@ -54,8 +54,8 @@ class Phase2KernelTests(unittest.TestCase):
             "synthesis:en:delayed-feedback-and-oscillation", 2
         )
         source_ids = {source["id"] for source in sources}
-        self.assertIn("src:astrom-murray-2008-feedback-systems", source_ids)
         self.assertIn("src:synthetic-feedback-run-delay-one-gain-one", source_ids)
+        self.assertNotIn("src:astrom-murray-2008-feedback-systems", source_ids)
 
     def test_valid_principia_candidate_import_is_deterministic(self) -> None:
         payload = load_json(FIXTURES / "principia-feedback-valid.json")
