@@ -1,0 +1,169 @@
+{
+  "contract": "atlas-review-coverage/0.1",
+  "id": "coverage:translation-overlay:feedback-id",
+  "title": "Complete Indonesian delayed-feedback translation-overlay readiness",
+  "intended_status": "reviewed",
+  "decision_at": "2026-07-26",
+  "coverage_requirement": "load-bearing",
+  "entities": [
+    {
+      "id": "src:astrom-murray-2008-feedback-systems",
+      "revision": 1,
+      "type": "source",
+      "status": "draft",
+      "staleness": "current",
+      "material_flags": [],
+      "role": "context",
+      "depends_on": []
+    },
+    {
+      "id": "src:synthetic-feedback-run-delay-one-gain-one",
+      "revision": 1,
+      "type": "source",
+      "status": "draft",
+      "staleness": "current",
+      "material_flags": ["generated"],
+      "role": "context",
+      "depends_on": ["model:en:delayed-correction-recurrence"]
+    },
+    {
+      "id": "question:id:kapan-koreksi-tertunda-dapat-berosilasi",
+      "revision": 1,
+      "type": "question",
+      "status": "draft",
+      "staleness": "current",
+      "translation_of": "question:en:when-delayed-correction-can-oscillate",
+      "translation_source_revision": 1,
+      "source_current_revision": 1,
+      "material_flags": ["contested-terminology"],
+      "role": "load-bearing",
+      "depends_on": []
+    },
+    {
+      "id": "concept:id:umpan-balik",
+      "revision": 1,
+      "type": "concept",
+      "status": "draft",
+      "staleness": "current",
+      "translation_of": "concept:en:feedback",
+      "translation_source_revision": 1,
+      "source_current_revision": 1,
+      "material_flags": [],
+      "role": "load-bearing",
+      "depends_on": ["src:astrom-murray-2008-feedback-systems"]
+    },
+    {
+      "id": "concept:id:osilasi",
+      "revision": 1,
+      "type": "concept",
+      "status": "draft",
+      "staleness": "current",
+      "translation_of": "concept:en:oscillation",
+      "translation_source_revision": 1,
+      "source_current_revision": 1,
+      "material_flags": ["contested-terminology"],
+      "role": "load-bearing",
+      "depends_on": [
+        "src:astrom-murray-2008-feedback-systems",
+        "model:id:rekurensi-koreksi-tertunda"
+      ]
+    },
+    {
+      "id": "model:id:rekurensi-koreksi-tertunda",
+      "revision": 1,
+      "type": "model",
+      "status": "draft",
+      "staleness": "current",
+      "translation_of": "model:en:delayed-correction-recurrence",
+      "translation_source_revision": 1,
+      "source_current_revision": 1,
+      "material_flags": ["executable", "derived", "fully-specified-reproducibility"],
+      "role": "load-bearing",
+      "depends_on": ["concept:id:umpan-balik"]
+    },
+    {
+      "id": "evidence:id:urutan-periodik-umpan-balik-tertunda",
+      "revision": 1,
+      "type": "evidence",
+      "status": "draft",
+      "staleness": "current",
+      "translation_of": "evidence:en:delayed-feedback-periodic-sequence",
+      "translation_source_revision": 1,
+      "source_current_revision": 1,
+      "material_flags": ["generated", "derived", "transformation", "fully-specified-reproducibility"],
+      "role": "load-bearing",
+      "depends_on": [
+        "src:synthetic-feedback-run-delay-one-gain-one",
+        "model:id:rekurensi-koreksi-tertunda"
+      ]
+    },
+    {
+      "id": "claim:id:rekurensi-tertunda-yang-dinyatakan-berosilasi",
+      "revision": 1,
+      "type": "claim",
+      "status": "draft",
+      "staleness": "current",
+      "claim_kind": "model-derived",
+      "translation_of": "claim:en:stated-delayed-recurrence-oscillates",
+      "translation_source_revision": 1,
+      "source_current_revision": 1,
+      "material_flags": ["fully-specified-reproducibility"],
+      "role": "load-bearing",
+      "depends_on": [
+        "evidence:id:urutan-periodik-umpan-balik-tertunda",
+        "model:id:rekurensi-koreksi-tertunda",
+        "concept:id:osilasi"
+      ]
+    },
+    {
+      "id": "claim:id:osilasi-model-tidak-membuktikan-osilasi-sistem-nyata",
+      "revision": 1,
+      "type": "claim",
+      "status": "draft",
+      "staleness": "current",
+      "claim_kind": "methodological",
+      "translation_of": "claim:en:model-oscillation-does-not-prove-real-system",
+      "translation_source_revision": 1,
+      "source_current_revision": 1,
+      "material_flags": ["model-inference"],
+      "role": "load-bearing",
+      "depends_on": [
+        "src:astrom-murray-2008-feedback-systems",
+        "model:id:rekurensi-koreksi-tertunda",
+        "concept:id:umpan-balik",
+        "concept:id:osilasi"
+      ]
+    },
+    {
+      "id": "synthesis:id:umpan-balik-tertunda-dan-osilasi",
+      "revision": 1,
+      "type": "synthesis",
+      "status": "draft",
+      "staleness": "current",
+      "translation_of": "synthesis:en:delayed-feedback-and-oscillation",
+      "translation_source_revision": 1,
+      "source_current_revision": 1,
+      "material_flags": ["model-inference"],
+      "role": "load-bearing",
+      "depends_on": [
+        "question:id:kapan-koreksi-tertunda-dapat-berosilasi",
+        "src:astrom-murray-2008-feedback-systems",
+        "src:synthetic-feedback-run-delay-one-gain-one",
+        "evidence:id:urutan-periodik-umpan-balik-tertunda",
+        "claim:id:rekurensi-tertunda-yang-dinyatakan-berosilasi",
+        "claim:id:osilasi-model-tidak-membuktikan-osilasi-sistem-nyata",
+        "concept:id:umpan-balik",
+        "concept:id:osilasi",
+        "model:id:rekurensi-koreksi-tertunda"
+      ]
+    }
+  ],
+  "external_dependents": [],
+  "metadata": {
+    "slice": "delayed-feedback",
+    "language": "id",
+    "scope": "complete Indonesian translation overlay plus shared source context",
+    "source_reference": "content/translations/id/feedback/",
+    "authority_note": "Translation readiness is independent from English review status and requires bilingual domain authority."
+  }
+}

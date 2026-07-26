@@ -9,8 +9,10 @@ on:
       - "docs/phase-1/**"
       - "tools/foundation-validator/phase1_review_gate.py"
       - "tools/foundation-validator/phase1_coverage_report.py"
+      - "tools/foundation-validator/phase1_review_backlog.py"
       - "tools/foundation-validator/tests/test_phase1_review_gate.py"
       - "tools/foundation-validator/tests/test_phase1_coverage_report.py"
+      - "tools/foundation-validator/tests/test_phase1_review_backlog.py"
       - ".github/workflows/phase1-review.yml"
   pull_request:
     paths:
@@ -19,8 +21,10 @@ on:
       - "docs/phase-1/**"
       - "tools/foundation-validator/phase1_review_gate.py"
       - "tools/foundation-validator/phase1_coverage_report.py"
+      - "tools/foundation-validator/phase1_review_backlog.py"
       - "tools/foundation-validator/tests/test_phase1_review_gate.py"
       - "tools/foundation-validator/tests/test_phase1_coverage_report.py"
+      - "tools/foundation-validator/tests/test_phase1_review_backlog.py"
       - ".github/workflows/phase1-review.yml"
 
 permissions:
@@ -61,6 +65,21 @@ jobs:
           python tools/foundation-validator/phase1_coverage_report.py validate-manifest \
             content/reviews/coverage/*.json
 
+      - name: Generate complete vertical-slice review backlogs
+        run: |
+          mkdir -p phase1-reports
+          for manifest in \
+            content/reviews/coverage/feedback-complete-vertical-slice.json \
+            content/reviews/coverage/feedback-id-translation-overlay.json; do
+            name="$(basename "$manifest" .json)"
+            python tools/foundation-validator/phase1_review_backlog.py \
+              "$manifest" \
+              --records-dir content/reviews/records \
+              --expect blocked \
+              --json-out "phase1-reports/backlog-${name}.json" \
+              --report "phase1-reports/backlog-${name}.md"
+          done
+
       - name: Validate eligible promotion and lifecycle fixtures
         run: |
           mkdir -p phase1-reports
@@ -92,7 +111,7 @@ jobs:
             fi
           done
 
-      - name: Confirm current packet coverage remains honestly blocked
+      - name: Confirm current packet and slice coverage remains honestly blocked
         run: |
           mkdir -p phase1-reports
           for manifest in content/reviews/coverage/*.json; do
