@@ -45,6 +45,14 @@ jobs:
       - name: Install validator dependencies
         run: python -m pip install -r tools/foundation-validator/requirements.txt
 
+      - name: Capture validator diagnostics
+        run: |
+          python tools/foundation-validator/phase1_ai_review.py \
+            content/reviews/ai/feedback-delayed-comprehensive.json \
+            --canonical-root content/canonical \
+            --json > phase1-ai-diagnostics.json || true
+          cat phase1-ai-diagnostics.json
+
       - name: Run AI review contract tests
         run: |
           python -m unittest discover \
@@ -81,12 +89,13 @@ jobs:
           print("phase1-ai-review=pass; entities=10; human-review-required=false")
           PY
 
-      - name: Upload AI review evidence
+      - name: Upload AI review evidence and diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: phase1-ai-review-python-${{ matrix.python-version }}
           path: |
+            phase1-ai-diagnostics.json
             content/reviews/ai/feedback-delayed-comprehensive.json
             docs/phase-1/ai-review-report.md
           if-no-files-found: error
