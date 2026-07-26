@@ -140,6 +140,22 @@ Required outcomes:
 - representative performance measurements;
 - no change to authored Markdown meaning.
 
+### First Phase 2 workstream
+
+PR #19 implements the initial deterministic kernel and bounded Principia bridge receiver:
+
+- `atlas-kernel-runtime/0.1` compilation from canonical Markdown;
+- exact `ENTITY_ID@REVISION` lookup;
+- typed relation and explicit provenance traversal;
+- internal reverse-dependency impact queries;
+- `principia-atlas-bridge-export/0.1` validation;
+- normalized `atlas-external-dependent/0.1` records;
+- Principia impact reports with declared `inspect`, `revalidate`, or `block-release` actions;
+- deterministic rejection of legacy ID-only exports, stale revisions, status inheritance, and `live: true`;
+- Python 3.11 and 3.13 machine gates.
+
+This workstream is a receiving and validation boundary, not a live integration. It does not clone Principia, call Principia during Atlas validation, copy Principia status, or modify canonical Atlas meaning.
+
 ## Future Principia & Atlas boundary
 
 Atlas is the knowledge and governance layer of the future **Principia & Atlas** system.
@@ -149,7 +165,7 @@ Atlas is the knowledge and governance layer of the future **Principia & Atlas** 
 - Principia may reference exact Atlas revisions.
 - Atlas may report dependency impact when upstream knowledge changes.
 - Neither repository inherits the other repository's status automatically.
-- No live cross-repository dependency is declared at the start of Phase 2.
+- No live cross-repository dependency is declared during the current Phase 2 workstream.
 
 ## Current restrictions
 
@@ -162,6 +178,7 @@ Still frozen:
 - hidden or autonomous authority claims;
 - automatic conversion of AI review into human verification;
 - direct repository merger with Principia;
+- live Principia dependency;
 - treating prototype runtime formats as canonical before kernel evaluation.
 
 Allowed:
@@ -171,18 +188,18 @@ Allowed:
 - English canonical content corrections;
 - explicitly labeled AI reviews;
 - optional human verification that remains separately labeled;
-- compatibility boundaries for future Principia references;
+- read-only compatibility boundaries for future Principia references;
+- exact-revision external-dependent fixtures and impact reports;
 - prototype regression maintenance.
 
 ## Immediate next actions
 
-1. define the Phase 2 kernel contract and non-goals;
-2. compile canonical Markdown into a deterministic runtime representation;
-3. implement read-only exact-revision lookup;
-4. implement typed relation and provenance traversal;
-5. implement dependency-impact queries;
-6. test malformed, stale, missing, and incompatible inputs;
-7. benchmark representative slices;
-8. produce a Phase 2 completion report before retrieval work.
+1. merge and preserve the first Phase 2 kernel workstream after all machine gates pass;
+2. benchmark compilation, lookup, provenance, and impact queries on representative slices;
+3. add malformed runtime and missing canonical-reference fixtures beyond the bridge-specific cases;
+4. validate lifecycle behavior for deprecated and retracted exact revisions;
+5. consume the updated Principia-generated export in a bounded end-to-end compatibility fixture after it is merged there;
+6. keep `live: false` until independent machine contracts pass in both repositories;
+7. produce a Phase 2 completion report before retrieval work.
 
-**Phase 1 is complete under the AI-reviewed policy. Phase 2 is active. Human verification remains optional and must never be implied when it did not occur.**
+**Phase 1 is complete under the AI-reviewed policy. Phase 2 is active. The first kernel and bridge-receiver workstream is implemented on PR #19, remains non-live, and does not imply human verification.**
