@@ -1,10 +1,18 @@
 # Atlas Foundation and Review Validators
 
-## Scope
+## Active scope
 
-These bounded Python tools verify accepted Atlas contracts, deterministic fixtures, machine attestations, reviewer handoffs, returned submission consistency, and explicit review-record admission decisions.
+The active validation path checks:
 
-They do **not** decide scientific truth, assign confidence, rewrite authored content, grant `reviewed` status, create human accountability, perform real-world identity checks, resolve findings, commit returned reviews automatically, or define the future Atlas runtime.
+- the English authored-content contract;
+- deterministic migration, identity, and synthetic staleness fixtures;
+- the comprehensive delayed-feedback AI review;
+- the exact period-six recurrence proof;
+- exact reviewed entity revisions;
+- explicit non-human review labeling;
+- `human_review_required: false`.
+
+Human handoff, intake, admission, backlog, and promotion tools remain available as optional historical governance experiments. They are not active Phase 1 duties or Phase 2 blockers.
 
 ## Setup
 
@@ -14,7 +22,11 @@ python -m venv .venv
 python -m pip install -r tools/foundation-validator/requirements.txt
 ```
 
-On Windows PowerShell, activate with `.venv\Scripts\Activate.ps1`.
+On Windows PowerShell:
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
 
 ## Foundation validator
 
@@ -23,143 +35,108 @@ python tools/foundation-validator/atlas_foundation_validator.py validate \
   content/canonical
 ```
 
-The active authored corpus is English-only. Translation identity and staleness are tested through neutral synthetic fixtures.
+The active authored corpus is English-only. Translation identity and staleness are tested only through neutral synthetic fixtures.
 
-## Review gate
+## Phase 1 AI review validator
+
+```bash
+python tools/foundation-validator/phase1_ai_review.py \
+  content/reviews/ai/feedback-delayed-comprehensive.json \
+  --canonical-root content/canonical
+```
+
+Expected output:
+
+```text
+ai-review=pass; entities=10; exact-period=6; human-review-required=false
+```
+
+The validator checks:
+
+- contract `atlas-ai-review/0.1`;
+- canonical AI-review ID;
+- reviewer kind `ai`;
+- `human_verified: false`;
+- reviewer limitations;
+- authoritative source locator and matched metadata;
+- exact recurrence sequence;
+- ordered state-pair return;
+- exact period 6;
+- all ten canonical entity IDs and revisions;
+- review dimensions and outcomes;
+- required resolved findings;
+- no open critical or major finding;
+- overall `pass`;
+- review level `ai-reviewed`;
+- `human_review_required: false`.
+
+The validator does not claim human identity, credentials, professional accountability, or empirical system testing.
+
+## Active tests
+
+```bash
+python -m unittest discover \
+  -s tools/foundation-validator/tests \
+  -p 'test_phase1_ai_review.py' \
+  -v
+```
+
+The active tests reject:
+
+- a false human-verification claim;
+- reintroduction of a mandatory human-review duty;
+- an incorrect sequence;
+- an incorrect period;
+- missing entities;
+- wrong reviewed revisions;
+- open major findings;
+- an unrecognized source locator.
+
+## Optional human verification tools
+
+The following tools are preserved but inactive:
+
+### Exact-revision review records
 
 ```bash
 python tools/foundation-validator/phase1_review_gate.py validate-record \
   content/reviews/records/<record>.json
 ```
 
-The gate enforces reviewer kind, qualification, independence, accountability, conflicts, horizon, findings, exact revision, and lifecycle requirements.
-
-## Coverage reporter
+### Coverage and backlog
 
 ```bash
 python tools/foundation-validator/phase1_coverage_report.py coverage \
   content/reviews/coverage/feedback-complete-vertical-slice.json \
   --records-dir content/reviews/records \
   --expect blocked \
-  --report phase1-coverage.md
+  --report optional-human-coverage.md
 ```
 
-Coverage reports required, satisfied, and missing review classes plus dependency impact. It never promotes content.
-
-## Review backlog
-
-```bash
-python tools/foundation-validator/phase1_review_backlog.py \
-  content/reviews/coverage/feedback-complete-vertical-slice.json \
-  --records-dir content/reviews/records \
-  --expect blocked \
-  --json-out phase1-backlog.json \
-  --report phase1-backlog.md
-```
-
-The backlog separates automation-eligible and human-required tasks. It does not assign reviewers or count as completed review.
-
-## Machine attestations
-
-```bash
-python tools/foundation-validator/phase1_machine_attestations.py check \
-  --records-dir content/reviews/records
-```
-
-The generator is limited to structural conformance and explicitly permitted fully specified recurrence reproduction. Every generated record is machine-only, non-accountable, and unable to permit promotion.
-
-## Human review handoff
+### Human handoff
 
 ```bash
 python tools/foundation-validator/phase1_human_review_handoff.py \
   content/reviews/coverage/feedback-complete-vertical-slice.json \
   --records-dir content/reviews/records \
   --canonical-root content/canonical \
-  --output-dir phase1-reports/human-review-handoff \
-  --expect-task-count 25 \
-  --expect-track-count 5
+  --output-dir optional-human-handoff
 ```
 
-The package contains `atlas-review-handoff/0.1`, five qualification-track bundles, all 25 human tasks exactly once, ten exact Markdown snapshots, paths and SHA-256 digests, blockers and dependents, and no reviewer assignment.
-
-## Review submission intake
-
-Validate a returned `atlas-review-submission/0.1` envelope:
+### Intake and admission
 
 ```bash
 python tools/foundation-validator/phase1_review_intake.py validate \
   reviewer-submission.json \
-  --handoff phase1-reports/human-review-handoff/handoff.json
-```
+  --handoff optional-human-handoff/handoff.json
 
-Extract the proposed nested record with intake lineage:
-
-```bash
-python tools/foundation-validator/phase1_review_intake.py extract \
-  reviewer-submission.json \
-  --handoff phase1-reports/human-review-handoff/handoff.json \
-  --out phase1-reports/extracted-review.json
-```
-
-Intake verifies active task identity, exact entity revision and snapshot digest, review type, human accountability, required independence, qualification, conflicts, nested review validity, AI-assistance disclosure, and date order.
-
-The extracted record adds `metadata.intake`. The tool never writes to `content/reviews/records/` automatically and does not accept authority.
-
-## Explicit review admission
-
-Validate an `atlas-review-admission/0.1` decision:
-
-```bash
 python tools/foundation-validator/phase1_review_admission.py validate \
   admission.json \
   reviewer-submission.json \
-  --handoff phase1-reports/human-review-handoff/handoff.json
+  --handoff optional-human-handoff/handoff.json
 ```
 
-Write a deterministic receipt:
-
-```bash
-python tools/foundation-validator/phase1_review_admission.py receipt \
-  admission.json \
-  reviewer-submission.json \
-  --handoff phase1-reports/human-review-handoff/handoff.json \
-  --out phase1-reports/admission-receipt.json
-```
-
-Prepare a record after an explicit `accept` decision:
-
-```bash
-python tools/foundation-validator/phase1_review_admission.py prepare \
-  admission.json \
-  reviewer-submission.json \
-  --handoff phase1-reports/human-review-handoff/handoff.json \
-  --records-dir content/reviews/records \
-  --out phase1-reports/proposed-admitted-review.json
-```
-
-Admission validates:
-
-- an accountable human decider declaration;
-- `accept`, `request-changes`, or `reject` decision semantics;
-- admission and submission date order;
-- declared external checks for reviewer identity, qualification, independence, and conflicts;
-- non-empty decision rationale;
-- duplicate canonical review-ID prevention;
-- intake and admission lineage preservation.
-
-Only `accept` may prepare a record. Preparation writes solely to `--out` and never to the canonical review directory.
-
-A `changes-required` record or record with open major findings may be admitted so criticism is preserved. Admission does not change its outcome, remove findings, or promote knowledge.
-
-Synthetic admissions set `test_fixture: true`; their prepared records are forced to `permits_promotion: false`.
-
-## Run all tests
-
-```bash
-python -m unittest discover -s tools/foundation-validator/tests -v
-```
-
-The suite covers corpus validation, deterministic diagnostics, migrations, identity, synthetic translation staleness, review authority, lifecycle transitions, coverage, backlog generation, machine-attestation drift, handoff uniqueness, snapshot integrity, blocker preservation, return-envelope matching, human authority, independence, AI disclosure, intake lineage, admission decisions, duplicate prevention, finding preservation, fixture promotion suppression, and no automatic repository writes.
+These tools must not be described as required work. A future human review must remain separately labeled and may not overwrite the AI review identity.
 
 ## Migration and identity fixtures
 
@@ -177,14 +154,10 @@ python tools/foundation-validator/atlas_foundation_validator.py translation-stal
   content/fixtures/translation/stale-source-revision.json
 ```
 
-The last command must return `possibly-stale` for the synthetic fixture.
-
-## Diagnostic contract
-
-Diagnostics contain severity, stable code, path, and deterministic message. Tools report safely independent findings in one pass and never edit authored meaning.
+The final command must return `possibly-stale` for the synthetic fixture.
 
 ## Authority boundary
 
-When tool behavior conflicts with an accepted foundation decision, the tool is wrong. Update implementation and fixtures through review; do not weaken the authored contract merely to make a test pass.
+Machine validation and AI review can provide bounded evidence for structure, mathematics, reproducibility, source metadata, internal consistency, and explicit inference limits.
 
-Machine conformance, arithmetic reproduction, backlogs, reviewer bundles, valid submissions, intake records, admission receipts, and prepared records are bounded governance artifacts. They are not scientific, editorial, methodological, source, legal, ethical, reviewer-identity, or lifecycle authority.
+They do not become human professional verification merely because they are detailed. Atlas must always display the actual review kind and review level.
