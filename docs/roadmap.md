@@ -2,96 +2,89 @@
 
 ## Roadmap status
 
-Atlas uses **evidence-based phase gates**, not a feature checklist. Authoritative definitions are in [`docs/foundation/05-phase-gates.md`](foundation/05-phase-gates.md).
+Atlas uses evidence-based phase gates rather than feature counts.
 
-The C++, Rust, Python ingestion, TypeScript, SQL, `.atlas`, and browser work remains an experimental prototype. It is maintained for regression and comparison, not counted as completed product architecture.
+The active authored corpus is English-only. Language-neutral translation semantics remain dormant and are exercised only through synthetic fixtures.
 
-The active authored corpus is English-only. Language-neutral translation semantics remain dormant infrastructure and may be exercised only through synthetic fixtures until a later phase explicitly reopens multilingual authoring.
+The existing C++, Rust, Python ingestion, TypeScript, SQL, `.atlas`, and browser code remains experimental until Phase 2 determines the minimum dependable runtime.
 
 ## Phase 0 — Knowledge foundation
 
-**Status: accepted for `atlas-content/0.1`**
+**Status: complete**
 
-Completed foundation outputs:
+Accepted outputs:
 
-- charter and non-goals;
-- canonical entity model and invariants;
-- claim-level evidence and provenance;
-- evidence, review, disagreement, revision, translation, migration, and staleness governance;
-- governed relation vocabulary;
-- language-qualified identity with shared work IDs;
-- versioned authored Markdown contract;
-- three split English canonical vertical slices;
-- invalid, migration, identity, federation, and synthetic stale-translation fixtures;
-- accepted minimum validator ADR;
-- deterministic Python 3.11/3.13 validation matrix;
-- source-verification and review registers;
-- closure report.
+- `atlas-content/0.1` authored Markdown contract;
+- canonical source, evidence, claim, concept, model, question, synthesis, and revision semantics;
+- provenance, uncertainty, disagreement, lifecycle, migration, identity, and staleness governance;
+- controlled relation vocabulary;
+- three English reference slices;
+- deterministic foundation validation.
 
-Phase 0 acceptance stabilizes the foundation. It does not promote example content from `draft`.
+## Phase 1 — English reference review
 
-### Language amendment
+**Status: complete under the AI-reviewed policy**
 
-The Phase 0 contract retains multilingual capability, but the active corpus and current review program use English only. Future multilingual work requires an explicit reopening decision, reviewer plan, terminology governance, and migration assessment.
+Completion evidence:
 
-## Phase 1 — Reviewed English reference corpus and validator hardening
+- comprehensive AI review of all ten delayed-feedback entities;
+- explicit AI identity and limitations;
+- source verification against the authoritative Caltech repository;
+- exact period-six recurrence proof;
+- corrected distinction between bounded oscillation and instability;
+- corrected model-to-world inference boundary;
+- resolved major findings;
+- deterministic Python 3.11 and 3.13 validation;
+- no mandatory human-review queue.
 
-**Status: active**
+Review level:
 
-Primary work:
+```text
+ai-reviewed
+human_verified: false
+human_review_required: false
+```
 
-- execute revision-specific source, editorial, domain, methodological, reproducibility, ethical, legal-context, and conflict reviews;
-- preserve reviewer disagreement and conflicts;
-- promote only entities that pass required review types;
-- calibrate confidence and domain-native uncertainty;
-- exercise contradiction, deprecation, retraction, and revision impact;
-- harden deterministic diagnostics, coverage, and provenance reports;
-- generate review backlogs that separate automation-eligible and human-required work;
-- expand migration and identity fixtures when review exposes real gaps;
-- reopen Phase 0 decisions when evidence demonstrates ontology failure;
-- derive minimal knowledge-kernel requirements from reviewed workflows.
-
-Current reference goal:
-
-- bring the complete English delayed-feedback vertical slice through sufficient exact-revision review coverage;
-- keep both the formal result and its model-to-world inference boundary load-bearing;
-- produce a Phase 1 completion report before entering Phase 2.
-
-Non-scope:
-
-- product UI expansion;
-- specialized search architecture;
-- synchronization or plugins;
-- active translated corpus or language-specific review programs;
-- autonomous synthesis;
-- new programming-language boundaries;
-- live Principia integration.
+Human verification remains an optional stronger layer and is not a prerequisite for Phase 2.
 
 ## Phase 2 — Minimal knowledge kernel
 
-Implement only the dependable runtime required by reviewed Phase 1 workflows.
+**Status: active**
 
-Expected outcomes:
+Implement only the dependable runtime required by the authored contract and reviewed workflows.
 
-- canonical-to-runtime compilation;
-- read-only entity repository;
+Required outcomes:
+
+- canonical Markdown compilation into a deterministic runtime representation;
+- exact-revision read-only entity lookup;
 - typed relation traversal;
 - synthesis-to-source provenance queries;
-- dependency and revision-impact queries;
+- reverse dependency and revision-impact queries;
+- visible lifecycle, staleness, confidence, and review level;
 - deterministic command or library interface;
-- compatibility and failure tests;
-- representative performance measurements.
+- malformed and incompatible input handling;
+- compatibility tests against all three English slices;
+- representative performance measurements;
+- replaceable runtime design that does not alter authored Markdown.
 
-The kernel must remain replaceable without changing authored Markdown.
+Non-scope:
+
+- polished UI;
+- specialized retrieval and ranking;
+- cloud synchronization;
+- plugins;
+- active translated corpus;
+- direct Principia repository integration;
+- hidden authority inference from AI review.
 
 ## Phase 3 — Retrieval and research trails
 
-Add inspectable retrieval after the knowledge kernel is dependable.
+**Status: future**
 
 Expected outcomes:
 
 - lexical baseline and documented relevance tests;
-- field-, status-, and evidence-aware ranking;
+- field-, status-, evidence-, and review-level-aware ranking;
 - filters and saved research trails;
 - contradiction and duplicate candidates;
 - ranking explanations;
@@ -99,22 +92,23 @@ Expected outcomes:
 
 ## Phase 4 — Principia & Atlas interactive experience
 
-Build interfaces over proven semantics.
+**Status: future**
 
 Expected outcomes:
 
 - Atlas evidence, claim, model, review, revision, and provenance views;
-- Principia long-form explanation, pathways, investigations, simulations, and system dossiers;
-- explicit bridge references and dependency-impact warnings;
-- accessible exploration without mandatory graph visualization;
-- visible review status, uncertainty, provenance, and staleness;
+- Principia explanation, pathways, investigations, simulations, and system dossiers;
+- exact-revision bridge references;
+- dependency-impact warnings;
+- accessible exploration;
+- visible distinction between AI-reviewed and human-verified material;
 - local-first packaging.
 
-The two domains may share one product identity without erasing their separate authority boundaries.
+The two repositories may share one product identity without erasing their separate authority and release boundaries.
 
 ## Phase 5 — Assisted synthesis and extensions
 
-Introduce advanced assistance only after authority and governance are dependable.
+**Status: future**
 
 Possible outcomes:
 
@@ -123,20 +117,19 @@ Possible outcomes:
 - domain-specific validators and model adapters;
 - synchronization preserving local ownership;
 - permissioned plugins;
-- multilingual authoring only after an accepted reopening gate.
-
-AI output remains draft until reviewed and cannot bypass source verification.
+- multilingual authoring only after an explicit reopening gate.
 
 ## Global non-goals until prerequisites exist
 
-- autonomous rewriting of authoritative knowledge;
+- autonomous rewriting of canonical meaning;
 - opaque vector-only retrieval;
 - mandatory cloud accounts;
-- polished visual design before reviewed workflows;
-- plugin marketplaces before versioned contracts and permissions;
-- active language expansion without accountable review capacity;
-- describing machine conformance as scientific validity.
+- polished visual design before dependable workflows;
+- plugin marketplaces before contracts and permissions;
+- active language expansion without review capacity;
+- describing AI review as human verification;
+- treating build success as scientific validity.
 
 ## Progress rule
 
-A phase is complete only when its own authority boundary and exit criteria are demonstrated. Code quantity, language count, screenshots, or build success are not sufficient measures of maturity.
+A phase is complete when its stated evidence and authority boundary are demonstrated. Code quantity, programming-language count, screenshots, or validator success alone are not measures of knowledge authority.
