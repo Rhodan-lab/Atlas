@@ -5,30 +5,36 @@ on:
     branches: [main]
     paths:
       - "PROJECT_STATE.md"
+      - "content/canonical/**"
       - "content/reviews/**"
       - "docs/phase-1/**"
       - "tools/foundation-validator/phase1_review_gate.py"
       - "tools/foundation-validator/phase1_coverage_report.py"
       - "tools/foundation-validator/phase1_review_backlog.py"
       - "tools/foundation-validator/phase1_machine_attestations.py"
+      - "tools/foundation-validator/phase1_human_review_handoff.py"
       - "tools/foundation-validator/tests/test_phase1_review_gate.py"
       - "tools/foundation-validator/tests/test_phase1_coverage_report.py"
       - "tools/foundation-validator/tests/test_phase1_review_backlog.py"
       - "tools/foundation-validator/tests/test_phase1_machine_attestations.py"
+      - "tools/foundation-validator/tests/test_phase1_human_review_handoff.py"
       - ".github/workflows/phase1-review.yml"
   pull_request:
     paths:
       - "PROJECT_STATE.md"
+      - "content/canonical/**"
       - "content/reviews/**"
       - "docs/phase-1/**"
       - "tools/foundation-validator/phase1_review_gate.py"
       - "tools/foundation-validator/phase1_coverage_report.py"
       - "tools/foundation-validator/phase1_review_backlog.py"
       - "tools/foundation-validator/phase1_machine_attestations.py"
+      - "tools/foundation-validator/phase1_human_review_handoff.py"
       - "tools/foundation-validator/tests/test_phase1_review_gate.py"
       - "tools/foundation-validator/tests/test_phase1_coverage_report.py"
       - "tools/foundation-validator/tests/test_phase1_review_backlog.py"
       - "tools/foundation-validator/tests/test_phase1_machine_attestations.py"
+      - "tools/foundation-validator/tests/test_phase1_human_review_handoff.py"
       - ".github/workflows/phase1-review.yml"
 
 permissions:
@@ -101,6 +107,45 @@ jobs:
           print("remaining-gate-tasks=25; automation-eligible=0; human-required=25")
           PY
 
+      - name: Generate self-contained human review handoff
+        run: |
+          python tools/foundation-validator/phase1_human_review_handoff.py \
+            content/reviews/coverage/feedback-complete-vertical-slice.json \
+            --records-dir content/reviews/records \
+            --canonical-root content/canonical \
+            --output-dir phase1-reports/human-review-handoff \
+            --expect-task-count 25 \
+            --expect-track-count 5
+
+      - name: Validate human review handoff summary
+        run: |
+          python - <<'PY'
+          import json
+          from collections import Counter
+          from pathlib import Path
+
+          path = Path("phase1-reports/human-review-handoff/handoff.json")
+          payload = json.loads(path.read_text(encoding="utf-8"))
+          assert payload["contract"] == "atlas-review-handoff/0.1", payload
+          assert payload["task_count"] == 25, payload
+          assert payload["track_count"] == 5, payload
+          assert payload["entity_snapshot_count"] == 10, payload
+          assert payload["reviewer_assignment"] is None, payload
+          counts = Counter({track["id"]: track["task_count"] for track in payload["tracks"]})
+          assert counts == Counter({
+              "domain-authority": 7,
+              "editorial-and-scope": 7,
+              "methods-and-inference": 5,
+              "source-and-provenance": 5,
+              "reproducibility": 1,
+          }), counts
+          tasks = [task for track in payload["tracks"] for task in track["tasks"]]
+          assert len({task["id"] for task in tasks}) == 25, tasks
+          assert all(task["execution_mode"] == "human-required" for task in tasks), tasks
+          assert all(task["reviewer_requirement"]["allowed_kinds"] == ["human"] for task in tasks), tasks
+          print("human-review-handoff=pass; tasks=25; tracks=5; snapshots=10")
+          PY
+
       - name: Validate eligible promotion and lifecycle fixtures
         run: |
           mkdir -p phase1-reports
@@ -144,7 +189,7 @@ jobs:
               --report "phase1-reports/coverage-${name}.md"
           done
 
-      - name: Upload deterministic review reports
+      - name: Upload deterministic review reports and handoff bundles
         if: always()
         uses: actions/upload-artifact@v4
         with:

@@ -6,7 +6,7 @@
 
 > **Current status: Phase 1 — English Reference Corpus and Accountable Exact-Revision Review**
 >
-> Phase 0 established the knowledge contract. Phase 1 proves review coverage, bounded machine authority, human accountability, lifecycle integrity, and dependency impact before product expansion.
+> Phase 0 established the knowledge contract. Phase 1 proves review coverage, bounded machine authority, accountable-human handoff, lifecycle integrity, and dependency impact before product expansion.
 
 ## What Atlas is
 
@@ -18,6 +18,7 @@ Atlas is a local-first knowledge and governance environment for an independent l
 - how certain, limited, contested, stale, deprecated, or retracted an item is;
 - how a synthesis traces to original sources;
 - what was reviewed, by whom or by which deterministic procedure, for which revision, and with which unresolved findings;
+- which exact content snapshot was handed to a reviewer;
 - why knowledge changed through revision.
 
 Atlas is not merely a notes app, graph visualization, textbook, course platform, or chatbot.
@@ -39,10 +40,10 @@ No live cross-repository dependency exists during Phase 1.
 2. accepted foundation documents in [`docs/foundation/`](docs/foundation/)
 3. accepted ADRs
 4. canonical authored content and exact-revision review records
-5. generated reports, coverage manifests, and backlogs
+5. generated reports, coverage manifests, backlogs, and handoff bundles
 6. experimental implementation code
 
-Machine validation can establish bounded conformance or a fully specified calculation. It cannot establish scientific truth, source interpretation, model applicability, legal correctness, ethical acceptability, editorial quality, or human accountability.
+Machine validation can establish bounded conformance or a fully specified calculation. A handoff generator can package exact review work. Neither can establish scientific truth, source interpretation, model applicability, legal correctness, ethical acceptability, editorial quality, or human accountability.
 
 ## Language scope
 
@@ -81,25 +82,15 @@ Each slice supports:
 question → source → evidence → claim → concept/model → synthesis → revision trigger
 ```
 
-## Phase 1 review system
+## Phase 1 contracts
 
-Phase 1 adds:
+- `atlas-review/0.1` — exact-revision review records;
+- `atlas-promotion/0.1` — deterministic lifecycle decisions;
+- `atlas-review-coverage/0.1` — packet and complete-slice coverage;
+- `atlas-review-backlog/0.1` — deterministic missing-review tasks;
+- `atlas-review-handoff/0.1` — generated accountable-human review bundles.
 
-- `atlas-review/0.1` exact-revision review records;
-- `atlas-promotion/0.1` deterministic lifecycle decisions;
-- `atlas-review-coverage/0.1` packet and complete-slice coverage;
-- `atlas-review-backlog/0.1` deterministic missing-review tasks;
-- deterministic structural and fully specified reproducibility attestations.
-
-The promotion gate blocks:
-
-- AI-only or machine-only authority where accountable human review is required;
-- wrong-revision reviews;
-- expired time-sensitive reviews;
-- stale synthetic translation fixtures;
-- unresolved critical or major findings;
-- hidden conflicts;
-- incomplete contested, deprecated, or retracted transitions.
+The promotion gate blocks AI-only or machine-only authority where humans are required, wrong-revision reviews, expired reviews, unresolved serious findings, hidden conflicts, and incomplete lifecycle transitions.
 
 ## Active complete slice
 
@@ -111,7 +102,7 @@ It contains ten exact revision-1 entities and keeps both the formal result and m
 
 ### Completed machine work
 
-The repository commits and verifies exactly:
+The repository commits and verifies:
 
 - 10 structural machine attestations;
 - 3 fully specified recurrence-reproducibility attestations.
@@ -132,34 +123,45 @@ They group into:
 - 7 editorial-and-scope tasks;
 - 5 methods-and-inference tasks;
 - 5 source-and-provenance tasks;
-- 1 independent reproducibility task for the generated source.
+- 1 independent reproducibility task.
 
 The slice remains `draft` and `blocked`.
 
-## Validation
+## Accountable-human handoff
 
-Install dependencies and run tests:
+The handoff generator packages all remaining work from live coverage data:
+
+```bash
+python tools/foundation-validator/phase1_human_review_handoff.py \
+  content/reviews/coverage/feedback-complete-vertical-slice.json \
+  --records-dir content/reviews/records \
+  --canonical-root content/canonical \
+  --output-dir phase1-reports/human-review-handoff \
+  --expect-task-count 25 \
+  --expect-track-count 5
+```
+
+The output contains:
+
+- five JSON and Markdown qualification-track bundles;
+- all 25 tasks exactly once;
+- ten byte-for-byte canonical Markdown snapshots;
+- original paths and SHA-256 digests;
+- existing blockers, dependents, and acceptance criteria;
+- no reviewer assignment.
+
+The bundle is preparation only. A real reviewer must still return one valid `atlas-review/0.1` record per exact entity revision and review type.
+
+## Validation
 
 ```bash
 python -m pip install -r tools/foundation-validator/requirements.txt
 python -m unittest discover -s tools/foundation-validator/tests -v
-```
-
-Validate authored content:
-
-```bash
-python tools/foundation-validator/atlas_foundation_validator.py validate \
-  content/canonical
-```
-
-Verify deterministic machine records:
-
-```bash
 python tools/foundation-validator/phase1_machine_attestations.py check \
   --records-dir content/reviews/records
 ```
 
-Generate complete-slice coverage:
+Generate coverage:
 
 ```bash
 python tools/foundation-validator/phase1_coverage_report.py coverage \
@@ -169,18 +171,7 @@ python tools/foundation-validator/phase1_coverage_report.py coverage \
   --report phase1-coverage.md
 ```
 
-Generate the remaining review backlog:
-
-```bash
-python tools/foundation-validator/phase1_review_backlog.py \
-  content/reviews/coverage/feedback-complete-vertical-slice.json \
-  --records-dir content/reviews/records \
-  --expect blocked \
-  --json-out phase1-backlog.json \
-  --report phase1-backlog.md
-```
-
-These commands produce governance output only. They never edit lifecycle status automatically.
+These commands produce conformance, planning, or evidence-transfer output only. They never edit lifecycle status automatically.
 
 ## Reading path
 
@@ -190,7 +181,7 @@ These commands produce governance output only. They never edit lifecycle status 
 4. [`docs/phase-1/review-protocol.md`](docs/phase-1/review-protocol.md)
 5. [`docs/phase-1/machine-attestations.md`](docs/phase-1/machine-attestations.md)
 6. [`docs/phase-1/feedback-human-review-plan.md`](docs/phase-1/feedback-human-review-plan.md)
-7. [`docs/phase-1/feedback-vertical-slice-readiness.md`](docs/phase-1/feedback-vertical-slice-readiness.md)
+7. [`docs/phase-1/human-review-handoff.md`](docs/phase-1/human-review-handoff.md)
 
 Contributors and agents must follow [`AGENTS.md`](AGENTS.md) and [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
@@ -202,15 +193,15 @@ Contributors and agents must follow [`AGENTS.md`](AGENTS.md) and [`CONTRIBUTING.
 - plugins and synchronization;
 - active translated corpus or language-specific review programs;
 - AI-generated authoritative content;
+- automatic reviewer assignment;
 - direct Principia integration or repository merger;
-- promotion of `.atlas`, SQL, or prototype runtime structures as canonical;
-- optimization without accepted requirements and measurements.
+- promotion of `.atlas`, SQL, or prototype runtime structures as canonical.
 
 ## Phase boundary
 
 Phase 1 closes only when the complete English delayed-feedback slice has sufficient accountable exact-revision review coverage, no required critical or major finding remains unresolved, lifecycle transitions preserve history, dishonest authority paths fail, and a completion report recommends entry into Phase 2.
 
-Passing a validator confirms only the checks it performs. It never turns a draft into authoritative knowledge by itself.
+Passing a validator or generating a handoff never turns a draft into authoritative knowledge by itself.
 
 ## License
 
