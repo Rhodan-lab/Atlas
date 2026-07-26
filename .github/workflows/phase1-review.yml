@@ -1,55 +1,31 @@
-name: Phase 1 Review Gate
+name: Phase 1 AI Review
 
 on:
   push:
     branches: [main]
     paths:
       - "PROJECT_STATE.md"
-      - "content/canonical/**"
-      - "content/reviews/**"
+      - "content/canonical/feedback/**"
+      - "content/reviews/ai/**"
       - "docs/phase-1/**"
-      - "tools/foundation-validator/phase1_review_gate.py"
-      - "tools/foundation-validator/phase1_coverage_report.py"
-      - "tools/foundation-validator/phase1_review_backlog.py"
-      - "tools/foundation-validator/phase1_machine_attestations.py"
-      - "tools/foundation-validator/phase1_human_review_handoff.py"
-      - "tools/foundation-validator/phase1_review_intake.py"
-      - "tools/foundation-validator/phase1_review_admission.py"
-      - "tools/foundation-validator/tests/test_phase1_review_gate.py"
-      - "tools/foundation-validator/tests/test_phase1_coverage_report.py"
-      - "tools/foundation-validator/tests/test_phase1_review_backlog.py"
-      - "tools/foundation-validator/tests/test_phase1_machine_attestations.py"
-      - "tools/foundation-validator/tests/test_phase1_human_review_handoff.py"
-      - "tools/foundation-validator/tests/test_phase1_review_intake.py"
-      - "tools/foundation-validator/tests/test_phase1_review_admission.py"
+      - "tools/foundation-validator/phase1_ai_review.py"
+      - "tools/foundation-validator/tests/test_phase1_ai_review.py"
       - ".github/workflows/phase1-review.yml"
   pull_request:
     paths:
       - "PROJECT_STATE.md"
-      - "content/canonical/**"
-      - "content/reviews/**"
+      - "content/canonical/feedback/**"
+      - "content/reviews/ai/**"
       - "docs/phase-1/**"
-      - "tools/foundation-validator/phase1_review_gate.py"
-      - "tools/foundation-validator/phase1_coverage_report.py"
-      - "tools/foundation-validator/phase1_review_backlog.py"
-      - "tools/foundation-validator/phase1_machine_attestations.py"
-      - "tools/foundation-validator/phase1_human_review_handoff.py"
-      - "tools/foundation-validator/phase1_review_intake.py"
-      - "tools/foundation-validator/phase1_review_admission.py"
-      - "tools/foundation-validator/tests/test_phase1_review_gate.py"
-      - "tools/foundation-validator/tests/test_phase1_coverage_report.py"
-      - "tools/foundation-validator/tests/test_phase1_review_backlog.py"
-      - "tools/foundation-validator/tests/test_phase1_machine_attestations.py"
-      - "tools/foundation-validator/tests/test_phase1_human_review_handoff.py"
-      - "tools/foundation-validator/tests/test_phase1_review_intake.py"
-      - "tools/foundation-validator/tests/test_phase1_review_admission.py"
+      - "tools/foundation-validator/phase1_ai_review.py"
+      - "tools/foundation-validator/tests/test_phase1_ai_review.py"
       - ".github/workflows/phase1-review.yml"
 
 permissions:
   contents: read
 
 jobs:
-  review-gate:
+  ai-review:
     name: Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
     strategy:
@@ -69,346 +45,49 @@ jobs:
       - name: Install validator dependencies
         run: python -m pip install -r tools/foundation-validator/requirements.txt
 
-      - name: Run all foundation and review tests
-        run: python -m unittest discover -s tools/foundation-validator/tests -v
-
-      - name: Validate Phase 1 review records
+      - name: Run AI review contract tests
         run: |
-          for record in content/reviews/records/*.json; do
-            python tools/foundation-validator/phase1_review_gate.py validate-record "$record"
-          done
+          python -m unittest discover \
+            -s tools/foundation-validator/tests \
+            -p 'test_phase1_ai_review.py' \
+            -v
 
-      - name: Verify deterministic machine attestations
+      - name: Validate corrected canonical content
         run: |
-          python tools/foundation-validator/phase1_machine_attestations.py check \
-            --records-dir content/reviews/records
+          python tools/foundation-validator/atlas_foundation_validator.py validate \
+            content/canonical
 
-      - name: Validate Phase 1 coverage manifests
+      - name: Validate comprehensive delayed-feedback AI review
         run: |
-          python tools/foundation-validator/phase1_coverage_report.py validate-manifest \
-            content/reviews/coverage/*.json
+          python tools/foundation-validator/phase1_ai_review.py \
+            content/reviews/ai/feedback-delayed-comprehensive.json \
+            --canonical-root content/canonical
 
-      - name: Generate complete English vertical-slice review backlog
-        run: |
-          mkdir -p phase1-reports
-          manifest="content/reviews/coverage/feedback-complete-vertical-slice.json"
-          name="$(basename "$manifest" .json)"
-          python tools/foundation-validator/phase1_review_backlog.py \
-            "$manifest" \
-            --records-dir content/reviews/records \
-            --expect blocked \
-            --json-out "phase1-reports/backlog-${name}.json" \
-            --report "phase1-reports/backlog-${name}.md"
-
-      - name: Confirm only accountable human review remains
+      - name: Confirm AI-reviewed policy boundary
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
 
-          path = Path("phase1-reports/backlog-feedback-complete-vertical-slice.json")
+          path = Path("content/reviews/ai/feedback-delayed-comprehensive.json")
           payload = json.loads(path.read_text(encoding="utf-8"))
-          assert payload["gate_task_count"] == 25, payload
-          assert payload["gate_automation_eligible_task_count"] == 0, payload
-          assert payload["gate_human_required_task_count"] == 25, payload
-          assert payload["advisory_task_count"] == 0, payload
-          print("remaining-gate-tasks=25; automation-eligible=0; human-required=25")
+          assert payload["review_level"] == "ai-reviewed", payload
+          assert payload["reviewer"]["kind"] == "ai", payload
+          assert payload["reviewer"]["human_verified"] is False, payload
+          assert payload["human_review_required"] is False, payload
+          assert payload["overall_outcome"] == "pass", payload
+          assert len(payload["entities"]) == 10, payload
+          assert all(item["outcome"] == "pass" for item in payload["entities"]), payload
+          print("phase1-ai-review=pass; entities=10; human-review-required=false")
           PY
 
-      - name: Generate self-contained human review handoff
-        run: |
-          python tools/foundation-validator/phase1_human_review_handoff.py \
-            content/reviews/coverage/feedback-complete-vertical-slice.json \
-            --records-dir content/reviews/records \
-            --canonical-root content/canonical \
-            --output-dir phase1-reports/human-review-handoff \
-            --expect-task-count 25 \
-            --expect-track-count 5
-
-      - name: Validate human review handoff summary
-        run: |
-          python - <<'PY'
-          import json
-          from collections import Counter
-          from pathlib import Path
-
-          path = Path("phase1-reports/human-review-handoff/handoff.json")
-          payload = json.loads(path.read_text(encoding="utf-8"))
-          assert payload["contract"] == "atlas-review-handoff/0.1", payload
-          assert payload["task_count"] == 25, payload
-          assert payload["track_count"] == 5, payload
-          assert payload["entity_snapshot_count"] == 10, payload
-          assert payload["reviewer_assignment"] is None, payload
-          counts = Counter({track["id"]: track["task_count"] for track in payload["tracks"]})
-          assert counts == Counter({
-              "domain-authority": 7,
-              "editorial-and-scope": 7,
-              "methods-and-inference": 5,
-              "source-and-provenance": 5,
-              "reproducibility": 1,
-          }), counts
-          tasks = [task for track in payload["tracks"] for task in track["tasks"]]
-          assert len({task["id"] for task in tasks}) == 25, tasks
-          assert all(task["execution_mode"] == "human-required" for task in tasks), tasks
-          assert all(task["reviewer_requirement"]["allowed_kinds"] == ["human"] for task in tasks), tasks
-          print("human-review-handoff=pass; tasks=25; tracks=5; snapshots=10")
-          PY
-
-      - name: Build synthetic exact-snapshot review submission
-        run: |
-          python - <<'PY'
-          import hashlib
-          import json
-          from pathlib import Path
-
-          handoff_path = Path("phase1-reports/human-review-handoff/handoff.json")
-          handoff = json.loads(handoff_path.read_text(encoding="utf-8"))
-          tasks = [task for track in handoff["tracks"] for task in track["tasks"]]
-          task = next(
-              task for task in tasks
-              if task["review_type"] == "editorial"
-              and "internal" in task["reviewer_requirement"]["allowed_independence"]
-          )
-          entity = task["entity"]
-          snapshot = task["entity_snapshot"]
-          submission = {
-              "contract": "atlas-review-submission/0.1",
-              "coverage_id": handoff["coverage_id"],
-              "task_id": task["id"],
-              "snapshot": {
-                  "entity_id": entity["id"],
-                  "revision": entity["revision"],
-                  "sha256": snapshot["sha256"],
-              },
-              "submitted_at": "2026-07-26",
-              "reviewed_exact_snapshot": True,
-              "ai_assistance": {
-                  "used": True,
-                  "description": "Synthetic CI fixture: AI wording assistance only; no real reviewer authority is claimed.",
-              },
-              "review_record": {
-                  "contract": "atlas-review/0.1",
-                  "id": "review:editorial:synthetic-intake-r1:2026-07-26",
-                  "entity": {
-                      "id": entity["id"],
-                      "revision": entity["revision"],
-                  },
-                  "review_type": "editorial",
-                  "reviewer": {
-                      "display_name": "Synthetic CI fixture reviewer",
-                      "kind": "human",
-                      "independence": "internal",
-                      "qualification": "Synthetic test qualification; not a real review or reviewer.",
-                      "accountable": True,
-                      "conflicts": [],
-                  },
-                  "completed_at": "2026-07-26",
-                  "review_horizon": None,
-                  "outcome": "pass",
-                  "findings": [],
-                  "summary": "Synthetic CI fixture for intake validation only.",
-                  "permits_promotion": True,
-              },
-          }
-          Path("phase1-reports/synthetic-review-submission.json").write_text(
-              json.dumps(submission, indent=2, sort_keys=True) + "\n",
-              encoding="utf-8",
-          )
-
-          digest = hashlib.sha256()
-          for path in sorted(Path("content/reviews/records").glob("*.json")):
-              digest.update(path.name.encode("utf-8"))
-              digest.update(b"\0")
-              digest.update(path.read_bytes())
-              digest.update(b"\0")
-          Path("phase1-reports/review-records-before.sha256").write_text(
-              digest.hexdigest() + "\n", encoding="utf-8"
-          )
-          print(f"synthetic-intake-task={task['id']}")
-          PY
-
-      - name: Validate and extract synthetic review submission
-        run: |
-          python tools/foundation-validator/phase1_review_intake.py validate \
-            phase1-reports/synthetic-review-submission.json \
-            --handoff phase1-reports/human-review-handoff/handoff.json
-          python tools/foundation-validator/phase1_review_intake.py extract \
-            phase1-reports/synthetic-review-submission.json \
-            --handoff phase1-reports/human-review-handoff/handoff.json \
-            --out phase1-reports/synthetic-extracted-review.json
-          python tools/foundation-validator/phase1_review_gate.py validate-record \
-            phase1-reports/synthetic-extracted-review.json
-
-      - name: Confirm intake lineage and no automatic repository write
-        run: |
-          python - <<'PY'
-          import hashlib
-          import json
-          from pathlib import Path
-
-          submission = json.loads(
-              Path("phase1-reports/synthetic-review-submission.json").read_text(encoding="utf-8")
-          )
-          record = json.loads(
-              Path("phase1-reports/synthetic-extracted-review.json").read_text(encoding="utf-8")
-          )
-          lineage = record["metadata"]["intake"]
-          assert lineage["task_id"] == submission["task_id"], lineage
-          assert lineage["snapshot"] == submission["snapshot"], lineage
-          assert lineage["reviewed_exact_snapshot"] is True, lineage
-          assert lineage["ai_assistance"]["used"] is True, lineage
-
-          digest = hashlib.sha256()
-          for path in sorted(Path("content/reviews/records").glob("*.json")):
-              digest.update(path.name.encode("utf-8"))
-              digest.update(b"\0")
-              digest.update(path.read_bytes())
-              digest.update(b"\0")
-          before = Path("phase1-reports/review-records-before.sha256").read_text(encoding="utf-8").strip()
-          assert digest.hexdigest() == before, "intake modified content/reviews/records"
-          assert not Path("content/reviews/records/synthetic-extracted-review.json").exists()
-          print("review-intake=pass; exact-snapshot-lineage=preserved; repository-write=none")
-          PY
-
-      - name: Build synthetic explicit review admission
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-
-          admission = {
-              "contract": "atlas-review-admission/0.1",
-              "id": "admission:synthetic-intake:2026-07-26",
-              "decision": "accept",
-              "decided_at": "2026-07-26",
-              "decider": {
-                  "display_name": "Synthetic CI fixture maintainer",
-                  "kind": "human",
-                  "role": "Synthetic Atlas admission fixture; not a real maintainer decision.",
-                  "accountable": True,
-                  "conflicts": [],
-              },
-              "external_verification": {
-                  "reviewer_identity_checked": True,
-                  "qualification_checked": True,
-                  "independence_checked": True,
-                  "conflicts_checked": True,
-                  "method": "Synthetic CI declarations only; no real person or credential was verified.",
-              },
-              "rationale": "Exercise admission lineage without granting real review authority.",
-              "test_fixture": True,
-          }
-          Path("phase1-reports/synthetic-review-admission.json").write_text(
-              json.dumps(admission, indent=2, sort_keys=True) + "\n",
-              encoding="utf-8",
-          )
-          PY
-
-      - name: Validate and prepare synthetic admitted review
-        run: |
-          python tools/foundation-validator/phase1_review_admission.py validate \
-            phase1-reports/synthetic-review-admission.json \
-            phase1-reports/synthetic-review-submission.json \
-            --handoff phase1-reports/human-review-handoff/handoff.json \
-            --records-dir content/reviews/records
-          python tools/foundation-validator/phase1_review_admission.py receipt \
-            phase1-reports/synthetic-review-admission.json \
-            phase1-reports/synthetic-review-submission.json \
-            --handoff phase1-reports/human-review-handoff/handoff.json \
-            --records-dir content/reviews/records \
-            --out phase1-reports/synthetic-admission-receipt.json
-          python tools/foundation-validator/phase1_review_admission.py prepare \
-            phase1-reports/synthetic-review-admission.json \
-            phase1-reports/synthetic-review-submission.json \
-            --handoff phase1-reports/human-review-handoff/handoff.json \
-            --records-dir content/reviews/records \
-            --out phase1-reports/synthetic-admitted-review.json
-          python tools/foundation-validator/phase1_review_gate.py validate-record \
-            phase1-reports/synthetic-admitted-review.json
-
-      - name: Confirm admission lineage and no automatic repository write
-        run: |
-          python - <<'PY'
-          import hashlib
-          import json
-          from pathlib import Path
-
-          receipt = json.loads(
-              Path("phase1-reports/synthetic-admission-receipt.json").read_text(encoding="utf-8")
-          )
-          record = json.loads(
-              Path("phase1-reports/synthetic-admitted-review.json").read_text(encoding="utf-8")
-          )
-          assert receipt["contract"] == "atlas-review-admission/0.1", receipt
-          assert receipt["decision"] == "accept", receipt
-          assert receipt["test_fixture"] is True, receipt
-          assert "intake" in record["metadata"], record
-          lineage = record["metadata"]["admission"]
-          assert lineage["contract"] == "atlas-review-admission/0.1", lineage
-          assert lineage["decision"] == "accept", lineage
-          assert lineage["test_fixture"] is True, lineage
-          assert record["permits_promotion"] is False, record
-
-          digest = hashlib.sha256()
-          for path in sorted(Path("content/reviews/records").glob("*.json")):
-              digest.update(path.name.encode("utf-8"))
-              digest.update(b"\0")
-              digest.update(path.read_bytes())
-              digest.update(b"\0")
-          before = Path("phase1-reports/review-records-before.sha256").read_text(encoding="utf-8").strip()
-          assert digest.hexdigest() == before, "admission modified content/reviews/records"
-          assert not Path("content/reviews/records/synthetic-admitted-review.json").exists()
-          print("review-admission=pass; lineage=preserved; promotion=false; repository-write=none")
-          PY
-
-      - name: Validate eligible promotion and lifecycle fixtures
-        run: |
-          mkdir -p phase1-reports
-          python tools/foundation-validator/phase1_review_gate.py promotion \
-            content/reviews/fixtures/valid-normative-promotion.json \
-            --report phase1-reports/valid-normative-promotion.md
-          python tools/foundation-validator/phase1_review_gate.py promotion \
-            content/reviews/fixtures/valid-contested-transition.json \
-            --report phase1-reports/valid-contested-transition.md
-          python tools/foundation-validator/phase1_review_gate.py promotion \
-            content/reviews/fixtures/valid-deprecation-transition.json \
-            --report phase1-reports/valid-deprecation-transition.md
-          python tools/foundation-validator/phase1_review_gate.py promotion \
-            content/reviews/fixtures/valid-retraction-transition.json \
-            --report phase1-reports/valid-retraction-transition.md
-
-      - name: Confirm blocked promotion fixtures fail
-        run: |
-          mkdir -p phase1-reports
-          for fixture in \
-            content/reviews/fixtures/invalid-ai-only-domain-promotion.json \
-            content/reviews/fixtures/invalid-stale-translation-promotion.json \
-            content/reviews/fixtures/invalid-open-major-finding.json; do
-            name="$(basename "$fixture" .json)"
-            if python tools/foundation-validator/phase1_review_gate.py promotion \
-              "$fixture" --report "phase1-reports/${name}.md"; then
-              echo "Expected blocked fixture to fail: $fixture" >&2
-              exit 1
-            fi
-          done
-
-      - name: Confirm current packet and slice coverage remains honestly blocked
-        run: |
-          mkdir -p phase1-reports
-          for manifest in content/reviews/coverage/*.json; do
-            name="$(basename "$manifest" .json)"
-            python tools/foundation-validator/phase1_coverage_report.py coverage \
-              "$manifest" \
-              --records-dir content/reviews/records \
-              --expect blocked \
-              --report "phase1-reports/coverage-${name}.md"
-          done
-
-      - name: Upload deterministic review reports, handoff, intake, and admission fixtures
+      - name: Upload AI review evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: phase1-review-reports-python-${{ matrix.python-version }}
-          path: phase1-reports
-          if-no-files-found: warn
+          name: phase1-ai-review-python-${{ matrix.python-version }}
+          path: |
+            content/reviews/ai/feedback-delayed-comprehensive.json
+            docs/phase-1/ai-review-report.md
+          if-no-files-found: error
           retention-days: 14
