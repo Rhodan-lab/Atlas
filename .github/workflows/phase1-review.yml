@@ -65,20 +65,17 @@ jobs:
           python tools/foundation-validator/phase1_coverage_report.py validate-manifest \
             content/reviews/coverage/*.json
 
-      - name: Generate complete vertical-slice review backlogs
+      - name: Generate complete English vertical-slice review backlog
         run: |
           mkdir -p phase1-reports
-          for manifest in \
-            content/reviews/coverage/feedback-complete-vertical-slice.json \
-            content/reviews/coverage/feedback-id-translation-overlay.json; do
-            name="$(basename "$manifest" .json)"
-            python tools/foundation-validator/phase1_review_backlog.py \
-              "$manifest" \
-              --records-dir content/reviews/records \
-              --expect blocked \
-              --json-out "phase1-reports/backlog-${name}.json" \
-              --report "phase1-reports/backlog-${name}.md"
-          done
+          manifest="content/reviews/coverage/feedback-complete-vertical-slice.json"
+          name="$(basename "$manifest" .json)"
+          python tools/foundation-validator/phase1_review_backlog.py \
+            "$manifest" \
+            --records-dir content/reviews/records \
+            --expect blocked \
+            --json-out "phase1-reports/backlog-${name}.json" \
+            --report "phase1-reports/backlog-${name}.md"
 
       - name: Validate eligible promotion and lifecycle fixtures
         run: |

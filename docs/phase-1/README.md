@@ -1,4 +1,4 @@
-# Phase 1 — Reference Corpus, Review Gate, Coverage, and Readiness
+# Phase 1 — English Reference Corpus, Review Gate, Coverage, and Readiness
 
 ## Status
 
@@ -6,9 +6,12 @@ Active after:
 
 - Phase 0 acceptance at `34afe253fc8c9cefb61adfe2831f6da82aa07e16`;
 - initial Phase 1 review-gate merge at `09488b76c43fdbe46f94fcb14a27637472adfa38`;
-- coverage and dependency-reporting merge at `c67457ae2c369d57b00b1cd22f454245ebf6ac13`.
+- coverage and dependency-reporting merge at `c67457ae2c369d57b00b1cd22f454245ebf6ac13`;
+- complete delayed-feedback readiness merge at `786bdaf4141be032554fe1b73439dfacb67c806d`.
 
-Phase 1 turns the accepted knowledge contract into a trustworthy review workflow. It does not build the general Atlas product and does not promote example content merely because it parses or generates a report.
+The active authored corpus is English-only. Translation contracts remain dormant language-neutral infrastructure exercised only through synthetic fixtures.
+
+Phase 1 turns the accepted knowledge contract into a trustworthy review workflow. It does not build the general Atlas product and does not promote content merely because it parses or generates a report.
 
 ## Core question
 
@@ -20,7 +23,7 @@ Can Atlas prove, for an exact authored revision:
 - what findings remain open;
 - whether the review is still current;
 - which review classes remain missing;
-- which human-review tasks must happen next;
+- which work may be automated and which requires accountable humans;
 - which internal or external dependents may be affected;
 - which lifecycle transition is permitted;
 - why promotion or slice closure is blocked?
@@ -33,12 +36,12 @@ Can Atlas prove, for an exact authored revision:
 | Promotion gate | deterministic lifecycle decision with reasons |
 | Coverage contract | `atlas-review-coverage/0.1` packet and slice reporting |
 | Review backlog | `atlas-review-backlog/0.1` deterministic missing-review tasks |
-| Review packets | bounded domain and translation packets |
-| Review records | exact-revision internal, AI-assisted, and independent records |
+| Review packets | bounded English domain, methodological, and legal-context packets |
+| Review records | exact-revision internal, AI-assisted, machine, and independent records |
 | Reviewer submission | code-independent guide and JSON example |
 | Lifecycle fixtures | reviewed, contested, deprecated, retracted, and stale cases |
 | Dependency impact | internal reverse links and optional opaque external dependents |
-| Contract challenge | reopen Phase 0 only when a real fixture fails |
+| Contract challenge | reopen Phase 0 only when a representative fixture fails |
 
 ## Review authority boundary
 
@@ -59,10 +62,11 @@ AI-assisted review may not independently satisfy:
 - methodological review of empirical or model-to-world inference;
 - ethical review;
 - legal-context review;
-- translation equivalence review;
 - final editorial accountability.
 
 Those reviews require accountable human judgment under the promotion policy. A generated backlog is not a review record.
+
+Translation-equivalence authority is not part of the active Phase 1 program. Synthetic fixtures may test that stale translation metadata is rejected, but they do not represent a supported authored language.
 
 ## Phase 1 artifacts
 
@@ -70,7 +74,7 @@ Those reviews require accountable human judgment under the promotion policy. A g
 content/reviews/
   records/            # revision-specific review records
   fixtures/           # promotion and lifecycle test cases
-  coverage/           # packet, complete-slice, and translation-overlay manifests
+  coverage/           # bounded packets and complete English slice manifests
 
 docs/phase-1/
   review-protocol.md
@@ -79,7 +83,7 @@ docs/phase-1/
   reviewer-submission-guide.md
   feedback-vertical-slice-readiness.md
   templates/          # reviewer submission example
-  packets/            # reviewer-ready bounded packets
+  packets/            # reviewer-ready English packets
   reports/            # generated or signed review reports
 
 tools/foundation-validator/
@@ -112,36 +116,19 @@ tools/foundation-validator/
    - legal updates and review horizon;
    - autonomy, accountability, accessibility, safety, and feasibility trade-offs.
 
-4. **Indonesian translation equivalence**
-   - mathematical meaning;
-   - control-systems terminology;
-   - qualifier preservation;
-   - stale-source behavior.
-
-Each bounded packet has a coverage manifest for its target entity. Those manifests remain expected `blocked` until sufficient accountable human review exists.
+Each bounded packet has a coverage manifest for its target entity. Those manifests remain expected `blocked` until sufficient accountable review exists.
 
 ## First complete vertical-slice readiness scope
 
-The delayed-feedback slice is the first complete readiness scope because it combines a question, source provenance, generated evidence, a formal model, model-derived and methodological claims, concepts, synthesis, and an Indonesian translation path.
-
-### English complete slice
+The delayed-feedback slice is the first complete readiness scope because it combines a question, source provenance, generated evidence, a formal model, model-derived and methodological claims, concepts, and synthesis.
 
 `content/reviews/coverage/feedback-complete-vertical-slice.json`
 
 - contains all ten split English entities;
 - uses `coverage_requirement: all`;
 - records the complete governance dependency graph;
+- keeps the formal result and model-to-world inference boundary load-bearing;
 - remains `draft` and expected `blocked`.
-
-### Indonesian translation overlay
-
-`content/reviews/coverage/feedback-id-translation-overlay.json`
-
-- contains all eight translated entities;
-- retains shared English sources as context;
-- treats every translated entity as load-bearing;
-- requires independent translation and domain authority;
-- remains independently blocked even if English coverage later passes.
 
 See [`feedback-vertical-slice-readiness.md`](feedback-vertical-slice-readiness.md).
 
@@ -166,9 +153,7 @@ python tools/foundation-validator/phase1_coverage_report.py coverage \
 
 `--expect blocked` verifies that known gaps remain visible. It does not grant a pass or change lifecycle state.
 
-## Review backlog commands
-
-Generate the English complete-slice backlog:
+## Review backlog command
 
 ```bash
 python tools/foundation-validator/phase1_review_backlog.py \
@@ -179,18 +164,13 @@ python tools/foundation-validator/phase1_review_backlog.py \
   --report phase1-reports/backlog-feedback-en.md
 ```
 
-Generate the Indonesian translation backlog:
+The backlog records exact revision, missing review type, execution mode, reviewer authority, priority, blockers, dependents, and acceptance criteria. It does not assign a person or count as completed review.
 
-```bash
-python tools/foundation-validator/phase1_review_backlog.py \
-  content/reviews/coverage/feedback-id-translation-overlay.json \
-  --records-dir content/reviews/records \
-  --expect blocked \
-  --json-out phase1-reports/backlog-feedback-id.json \
-  --report phase1-reports/backlog-feedback-id.md
-```
+Current English backlog:
 
-The backlog records exact revision, missing review type, reviewer authority, priority, blockers, dependents, and acceptance criteria. It does not assign a person or count as completed review.
+- 38 gate tasks;
+- 13 automation-eligible tasks;
+- 25 human-required tasks.
 
 ## Future Principia & Atlas compatibility
 
@@ -208,15 +188,14 @@ No live Principia dependency is declared during Phase 1.
 
 ## Exit evidence
 
-Phase 1 does not close because several review files, complete manifests, or backlogs exist. It closes when:
+Phase 1 does not close because review files, manifests, or backlogs exist. It closes when:
 
-- the review, promotion, coverage, and backlog semantics are executable;
+- review, promotion, coverage, and backlog semantics are executable;
 - promotion and coverage decisions are deterministic and explainable;
 - dishonest authority paths fail fixtures;
 - lifecycle transitions preserve history;
 - reviewer packets and submission templates are usable without code knowledge;
-- at least one complete vertical slice reaches its intended lifecycle state through valid accountable records;
-- translated status is independently justified;
+- the complete English delayed-feedback slice reaches its intended lifecycle state through valid accountable records;
 - dependency impact is visible;
 - all remaining gaps are visible and correctly scoped;
 - a completion report recommends or rejects Phase 2.
@@ -226,6 +205,7 @@ Phase 1 does not close because several review files, complete manifests, or back
 - broad content production;
 - a polished UI;
 - search or retrieval redesign;
+- an active translated corpus;
 - autonomous review approval;
 - replacing domain experts with AI;
 - direct Principia integration or repository merger;

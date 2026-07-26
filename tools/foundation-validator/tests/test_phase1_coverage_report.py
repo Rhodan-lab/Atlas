@@ -132,8 +132,8 @@ class CoverageManifestTests(unittest.TestCase):
         codes = {item.code for item in coverage.validate_manifest(payload)}
         self.assertIn("E-COVERAGE-EXTERNAL-TARGET", codes)
 
-    def test_translation_requires_revision_lineage(self) -> None:
-        translated = entity(entity_id="claim:id:test", claim_kind="model-derived")
+    def test_synthetic_translation_requires_revision_lineage(self) -> None:
+        translated = entity(entity_id="claim:fr:test", claim_kind="model-derived")
         translated["translation_of"] = "claim:en:test"
         payload = manifest(entities=[translated])
         codes = {item.code for item in coverage.validate_manifest(payload)}

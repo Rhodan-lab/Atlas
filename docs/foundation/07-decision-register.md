@@ -16,7 +16,7 @@ This register separates accepted constraints from provisional assumptions and fu
 
 ### FND-001 — Foundation before feature development
 
-Atlas defines and tests its knowledge foundation before expanding product features. Existing software remains experimental until later architecture gates justify it.
+Atlas defines and tests its knowledge foundation before expanding product features. Existing software remains experimental until later gates justify it.
 
 ### FND-002 — Markdown is the authored source of truth
 
@@ -34,9 +34,9 @@ New knowledge and generated transformations remain `draft` until required review
 
 Authoritative content remains inspectable and exportable without a mandatory cloud account.
 
-### FND-006 — Polyglot requires evidence
+### FND-006 — Polyglot implementation requires evidence
 
-A language or process boundary requires a stable responsibility, baseline comparison, measurable advantage, versioned contract, and maintenance analysis.
+A programming-language or process boundary requires stable responsibility, baseline comparison, measurable advantage, versioned contract, and maintenance analysis.
 
 ### FND-007 — AI cannot grant authority
 
@@ -48,19 +48,19 @@ Atlas preserves domain-appropriate uncertainty and written rationale rather than
 
 ### FND-009 — Initial contract is `atlas-content/0.1`
 
-Authoring, derived-data, and application versions are separate. Contract changes follow `11-contract-versioning-and-migrations.md`.
+Authoring, derived-data, and application versions are separate. Contract changes follow the migration policy.
 
-### FND-010 — Multilingual authored knowledge with language-neutral structure
+### FND-010 — Language-qualified identity remains part of the contract
 
-Canonical structural tokens remain English technical identifiers. Human-readable knowledge may use any declared language. Translations are separate entities sharing a `work` identity and require their own review.
+Canonical structural tokens remain English technical identifiers. The contract can represent separately reviewed language versions sharing a `work` identity. This is a capability decision, not an active corpus requirement.
 
 ### FND-011 — Claim atomicity is semantic, not sentence length
 
-A claim is split when its clauses can differ in evidence, scope, confidence, lifecycle, contradiction, or revision.
+A claim is split when clauses can differ in evidence, scope, confidence, lifecycle, contradiction, or revision.
 
 ### FND-012 — Argument is embedded structure in `0.1`
 
-Arguments use structured premise, assumption, conclusion, alternative, and inference blocks. They are not canonical entities until fixtures demonstrate a need for independent identity and lifecycle.
+Arguments use structured premise, assumption, conclusion, alternative, and inference blocks. They are not canonical entities until fixtures demonstrate independent identity and lifecycle.
 
 ### FND-013 — Evidence storage follows minimum-necessary provenance
 
@@ -76,7 +76,7 @@ Review records exact entity revision, review types, reviewers, conflicts, findin
 
 ### FND-016 — Three reference domains define the Phase 0 stress test
 
-The canonical corpus tests empirical biology, formal feedback modeling, and socio-technical recommender governance. The slices are bounded ontology tests, not a general content-production program.
+The canonical corpus tests empirical biology, formal feedback modeling, and socio-technical recommender governance. The slices are ontology tests, not a general content-production program.
 
 ### FND-017 — Invalid fixtures are part of the contract
 
@@ -84,43 +84,55 @@ The validator reports specific deterministic structural and semantic diagnostics
 
 ### FND-018 — Revision impact uses bounded automatic staleness
 
-Material dependency changes may mark downstream items `possibly-stale` or `review-required`. Automation identifies candidates; human review determines semantic impact. Translation source-revision mismatch is demonstrated by fixture.
+Material dependency changes may mark downstream items `possibly-stale` or `review-required`. Automation identifies candidates; human review determines semantic impact. Translation source-revision mismatch is demonstrated by a synthetic fixture.
 
 ### FND-019 — Canonical entity set is sufficient for `0.1`
 
-Source, evidence, claim, concept, relation, model, question, synthesis, and revision are sufficient for the three split canonical slices. Argument remains embedded. A future contract may add an entity only after fixtures show independent identity and lifecycle are necessary.
+Source, evidence, claim, concept, relation, model, question, synthesis, and revision are sufficient for the reference slices. A future contract may add an entity only after fixtures show independent identity and lifecycle are necessary.
 
 ### FND-020 — Relation vocabulary is executable for `0.1`
 
-`10-relation-vocabulary.md` is the single source of truth. The validator checks relation names, directions, entity pairs, duplicate edges, and missing targets.
+The relation vocabulary is the single source of truth. The validator checks names, directions, entity pairs, duplicate edges, and missing targets.
 
-### FND-021 — Language-specific IDs and shared work identity are accepted
+### FND-021 — Language-qualified IDs and shared work identity are accepted
 
-Canonical entity IDs are language-specific. Equivalent language versions share a language-neutral `work` identifier. Alias, rename, collision, federation, and translation behavior are demonstrated by fixtures.
+Equivalent language versions can share a language-neutral `work` identifier while retaining separate IDs, revisions, lifecycle, and review.
 
 ### FND-022 — Python is the minimum Phase 0 validator baseline
 
-ADR-0001 selects Python 3.11+ with pinned PyYAML for contract verification. The validator is replaceable infrastructure and is not the future product runtime or semantic authority.
+ADR-0001 selects Python 3.11+ with pinned dependencies for contract verification. The validator is replaceable infrastructure, not product runtime or semantic authority.
 
 ### FND-023 — Foundation acceptance is distinct from content review
 
-Phase 0 accepts the versioned knowledge contract, governance, and executable fixture architecture. Phase 1 performs revision-specific independent review of reference content. Machine conformance cannot promote content from `draft`.
+Phase 0 accepts the versioned knowledge contract, governance, and executable fixture architecture. Phase 1 performs exact-revision independent review. Machine conformance cannot promote content from `draft`.
 
-### FND-024 — Canonical files replace bundled slices as executable fixtures
+### FND-024 — Split canonical files replace bundled slices
 
-The bundled vertical-slice documents remain historical drafting artifacts. Canonical validation uses one file per entity under `content/canonical/` and `content/translations/`.
+Bundled vertical-slice documents remain historical drafting artifacts. Executable authored validation uses one file per entity under `content/canonical/`.
+
+### FND-025 — Active authored corpus is English-only
+
+**Accepted during Phase 1.**
+
+The current authored corpus, review packets, coverage manifests, generated backlogs, and future Principia compatibility work use English only.
+
+Translation capability remains dormant language-neutral infrastructure exercised through neutral synthetic fixtures. No active translated corpus, language-specific review queue, or supported product language beyond English exists.
+
+Multilingual authoring may return only through an explicit reopening decision covering scope, reviewer capacity, terminology governance, migration, staleness, and rollback.
+
+### FND-026 — Atlas and Principia retain separate authority boundaries
+
+Atlas owns canonical knowledge identity, evidence, provenance, review, revision, lifecycle, and staleness. Principia will own explanation, pathways, investigations, simulations, system dossiers, and design experiences.
+
+A shared product identity must not create automatic review-status inheritance or circular repository dependency.
 
 ## Provisional decisions
 
 ### FND-101 — Qualitative confidence vocabulary
 
-**State:** provisional
-
-`uncertain`, `plausible`, `well-supported`, and `strongly-supported` require rationale and scope. The fixtures demonstrate useful distinctions, but independent reviewer calibration remains a Phase 1 task.
+`uncertain`, `plausible`, `well-supported`, and `strongly-supported` require rationale and scope. Independent reviewer calibration remains a Phase 1 task.
 
 ### FND-102 — Independent learner and researcher as initial user
-
-**State:** provisional
 
 The foundation optimizes for inspectable personal or small-team knowledge. Institutional workflow requirements remain deferred.
 
@@ -128,27 +140,27 @@ The foundation optimizes for inspectable personal or small-team knowledge. Insti
 
 ### FND-106 — Bundled vertical slices before canonical file split
 
-**State:** superseded by FND-024
-
-Bundled documents were useful for initial reasoning review. The executable contract now uses split canonical records.
+Superseded by FND-024.
 
 ### FND-207 — Revision impact propagation remained the main semantic blocker
 
-**State:** superseded by FND-018
-
-Material and navigational dependencies, staleness states, translation mismatch, and human impact review are now defined and demonstrated.
+Superseded by FND-018.
 
 ### FND-209 — First reference implementation remained blocked
 
-**State:** superseded by FND-022
+Superseded by FND-022.
 
-The minimum Phase 0 validator was selected through ADR-0001 and passes the fixture matrix on Python 3.11 and 3.13.
+### FND-304 — Reject an English-only authored corpus
+
+**State:** superseded by FND-025.
+
+The earlier decision favored immediate multilingual first-class authoring. Phase 1 scope analysis showed that active language expansion would dilute exact-revision review capacity before the English knowledge authority was mature.
+
+The underlying language-neutral contract remains accepted; only the active corpus policy changed.
 
 ## Open Phase 1 decisions
 
-These do not block Phase 0 foundation acceptance.
-
-### FND-210 — Repository structure after Phase 0
+### FND-210 — Repository structure after Phase 1
 
 - Should prototype code move beneath `prototypes/`?
 - Should canonical content and product software remain in one repository?
@@ -163,7 +175,7 @@ These do not block Phase 0 foundation acceptance.
 ### FND-212 — Protocol and method representation
 
 - Are experimental protocols sources, models, or a future method entity?
-- How are protocol deviations and instrument calibration represented?
+- How are deviations and calibration represented?
 
 ### FND-213 — Legal and policy interpretation lifecycle
 
@@ -173,13 +185,20 @@ These do not block Phase 0 foundation acceptance.
 ### FND-214 — Confidence calibration
 
 - How do reviewers apply qualitative confidence consistently across domains?
-- When should a domain-native uncertainty representation replace a qualitative label?
+- When should domain-native uncertainty replace a qualitative label?
 
 ### FND-215 — Operational federation
 
 - How are identifiers exchanged across repositories?
 - Which authority controls aliases and collision resolution?
 - How are trust and access boundaries represented?
+
+### FND-216 — Principia bridge contract
+
+- Which Atlas revisions may a Principia artifact pin?
+- How are deprecated or retracted dependencies surfaced?
+- Which generated impact reports cross repository boundaries?
+- How is pedagogical status kept independent from knowledge status?
 
 ## Rejected decisions
 
@@ -195,10 +214,6 @@ Rejected because it prevents claim-level provenance, disagreement, model assumpt
 
 Rejected because interface behavior would solidify incomplete semantics.
 
-### FND-304 — Make English the only authored knowledge language
-
-Rejected because it would make Indonesian and other serious authored knowledge secondary display material rather than reviewable first-class content.
-
 ### FND-305 — Promote translations automatically
 
 Rejected because translation can alter meaning, scope, terminology, and ambiguity.
@@ -209,7 +224,11 @@ Rejected for `0.1`; embedded argument structure is sufficient until reuse and in
 
 ### FND-307 — Require reviewed example content before accepting the foundation contract
 
-Rejected because it conflates two authorities. Phase 0 must prove that reviewable content can be represented and validated; Phase 1 must perform and record the independent reviews before promoting particular revisions.
+Rejected because it conflates foundation conformance with content authority.
+
+### FND-308 — Merge Principia and Atlas repositories before bridge semantics stabilize
+
+Rejected because premature consolidation would mix pedagogical status, knowledge authority, review lifecycle, and implementation history.
 
 ## Decision procedure
 

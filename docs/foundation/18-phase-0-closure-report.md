@@ -4,53 +4,42 @@
 
 - **Report date:** 2026-07-26
 - **Scope:** Atlas knowledge-foundation specification and executable fixture architecture
-- **Candidate state:** mechanically complete and ready for maintainer acceptance
-- **Recommendation:** close Phase 0 after this PR is merged with green final CI; enter Phase 1 for reference-corpus review and validator hardening
+- **Accepted state:** mechanically complete and accepted through merged PR #3
 - **Content authority:** all canonical example content remains `draft`
 
-## What this report closes
+## What Phase 0 closed
 
-Phase 0 exists to establish what Atlas means before product architecture expands. This report evaluates whether the project now has a coherent, testable, implementation-independent foundation for:
+Phase 0 established what Atlas means before product architecture expands:
 
 - product purpose and non-goals;
 - canonical knowledge entities;
 - claim-level evidence and provenance;
 - relation meaning and direction;
 - uncertainty, disagreement, review, revision, and staleness;
-- multilingual identity and translation lineage;
+- language-qualified identity and translation-lineage semantics;
 - contract versioning and migration;
-- architecture and language restraint;
+- architecture and implementation restraint;
 - representative positive and negative fixtures.
 
-It does not certify the example scientific, legal, social, or ethical material as reviewed educational content.
+It did not certify the example scientific, legal, social, or ethical material as reviewed educational content.
 
 ## Closure interpretation
 
-Phase 0 foundation acceptance and canonical-content review are different decisions.
+Foundation acceptance and content review are different decisions.
 
-### Foundation acceptance asks
+Foundation acceptance asks whether meanings, invariants, migrations, identities, and deterministic diagnostics are explicit.
 
-- Are entity meanings and invariants explicit?
-- Can representative records express the required structures?
-- Can invalid structures be rejected deterministically?
-- Can identity, translation, migration, and revision behavior be preserved?
-- Can future implementation change without changing authored meaning?
+Content review asks whether particular exact revisions are scientifically, methodologically, legally, editorially, and ethically adequate under accountable review.
 
-### Content review asks
+Phase 0 closed the first decision. Phase 1 owns the second. Passing a validator never promotes content authority.
 
-- Are particular claims scientifically, methodologically, legally, linguistically, and ethically adequate?
-- Have qualified independent reviewers evaluated the exact revisions?
-- Can those revisions be promoted from `draft`?
-
-Phase 0 closes the first decision. Phase 1 owns the second through a reviewed reference corpus. Passing a validator never promotes content authority.
-
-## Foundation outputs completed
+## Foundation outputs
 
 ### Product and ontology
 
 - explicit charter and non-goals;
 - source, evidence, claim, concept, relation, model, question, synthesis, and revision meanings;
-- stable language-specific `id` plus shared language-neutral `work` identity;
+- stable language-qualified `id` plus shared language-neutral `work` identity;
 - governed relation vocabulary with direction and entity-pair compatibility;
 - claim atomicity, scope, kind, confidence rationale, and argument boundaries.
 
@@ -68,9 +57,9 @@ Phase 0 closes the first decision. Phase 1 owns the second through a reviewed re
 - versioned `atlas-content/0.1` Markdown contract;
 - migration and rollback invariants;
 - mechanical and semantic migration fixtures;
-- language-admission and architecture policy;
+- architecture and programming-language admission policy;
 - accepted ADR-0001 for the minimum Phase 0 validator;
-- experimental polyglot prototype remains non-authoritative and feature-frozen.
+- experimental polyglot prototype remains non-authoritative.
 
 ## Executable reference system
 
@@ -84,134 +73,91 @@ The bundled drafts were split into **34 canonical entity files**:
 
 Each slice contains an inspectable question → source → evidence → claim → concept/model → synthesis path.
 
-### Indonesian translation corpus
+### Translation-semantics evidence
 
-A complete delayed-feedback path contains **8 translated entity files**:
+The foundation demonstrated:
 
-- question;
-- model;
-- evidence;
-- two claims;
-- two concepts;
-- synthesis.
-
-Each translation has:
-
-- its own canonical `id`;
-- shared `work` identity with the English entity;
+- language-qualified identity;
+- shared `work` identity;
 - `translation_of` and source revision;
 - independent lifecycle and staleness;
 - no inherited reviewed status.
 
+The active authored corpus was later narrowed to English-only during Phase 1. Translation behavior is now retained only through neutral synthetic fixtures. This amendment changes project scope, not the underlying contract capability.
+
 ### Negative and boundary fixtures
 
-- 24 invalid diagnostic scenarios;
+- invalid diagnostic scenarios;
 - valid minimal end-to-end corpus;
 - mechanical migration fixture;
 - semantic one-to-many claim split;
 - alias, rename, and federation fixture;
-- stale-translation fixture;
+- synthetic stale-translation fixture;
 - independent feedback-sequence reproduction.
 
 ## Validation evidence
 
-### Foundation Contract workflow
+The Phase 0 validation matrix covered:
 
-Validated commit: `2a9f2b0968ef5575b3aca6e24f019dce783734d8`  
-Workflow run: `30169791668`
+- validator contract tests on Python 3.11 and 3.13;
+- canonical corpus validation;
+- mechanical migration;
+- semantic claim split;
+- identity and federation fixtures;
+- translation source-revision staleness.
 
-| Check | Python 3.11 | Python 3.13 |
-|---|---:|---:|
-| 30 validator tests | pass | pass |
-| canonical and translated corpus | pass | pass |
-| mechanical migration | pass | pass |
-| semantic claim split | pass | pass |
-| identity fixture | pass | pass |
-| stale translation state | pass | pass |
-
-Successful log result:
-
-- 30 tests run;
-- 30 passed;
-- zero failed;
-- zero corpus error diagnostics;
-- zero corpus warning diagnostics;
-- stale fixture returned `possibly-stale`.
-
-### Prototype regression
-
-The existing Atlas CI remained green for:
-
-- TypeScript API;
-- Python ingestion on 3.11, 3.12, and 3.13;
-- Rust search;
-- C++ on Linux, macOS, and Windows;
-- end-to-end integration, subject to the final workflow completion recorded on the PR.
-
-Prototype success does not promote it to final architecture.
+Prototype regression also remained green across TypeScript, Python, Rust, C++, and end-to-end integration. Prototype success did not promote those implementations to final architecture.
 
 ## Source verification evidence
 
-The source-verification ledger matched canonical metadata and locators against:
+The source-verification ledger matched canonical metadata and locators against authoritative or primary records for:
 
-- PubMed and DOI metadata for catalase sources;
-- CaltechAUTHORS for the feedback reference;
-- bibliographic indexes and DOI records for the Facebook study;
-- PubMed/PMC for the Twitter experiment;
-- EUR-Lex official text for the Digital Services Act.
+- catalase sources;
+- the feedback reference;
+- recommender-system studies;
+- the Digital Services Act.
 
-This verification is explicit about its limits and is not substituted for independent domain review.
+This verification was not substituted for independent domain review.
 
-## Gate table
+## Gate result
 
-| Phase 0 gate | Result | Evidence |
-|---|---|---|
-| product purpose and non-goals explicit | pass | charter and README |
-| canonical entities and invariants explicit | pass | knowledge model and content contract |
-| claim-level provenance representable | pass | three canonical slices |
-| relation meaning and direction governed | pass | vocabulary plus validator pair checks |
-| uncertainty and disagreement preserved | pass | claim and synthesis fixtures |
-| multilingual identity demonstrated | pass | complete Indonesian path |
-| translation staleness demonstrated | pass | source-revision mismatch fixture |
-| migration preserves identity and meaning | pass | mechanical and semantic fixtures |
-| aliases and federation tested | pass | identity fixture |
-| invalid contract behavior deterministic | pass | 24 diagnostic cases |
-| generated tools cannot become authority | pass | ADR-0001 boundary and governance |
-| representative content independently reviewed | deferred to Phase 1 | review register; all content remains draft |
-| product implementation expansion justified | not applicable | feature freeze remains |
+| Phase 0 gate | Result |
+|---|---|
+| product purpose and non-goals explicit | pass |
+| canonical entities and invariants explicit | pass |
+| claim-level provenance representable | pass |
+| relation meaning and direction governed | pass |
+| uncertainty and disagreement preserved | pass |
+| language-qualified identity representable | pass |
+| translation staleness demonstrated with a fixture | pass |
+| migration preserves identity and meaning | pass |
+| aliases and federation tested | pass |
+| invalid contract behavior deterministic | pass |
+| generated tools cannot become authority | pass |
+| representative content independently reviewed | deferred to Phase 1 |
 
-## Defects found during closure
-
-The gate caught one real canonical-fixture defect: an unquoted YAML title containing a colon. The file was corrected, and the full matrix passed on both Python versions.
-
-No contract rule was weakened to make validation pass.
-
-## Remaining risks
-
-These are Phase 1 content-review risks, not unresolved foundation-definition failures:
+## Remaining risks transferred to Phase 1
 
 - biochemical and assay-method interpretation;
 - control-system terminology and model applicability;
 - recommender-study methodology and cross-platform generalization;
 - ethical and legal-context review;
-- independent Indonesian translation equivalence;
-- future migration breadth beyond the representative fixtures.
+- future migration breadth beyond representative fixtures.
 
 Any review that exposes an ontology failure can reopen the relevant Phase 0 decision. Closure is versioned, not irreversible.
 
-## Phase 1 entry conditions
+## English-only amendment
 
-After maintainer acceptance and final green CI:
+During Phase 1, the maintainer narrowed the active authored corpus and review program to English.
 
-1. retain `atlas-content/0.1` as the authored baseline;
-2. retain the Python validator as the minimum reference implementation, not the product runtime;
-3. conduct revision-specific independent reviews of the canonical slices;
-4. promote only reviewed entities, never whole folders by implication;
-5. expand fixtures only when review exposes a real contract gap;
-6. keep product UI, search architecture, storage, plugins, synchronization, and AI assistance outside scope until Phase 1 gates justify them.
+Consequences:
 
-## Final recommendation
+- previously authored translated examples were removed;
+- language-specific review packets and coverage scopes were removed;
+- CI rejects authored files under `content/translations/`;
+- translation semantics remain covered by neutral synthetic fixtures;
+- multilingual authoring requires a future explicit reopening gate.
 
-**Accept the Phase 0 foundation specification as complete for version `atlas-content/0.1` once PR #3 has final green checks and is merged.**
+## Final interpretation
 
-This means Atlas has a mature, executable, migration-aware, multilingual, review-governed knowledge foundation. It does not mean the example content is universally true, independently reviewed, or ready for public instructional use.
+Atlas has an executable, migration-aware, review-governed knowledge foundation with dormant language-neutral translation capability. It does not mean example content is universally true, independently reviewed, or ready for public instructional use.

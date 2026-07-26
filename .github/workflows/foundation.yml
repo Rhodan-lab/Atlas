@@ -48,6 +48,18 @@ jobs:
       - name: Initialize validation log
         run: touch foundation-validation.log
 
+      - name: Enforce English-only authored corpus
+        shell: bash
+        run: |
+          set -o pipefail
+          if [ -d content/translations ] && find content/translations -type f -print -quit | grep -q .; then
+            echo "Active translated authored content is not allowed in the current phase." \
+              | tee -a foundation-validation.log
+            find content/translations -type f -print | tee -a foundation-validation.log
+            exit 1
+          fi
+          echo "english-only-authored-corpus=pass" | tee -a foundation-validation.log
+
       - name: Run validator contract tests
         shell: bash
         run: |
@@ -55,12 +67,12 @@ jobs:
           python -m unittest discover -s tools/foundation-validator/tests -v 2>&1 \
             | tee -a foundation-validation.log
 
-      - name: Validate canonical and translated content
+      - name: Validate canonical English content
         shell: bash
         run: |
           set -o pipefail
           python tools/foundation-validator/atlas_foundation_validator.py validate \
-            content/canonical content/translations 2>&1 \
+            content/canonical 2>&1 \
             | tee -a foundation-validation.log
 
       - name: Validate migration fixtures
@@ -82,7 +94,7 @@ jobs:
             content/fixtures/identity/alias-rename-federation.json 2>&1 \
             | tee -a foundation-validation.log
 
-      - name: Verify stale translation state
+      - name: Verify synthetic stale translation state
         shell: bash
         run: |
           set -o pipefail

@@ -20,80 +20,86 @@ No canonical reference item is promoted from `draft` by this register.
 | Review area | Status | Evidence | Limitation |
 |---|---|---|---|
 | contract structure | passed-machine | `phase-0-structural-validation.md` | conformance is not semantic truth |
-| diagnostic specificity | passed-machine | 24 invalid cases and 30-test suite | future contract versions require new snapshots |
+| diagnostic specificity | passed-machine | invalid cases and validator suite | future contract versions require new snapshots |
 | migration preservation | passed-machine | mechanical and semantic migration fixtures | only representative migrations tested |
-| identity and federation | passed-machine | alias, rename, and federation fixture | cross-repository operational federation not implemented |
-| multilingual lineage | passed-machine | Indonesian vertical slice and stale-source fixture | independent translation review pending |
+| identity and federation | passed-machine | alias, rename, and federation fixture | operational federation not implemented |
+| language-qualified identity | passed-machine | neutral synthetic translation and stale-source fixtures | no active translated corpus |
 | source metadata and locators | verified-metadata | `phase-0-source-verification.md` | full-text and domain interpretation remain pending |
-| cross-document editorial consistency | completed-internal | ontology, relation, evidence, translation, migration, and staleness policies aligned | independent editorial calibration pending |
-| architecture restraint | completed-internal | ADR-0001 and feature freeze | future Phase 1 architecture still requires bounded implementation |
+| cross-document editorial consistency | completed-internal | ontology, relation, evidence, migration, and staleness policies aligned | independent editorial calibration pending |
+| architecture restraint | completed-internal | ADR-0001 and feature freeze | later architecture requires bounded evidence |
 
 ## Catalase slice
 
 | Review type | Status | Notes |
 |---|---|---|
 | structural | passed-machine | all canonical files and references valid |
-| source | verified-metadata | Aebi and Wu–Lin–Wolfbeis records matched authoritative metadata |
+| source | verified-metadata | source records matched authoritative metadata |
 | editorial | completed-internal | universal-optimum wording removed; assay scope explicit |
 | domain | pending-independent | biochemistry reviewer required |
 | methodological | pending-independent | assay, proxy, and generalization reviewer required |
-| reproducibility | not-applicable | no published empirical calculation is reproduced in this canonical slice |
+| reproducibility | not-applicable | no empirical calculation is reproduced in this slice |
 | ethical | not-applicable | no material ethical recommendation |
-| translation | not-applicable | no canonical translation in this slice yet |
 
 ## Delayed-feedback slice
 
 | Review type | Status | Notes |
 |---|---|---|
 | structural | passed-machine | all canonical files and references valid |
-| source | verified-metadata | Åström–Murray repository metadata matched |
+| source | verified-metadata | authoritative feedback-reference metadata matched |
 | editorial | completed-internal | formal result separated from real-system inference |
 | domain | pending-independent | control-systems terminology reviewer required |
 | methodological | completed-internal | model-to-world inference boundary explicit |
-| reproducibility | passed-machine | sequence independently recalculated in unit tests |
+| reproducibility | passed-machine | sequence independently recalculated in tests |
 | ethical | not-applicable | no material ethical recommendation |
-| translation | pending-independent | Indonesian path is complete and current but lacks independent language/domain sign-off |
 
 ## Recommender slice
 
 | Review type | Status | Notes |
 |---|---|---|
 | structural | passed-machine | all canonical files and references valid |
-| source | verified-metadata | Facebook, Twitter, and DSA identifiers and locators matched |
+| source | verified-metadata | study and legal identifiers and locators matched |
 | editorial | completed-internal | observational, causal, legal, interpretive, and normative layers separated |
 | domain | pending-independent | recommender-systems and political-communication reviewers required |
-| methodological | pending-independent | platform experiment, measurement, and generalization review required |
+| methodological | pending-independent | experiment, measurement, and generalization review required |
 | reproducibility | pending-independent | published empirical results were not independently recomputed |
 | ethical | pending-independent | autonomy, accountability, accessibility, safety, and feasibility trade-offs require review |
-| legal context | pending-independent | DSA interpretation requires qualified legal-context review and horizon monitoring |
+| legal context | pending-independent | legal interpretation requires qualified review and horizon monitoring |
 | conflict | completed-internal | platform employment and data-access limitations are visible |
+
+## English-only amendment
+
+The active authored corpus and review program were narrowed to English during Phase 1.
+
+- previously authored translated examples were removed;
+- language-specific review work is no longer a blocking Phase 1 requirement;
+- translation semantics remain tested only through neutral synthetic fixtures;
+- multilingual authoring requires an explicit future reopening decision.
 
 ## Blocking findings
 
 ### Critical
 
-None identified by the machine and internal consistency reviews.
+None identified by machine and internal consistency reviews.
 
 ### Major
 
-The following remain major only for promoting the reference content to `reviewed`, not for accepting the Phase 0 contract and fixture architecture:
+The following remain major for promoting reference content to `reviewed`, not for accepting the foundation architecture:
 
 1. independent biochemical and assay-method review;
 2. independent control-systems terminology review;
 3. independent recommender-methodology and political-communication review;
-4. independent ethical and legal-context review;
-5. independent Indonesian translation equivalence review.
+4. independent ethical and legal-context review.
 
 ## Closure interpretation
 
-The Phase 0 **foundation specification and executable fixture system** can be accepted when its mechanical gates pass and its remaining human-review requirements are explicitly preserved.
+The Phase 0 foundation specification and executable fixture system can be accepted when its mechanical gates pass and its remaining human-review requirements are explicitly preserved.
 
-The Phase 0 **reference content** cannot be called reviewed until the pending independent reviews are recorded for exact revisions.
+The reference content cannot be called reviewed until pending independent reviews are recorded for exact revisions.
 
-This separation allows the project to avoid two dishonest extremes:
+This avoids two dishonest extremes:
 
 - claiming content authority from passing a schema validator;
-- preventing the foundation architecture from stabilizing until every example becomes a publication-grade research review.
+- preventing the foundation architecture from stabilizing until every example becomes publication-grade research.
 
 ## Next review action
 

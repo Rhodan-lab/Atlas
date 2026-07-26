@@ -8,6 +8,8 @@
 
 The coverage reporter is governance infrastructure. It does not judge truth, perform review, change lifecycle state, or promote content.
 
+The active coverage program is English-only.
+
 ## Contracts
 
 - review records: `atlas-review/0.1`;
@@ -20,7 +22,7 @@ A coverage manifest names exact entity revisions, their role in the bounded scop
 
 ### `all`
 
-Every listed entity is required for the coverage decision. Use this for a tightly bounded review packet.
+Every listed entity is required for the coverage decision. Use this for a tightly bounded packet or a complete vertical slice.
 
 ### `load-bearing`
 
@@ -57,6 +59,12 @@ The reporter uses the same requirement function as the promotion gate. A manifes
 A methodological claim requires structural, editorial, source, domain, and methodological review. This prevents claims about measurement or inference practice from being promoted through domain and source review alone.
 
 A legal-descriptive claim may explicitly add `legal-context` when its canonical semantics require current legal interpretation even if the generic descriptive-claim profile would not infer that requirement from the entity fields alone.
+
+## Language boundary
+
+The active authored corpus and coverage manifests use English only.
+
+Language-neutral translation fields remain supported by the contracts so future multilingual work does not require an ontology rewrite. During Phase 1 they may appear only in synthetic fixtures that test validation, source-revision pinning, and staleness. They do not create a translated coverage manifest, review backlog, or supported-language claim.
 
 ## Dependency impact
 
@@ -107,37 +115,34 @@ Generate a report:
 
 ```bash
 python tools/foundation-validator/phase1_coverage_report.py coverage \
-  content/reviews/coverage/catalase-methodology.json \
+  content/reviews/coverage/feedback-complete-vertical-slice.json \
   --records-dir content/reviews/records \
-  --report phase1-reports/catalase-methodology.md
-```
-
-The current packet manifests are intentionally expected to be blocked because accountable independent review is still missing:
-
-```bash
-python tools/foundation-validator/phase1_coverage_report.py coverage \
-  content/reviews/coverage/catalase-methodology.json \
-  --records-dir content/reviews/records \
-  --expect blocked
+  --expect blocked \
+  --report phase1-reports/feedback-complete-vertical-slice.md
 ```
 
 `--expect blocked` confirms that known blockers remain visible. It does not turn a blocked result into a pass.
 
-## Current bounded manifests
+## Current manifests
+
+Bounded packet manifests:
 
 - catalase assay methodology;
 - delayed-feedback domain terminology and formal result;
-- recommender legal-context governance;
-- English–Indonesian delayed-feedback translation.
+- recommender legal-context governance.
 
-These manifests cover the target entities of the existing reviewer packets. They are not yet complete vertical-slice closure manifests.
+Complete slice manifest:
+
+- English delayed-feedback vertical slice.
+
+The complete slice contains all ten exact revision-1 entities in its provenance and reasoning path.
 
 ## Phase 1 implications
 
 This work satisfies the infrastructure part of deterministic coverage reporting. Phase 1 remains incomplete until:
 
+- valid automation-eligible review records are generated;
 - accountable human reviews are recorded;
-- at least one complete vertical slice is represented by a coverage manifest;
-- every required entity in that slice has sufficient exact-revision review;
+- every required entity in the complete English slice has sufficient exact-revision review;
 - open major findings are resolved or the affected entity remains blocked;
 - a completion report recommends or rejects entry to Phase 2.

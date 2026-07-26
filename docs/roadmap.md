@@ -6,9 +6,11 @@ Atlas uses **evidence-based phase gates**, not a feature checklist. Authoritativ
 
 The C++, Rust, Python ingestion, TypeScript, SQL, `.atlas`, and browser work remains an experimental prototype. It is maintained for regression and comparison, not counted as completed product architecture.
 
+The active authored corpus is English-only. Language-neutral translation semantics remain dormant infrastructure and may be exercised only through synthetic fixtures until a later phase explicitly reopens multilingual authoring.
+
 ## Phase 0 — Knowledge foundation
 
-**Status: closure candidate for `atlas-content/0.1`**
+**Status: accepted for `atlas-content/0.1`**
 
 Completed foundation outputs:
 
@@ -17,46 +19,53 @@ Completed foundation outputs:
 - claim-level evidence and provenance;
 - evidence, review, disagreement, revision, translation, migration, and staleness governance;
 - governed relation vocabulary;
-- multilingual identity with shared work IDs;
+- language-qualified identity with shared work IDs;
 - versioned authored Markdown contract;
-- three split canonical vertical slices;
-- complete Indonesian translation path;
-- invalid, migration, identity, federation, and stale-translation fixtures;
+- three split English canonical vertical slices;
+- invalid, migration, identity, federation, and synthetic stale-translation fixtures;
 - accepted minimum validator ADR;
 - deterministic Python 3.11/3.13 validation matrix;
 - source-verification and review registers;
 - closure report.
 
-Closure condition:
-
-- final PR #3 checks remain green;
-- maintainer accepts the versioned foundation through merge.
-
 Phase 0 acceptance stabilizes the foundation. It does not promote example content from `draft`.
 
-## Phase 1 — Reviewed reference corpus and validator hardening
+### Language amendment
 
-**Status: next after Phase 0 acceptance**
+The Phase 0 contract retains multilingual capability, but the active corpus and current review program use English only. Future multilingual work requires an explicit reopening decision, reviewer plan, terminology governance, and migration assessment.
+
+## Phase 1 — Reviewed English reference corpus and validator hardening
+
+**Status: active**
 
 Primary work:
 
-- conduct revision-specific source, editorial, domain, methodological, reproducibility, ethical, legal-context, conflict, and translation reviews;
+- execute revision-specific source, editorial, domain, methodological, reproducibility, ethical, legal-context, and conflict reviews;
 - preserve reviewer disagreement and conflicts;
 - promote only entities that pass required review types;
 - calibrate confidence and domain-native uncertainty;
 - exercise contradiction, deprecation, retraction, and revision impact;
-- harden deterministic diagnostics and provenance reports;
+- harden deterministic diagnostics, coverage, and provenance reports;
+- generate review backlogs that separate automation-eligible and human-required work;
 - expand migration and identity fixtures when review exposes real gaps;
 - reopen Phase 0 decisions when evidence demonstrates ontology failure;
 - derive minimal knowledge-kernel requirements from reviewed workflows.
+
+Current reference goal:
+
+- bring the complete English delayed-feedback vertical slice through sufficient exact-revision review coverage;
+- keep both the formal result and its model-to-world inference boundary load-bearing;
+- produce a Phase 1 completion report before entering Phase 2.
 
 Non-scope:
 
 - product UI expansion;
 - specialized search architecture;
 - synchronization or plugins;
+- active translated corpus or language-specific review programs;
 - autonomous synthesis;
-- new programming-language boundaries.
+- new programming-language boundaries;
+- live Principia integration.
 
 ## Phase 2 — Minimal knowledge kernel
 
@@ -88,17 +97,20 @@ Expected outcomes:
 - ranking explanations;
 - specialized indexing only after benchmark approval.
 
-## Phase 4 — Interactive atlas
+## Phase 4 — Principia & Atlas interactive experience
 
 Build interfaces over proven semantics.
 
 Expected outcomes:
 
-- long-form reading and evidence inspection;
-- concept, claim, prerequisite, timeline, scale, and system views;
+- Atlas evidence, claim, model, review, revision, and provenance views;
+- Principia long-form explanation, pathways, investigations, simulations, and system dossiers;
+- explicit bridge references and dependency-impact warnings;
 - accessible exploration without mandatory graph visualization;
 - visible review status, uncertainty, provenance, and staleness;
 - local-first packaging.
+
+The two domains may share one product identity without erasing their separate authority boundaries.
 
 ## Phase 5 — Assisted synthesis and extensions
 
@@ -110,7 +122,8 @@ Possible outcomes:
 - citation-aware research workflows;
 - domain-specific validators and model adapters;
 - synchronization preserving local ownership;
-- permissioned plugins.
+- permissioned plugins;
+- multilingual authoring only after an accepted reopening gate.
 
 AI output remains draft until reviewed and cannot bypass source verification.
 
@@ -121,7 +134,7 @@ AI output remains draft until reviewed and cannot bypass source verification.
 - mandatory cloud accounts;
 - polished visual design before reviewed workflows;
 - plugin marketplaces before versioned contracts and permissions;
-- adding languages without an independently useful, measured boundary;
+- active language expansion without accountable review capacity;
 - describing machine conformance as scientific validity.
 
 ## Progress rule
