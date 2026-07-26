@@ -18,7 +18,8 @@ Phase 1 is closed under an explicitly **AI-reviewed** policy. No human or expert
 - optional exact-snapshot intake — PR #10, commit `9809bcb523954770e87c78154cdb124f37aadf46`;
 - optional admission boundary — PR #17, commit `01feffc696cc207305ef74c92d600f37f1e240a4`;
 - Phase 1 AI review and Phase 2 activation — PR #18, commit `f90fa53f99ec9780451c9c50c57625759ba3b2b5`;
-- first Phase 2 kernel and bridge receiver — PR #19, commit `8f1e473578d9086a73dae44f0b6001b246cfbc20`.
+- first Phase 2 kernel and bridge receiver — PR #19, commit `8f1e473578d9086a73dae44f0b6001b246cfbc20`;
+- Principia v0.2 importer baseline — PR #20, commit `1cc4aec6908a8703a7f505478329c633a23b4ef9`.
 
 ## Language policy
 
@@ -114,28 +115,43 @@ PR #19 implemented:
 
 This receiver is not a live integration. It does not clone Principia, call Principia during Atlas validation, copy Principia status, or modify canonical Atlas meaning.
 
-## Phase 2 workstream 2 — PR #20 candidate
+## Phase 2 workstream 2 — accepted
 
-PR #20 consumes the exact bridge candidate merged through Principia PR #16.
+PR #20 established and validated the Principia importer baseline using the exact export merged through Principia PR #16.
 
-Source identity:
+Atlas importer baseline:
+
+```yaml
+contract: principia-atlas-external-dependent/0.2
+mode: importer-candidate
+live: false
+accepted_pr: 20
+accepted_merge_commit: 1cc4aec6908a8703a7f505478329c633a23b4ef9
+```
+
+Pinned Principia source identity:
 
 ```text
-Principia contract: principia-atlas-external-dependent/0.2
 Principia PR: #16
 Principia head: 405cfabb6eba71b42bd42ed81b922b458f9175e7
 Principia merge: eb3a00dfbfdfaa5470cb40505fa213e5349a917f
-mode: bridge-candidate
-live: false
+Principia source bridge mode: bridge-candidate
 ```
 
-Implemented candidate evidence:
+Accepted exact dependencies:
+
+- `claim:en:model-oscillation-does-not-prove-real-system@1`;
+- `concept:en:feedback@1`;
+- `concept:en:oscillation@1`;
+- `model:en:delayed-correction-recurrence@2`.
+
+Accepted importer evidence:
 
 - pinned copy of the generated Principia export;
 - source path, Git blob SHA, and SHA-256 verification;
 - adapter from the Principia v0.2 wire format into the Atlas receiver;
 - verification that `depends_on` exactly mirrors `depends_on_exact`;
-- exact delayed-feedback model revision 2 admission;
+- exact admission of all four accepted dependencies;
 - preserved separation of Atlas and Principia status;
 - lifecycle-aware impact escalation;
 - representative benchmarks for compilation, lookup, provenance, bridge import, and impact reporting.
@@ -143,16 +159,16 @@ Implemented candidate evidence:
 Lifecycle policy:
 
 ```text
-current              -> preserve declared action
-deprecated           -> at least revalidate
+current               -> preserve declared action
+deprecated            -> at least revalidate
 review-required stale -> at least revalidate
-confirmed stale      -> at least revalidate
-retracted            -> block-release
+confirmed stale       -> at least revalidate
+retracted             -> block-release
 ```
 
 Atlas reports both the Principia-declared action and the effective lifecycle action. It does not mutate either repository or execute the action automatically.
 
-Initial PR #20 measurements on the 34-entity corpus passed their regression budgets on Python 3.11 and 3.13. These measurements are operational small-corpus evidence, not production-scale claims.
+PR #20 measurements on the 34-entity corpus passed their regression budgets on Python 3.11 and 3.13. These measurements are operational small-corpus evidence, not production-scale claims.
 
 ## Principia & Atlas boundary
 
@@ -196,12 +212,11 @@ Allowed:
 
 ## Immediate next actions
 
-1. merge PR #20 only after the exact tested head passes all Phase 2, foundation, AI-review, and repository-wide workflows;
-2. add malformed runtime and missing canonical-reference fixtures beyond bridge-specific cases;
-3. build a larger deterministic synthetic corpus for scaled benchmarks;
-4. test multiple external dependents and mixed lifecycle states;
-5. define bounded deprecation and retraction event fixtures without activating synchronization;
-6. keep `live: false` until independent machine contracts pass in both repositories and a separate activation decision is recorded;
-7. produce the Phase 2 completion report before retrieval work.
+1. add malformed runtime and missing canonical-reference fixtures beyond bridge-specific cases;
+2. build a larger deterministic synthetic corpus for scaled benchmarks;
+3. test multiple external dependents and mixed lifecycle states;
+4. define bounded deprecation and retraction event fixtures without activating synchronization;
+5. keep `live: false` until independent machine contracts pass in both repositories and a separate activation decision is recorded;
+6. produce the Phase 2 completion report before retrieval work.
 
-**Phase 1 is complete under the AI-reviewed policy. Phase 2 is active. PR #19 is accepted; PR #20 is the non-live exact Principia v0.2 compatibility candidate. Human verification remains optional and must never be implied when it did not occur.**
+**Phase 1 is complete under the AI-reviewed policy. Phase 2 is active. PR #19 and PR #20 are accepted. The Principia v0.2 importer baseline is recorded as `mode: importer-candidate` with `live: false`. Human verification remains optional and must never be implied when it did not occur.**
