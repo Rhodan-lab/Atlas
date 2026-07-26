@@ -135,6 +135,22 @@ class PrincipiaV02BridgeTests(unittest.TestCase):
             dependent["lifecycle_reason"], "atlas-staleness-confirmed-stale"
         )
 
+    def test_malformed_external_action_fails_deterministically(self) -> None:
+        imported = import_principia_candidate(self.payload, self.repository)
+        for dependency in imported["dependencies"]:
+            if dependency["id"] == MODEL_ID and dependency["revision"] == 2:
+                dependency["change_policy"] = "invalid-action"
+                break
+        else:
+            self.fail("model dependency not found")
+        with self.assertRaisesRegex(KernelError, "E-LIFECYCLE-ACTION"):
+            lifecycle_impact_report(
+                self.repository,
+                MODEL_ID,
+                2,
+                [imported],
+            )
+
     def test_percentile_uses_nearest_rank_for_small_samples(self) -> None:
         with patch(
             "tools.phase2_kernel.benchmark.time.perf_counter_ns",
