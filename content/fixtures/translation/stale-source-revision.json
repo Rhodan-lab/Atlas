@@ -1,8 +1,8 @@
 {
-  "source_id": "claim:en:stated-delayed-recurrence-oscillates",
-  "translation_id": "claim:id:rekurensi-tertunda-yang-dinyatakan-berosilasi",
+  "source_id": "claim:en:synthetic-translation-source",
+  "translation_id": "claim:fr:synthetic-translation-target",
   "source_revision": 2,
   "translation_source_revision": 1,
   "expected_state": "possibly-stale",
-  "reason": "The source-language claim changed after the Indonesian translation was authored. Review must determine whether the translation meaning changed."
+  "reason": "A synthetic source revision changed after the fixture translation was created. The fixture tests source-revision staleness without representing an active authored language corpus."
 }
