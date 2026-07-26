@@ -7,18 +7,19 @@
 Accepted history:
 
 - Phase 0 foundation — PR #3, commit `34afe253fc8c9cefb61adfe2831f6da82aa07e16`;
-- Phase 1 review and promotion gate — PR #4, commit `09488b76c43fdbe46f94fcb14a27637472adfa38`;
+- review and promotion gate — PR #4, commit `09488b76c43fdbe46f94fcb14a27637472adfa38`;
 - coverage and dependency reporting — PR #5, commit `c67457ae2c369d57b00b1cd22f454245ebf6ac13`;
 - complete delayed-feedback readiness and backlog — PR #6, commit `786bdaf4141be032554fe1b73439dfacb67c806d`;
 - English-only authored and review corpus — PR #7, commit `92b2cec5fbc310e065bdeca4486ca98d1dc5a7f2`;
 - deterministic machine attestations — PR #8, commit `a4d73fc4dfc7f8fa03aa7f913473110943b41f9e`;
-- accountable-human handoff bundles — PR #9, commit `5dcd4964b04617d1c40a4458b2c646c43ebd09ed`.
+- accountable-human handoff bundles — PR #9, commit `5dcd4964b04617d1c40a4458b2c646c43ebd09ed`;
+- exact-snapshot review intake — PR #10, commit `9809bcb523954770e87c78154cdb124f37aadf46`.
 
 All machine-authorized structural and fully specified reproducibility work for the complete English delayed-feedback slice is complete. The remaining 25 gate tasks require accountable humans.
 
-Current work validates returned human-review submissions against one active handoff task and the exact canonical snapshot supplied to the reviewer. Intake validation does not accept the review, resolve findings, permit promotion, assign authority, or change lifecycle status.
+Current work adds an explicit maintainer admission decision between validated intake and canonical review history. Admission does not approve knowledge, resolve findings, permit promotion, or write automatically to `content/reviews/records/`.
 
-All canonical reference entities remain `draft`. No validator pass, machine attestation, AI-assisted record, coverage report, backlog, handoff bundle, submission envelope, extracted record, or synthetic fixture grants scientific, methodological, editorial, source, legal, ethical, or human authority.
+All canonical reference entities remain `draft`. No validator pass, machine attestation, handoff bundle, submission envelope, admission receipt, prepared record, or synthetic fixture grants scientific, methodological, editorial, source, legal, ethical, or lifecycle authority.
 
 ## Authority order
 
@@ -26,10 +27,10 @@ All canonical reference entities remain `draft`. No validator pass, machine atte
 2. accepted foundation documents in `docs/foundation/`
 3. accepted ADRs
 4. canonical authored content and committed exact-revision review records
-5. generated reports, manifests, backlogs, handoff bundles, and intake artifacts
+5. generated reports, manifests, backlogs, handoff bundles, intake artifacts, and admission receipts
 6. experimental prototype code
 
-A tool may establish bounded conformance, arithmetic reproduction, task-to-snapshot integrity, or submission consistency. It cannot establish scientific truth, domain adequacy, model applicability, source interpretation, legal correctness, ethical acceptability, editorial quality, reviewer identity, reviewer qualification, or lifecycle authority by itself.
+A tool may establish bounded conformance, arithmetic reproduction, task-to-snapshot integrity, submission consistency, or declared admission consistency. It cannot establish scientific truth, source interpretation, model applicability, reviewer identity, reviewer qualification, reviewer independence, or lifecycle authority by itself.
 
 ## Language policy
 
@@ -37,16 +38,15 @@ The active authored corpus and review program are English-only.
 
 Language-neutral translation identity, source-revision lineage, independent lifecycle, and staleness semantics remain dormant contract capabilities exercised only through synthetic fixtures. They do not represent a supported authored language or active review queue.
 
-## Accepted foundation and governance contracts
+## Accepted contracts
 
 ### Phase 0
 
 - `atlas-content/0.1` authored Markdown contract;
-- canonical source, evidence, claim, concept, relation, model, question, synthesis, and revision semantics;
-- claim-level provenance, scope, uncertainty, and normative-value boundaries;
+- source, evidence, claim, concept, relation, model, question, synthesis, and revision semantics;
+- claim-level provenance, scope, uncertainty, and explicit normative values;
 - controlled relation vocabulary and compatibility;
-- mechanical and semantic migration rules;
-- alias, rename, collision, federation, and synthetic translation fixtures;
+- migration, alias, collision, federation, and synthetic translation fixtures;
 - deterministic validation and closure records.
 
 ### Phase 1
@@ -57,7 +57,8 @@ Language-neutral translation identity, source-revision lineage, independent life
 - `atlas-review-backlog/0.1` — deterministic missing-review tasks;
 - deterministic machine-attestation generation and drift checks;
 - `atlas-review-handoff/0.1` — self-contained accountable-human reviewer bundles;
-- `atlas-review-submission/0.1` — exact-task and exact-snapshot return envelope.
+- `atlas-review-submission/0.1` — exact-task and exact-snapshot return envelope;
+- `atlas-review-admission/0.1` — explicit human-maintainer decision about entry into review history.
 
 ## Active review scope
 
@@ -81,17 +82,10 @@ The formal recurrence result and the model-to-world inference boundary are both 
 
 The repository commits and deterministically verifies:
 
-- 10 structural machine records, one for each complete-slice entity;
+- 10 structural machine records;
 - 3 fully specified recurrence-reproducibility machine records.
 
-Every machine record:
-
-- targets an exact entity revision;
-- uses reviewer kind `machine`;
-- uses independence `not-applicable`;
-- sets `accountable: false`;
-- sets `permits_promotion: false`;
-- remains bounded to its declared procedure.
+Every machine record targets one exact revision, uses reviewer kind `machine`, sets `accountable: false`, sets `permits_promotion: false`, and remains bounded to its declared procedure.
 
 ## Remaining human-required backlog
 
@@ -101,8 +95,6 @@ The complete slice remains `blocked` with:
 - 0 automation-eligible tasks;
 - 25 human-required tasks;
 - 0 advisory-only tasks.
-
-Qualification tracks:
 
 | Track | Tasks | Minimum authority |
 |---|---:|---|
@@ -114,52 +106,65 @@ Qualification tracks:
 
 These are exact entity/review-type tasks, not a required number of distinct people.
 
-## Accountable-human handoff baseline
+## Accountable-human handoff
 
-`tools/foundation-validator/phase1_human_review_handoff.py` generates a self-contained package containing:
+`phase1_human_review_handoff.py` generates:
 
 - all 25 tasks exactly once;
-- five JSON and Markdown qualification-track bundles;
-- byte-for-byte snapshots of all ten canonical Markdown entities;
-- original repository paths and SHA-256 digests;
-- existing non-satisfying records, blockers, and dependents;
-- task-specific acceptance criteria and submission worksheets;
+- five qualification-track bundles;
+- byte-for-byte snapshots of all ten canonical entities;
+- repository paths and SHA-256 digests;
+- existing blockers and dependency impact;
+- task-specific acceptance criteria;
 - `reviewer_assignment: null`.
 
-The existing major finding `finding:feedback:periodicity-proof` remains visible in the domain packet.
+The existing major finding `finding:feedback:periodicity-proof` remains visible. The handoff performs no review and changes no status.
 
-The handoff assigns no reviewer, performs no review, resolves no finding, permits no promotion, and changes no lifecycle state.
+## Exact-snapshot review intake
 
-## Review submission intake
+`phase1_review_intake.py` validates `atlas-review-submission/0.1` envelopes against the active handoff.
 
-`tools/foundation-validator/phase1_review_intake.py` validates `atlas-review-submission/0.1` envelopes against a generated handoff.
+It checks:
 
-A submission must bind:
-
-- the active coverage ID;
-- one active human-required task ID;
-- the exact entity ID and revision;
-- the exact handoff snapshot SHA-256;
-- `reviewed_exact_snapshot: true`;
-- submission date;
-- explicit AI-assistance disclosure;
-- one proposed `atlas-review/0.1` record.
-
-Intake validation checks:
-
-- task and coverage identity;
-- exact snapshot identity and digest;
-- exact review entity, revision, and review type;
+- active coverage and task identity;
+- exact entity ID, revision, and snapshot SHA-256;
+- exact review type;
 - human reviewer kind and accountability;
-- required independence;
-- qualification and conflicts;
+- task-specific independence;
+- qualification and conflicts declarations;
 - review-record contract validity;
 - AI-assistance disclosure;
 - completion and submission date order.
 
-A successful intake may extract a normalized review record with `metadata.intake` lineage. Extraction writes only to an explicitly requested output path and never modifies `content/reviews/records/` automatically.
+A successful intake may extract a normalized proposed record with `metadata.intake` lineage only to an explicit output path. Intake never writes to the canonical review directory.
 
-Maintainers must still inspect the real reviewer, commit the record through normal review, regenerate coverage, and preserve any unresolved finding.
+## Explicit review admission
+
+`phase1_review_admission.py` validates `atlas-review-admission/0.1` decisions after intake.
+
+Admission decisions:
+
+- `accept` — prepare the proposed record for normal repository review;
+- `request-changes` — preserve a receipt, but prepare no record;
+- `reject` — preserve a receipt, but prepare no record.
+
+An `accept` decision requires a real accountable human decider to declare completion of external checks for reviewer identity, qualification, independence, and conflicts.
+
+The validator can confirm that these declarations are present. It cannot perform the real-world verification.
+
+Admission may preserve a review whose outcome is `changes-required` or that contains major findings. Accepting the **record into review history** is not the same as accepting the **reviewed knowledge**.
+
+The `prepare` command:
+
+- preserves `metadata.intake`;
+- adds `metadata.admission`;
+- rejects duplicate canonical review IDs;
+- writes only to an explicit output path;
+- never resolves or removes findings;
+- never writes automatically to `content/reviews/records/`;
+- never changes canonical lifecycle status.
+
+Synthetic admissions set `test_fixture: true`; their prepared records are forced to `permits_promotion: false`.
 
 ## Phase 1 work packages
 
@@ -171,32 +176,35 @@ Maintainers must still inspect the real reviewer, commit the record through norm
 - deterministic backlog generation;
 - complete English delayed-feedback readiness scope;
 - bounded machine attestations;
-- accountable-human handoff bundles.
+- accountable-human handoff bundles;
+- exact-snapshot review intake.
 
-### Review intake — implementation in review
+### Explicit review admission — implementation in review
 
-- `atlas-review-submission/0.1` envelope;
-- active-task and exact-snapshot binding;
-- human accountability and independence checks;
-- AI-assistance disclosure;
-- normalized intake lineage extraction;
-- proof that intake does not write to the canonical review directory;
-- synthetic CI fixtures only, with no real review authority.
+- `atlas-review-admission/0.1` decisions and receipts;
+- accountable human decider declaration;
+- external identity, qualification, independence, and conflict check declarations;
+- duplicate review-ID rejection;
+- preserved intake and admission lineage;
+- synthetic fixture promotion suppression;
+- proof that no canonical review file is written automatically.
 
 ### Accountable human review execution — external next work
 
-- identify real qualified reviewers outside the generator;
-- provide the relevant exact-snapshot track bundles;
-- receive and validate submission envelopes;
-- inspect and commit acceptable exact-revision review records;
+- identify real qualified reviewers;
+- provide exact-snapshot track bundles;
+- receive exact-snapshot submission envelopes;
+- perform real external verification;
+- issue accountable admission decisions;
+- commit acceptable review records through normal pull requests;
 - preserve disagreements and findings;
-- resolve content defects through new canonical revisions;
+- create new canonical revisions for content defects;
 - regenerate coverage, backlog, and handoff;
 - keep the slice blocked until every required review class passes.
 
 ## Future Principia & Atlas boundary
 
-Atlas is being prepared to serve as the knowledge and governance layer of a future **Principia & Atlas** product without becoming dependent on the Principia repository.
+Atlas is being prepared as the knowledge and governance layer of a future **Principia & Atlas** product without becoming dependent on the Principia repository.
 
 - Atlas owns canonical knowledge identity, evidence, provenance, revision, review, lifecycle, and staleness.
 - Principia will own causal explanation, pedagogy, pathways, systems, investigations, simulations, and design experiences.
@@ -205,19 +213,19 @@ Atlas is being prepared to serve as the knowledge and governance layer of a futu
 - Principia does not inherit Atlas review status automatically.
 - No live Principia dependency is declared during Phase 1.
 
-Handoff and intake validate Atlas review provenance only. They cannot approve a future Principia explanation, lesson, simulation, investigation, or system dossier.
+Handoff, intake, and admission govern Atlas review provenance only. They cannot approve a Principia explanation, lesson, simulation, investigation, system dossier, or release.
 
 ## Phase 1 exit gate
 
 Phase 1 is complete only when:
 
-- review, promotion, coverage, backlog, attestation, handoff, and intake semantics are explicit and executable;
-- review records, manifests, committed attestations, generated bundles, and return envelopes validate deterministically;
+- review, promotion, coverage, backlog, attestation, handoff, intake, and admission semantics are executable;
+- committed and generated artifacts validate deterministically;
 - promotion cannot occur from machine or AI review alone where human authority is required;
-- every remaining task is tied to an exact entity revision, exact snapshot, and accountable authority requirement;
+- every remaining task is tied to an exact revision, exact snapshot, and accountable authority requirement;
 - contradiction, contested, deprecation, retraction, stale-review, and dependency-impact fixtures pass;
 - the complete English delayed-feedback slice has sufficient accountable exact-revision review coverage;
-- remaining review gaps remain visible and do not masquerade as passes;
+- remaining gaps remain visible and do not masquerade as passes;
 - no critical or major contract defect remains;
 - a Phase 1 completion report recommends or rejects entry to Phase 2.
 
@@ -232,32 +240,32 @@ Still frozen:
 - active translated corpus or language-specific review programs;
 - autonomous or authoritative AI synthesis;
 - automatic reviewer assignment;
-- automatic commitment or acceptance of extracted review records;
+- automatic reviewer identity or qualification claims;
+- automatic commitment or acceptance of prepared review records;
 - direct Principia integration or repository merger;
-- promotion of experimental `.atlas`, SQL, C++, Rust, or TypeScript structures as the final runtime.
+- promotion of experimental runtime structures as canonical.
 
 Allowed:
 
-- review-contract, promotion, coverage, provenance, backlog, attestation, handoff, intake, and validator work;
-- English reviewer packets, submission templates, and reports;
-- source and literature challenge scans;
+- review-contract, promotion, coverage, provenance, backlog, attestation, handoff, intake, admission, and validator work;
+- English reviewer packets, templates, receipts, and reports;
 - accountable review records supplied by real reviewers;
-- synthetic CI submissions that clearly grant no real authority;
-- synthetic translation fixtures testing language-neutral contracts only;
+- synthetic CI fixtures that clearly grant no real authority;
 - fixture-driven corrections to accepted foundation decisions;
-- compatibility boundaries that do not create a live cross-repository dependency;
+- compatibility boundaries without a live cross-repository dependency;
 - prototype regression maintenance.
 
 ## Immediate next actions
 
-1. verify synthetic intake validation and extraction on Python 3.11 and 3.13;
-2. prove exact-snapshot lineage is preserved and no automatic repository write occurs;
-3. publish the intake template and documentation;
-4. identify real qualified reviewers outside Atlas automation;
-5. receive and inspect exact-snapshot submissions;
-6. commit only acceptable exact-revision records through normal review;
-7. resolve or preserve every major finding honestly;
-8. regenerate coverage and determine whether the English slice can reach `reviewed`;
-9. produce a Phase 1 completion report before entering Phase 2.
+1. verify admission tests on Python 3.11 and 3.13;
+2. prove synthetic admission preserves intake and admission lineage;
+3. prove fixture records cannot permit promotion;
+4. prove no automatic canonical review-directory write occurs;
+5. identify real qualified reviewers outside Atlas automation;
+6. receive, inspect, and externally verify real submissions;
+7. commit only acceptable records through normal pull-request review;
+8. resolve or preserve every major finding honestly;
+9. regenerate coverage and determine whether the English slice can reach `reviewed`;
+10. produce a Phase 1 completion report before Phase 2.
 
 **Phase 1 is active. The goal is a trustworthy English knowledge authority that Principia can later depend on without inheriting false certainty.**
