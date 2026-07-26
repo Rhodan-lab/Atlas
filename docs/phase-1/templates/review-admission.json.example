@@ -1,0 +1,22 @@
+{
+  "contract": "atlas-review-admission/0.1",
+  "id": "admission:replace-with-stable-slug:YYYY-MM-DD",
+  "decision": "accept",
+  "decided_at": "YYYY-MM-DD",
+  "decider": {
+    "display_name": "Real accountable maintainer name or stable organizational role",
+    "kind": "human",
+    "role": "Describe the authority to admit review records into Atlas history",
+    "accountable": true,
+    "conflicts": []
+  },
+  "external_verification": {
+    "reviewer_identity_checked": true,
+    "qualification_checked": true,
+    "independence_checked": true,
+    "conflicts_checked": true,
+    "method": "Describe the external checks performed; do not claim checks that did not occur."
+  },
+  "rationale": "Explain why the proposed review record should be accepted, returned for changes, or rejected.",
+  "test_fixture": false
+}
