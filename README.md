@@ -6,7 +6,7 @@
 
 > **Current status: Phase 1 — English Reference Corpus and Accountable Exact-Revision Review**
 >
-> Phase 0 established the knowledge contract. Phase 1 proves review coverage, bounded machine authority, accountable-human handoff, lifecycle integrity, and dependency impact before product expansion.
+> Phase 0 established the knowledge contract. Phase 1 proves review coverage, bounded machine authority, accountable-human handoff and return provenance, lifecycle integrity, and dependency impact before product expansion.
 
 ## What Atlas is
 
@@ -18,7 +18,7 @@ Atlas is a local-first knowledge and governance environment for an independent l
 - how certain, limited, contested, stale, deprecated, or retracted an item is;
 - how a synthesis traces to original sources;
 - what was reviewed, by whom or by which deterministic procedure, for which revision, and with which unresolved findings;
-- which exact content snapshot was handed to a reviewer;
+- which exact content snapshot was handed to a reviewer and returned in a submission;
 - why knowledge changed through revision.
 
 Atlas is not merely a notes app, graph visualization, textbook, course platform, or chatbot.
@@ -39,11 +39,11 @@ No live cross-repository dependency exists during Phase 1.
 1. [`PROJECT_STATE.md`](PROJECT_STATE.md)
 2. accepted foundation documents in [`docs/foundation/`](docs/foundation/)
 3. accepted ADRs
-4. canonical authored content and exact-revision review records
-5. generated reports, coverage manifests, backlogs, and handoff bundles
+4. canonical authored content and committed exact-revision review records
+5. generated reports, coverage manifests, backlogs, handoff bundles, and intake artifacts
 6. experimental implementation code
 
-Machine validation can establish bounded conformance or a fully specified calculation. A handoff generator can package exact review work. Neither can establish scientific truth, source interpretation, model applicability, legal correctness, ethical acceptability, editorial quality, or human accountability.
+Machine validation can establish bounded conformance or a fully specified calculation. Handoff and intake tools can preserve task-to-snapshot provenance. None can establish scientific truth, source interpretation, model applicability, legal correctness, ethical acceptability, editorial quality, reviewer identity, or human accountability.
 
 ## Language scope
 
@@ -88,7 +88,8 @@ question → source → evidence → claim → concept/model → synthesis → r
 - `atlas-promotion/0.1` — deterministic lifecycle decisions;
 - `atlas-review-coverage/0.1` — packet and complete-slice coverage;
 - `atlas-review-backlog/0.1` — deterministic missing-review tasks;
-- `atlas-review-handoff/0.1` — generated accountable-human review bundles.
+- `atlas-review-handoff/0.1` — generated accountable-human review bundles;
+- `atlas-review-submission/0.1` — exact-task and exact-snapshot return envelopes.
 
 The promotion gate blocks AI-only or machine-only authority where humans are required, wrong-revision reviews, expired reviews, unresolved serious findings, hidden conflicts, and incomplete lifecycle transitions.
 
@@ -111,25 +112,13 @@ Every machine record is non-accountable and sets `permits_promotion: false`.
 
 ### Remaining human work
 
-After machine attestations:
-
 - 25 gate tasks remain;
 - 0 tasks remain automation-eligible;
-- all 25 remaining tasks require accountable humans.
+- all 25 tasks require accountable humans.
 
-They group into:
-
-- 7 domain-authority tasks;
-- 7 editorial-and-scope tasks;
-- 5 methods-and-inference tasks;
-- 5 source-and-provenance tasks;
-- 1 independent reproducibility task.
-
-The slice remains `draft` and `blocked`.
+They group into 7 domain, 7 editorial, 5 methods, 5 source/provenance, and 1 independent reproducibility task. The slice remains `draft` and `blocked`.
 
 ## Accountable-human handoff
-
-The handoff generator packages all remaining work from live coverage data:
 
 ```bash
 python tools/foundation-validator/phase1_human_review_handoff.py \
@@ -141,16 +130,30 @@ python tools/foundation-validator/phase1_human_review_handoff.py \
   --expect-track-count 5
 ```
 
-The output contains:
+The output contains five qualification-track bundles, all 25 tasks exactly once, ten byte-for-byte canonical snapshots, original paths and SHA-256 digests, existing blockers and dependents, acceptance criteria, and no reviewer assignment.
 
-- five JSON and Markdown qualification-track bundles;
-- all 25 tasks exactly once;
-- ten byte-for-byte canonical Markdown snapshots;
-- original paths and SHA-256 digests;
-- existing blockers, dependents, and acceptance criteria;
-- no reviewer assignment.
+## Exact-snapshot review return
 
-The bundle is preparation only. A real reviewer must still return one valid `atlas-review/0.1` record per exact entity revision and review type.
+Validate a returned submission envelope:
+
+```bash
+python tools/foundation-validator/phase1_review_intake.py validate \
+  reviewer-submission.json \
+  --handoff phase1-reports/human-review-handoff/handoff.json
+```
+
+Extract the proposed review record with intake lineage:
+
+```bash
+python tools/foundation-validator/phase1_review_intake.py extract \
+  reviewer-submission.json \
+  --handoff phase1-reports/human-review-handoff/handoff.json \
+  --out phase1-reports/extracted-review.json
+```
+
+Intake verifies the active task, exact revision and snapshot digest, review type, human accountability, required independence, qualification, conflicts, dates, and AI-assistance disclosure.
+
+A passing envelope or extracted record is not accepted automatically and is never written to `content/reviews/records/` by the tool.
 
 ## Validation
 
@@ -161,17 +164,7 @@ python tools/foundation-validator/phase1_machine_attestations.py check \
   --records-dir content/reviews/records
 ```
 
-Generate coverage:
-
-```bash
-python tools/foundation-validator/phase1_coverage_report.py coverage \
-  content/reviews/coverage/feedback-complete-vertical-slice.json \
-  --records-dir content/reviews/records \
-  --expect blocked \
-  --report phase1-coverage.md
-```
-
-These commands produce conformance, planning, or evidence-transfer output only. They never edit lifecycle status automatically.
+These commands produce conformance, planning, evidence-transfer, or intake-consistency output only. They never edit lifecycle status automatically.
 
 ## Reading path
 
@@ -180,8 +173,8 @@ These commands produce conformance, planning, or evidence-transfer output only. 
 3. [`docs/phase-1/README.md`](docs/phase-1/README.md)
 4. [`docs/phase-1/review-protocol.md`](docs/phase-1/review-protocol.md)
 5. [`docs/phase-1/machine-attestations.md`](docs/phase-1/machine-attestations.md)
-6. [`docs/phase-1/feedback-human-review-plan.md`](docs/phase-1/feedback-human-review-plan.md)
-7. [`docs/phase-1/human-review-handoff.md`](docs/phase-1/human-review-handoff.md)
+6. [`docs/phase-1/human-review-handoff.md`](docs/phase-1/human-review-handoff.md)
+7. [`docs/phase-1/review-intake.md`](docs/phase-1/review-intake.md)
 
 Contributors and agents must follow [`AGENTS.md`](AGENTS.md) and [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
@@ -193,7 +186,7 @@ Contributors and agents must follow [`AGENTS.md`](AGENTS.md) and [`CONTRIBUTING.
 - plugins and synchronization;
 - active translated corpus or language-specific review programs;
 - AI-generated authoritative content;
-- automatic reviewer assignment;
+- automatic reviewer assignment or review-record acceptance;
 - direct Principia integration or repository merger;
 - promotion of `.atlas`, SQL, or prototype runtime structures as canonical.
 
@@ -201,7 +194,7 @@ Contributors and agents must follow [`AGENTS.md`](AGENTS.md) and [`CONTRIBUTING.
 
 Phase 1 closes only when the complete English delayed-feedback slice has sufficient accountable exact-revision review coverage, no required critical or major finding remains unresolved, lifecycle transitions preserve history, dishonest authority paths fail, and a completion report recommends entry into Phase 2.
 
-Passing a validator or generating a handoff never turns a draft into authoritative knowledge by itself.
+Passing a validator, generating a handoff, or validating an intake envelope never turns a draft into authoritative knowledge by itself.
 
 ## License
 
