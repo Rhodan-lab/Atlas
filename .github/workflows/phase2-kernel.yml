@@ -63,16 +63,16 @@ jobs:
           python -m tools.phase2_kernel.cli compile --output /tmp/atlas-runtime-b.json
           cmp /tmp/atlas-runtime-a.json /tmp/atlas-runtime-b.json
 
-      - name: Validate bounded Principia bridge candidate
+      - name: Validate merged Principia PR 16 candidate
         run: |
           python -m tools.phase2_kernel.cli bridge-validate \
-            content/fixtures/phase2_bridge/principia-feedback-valid.json \
+            content/fixtures/phase2_bridge/principia-feedback-pr16-v02.json \
             --runtime /tmp/atlas-runtime-a.json
 
-      - name: Import candidate and verify impact report
+      - name: Import candidate and verify lifecycle-aware impact
         run: |
           python -m tools.phase2_kernel.cli bridge-import \
-            content/fixtures/phase2_bridge/principia-feedback-valid.json \
+            content/fixtures/phase2_bridge/principia-feedback-pr16-v02.json \
             --runtime /tmp/atlas-runtime-a.json \
             --output /tmp/principia-feedback.external-dependent.json
           python -m tools.phase2_kernel.cli impact \
@@ -84,12 +84,35 @@ jobs:
           import json
           from pathlib import Path
 
+          imported = json.loads(Path('/tmp/principia-feedback.external-dependent.json').read_text(encoding='utf-8'))
           impact = json.loads(Path('/tmp/model-impact.json').read_text(encoding='utf-8'))
+          assert imported['source_contract'] == 'principia-atlas-external-dependent/0.2'
+          assert imported['legacy_id_index_verified'] is True
+          assert impact['contract'] == 'atlas-lifecycle-impact-report/0.1'
           assert impact['external_dependents'][0]['id'] == 'principia:failure-pattern:feedback-instability'
-          assert impact['external_dependents'][0]['action'] == 'inspect'
+          assert impact['external_dependents'][0]['declared_action'] == 'inspect'
+          assert impact['external_dependents'][0]['effective_action'] == 'inspect'
           assert impact['automatic_status_change'] is False
-          print('phase2-principia-impact=pass; live=false; automatic-status-change=false')
+          assert impact['automatic_release_action'] is False
+          print('principia-v02-impact=pass; live=false; automatic-mutation=false')
           PY
+
+      - name: Run representative kernel benchmark
+        run: |
+          python -m tools.phase2_kernel.benchmark \
+            --fixture content/fixtures/phase2_bridge/principia-feedback-pr16-v02.json \
+            --compile-iterations 3 \
+            --operation-iterations 200 \
+            --enforce \
+            --output phase2-kernel-benchmark.json
+
+      - name: Upload benchmark report
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase2-kernel-benchmark-python-${{ matrix.python-version }}
+          path: phase2-kernel-benchmark.json
+          if-no-files-found: error
+          retention-days: 30
 
       - name: Confirm unsafe bridge fixtures fail
         shell: bash

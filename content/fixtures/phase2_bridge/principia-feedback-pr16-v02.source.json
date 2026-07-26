@@ -1,0 +1,14 @@
+{
+  "contract": "atlas-external-fixture-source/0.1",
+  "fixture": "content/fixtures/phase2_bridge/principia-feedback-pr16-v02.json",
+  "source_repository": "Rhodan-lab/principle-to-system",
+  "source_pull_request": 16,
+  "source_head_commit": "405cfabb6eba71b42bd42ed81b922b458f9175e7",
+  "source_merge_commit": "eb3a00dfbfdfaa5470cb40505fa213e5349a917f",
+  "source_path": "integration/principia-atlas/exports/feedback-instability.external-dependent.fixture.json",
+  "source_blob_sha": "a0ab1e098b17a5cfe9fee521394513461a2f4e51",
+  "source_sha256": "6d9d232007b5ecc18c6470f5c2e457decfcae1a5be99764be9796b4b24db7047",
+  "captured_at": "2026-07-26",
+  "bridge_mode": "bridge-candidate",
+  "live": false
+}
