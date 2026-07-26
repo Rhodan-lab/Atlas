@@ -181,14 +181,25 @@ def _effective_action(
     lifecycle_status: str | None,
     staleness: str | None,
 ) -> tuple[str, str]:
+    if declared_action not in _ACTION_RANK:
+        raise KernelError(
+            "E-LIFECYCLE-ACTION",
+            f"unsupported declared action {declared_action!r}",
+        )
     effective = declared_action
     reason = "principia-declared-policy"
     if lifecycle_status == "retracted":
         return "block-release", "atlas-entity-retracted"
-    if lifecycle_status == "deprecated" and _ACTION_RANK[effective] < _ACTION_RANK["revalidate"]:
+    if (
+        lifecycle_status == "deprecated"
+        and _ACTION_RANK[effective] < _ACTION_RANK["revalidate"]
+    ):
         effective = "revalidate"
         reason = "atlas-entity-deprecated"
-    if staleness in {"review-required", "confirmed-stale"} and _ACTION_RANK[effective] < _ACTION_RANK["revalidate"]:
+    if (
+        staleness in {"review-required", "confirmed-stale"}
+        and _ACTION_RANK[effective] < _ACTION_RANK["revalidate"]
+    ):
         effective = "revalidate"
         reason = f"atlas-staleness-{staleness}"
     return effective, reason
