@@ -4,8 +4,9 @@ import copy
 import hashlib
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
-from tools.phase2_kernel.benchmark import BENCHMARK_CONTRACT, run_benchmark
+from tools.phase2_kernel.benchmark import BENCHMARK_CONTRACT, _measure, run_benchmark
 from tools.phase2_kernel.bridge import (
     BRIDGE_ADAPTER_CONTRACT,
     LIFECYCLE_IMPACT_CONTRACT,
@@ -134,6 +135,16 @@ class PrincipiaV02BridgeTests(unittest.TestCase):
             dependent["lifecycle_reason"], "atlas-staleness-confirmed-stale"
         )
 
+    def test_percentile_uses_nearest_rank_for_small_samples(self) -> None:
+        with patch(
+            "tools.phase2_kernel.benchmark.time.perf_counter_ns",
+            side_effect=[0, 10, 0, 20, 0, 30],
+        ):
+            metric = _measure(lambda: None, 3)
+        self.assertEqual(metric["median_ms"], 0.00002)
+        self.assertEqual(metric["p95_ms"], 0.00003)
+        self.assertEqual(metric["max_ms"], 0.00003)
+
     def test_representative_benchmark_report_is_well_formed(self) -> None:
         report = run_benchmark(
             CANONICAL,
@@ -145,13 +156,16 @@ class PrincipiaV02BridgeTests(unittest.TestCase):
         self.assertEqual(
             report["fixture_contract"], PRINCIPIA_EXTERNAL_DEPENDENT_CONTRACT
         )
-        self.assertEqual(set(report["metrics"]), {
-            "compile",
-            "exact_lookup",
-            "provenance",
-            "bridge_import",
-            "impact",
-        })
+        self.assertEqual(
+            set(report["metrics"]),
+            {
+                "compile",
+                "exact_lookup",
+                "provenance",
+                "bridge_import",
+                "impact",
+            },
+        )
         for metric in report["metrics"].values():
             self.assertGreaterEqual(metric["median_ms"], 0)
             self.assertGreaterEqual(metric["p95_ms"], 0)
