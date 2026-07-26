@@ -1,0 +1,98 @@
+name: Phase 2 Knowledge Kernel
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "content/canonical/**"
+      - "content/fixtures/phase2_bridge/**"
+      - "docs/phase-2/**"
+      - "tools/phase2_kernel/**"
+      - ".github/workflows/phase2-kernel.yml"
+  pull_request:
+    paths:
+      - "content/canonical/**"
+      - "content/fixtures/phase2_bridge/**"
+      - "docs/phase-2/**"
+      - "tools/phase2_kernel/**"
+      - ".github/workflows/phase2-kernel.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  kernel:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+
+      - name: Install pinned dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+
+      - name: Run Phase 2 kernel tests
+        run: python -m unittest discover -s tools/phase2_kernel/tests -v
+
+      - name: Compile twice and verify deterministic output
+        run: |
+          python -m tools.phase2_kernel.cli compile --output /tmp/atlas-runtime-a.json
+          python -m tools.phase2_kernel.cli compile --output /tmp/atlas-runtime-b.json
+          cmp /tmp/atlas-runtime-a.json /tmp/atlas-runtime-b.json
+
+      - name: Validate bounded Principia bridge candidate
+        run: |
+          python -m tools.phase2_kernel.cli bridge-validate \
+            content/fixtures/phase2_bridge/principia-feedback-valid.json \
+            --runtime /tmp/atlas-runtime-a.json
+
+      - name: Import candidate and verify impact report
+        run: |
+          python -m tools.phase2_kernel.cli bridge-import \
+            content/fixtures/phase2_bridge/principia-feedback-valid.json \
+            --runtime /tmp/atlas-runtime-a.json \
+            --output /tmp/principia-feedback.external-dependent.json
+          python -m tools.phase2_kernel.cli impact \
+            model:en:delayed-correction-recurrence@2 \
+            --runtime /tmp/atlas-runtime-a.json \
+            --external /tmp/principia-feedback.external-dependent.json \
+            --output /tmp/model-impact.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          impact = json.loads(Path('/tmp/model-impact.json').read_text(encoding='utf-8'))
+          assert impact['external_dependents'][0]['id'] == 'principia:failure-pattern:feedback-instability'
+          assert impact['external_dependents'][0]['action'] == 'inspect'
+          assert impact['automatic_status_change'] is False
+          print('phase2-principia-impact=pass; live=false; automatic-status-change=false')
+          PY
+
+      - name: Confirm unsafe bridge fixtures fail
+        shell: bash
+        run: |
+          set -euo pipefail
+          for fixture in \
+            principia-feedback-legacy-id-only.json \
+            principia-feedback-stale-revision.json \
+            principia-feedback-status-inheritance.json
+          do
+            if python -m tools.phase2_kernel.cli bridge-validate \
+              "content/fixtures/phase2_bridge/${fixture}" \
+              --runtime /tmp/atlas-runtime-a.json
+            then
+              echo "Unsafe fixture unexpectedly passed: ${fixture}"
+              exit 1
+            fi
+          done
+          echo "unsafe-bridge-fixtures=rejected"
