@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import platform
 import statistics
 import sys
@@ -35,7 +36,10 @@ def _measure(operation: Callable[[], object], iterations: int) -> dict[str, floa
         operation()
         durations.append((time.perf_counter_ns() - started) / 1_000_000.0)
     ordered = sorted(durations)
-    p95_index = min(len(ordered) - 1, max(0, int(len(ordered) * 0.95) - 1))
+    p95_index = min(
+        len(ordered) - 1,
+        max(0, math.ceil(len(ordered) * 0.95) - 1),
+    )
     return {
         "iterations": iterations,
         "median_ms": round(statistics.median(ordered), 6),
