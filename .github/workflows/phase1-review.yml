@@ -14,12 +14,14 @@ on:
       - "tools/foundation-validator/phase1_machine_attestations.py"
       - "tools/foundation-validator/phase1_human_review_handoff.py"
       - "tools/foundation-validator/phase1_review_intake.py"
+      - "tools/foundation-validator/phase1_review_admission.py"
       - "tools/foundation-validator/tests/test_phase1_review_gate.py"
       - "tools/foundation-validator/tests/test_phase1_coverage_report.py"
       - "tools/foundation-validator/tests/test_phase1_review_backlog.py"
       - "tools/foundation-validator/tests/test_phase1_machine_attestations.py"
       - "tools/foundation-validator/tests/test_phase1_human_review_handoff.py"
       - "tools/foundation-validator/tests/test_phase1_review_intake.py"
+      - "tools/foundation-validator/tests/test_phase1_review_admission.py"
       - ".github/workflows/phase1-review.yml"
   pull_request:
     paths:
@@ -33,12 +35,14 @@ on:
       - "tools/foundation-validator/phase1_machine_attestations.py"
       - "tools/foundation-validator/phase1_human_review_handoff.py"
       - "tools/foundation-validator/phase1_review_intake.py"
+      - "tools/foundation-validator/phase1_review_admission.py"
       - "tools/foundation-validator/tests/test_phase1_review_gate.py"
       - "tools/foundation-validator/tests/test_phase1_coverage_report.py"
       - "tools/foundation-validator/tests/test_phase1_review_backlog.py"
       - "tools/foundation-validator/tests/test_phase1_machine_attestations.py"
       - "tools/foundation-validator/tests/test_phase1_human_review_handoff.py"
       - "tools/foundation-validator/tests/test_phase1_review_intake.py"
+      - "tools/foundation-validator/tests/test_phase1_review_admission.py"
       - ".github/workflows/phase1-review.yml"
 
 permissions:
@@ -266,6 +270,97 @@ jobs:
           print("review-intake=pass; exact-snapshot-lineage=preserved; repository-write=none")
           PY
 
+      - name: Build synthetic explicit review admission
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          admission = {
+              "contract": "atlas-review-admission/0.1",
+              "id": "admission:synthetic-intake:2026-07-26",
+              "decision": "accept",
+              "decided_at": "2026-07-26",
+              "decider": {
+                  "display_name": "Synthetic CI fixture maintainer",
+                  "kind": "human",
+                  "role": "Synthetic Atlas admission fixture; not a real maintainer decision.",
+                  "accountable": True,
+                  "conflicts": [],
+              },
+              "external_verification": {
+                  "reviewer_identity_checked": True,
+                  "qualification_checked": True,
+                  "independence_checked": True,
+                  "conflicts_checked": True,
+                  "method": "Synthetic CI declarations only; no real person or credential was verified.",
+              },
+              "rationale": "Exercise admission lineage without granting real review authority.",
+              "test_fixture": True,
+          }
+          Path("phase1-reports/synthetic-review-admission.json").write_text(
+              json.dumps(admission, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          PY
+
+      - name: Validate and prepare synthetic admitted review
+        run: |
+          python tools/foundation-validator/phase1_review_admission.py validate \
+            phase1-reports/synthetic-review-admission.json \
+            phase1-reports/synthetic-review-submission.json \
+            --handoff phase1-reports/human-review-handoff/handoff.json \
+            --records-dir content/reviews/records
+          python tools/foundation-validator/phase1_review_admission.py receipt \
+            phase1-reports/synthetic-review-admission.json \
+            phase1-reports/synthetic-review-submission.json \
+            --handoff phase1-reports/human-review-handoff/handoff.json \
+            --records-dir content/reviews/records \
+            --out phase1-reports/synthetic-admission-receipt.json
+          python tools/foundation-validator/phase1_review_admission.py prepare \
+            phase1-reports/synthetic-review-admission.json \
+            phase1-reports/synthetic-review-submission.json \
+            --handoff phase1-reports/human-review-handoff/handoff.json \
+            --records-dir content/reviews/records \
+            --out phase1-reports/synthetic-admitted-review.json
+          python tools/foundation-validator/phase1_review_gate.py validate-record \
+            phase1-reports/synthetic-admitted-review.json
+
+      - name: Confirm admission lineage and no automatic repository write
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          receipt = json.loads(
+              Path("phase1-reports/synthetic-admission-receipt.json").read_text(encoding="utf-8")
+          )
+          record = json.loads(
+              Path("phase1-reports/synthetic-admitted-review.json").read_text(encoding="utf-8")
+          )
+          assert receipt["contract"] == "atlas-review-admission/0.1", receipt
+          assert receipt["decision"] == "accept", receipt
+          assert receipt["test_fixture"] is True, receipt
+          assert "intake" in record["metadata"], record
+          lineage = record["metadata"]["admission"]
+          assert lineage["contract"] == "atlas-review-admission/0.1", lineage
+          assert lineage["decision"] == "accept", lineage
+          assert lineage["test_fixture"] is True, lineage
+          assert record["permits_promotion"] is False, record
+
+          digest = hashlib.sha256()
+          for path in sorted(Path("content/reviews/records").glob("*.json")):
+              digest.update(path.name.encode("utf-8"))
+              digest.update(b"\0")
+              digest.update(path.read_bytes())
+              digest.update(b"\0")
+          before = Path("phase1-reports/review-records-before.sha256").read_text(encoding="utf-8").strip()
+          assert digest.hexdigest() == before, "admission modified content/reviews/records"
+          assert not Path("content/reviews/records/synthetic-admitted-review.json").exists()
+          print("review-admission=pass; lineage=preserved; promotion=false; repository-write=none")
+          PY
+
       - name: Validate eligible promotion and lifecycle fixtures
         run: |
           mkdir -p phase1-reports
@@ -309,7 +404,7 @@ jobs:
               --report "phase1-reports/coverage-${name}.md"
           done
 
-      - name: Upload deterministic review reports, handoff, and intake fixtures
+      - name: Upload deterministic review reports, handoff, intake, and admission fixtures
         if: always()
         uses: actions/upload-artifact@v4
         with:

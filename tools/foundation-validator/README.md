@@ -2,9 +2,9 @@
 
 ## Scope
 
-These bounded Python tools verify accepted Atlas contracts, deterministic fixtures, machine attestations, reviewer handoffs, and returned submission consistency.
+These bounded Python tools verify accepted Atlas contracts, deterministic fixtures, machine attestations, reviewer handoffs, returned submission consistency, and explicit review-record admission decisions.
 
-They do **not** decide scientific truth, assign confidence, rewrite authored content, grant `reviewed` status, create or assign human accountability, resolve findings, accept returned reviews automatically, or define the future Atlas runtime.
+They do **not** decide scientific truth, assign confidence, rewrite authored content, grant `reviewed` status, create human accountability, perform real-world identity checks, resolve findings, commit returned reviews automatically, or define the future Atlas runtime.
 
 ## Setup
 
@@ -80,7 +80,7 @@ python tools/foundation-validator/phase1_human_review_handoff.py \
   --expect-track-count 5
 ```
 
-The package contains `atlas-review-handoff/0.1`, five qualification-track bundles, all 25 human tasks exactly once, ten exact Markdown snapshots, original paths and SHA-256 digests, blockers and dependents, and no reviewer assignment.
+The package contains `atlas-review-handoff/0.1`, five qualification-track bundles, all 25 human tasks exactly once, ten exact Markdown snapshots, paths and SHA-256 digests, blockers and dependents, and no reviewer assignment.
 
 ## Review submission intake
 
@@ -92,7 +92,7 @@ python tools/foundation-validator/phase1_review_intake.py validate \
   --handoff phase1-reports/human-review-handoff/handoff.json
 ```
 
-Extract the proposed nested review record with intake lineage:
+Extract the proposed nested record with intake lineage:
 
 ```bash
 python tools/foundation-validator/phase1_review_intake.py extract \
@@ -101,19 +101,57 @@ python tools/foundation-validator/phase1_review_intake.py extract \
   --out phase1-reports/extracted-review.json
 ```
 
-Intake verifies:
+Intake verifies active task identity, exact entity revision and snapshot digest, review type, human accountability, required independence, qualification, conflicts, nested review validity, AI-assistance disclosure, and date order.
 
-- active coverage and task identity;
-- exact entity revision and snapshot SHA-256;
-- matching review type;
-- human reviewer kind and accountability;
-- required independence;
-- qualification and conflicts;
-- nested `atlas-review/0.1` validity;
-- AI-assistance disclosure;
-- completion and submission date order.
+The extracted record adds `metadata.intake`. The tool never writes to `content/reviews/records/` automatically and does not accept authority.
 
-The extracted record adds `metadata.intake` provenance. The tool never writes to `content/reviews/records/` automatically and does not accept the review into authority.
+## Explicit review admission
+
+Validate an `atlas-review-admission/0.1` decision:
+
+```bash
+python tools/foundation-validator/phase1_review_admission.py validate \
+  admission.json \
+  reviewer-submission.json \
+  --handoff phase1-reports/human-review-handoff/handoff.json
+```
+
+Write a deterministic receipt:
+
+```bash
+python tools/foundation-validator/phase1_review_admission.py receipt \
+  admission.json \
+  reviewer-submission.json \
+  --handoff phase1-reports/human-review-handoff/handoff.json \
+  --out phase1-reports/admission-receipt.json
+```
+
+Prepare a record after an explicit `accept` decision:
+
+```bash
+python tools/foundation-validator/phase1_review_admission.py prepare \
+  admission.json \
+  reviewer-submission.json \
+  --handoff phase1-reports/human-review-handoff/handoff.json \
+  --records-dir content/reviews/records \
+  --out phase1-reports/proposed-admitted-review.json
+```
+
+Admission validates:
+
+- an accountable human decider declaration;
+- `accept`, `request-changes`, or `reject` decision semantics;
+- admission and submission date order;
+- declared external checks for reviewer identity, qualification, independence, and conflicts;
+- non-empty decision rationale;
+- duplicate canonical review-ID prevention;
+- intake and admission lineage preservation.
+
+Only `accept` may prepare a record. Preparation writes solely to `--out` and never to the canonical review directory.
+
+A `changes-required` record or record with open major findings may be admitted so criticism is preserved. Admission does not change its outcome, remove findings, or promote knowledge.
+
+Synthetic admissions set `test_fixture: true`; their prepared records are forced to `permits_promotion: false`.
 
 ## Run all tests
 
@@ -121,7 +159,7 @@ The extracted record adds `metadata.intake` provenance. The tool never writes to
 python -m unittest discover -s tools/foundation-validator/tests -v
 ```
 
-The suite covers corpus validation, deterministic diagnostics, migrations, identity, synthetic translation staleness, review authority, lifecycle transitions, coverage, backlog generation, machine-attestation drift, handoff task uniqueness, snapshot integrity, blocker preservation, return-envelope matching, human authority, independence, AI disclosure, intake lineage, and no automatic repository writes.
+The suite covers corpus validation, deterministic diagnostics, migrations, identity, synthetic translation staleness, review authority, lifecycle transitions, coverage, backlog generation, machine-attestation drift, handoff uniqueness, snapshot integrity, blocker preservation, return-envelope matching, human authority, independence, AI disclosure, intake lineage, admission decisions, duplicate prevention, finding preservation, fixture promotion suppression, and no automatic repository writes.
 
 ## Migration and identity fixtures
 
@@ -149,4 +187,4 @@ Diagnostics contain severity, stable code, path, and deterministic message. Tool
 
 When tool behavior conflicts with an accepted foundation decision, the tool is wrong. Update implementation and fixtures through review; do not weaken the authored contract merely to make a test pass.
 
-Machine conformance, arithmetic reproduction, backlogs, reviewer bundles, valid submission envelopes, and extracted proposed records are bounded evidence-transfer or planning artifacts. They are not scientific, editorial, methodological, source, legal, ethical, human, or lifecycle authority.
+Machine conformance, arithmetic reproduction, backlogs, reviewer bundles, valid submissions, intake records, admission receipts, and prepared records are bounded governance artifacts. They are not scientific, editorial, methodological, source, legal, ethical, reviewer-identity, or lifecycle authority.
