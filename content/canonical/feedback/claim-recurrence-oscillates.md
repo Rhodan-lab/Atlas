@@ -11,7 +11,7 @@ updated: 2026-07-26
 language: en
 claim:
   kind: model-derived
-  statement: For x[t+1] = x[t] - x[t-1] with x0 = 1 and x1 = 0, the state sequence is periodic with exact period 6: 1, 0, -1, -1, 0, 1, then repetition.
+  statement: "For x[t+1] = x[t] - x[t-1] with x0 = 1 and x1 = 0, the state sequence is periodic with exact period 6: 1, 0, -1, -1, 0, 1, then repetition."
   scope:
     model: model:en:delayed-correction-recurrence
     gain: 1
