@@ -6,10 +6,10 @@ import argparse
 import sys
 from pathlib import Path
 
+from .compiler import compile_canonical
 from .kernel import (
     KernelError,
     KernelRepository,
-    compile_canonical,
     impact_report,
     import_principia_export,
     load_json,
