@@ -6,12 +6,11 @@ import argparse
 import sys
 from pathlib import Path
 
+from .bridge import import_principia_candidate, lifecycle_impact_report
 from .compiler import compile_canonical
 from .kernel import (
     KernelError,
     KernelRepository,
-    impact_report,
-    import_principia_export,
     load_json,
     render_json,
 )
@@ -89,7 +88,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     impact = subparsers.add_parser(
-        "impact", help="report internal and external dependency impact"
+        "impact", help="report internal and external lifecycle impact"
     )
     impact.add_argument("exact_reference")
     impact.add_argument("--external", type=Path, action="append", default=[])
@@ -123,11 +122,12 @@ def main(argv: list[str] | None = None) -> int:
                 None,
             )
         elif args.command in {"bridge-validate", "bridge-import"}:
-            imported = import_principia_export(load_json(args.export), repository)
+            imported = import_principia_candidate(load_json(args.export), repository)
             if args.command == "bridge-validate":
                 print(
                     f"bridge=pass; artifact={imported['id']}@{imported['revision']}; "
-                    f"dependencies={len(imported['dependencies'])}; live=false"
+                    f"dependencies={len(imported['dependencies'])}; "
+                    f"source-contract={imported['source_contract']}; live=false"
                 )
             else:
                 _write_or_print(imported, args.output)
@@ -135,7 +135,10 @@ def main(argv: list[str] | None = None) -> int:
             entity_id, revision = _split_exact(args.exact_reference)
             external = [load_json(path) for path in args.external]
             _write_or_print(
-                impact_report(repository, entity_id, revision, external), args.output
+                lifecycle_impact_report(
+                    repository, entity_id, revision, external
+                ),
+                args.output,
             )
         return 0
     except KernelError as exc:
