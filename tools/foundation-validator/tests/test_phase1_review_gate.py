@@ -100,7 +100,7 @@ class ReviewRecordTests(unittest.TestCase):
         self.assertIn("E-NONHUMAN-ACCOUNTABILITY", codes)
         self.assertIn("E-NONHUMAN-PROMOTION", codes)
 
-    def test_machine_structural_review_can_be_valid_without_promotion(self) -> None:
+    def test_machine_structural_review_is_valid_without_promotion(self) -> None:
         record = review(
             "structural",
             kind="machine",
@@ -111,11 +111,10 @@ class ReviewRecordTests(unittest.TestCase):
         self.assertEqual(gate.validate_review_record(record), [])
 
     def test_review_requires_exact_revision(self) -> None:
-        record = review("domain", revision=0)
-        codes = {item.code for item in gate.validate_review_record(record)}
+        codes = {item.code for item in gate.validate_review_record(review("domain", revision=0))}
         self.assertIn("E-REVIEW-ENTITY-REVISION", codes)
 
-    def test_open_major_finding_blocks_promotion_recommendation(self) -> None:
+    def test_open_major_finding_blocks_passing_review(self) -> None:
         record = review(
             "domain",
             findings=[
@@ -148,20 +147,22 @@ class ReviewRecordTests(unittest.TestCase):
         codes = {item.code for item in gate.validate_review_record(record)}
         self.assertIn("E-FINDING-RESOLUTION-NOTE", codes)
 
-    def test_expired_horizon_is_invalid_when_before_completion(self) -> None:
-        record = review("legal-context", horizon="2026-07-25")
-        codes = {item.code for item in gate.validate_review_record(record)}
-        self.assertIn("E-REVIEW-HORIZON", codes)
-
-    def test_unknown_field_is_rejected(self) -> None:
-        record = review("domain")
-        record["magic"] = True
-        codes = {item.code for item in gate.validate_review_record(record)}
-        self.assertIn("E-REVIEW-FIELD-UNKNOWN", codes)
+    def test_review_horizon_and_unknown_field_validation(self) -> None:
+        expired = review("legal-context", horizon="2026-07-25")
+        self.assertIn(
+            "E-REVIEW-HORIZON",
+            {item.code for item in gate.validate_review_record(expired)},
+        )
+        unknown = review("domain")
+        unknown["magic"] = True
+        self.assertIn(
+            "E-REVIEW-FIELD-UNKNOWN",
+            {item.code for item in gate.validate_review_record(unknown)},
+        )
 
 
 class RequiredReviewTests(unittest.TestCase):
-    def test_normative_claim_requires_structural_editorial_and_ethical(self) -> None:
+    def test_normative_claim_requirements(self) -> None:
         entity = {
             "id": "claim:en:test",
             "revision": 1,
@@ -173,7 +174,7 @@ class RequiredReviewTests(unittest.TestCase):
             {"structural", "editorial", "ethical"},
         )
 
-    def test_causal_legal_claim_adds_source_domain_method_and_legal(self) -> None:
+    def test_causal_legal_claim_requirements(self) -> None:
         entity = {
             "id": "claim:en:test",
             "revision": 1,
@@ -193,16 +194,27 @@ class RequiredReviewTests(unittest.TestCase):
             },
         )
 
-    def test_translated_model_requires_translation(self) -> None:
+    def test_synthetic_translated_model_requires_translation_and_reproducibility(self) -> None:
         entity = {
-            "id": "model:id:test",
+            "id": "model:fr:test",
             "revision": 1,
             "type": "model",
             "translation_of": "model:en:test",
             "material_flags": ["executable"],
         }
-        self.assertIn("translation", gate.required_review_types(entity))
-        self.assertIn("reproducibility", gate.required_review_types(entity))
+        required = gate.required_review_types(entity)
+        self.assertIn("translation", required)
+        self.assertIn("reproducibility", required)
+
+    def test_methodological_claim_requires_methodological_review(self) -> None:
+        entity = {
+            "id": "claim:en:test",
+            "revision": 1,
+            "type": "claim",
+            "claim_kind": "methodological",
+            "material_flags": [],
+        }
+        self.assertIn("methodological", gate.required_review_types(entity))
 
 
 class PromotionTests(unittest.TestCase):
@@ -243,11 +255,7 @@ class PromotionTests(unittest.TestCase):
                 accountable=False,
                 permits=False,
             ),
-            review(
-                "editorial",
-                entity_id="concept:en:test",
-                independence="internal",
-            ),
+            review("editorial", entity_id="concept:en:test", independence="internal"),
             review(
                 "domain",
                 entity_id="concept:en:test",
@@ -284,27 +292,18 @@ class PromotionTests(unittest.TestCase):
                 accountable=False,
                 permits=False,
             ),
-            review(
-                "source",
-                entity_id="source:en:test",
-                revision=1,
-                independence="internal",
-            ),
+            review("source", entity_id="source:en:test", revision=1, independence="internal"),
         ]
         result, diagnostics = gate.evaluate_promotion(
-            promotion(
-                entity=entity,
-                reviews=records,
-                required=["structural", "source"],
-            )
+            promotion(entity=entity, reviews=records, required=["structural", "source"])
         )
         self.assertEqual(diagnostics, [])
         self.assertEqual(result.decision, "blocked")
         self.assertTrue(any("another entity revision" in item for item in result.reasons))
 
-    def test_stale_translation_is_blocked(self) -> None:
+    def test_synthetic_stale_translation_is_blocked(self) -> None:
         entity = {
-            "id": "claim:id:test",
+            "id": "claim:fr:test",
             "revision": 1,
             "type": "claim",
             "status": "in-review",
@@ -323,7 +322,6 @@ class PromotionTests(unittest.TestCase):
         )
 
     def test_expired_review_is_blocked(self) -> None:
-        record = review("ethical", horizon="2026-07-26")
         payload = promotion(
             reviews=[
                 review(
@@ -334,7 +332,7 @@ class PromotionTests(unittest.TestCase):
                     permits=False,
                 ),
                 review("editorial", independence="internal"),
-                record,
+                review("ethical", horizon="2026-07-26"),
             ]
         )
         payload["decision_at"] = "2026-07-27"
@@ -343,8 +341,8 @@ class PromotionTests(unittest.TestCase):
         self.assertEqual(result.decision, "blocked")
         self.assertTrue(any("expired" in reason for reason in result.reasons))
 
-    def test_contested_transition_requires_two_positions(self) -> None:
-        result, diagnostics = gate.evaluate_promotion(
+    def test_contested_transitions(self) -> None:
+        blocked, diagnostics = gate.evaluate_promotion(
             promotion(
                 requested_status="contested",
                 transition={
@@ -355,10 +353,9 @@ class PromotionTests(unittest.TestCase):
             )
         )
         self.assertEqual(diagnostics, [])
-        self.assertEqual(result.decision, "blocked")
+        self.assertEqual(blocked.decision, "blocked")
 
-    def test_valid_contested_transition(self) -> None:
-        result, diagnostics = gate.evaluate_promotion(
+        eligible, diagnostics = gate.evaluate_promotion(
             promotion(
                 requested_status="contested",
                 transition={
@@ -369,10 +366,10 @@ class PromotionTests(unittest.TestCase):
             )
         )
         self.assertEqual(diagnostics, [])
-        self.assertEqual(result.decision, "eligible")
+        self.assertEqual(eligible.decision, "eligible")
 
-    def test_deprecation_requires_explicit_replacement_field(self) -> None:
-        result, _ = gate.evaluate_promotion(
+    def test_deprecation_and_retraction_transitions(self) -> None:
+        deprecated, _ = gate.evaluate_promotion(
             promotion(
                 requested_status="deprecated",
                 transition={
@@ -382,11 +379,10 @@ class PromotionTests(unittest.TestCase):
                 },
             )
         )
-        self.assertEqual(result.decision, "blocked")
-        self.assertTrue(any("replacement" in reason for reason in result.reasons))
+        self.assertEqual(deprecated.decision, "blocked")
+        self.assertTrue(any("replacement" in reason for reason in deprecated.reasons))
 
-    def test_valid_retraction(self) -> None:
-        result, diagnostics = gate.evaluate_promotion(
+        retracted, diagnostics = gate.evaluate_promotion(
             promotion(
                 requested_status="retracted",
                 transition={
@@ -400,7 +396,7 @@ class PromotionTests(unittest.TestCase):
             )
         )
         self.assertEqual(diagnostics, [])
-        self.assertEqual(result.decision, "eligible")
+        self.assertEqual(retracted.decision, "eligible")
 
     def test_nonhuman_acceptor_is_rejected(self) -> None:
         payload = promotion(
