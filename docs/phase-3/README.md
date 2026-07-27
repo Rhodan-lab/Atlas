@@ -13,24 +13,29 @@ live: false
 canonical_mutation: false
 ```
 
-## Active candidate
+## Accepted workstream 1
 
-Workstream 1 defines the retrieval evaluation boundary before ranking implementation begins.
+PR #30 established the retrieval evaluation boundary before ranking implementation.
 
 ```yaml
 workstream: 1
 mode: retrieval-evaluation
-state: candidate
+state: accepted
 query_set_contract: atlas-retrieval-query-set/0.1
 result_set_contract: atlas-retrieval-result-set/0.1
 metric_report_contract: atlas-retrieval-metric-report/0.1
+query_set_id: retrieval-query-set:phase3-reference-en-v1
+query_set_version: 1
 query_count: 13
 entity_count: 34
+accepted_pr: 30
+tested_head: 3cd4c103da12c140e1a4d0b7bf2bdb8cca5e9727
+accepted_merge_commit: 973827e6e7644f79437f3705c73f9e6d83e9a477
 live: false
 repository_mutation: false
 ```
 
-The candidate includes direct, compositional, ambiguous, cross-slice, and unavailable-revision cases. It does not implement retrieval or claim quality. See [`evaluation-contract.md`](evaluation-contract.md).
+The accepted fixture contains 12 ranked queries and one unavailable-revision error, with 26 positive graded targets and 382 implicit grade-0 judgments over the pinned corpus. It includes direct, compositional, ambiguous, cross-slice, contested-normative, and exact-revision-error cases. See [`evaluation-contract.md`](evaluation-contract.md).
 
 ## Goal
 
@@ -52,23 +57,21 @@ That recommendation permits comparative retrieval experiments. It does not permi
 
 ### Query and judgment contract
 
-Phase 3 must define a machine-readable fixture contract containing:
+Workstream 1 now provides a machine-readable contract containing:
 
-- stable query ID;
-- query text;
-- language;
-- intended information need;
+- stable query-set and query IDs;
+- query text and intended information need;
 - exact relevant entity IDs and revisions;
-- graded or binary relevance judgment;
-- rationale;
+- graded relevance judgments and rationales;
 - slice and difficulty metadata;
-- ambiguity or disagreement notes.
+- ambiguity and disagreement notes;
+- an exhaustive grade-0 policy over the pinned corpus.
 
 Judgments are evaluation fixtures, not new canonical scientific claims.
 
 ### Baselines before infrastructure commitments
 
-The first accepted retrieval candidates must include:
+The next accepted retrieval candidates must include:
 
 1. a deterministic lexical baseline;
 2. a deterministic structured-field baseline.
@@ -83,20 +86,20 @@ The structured baseline may use authored and compiled fields such as:
 - provenance-linked source identity;
 - status, staleness, confidence, and review level.
 
-Embedding, vector, or learned-ranking experiments may begin only after these baselines exist and use the same judgment set.
+Embedding, vector, or learned-ranking experiments may begin only after these baselines exist and use the same accepted judgment set.
 
 ### Evaluation metrics
 
-The phase must define and report appropriate deterministic metrics, including at minimum:
+The accepted metric contract requires:
 
 - precision at a declared cutoff;
 - recall at a declared cutoff;
-- mean reciprocal rank or an explicitly justified alternative;
-- normalized discounted cumulative gain when graded judgments are used;
+- mean reciprocal rank;
+- normalized discounted cumulative gain at the cutoff;
 - zero-result and unavailable-revision rates;
 - deterministic tie counts and tie-breaking behavior.
 
-Metrics must be reported with the fixture version and exact index implementation.
+Metrics must be reported with the exact fixture version, result-set digest, and index implementation. Workstream 1 defines the fields but does not establish a quality threshold.
 
 ### Result contract
 
@@ -106,13 +109,13 @@ Every retrieval result must expose:
 - positive revision;
 - entity type and title;
 - deterministic score and rank;
-- matched fields or explanation evidence;
-- provenance or source path where applicable;
+- matched fields and explanation evidence;
+- provenance where applicable;
 - review level;
 - lifecycle and staleness visibility;
 - index contract and build digest.
 
-A result may not silently substitute another revision or an implicit `latest` entity.
+A result may not silently substitute another revision or an implicit `latest` entity. Equal-score ties use ascending exact entity keys.
 
 ### Replaceability and rollback
 
@@ -129,27 +132,30 @@ Rollback means deleting the generated index and rebuilding it. Mutable index sta
 
 ## Initial workstreams
 
-### Workstream 1 — evaluation contract and fixtures
+### Workstream 1 — evaluation contract and fixtures — accepted
 
-Candidate scope:
+Accepted evidence:
 
-- define query, judgment, result, and metric contracts;
-- create a bounded fixture set spanning catalase, delayed feedback, and recommendation systems;
-- include straightforward, compositional, ambiguous, cross-slice, and unavailable-revision cases;
-- treat every unlisted exact entity as grade 0 over the pinned corpus;
-- record explicit fixture limitations;
-- reject unversioned results, mismatched metadata, nondeterministic ties, malformed metrics, and live authority.
+- `content/fixtures/phase3_retrieval/reference-query-set.v01.json`;
+- `content/fixtures/phase3_retrieval/contract-baseline.json`;
+- `tools/phase3_retrieval/contracts.py`;
+- `tools/phase3_retrieval/tests/test_contracts.py`;
+- `.github/workflows/phase3-retrieval-contract.yml`;
+- `docs/phase-3/evaluation-contract.md`.
 
-Acceptance requires exact-head Phase 3 contract CI and the complete Atlas regression suite.
+The workstream rejects duplicate queries, unavailable positive targets, mismatched revision errors, unversioned results, canonical metadata drift, malformed ranks, increasing scores, nondeterministic ties, malformed metrics, non-replaceable indexes, live authority, and repository mutation.
 
-### Workstream 2 — lexical baseline
+### Workstream 2 — lexical baseline — next
 
+- use the accepted query set unchanged;
 - tokenize and normalize deterministically;
 - index canonical exact revisions;
 - implement transparent scoring;
 - define deterministic tie-breaking;
-- emit inspectable match evidence;
-- validate deletion and rebuild.
+- emit contract-valid matched-field and provenance evidence;
+- compute the accepted metrics;
+- validate deletion and byte-identical rebuild;
+- record quality limitations without production claims.
 
 ### Workstream 3 — structured baseline
 
