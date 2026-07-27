@@ -1,0 +1,95 @@
+{
+  "advisory_only": true,
+  "automatic_merge_or_resolution": false,
+  "canonical_copy_authority": false,
+  "contract": "atlas-phase3-research-foundation-baseline/0.1",
+  "counts": {
+    "contradiction_candidates": 1,
+    "duplicate_candidates": 1,
+    "filter_result_items": 9,
+    "filters": 4,
+    "negative_cases": 5,
+    "trail_entries": 5,
+    "trails": 1
+  },
+  "decision": "research-foundation-candidate",
+  "embeddings": false,
+  "entity_count": 34,
+  "external_services": false,
+  "filter_result_artifact_bytes": 6984,
+  "filter_result_artifact_sha256": "3f25421b72350be1d8d820baaa9b549ead5d9d8caa5bb61538cd0ecc545c3f67",
+  "filter_result_counts": [
+    1,
+    1,
+    1,
+    6
+  ],
+  "filter_result_digests": [
+    "0e07b3989c35d9d4a0687272b0ff4d4b584cfa28fcc83e209dc5491104d277f1",
+    "82256be703ea84dc02b6e3b7c2d795ee2cbb2ba9e4237229b7debc26741d829e",
+    "84cd645e3b2133a818662169eb08d3b88c443faae112e86f21d0abe93b2a4990",
+    "72129ddc6c203c0059fc9f1262359449258a256a4d1da288ea64673d5034b783"
+  ],
+  "filter_result_exact_keys": [
+    [
+      "model:en:delayed-correction-recurrence@2"
+    ],
+    [
+      "evidence:en:fluorescent-catalase-assay-neutral-ph@1"
+    ],
+    [
+      "evidence:en:dsa-recommender-transparency-and-choice@1"
+    ],
+    [
+      "claim:en:facebook-exposure-reflects-network-ranking-and-clicks@1",
+      "claim:en:recommender-effects-are-context-dependent@1",
+      "claim:en:transparency-and-nonprofiling-are-eu-governance-responses@1",
+      "claim:en:twitter-ranking-changed-relative-political-amplification@1",
+      "claim:en:users-should-have-recommender-explanation-and-choice@1",
+      "synthesis:en:recommender-exposure-and-governance@1"
+    ]
+  ],
+  "fixture_id": "research-foundations:phase3-reference-en-v1",
+  "fixture_version": 1,
+  "live": false,
+  "mode": "retrieval-evaluation",
+  "negative_errors": [
+    "E-FILTER-DOMAIN",
+    "E-FILTER-DATE",
+    "E-REVISION-MISSING",
+    "E-CANDIDATE-PAIR",
+    "E-DUPLICATE-AUTHORITY"
+  ],
+  "provenance_visible": true,
+  "python_substantive_artifacts_byte_identical": true,
+  "query_set_id": "retrieval-query-set:phase3-reference-en-v1",
+  "query_set_sha256": "e8b27966a87eaf6fd07585dfcdb10a08ac0b322db6a31cc5a3638f2f27e3b302",
+  "query_set_version": 1,
+  "report_artifact_bytes": 4953,
+  "report_artifact_sha256": "bdf56d085025e624b80fd7e0b35a362e16331e593185184d5500c7603b3910bd",
+  "report_contract": "atlas-phase3-research-foundation-report/0.1",
+  "report_digest": "733aeb28a3147a36d1cc7d3406ab98fa81522cb4b4e87e3aa792aaf54893a394",
+  "repository_mutation": false,
+  "review_and_staleness_visible": true,
+  "source_digest": "684d08f23db50c2d994ea07293c6aaea2cbcb24492b062663b2e43144f07d3b1",
+  "structured_baseline_sha256": "fc2bf63814e029ceffd6b66f493ae7f0fc30b8bff207ffd39393b8739de9dca5",
+  "validated_candidates": {
+    "contradiction": {
+      "assessment": "scope-difference-likely",
+      "decision": "valid-candidate-not-proven-contradiction",
+      "id": "candidate:contradiction:facebook-twitter-exposure-effects"
+    },
+    "duplicate": {
+      "assessment": "related-not-duplicate",
+      "decision": "valid-candidate-not-proven-duplicate",
+      "id": "candidate:duplicate:recommender-context-claim-and-synthesis"
+    }
+  },
+  "validated_trail": {
+    "authority": "research-only",
+    "entry_count": 5,
+    "id": "trail:en:recommender-cross-platform-generalization",
+    "revision": 1
+  },
+  "vector_database": false
+}

@@ -1,0 +1,168 @@
+name: Phase 3 Research Foundations
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "content/canonical/**"
+      - "content/fixtures/phase3_retrieval/**"
+      - "docs/phase-3/**"
+      - "tools/phase3_retrieval/**"
+      - ".github/workflows/phase3-research-foundations.yml"
+  pull_request:
+    paths:
+      - "content/canonical/**"
+      - "content/fixtures/phase3_retrieval/**"
+      - "docs/phase-3/**"
+      - "tools/phase3_retrieval/**"
+      - ".github/workflows/phase3-research-foundations.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  research-foundations:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+
+      - name: Install pinned dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+
+      - name: Run research-foundation tests
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m unittest tools.phase3_retrieval.tests.test_research -v 2>&1 | tee phase3-research-foundations-tests.txt
+
+      - name: Generate and verify exact research-foundation evidence
+        run: |
+          python -m tools.phase3_retrieval.research \
+            --query-set content/fixtures/phase3_retrieval/reference-query-set.v01.json \
+            --structured-baseline content/fixtures/phase3_retrieval/structured-baseline.json \
+            --fixtures content/fixtures/phase3_retrieval/research-foundations.v01.json \
+            --report-output phase3-research-foundations-report.json \
+            --filter-results-output phase3-filter-results.json
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          from tools.phase2_kernel import load_json
+          from tools.phase3_retrieval.lexical import _json_sha256
+
+          query_path = Path('content/fixtures/phase3_retrieval/reference-query-set.v01.json')
+          structured_path = Path('content/fixtures/phase3_retrieval/structured-baseline.json')
+          fixtures_path = Path('content/fixtures/phase3_retrieval/research-foundations.v01.json')
+          pinned = load_json(Path('content/fixtures/phase3_retrieval/research-foundations-baseline.json'))
+          query_set = load_json(query_path)
+          structured = load_json(structured_path)
+          fixtures = load_json(fixtures_path)
+          report_path = Path('phase3-research-foundations-report.json')
+          results_path = Path('phase3-filter-results.json')
+          report = load_json(report_path)
+          results = json.loads(results_path.read_text(encoding='utf-8'))
+
+          assert pinned['contract'] == 'atlas-phase3-research-foundation-baseline/0.1'
+          assert pinned['mode'] == 'retrieval-evaluation'
+          assert pinned['decision'] == 'research-foundation-candidate'
+          assert pinned['fixture_id'] == fixtures['id']
+          assert pinned['fixture_version'] == fixtures['version'] == 1
+          assert pinned['entity_count'] == fixtures['entity_count'] == report['entity_count'] == 34
+          assert pinned['query_set_id'] == query_set['id'] == report['query_set_id']
+          assert pinned['query_set_version'] == query_set['version'] == report['query_set_version'] == 1
+          assert hashlib.sha256(query_path.read_bytes()).hexdigest() == pinned['query_set_sha256']
+          assert _json_sha256(structured) == pinned['structured_baseline_sha256']
+          assert fixtures['structured_baseline_sha256'] == pinned['structured_baseline_sha256']
+          assert fixtures['source_digest'] == pinned['source_digest'] == report['source_digest']
+
+          assert report['contract'] == pinned['report_contract'] == 'atlas-phase3-research-foundation-report/0.1'
+          assert report['decision'] == pinned['decision']
+          assert report['counts'] == pinned['counts']
+          assert report['filter_result_digests'] == pinned['filter_result_digests']
+          assert report['report_digest'] == pinned['report_digest']
+          assert report['structured_baseline_sha256'] == pinned['structured_baseline_sha256']
+          assert report['exact_revision_preserved'] is True
+          assert report['provenance_visible'] == pinned['provenance_visible'] is True
+          assert report['review_and_staleness_visible'] == pinned['review_and_staleness_visible'] is True
+          assert report['candidate_authority'] == 'advisory-only'
+          assert report['automatic_merge_or_resolution'] == pinned['automatic_merge_or_resolution'] is False
+          assert report['canonical_copy_authority'] == pinned['canonical_copy_authority'] is False
+          assert report['embeddings'] == pinned['embeddings'] is False
+          assert report['vector_database'] == pinned['vector_database'] is False
+          assert report['external_services'] == pinned['external_services'] is False
+          assert report['live'] == pinned['live'] is False
+          assert report['repository_mutation'] == pinned['repository_mutation'] is False
+          assert hashlib.sha256(report_path.read_bytes()).hexdigest() == pinned['report_artifact_sha256']
+          assert len(report_path.read_bytes()) == pinned['report_artifact_bytes']
+
+          contradiction = report['contradiction_validations'][0]
+          duplicate = report['duplicate_validations'][0]
+          trail = report['trail_validations'][0]
+          assert contradiction['id'] == pinned['validated_candidates']['contradiction']['id']
+          assert contradiction['assessment'] == pinned['validated_candidates']['contradiction']['assessment']
+          assert contradiction['decision'] == pinned['validated_candidates']['contradiction']['decision']
+          assert duplicate['id'] == pinned['validated_candidates']['duplicate']['id']
+          assert duplicate['assessment'] == pinned['validated_candidates']['duplicate']['assessment']
+          assert duplicate['decision'] == pinned['validated_candidates']['duplicate']['decision']
+          assert trail['id'] == pinned['validated_trail']['id']
+          assert trail['revision'] == pinned['validated_trail']['revision']
+          assert trail['entry_count'] == pinned['validated_trail']['entry_count']
+          assert trail['authority'] == pinned['validated_trail']['authority']
+          assert [item['observed_error'] for item in report['negative_validations']] == pinned['negative_errors']
+
+          assert isinstance(results, list) and len(results) == pinned['counts']['filters'] == 4
+          actual_counts = [item['entity_count_after'] for item in results]
+          actual_digests = [item['result_digest'] for item in results]
+          actual_keys = [
+              [f"{entity['id']}@{entity['revision']}" for entity in item['items']]
+              for item in results
+          ]
+          assert actual_counts == pinned['filter_result_counts']
+          assert actual_digests == pinned['filter_result_digests']
+          assert actual_keys == pinned['filter_result_exact_keys']
+          assert all(item['contract'] == 'atlas-filtered-result-set/0.1' for item in results)
+          assert all(item['source_digest'] == pinned['source_digest'] for item in results)
+          assert all(item['entity_count_before'] == pinned['entity_count'] for item in results)
+          assert all(item['exact_revision_preserved'] is True for item in results)
+          assert all(item['advisory_only'] is True for item in results)
+          assert all(item['live'] is False for item in results)
+          assert all(item['repository_mutation'] is False for item in results)
+          assert all(
+              {'id', 'revision', 'type', 'title', 'status', 'staleness', 'review_level', 'domain', 'updated', 'evidence_roles', 'provenance'} <= set(entity)
+              for item in results
+              for entity in item['items']
+          )
+          assert hashlib.sha256(results_path.read_bytes()).hexdigest() == pinned['filter_result_artifact_sha256']
+          assert len(results_path.read_bytes()) == pinned['filter_result_artifact_bytes']
+          assert pinned['python_substantive_artifacts_byte_identical'] is True
+
+          print('research-foundation-report-digest=' + report['report_digest'])
+          print('research-foundation-counts=' + json.dumps(report['counts'], sort_keys=True, separators=(',', ':')))
+          print('filter-result-digests=' + json.dumps(report['filter_result_digests'], separators=(',', ':')))
+          print('phase3-research-foundations=pass; filters=4; items=9; trails=1; entries=5; contradiction=1; duplicate=1; negatives=5; exact-evidence=true; embeddings=false; live=false')
+          PY
+
+      - name: Upload research-foundation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase3-research-foundations-python-${{ matrix.python-version }}
+          path: |
+            phase3-research-foundations-tests.txt
+            phase3-research-foundations-report.json
+            phase3-filter-results.json
+          if-no-files-found: error
+          retention-days: 30
