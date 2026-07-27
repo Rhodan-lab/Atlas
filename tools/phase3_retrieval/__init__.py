@@ -1,5 +1,11 @@
 """Atlas Phase 3 retrieval evaluation interfaces."""
 
+from .closure import (
+    COMPLETION_CONTRACT,
+    COMPLETION_VALIDATION_CONTRACT,
+    run_phase3_closure,
+    validate_completion_report,
+)
 from .contracts import (
     METRIC_REPORT_CONTRACT,
     MODE,
@@ -59,6 +65,8 @@ from .structured import (
 )
 
 __all__ = [
+    "COMPLETION_CONTRACT",
+    "COMPLETION_VALIDATION_CONTRACT",
     "CONTRADICTION_CONTRACT",
     "DUPLICATE_CONTRACT",
     "FILTER_CONTRACT",
@@ -89,12 +97,14 @@ __all__ = [
     "fuse_result_sets",
     "run_lexical_baseline",
     "run_lexical_queries",
+    "run_phase3_closure",
     "run_rank_fusion_candidate",
     "run_structured_baseline",
     "run_structured_queries",
     "search_lexical_index",
     "search_structured_index",
     "tokenize",
+    "validate_completion_report",
     "validate_contradiction_candidate",
     "validate_duplicate_candidate",
     "validate_filter",
