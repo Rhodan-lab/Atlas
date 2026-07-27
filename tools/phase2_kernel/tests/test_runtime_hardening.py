@@ -38,6 +38,8 @@ def _mutate_runtime(runtime: dict, name: str) -> None:
         runtime["source_contract"] = "atlas-content/9.9"
     elif name == "source-digest-malformed":
         runtime["source_digest"] = "not-a-sha256"
+    elif name == "source-digest-mismatch":
+        runtime["source_digest"] = "0" * 64
     elif name == "entity-count-mismatch":
         runtime["entity_count"] += 1
     elif name == "duplicate-entity":
