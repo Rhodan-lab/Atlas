@@ -6,6 +6,7 @@ serialized runtime completely before exposing that engine through the public
 """
 from __future__ import annotations
 
+import hashlib
 import re
 from collections import defaultdict
 from typing import Any, Mapping
@@ -56,8 +57,8 @@ def validate_runtime(runtime: Mapping[str, Any]) -> dict[str, Any]:
     """Validate a complete ``atlas-kernel-runtime/0.1`` document.
 
     The validator rejects malformed entities and any disagreement between the
-    entity list, exact revision index, reference graph, relation graph, and
-    reverse dependency index before query execution begins.
+    entity list, source digest, exact revision index, reference graph, relation
+    graph, and reverse dependency index before query execution begins.
     """
     if not isinstance(runtime, Mapping):
         raise KernelError("E-RUNTIME-STRUCTURE", "runtime must be an object")
@@ -73,7 +74,7 @@ def validate_runtime(runtime: Mapping[str, Any]) -> dict[str, Any]:
         )
     if not isinstance(runtime.get("source_root"), str) or not runtime["source_root"]:
         raise KernelError("E-RUNTIME-SOURCE", "source_root must be a non-empty string")
-    _digest(runtime.get("source_digest"), "$.source_digest")
+    source_digest = _digest(runtime.get("source_digest"), "$.source_digest")
 
     entities = runtime.get("entities")
     revisions = runtime.get("revisions_by_id")
@@ -91,12 +92,12 @@ def validate_runtime(runtime: Mapping[str, Any]) -> dict[str, Any]:
     if (
         not isinstance(entity_count, int)
         or isinstance(entity_count, bool)
-        or entity_count < 0
+        or entity_count < 1
         or entity_count != len(entities)
     ):
         raise KernelError(
             "E-RUNTIME-ENTITY-COUNT",
-            "entity_count must equal the number of entity records",
+            "entity_count must equal the positive number of entity records",
         )
 
     by_key: dict[str, Mapping[str, Any]] = {}
@@ -185,7 +186,10 @@ def validate_runtime(runtime: Mapping[str, Any]) -> dict[str, Any]:
             current_reference_targets.append(target_key)
             reference_order.append((target_id, target_revision))
             reference_count += 1
-        if reference_order != sorted(reference_order) or len(current_reference_targets) != len(set(current_reference_targets)):
+        if (
+            reference_order != sorted(reference_order)
+            or len(current_reference_targets) != len(set(current_reference_targets))
+        ):
             raise KernelError(
                 "E-RUNTIME-REFERENCE-ORDER",
                 "references must be sorted and target each exact entity at most once",
@@ -217,10 +221,10 @@ def validate_runtime(runtime: Mapping[str, Any]) -> dict[str, Any]:
             current_relation_targets.append(target_key)
             relation_order.append((relation_type, target_id, target_revision))
             relation_count += 1
-        if relation_order != sorted(relation_order):
+        if relation_order != sorted(relation_order) or len(relation_order) != len(set(relation_order)):
             raise KernelError(
                 "E-RUNTIME-RELATION-ORDER",
-                "relations must use deterministic ordering",
+                "relations must use deterministic duplicate-free ordering",
                 path,
             )
         relation_targets[key] = current_relation_targets
@@ -229,6 +233,17 @@ def validate_runtime(runtime: Mapping[str, Any]) -> dict[str, Any]:
         raise KernelError(
             "E-RUNTIME-ENTITY-ORDER",
             "entities must use deterministic ID, revision, and path ordering",
+        )
+
+    recomputed_digest = hashlib.sha256()
+    for entity in entities:
+        recomputed_digest.update(
+            f"{entity['path']}\0{entity['source_sha256']}\n".encode("utf-8")
+        )
+    if recomputed_digest.hexdigest() != source_digest:
+        raise KernelError(
+            "E-RUNTIME-SOURCE-DIGEST",
+            "source_digest does not match entity paths and source hashes",
         )
 
     entity_keys = set(by_key)
@@ -313,7 +328,7 @@ def validate_runtime(runtime: Mapping[str, Any]) -> dict[str, Any]:
         "contract": RUNTIME_VALIDATION_CONTRACT,
         "runtime_contract": RUNTIME_CONTRACT,
         "source_contract": CONTENT_CONTRACT,
-        "source_digest": runtime["source_digest"],
+        "source_digest": source_digest,
         "entity_count": len(entities),
         "reference_count": reference_count,
         "relation_count": relation_count,
