@@ -4,7 +4,7 @@
 
 Active after Phase 1 completion under the explicitly labeled AI-reviewed policy.
 
-The first workstream built the deterministic kernel and bounded bridge receiver through PR #19. The second workstream accepted the exact non-live Principia v0.2 importer baseline through PRs #20 and #21. The third workstream accepted the later Principia Phase 16–18 offline evidence audit through PRs #22 and #23. The fourth workstream accepted strict serialized-runtime admission and canonical failure semantics through PRs #24 and #25. The fifth workstream measures deterministic scale and validates multi-batch replay and recovery.
+The first workstream built the deterministic kernel and bounded bridge receiver through PR #19. The second workstream accepted the exact non-live Principia v0.2 importer baseline through PRs #20 and #21. The third workstream accepted the later Principia Phase 16–18 offline evidence audit through PRs #22 and #23. The fourth workstream accepted strict serialized-runtime admission and canonical failure semantics through PRs #24 and #25. The fifth workstream accepted deterministic scale, replay, and recovery through PRs #26 and #27. The sixth workstream is the Phase 2 closure candidate for replaceability, rollback, and retrieval entry.
 
 ## Goal
 
@@ -79,7 +79,7 @@ The accepted fourth workstream adds a strict public admission boundary for `atla
 
 ### Scale, replay, and recovery
 
-The fifth workstream candidate adds:
+The accepted fifth workstream adds:
 
 - a deterministic temporary corpus with 1,026 exact entity revisions;
 - 256 synthetic external dependents sharing a measurable impact fan-out;
@@ -93,10 +93,24 @@ The fifth workstream candidate adds:
 
 The synthetic corpus is generated only in temporary test directories. It does not expand canonical Atlas content. Replay evidence remains `live: false` and performs no repository or status mutation.
 
+### Closure, replaceability, and retrieval entry
+
+The sixth workstream candidate adds:
+
+- `atlas-kernel-portable-snapshot/0.1` without generated runtime indexes;
+- an independent `PortableKernelRepository` query implementation;
+- exact, relation, provenance, and impact equivalence checks for every canonical entity revision;
+- deterministic migration and rollback rebuilding from canonical Markdown;
+- `atlas-phase2-completion-report/0.1`;
+- an explicit recommendation to proceed only to bounded Phase 3 retrieval evaluation;
+- deterministic blocks on production claims, live synchronization, unversioned lookup, canonical writes, and premature vector-database commitment.
+
+The candidate does not mark Phase 2 complete by itself. Completion requires exact-head workflow success, merge, and a separate accepted governance record.
+
 ## Non-goals
 
 - polished UI;
-- specialized retrieval or ranking;
+- specialized retrieval or ranking during Phase 2;
 - vector database selection;
 - synchronization;
 - plugins;
@@ -127,11 +141,13 @@ See:
 - `docs/phase-2/offline-protocol-audit.md`;
 - `docs/phase-2/runtime-hardening.md`;
 - `docs/phase-2/scale-replay.md`;
+- `docs/phase-2/completion-report.md`;
 - `docs/phase-2/benchmark-policy.md`;
 - `content/fixtures/phase2_bridge/`;
 - `content/fixtures/phase2_protocol/`;
 - `content/fixtures/phase2_runtime/`;
 - `content/fixtures/phase2_scale/`;
+- `content/fixtures/phase2_closure/`;
 - `tools/phase2_kernel/`.
 
 ## Exit evidence
@@ -150,3 +166,5 @@ Phase 2 closes only when:
 - receipt replay and recovery semantics are deterministic;
 - the selected kernel remains replaceable;
 - a completion report recommends or rejects retrieval work.
+
+The sixth workstream is the candidate evidence for the final two criteria. Retrieval remains frozen until that evidence is accepted.
