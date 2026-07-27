@@ -57,26 +57,15 @@ def _load_object(path: Path) -> dict[str, Any]:
     except (OSError, json.JSONDecodeError) as exc:
         raise KernelError("E-POLICY-JSON", str(exc), str(path)) from exc
     if not isinstance(value, dict):
-        raise KernelError("E-POLICY-JSON-OBJECT", "document must be an object", str(path))
+        raise KernelError(
+            "E-POLICY-JSON-OBJECT",
+            "document must be an object",
+            str(path),
+        )
     return value
 
 
-def _safe_relative_path(value: Any, root: Path, field: str) -> str:
-    if not isinstance(value, str) or not value:
-        raise KernelError("E-SNAPSHOT-PATH", f"{field} must be a non-empty path")
-    candidate = Path(value)
-    if candidate.is_absolute() or ".." in candidate.parts:
-        raise KernelError("E-SNAPSHOT-PATH-ESCAPE", f"{field} escapes the repository root")
-    resolved = (root / candidate).resolve()
-    try:
-        resolved.relative_to(root)
-    except ValueError as exc:
-        raise KernelError("E-SNAPSHOT-PATH-ESCAPE", f"{field} escapes the repository root") from exc
-    return candidate.as_posix()
-
-
-def validate_pinned_snapshot(snapshot_path: Path) -> dict[str, Any]:
-    snapshot = _load_object(snapshot_path)
+def _validate_snapshot_identity(snapshot: Mapping[str, Any]) -> None:
     if snapshot.get("contract") != SNAPSHOT_CONTRACT:
         raise KernelError("E-SNAPSHOT-CONTRACT", "unsupported pinned snapshot contract")
     if snapshot.get("source_repository") != PRINCIPIA_REPOSITORY:
@@ -89,21 +78,63 @@ def validate_pinned_snapshot(snapshot_path: Path) -> dict[str, Any]:
         raise KernelError("E-SNAPSHOT-MODE", "unsupported snapshot mode")
     if snapshot.get("live") is not False:
         raise KernelError("E-SNAPSHOT-LIVE", "pinned snapshot must remain live=false")
+
+
+def _safe_relative_path(value: Any, root: Path, field: str) -> str:
+    if not isinstance(value, str) or not value:
+        raise KernelError("E-SNAPSHOT-PATH", f"{field} must be a non-empty path")
+    candidate = Path(value)
+    if candidate.is_absolute() or ".." in candidate.parts:
+        raise KernelError(
+            "E-SNAPSHOT-PATH-ESCAPE",
+            f"{field} escapes the repository root",
+        )
+    resolved = (root / candidate).resolve()
+    try:
+        resolved.relative_to(root)
+    except ValueError as exc:
+        raise KernelError(
+            "E-SNAPSHOT-PATH-ESCAPE",
+            f"{field} escapes the repository root",
+        ) from exc
+    return candidate.as_posix()
+
+
+def validate_pinned_snapshot(snapshot_path: Path) -> dict[str, Any]:
+    snapshot = _load_object(snapshot_path)
+    _validate_snapshot_identity(snapshot)
     files = snapshot.get("files")
     if not isinstance(files, list) or len(files) != 9:
-        raise KernelError("E-SNAPSHOT-FILES", "accepted snapshot must contain exactly nine files")
+        raise KernelError(
+            "E-SNAPSHOT-FILES",
+            "accepted snapshot must contain exactly nine files",
+        )
     root = snapshot_path.resolve().parents[3]
     source_paths: set[str] = set()
     fixture_paths: set[str] = set()
     for index, item in enumerate(files):
         if not isinstance(item, Mapping):
             raise KernelError("E-SNAPSHOT-FILE", f"files[{index}] must be an object")
-        source = _safe_relative_path(item.get("source_path"), root, f"files[{index}].source_path")
-        fixture = _safe_relative_path(item.get("fixture_path"), root, f"files[{index}].fixture_path")
+        source = _safe_relative_path(
+            item.get("source_path"),
+            root,
+            f"files[{index}].source_path",
+        )
+        fixture = _safe_relative_path(
+            item.get("fixture_path"),
+            root,
+            f"files[{index}].fixture_path",
+        )
         if not source.startswith("integration/principia-atlas/"):
-            raise KernelError("E-SNAPSHOT-SOURCE-PATH", "source path is outside the Principia integration boundary")
+            raise KernelError(
+                "E-SNAPSHOT-SOURCE-PATH",
+                "source path is outside the Principia integration boundary",
+            )
         if not fixture.startswith("content/fixtures/"):
-            raise KernelError("E-SNAPSHOT-FIXTURE-PATH", "fixture path is outside Atlas fixture storage")
+            raise KernelError(
+                "E-SNAPSHOT-FIXTURE-PATH",
+                "fixture path is outside Atlas fixture storage",
+            )
         if source in source_paths or fixture in fixture_paths:
             raise KernelError("E-SNAPSHOT-DUPLICATE", "snapshot paths must be unique")
         source_paths.add(source)
@@ -120,7 +151,10 @@ def load_pinned_snapshot_documents(
 
 def validate_pinned_batch(batch: Mapping[str, Any]) -> None:
     if batch.get("atlas_snapshot") != EXPECTED_ATLAS_SNAPSHOT:
-        raise KernelError("E-BATCH-ATLAS-SNAPSHOT", "batch does not pin the complete accepted Atlas snapshot")
+        raise KernelError(
+            "E-BATCH-ATLAS-SNAPSHOT",
+            "batch does not pin the complete accepted Atlas snapshot",
+        )
 
 
 def validate_pinned_receipt(receipt: Mapping[str, Any]) -> None:
@@ -129,11 +163,20 @@ def validate_pinned_receipt(receipt: Mapping[str, Any]) -> None:
         raise KernelError("E-RECEIPT-IMPORTER", "atlas_importer must be an object")
     for field, expected in EXPECTED_RECEIPT_IMPORTER.items():
         if importer.get(field) != expected:
-            raise KernelError("E-RECEIPT-IMPORTER", f"receipt importer field {field!r} mismatch")
+            raise KernelError(
+                "E-RECEIPT-IMPORTER",
+                f"receipt importer field {field!r} mismatch",
+            )
     if importer.get("implementation") != EXPECTED_IMPLEMENTATION:
-        raise KernelError("E-RECEIPT-IMPLEMENTATION", "receipt implementation baseline mismatch")
+        raise KernelError(
+            "E-RECEIPT-IMPLEMENTATION",
+            "receipt implementation baseline mismatch",
+        )
     if importer.get("governance_finalization") != EXPECTED_GOVERNANCE:
-        raise KernelError("E-RECEIPT-GOVERNANCE", "receipt governance baseline mismatch")
+        raise KernelError(
+            "E-RECEIPT-GOVERNANCE",
+            "receipt governance baseline mismatch",
+        )
 
 
 def _unique_nested_ids(
@@ -148,11 +191,17 @@ def _unique_nested_ids(
         raise KernelError(code, f"{collection_field} must be a list")
     seen: set[str] = set()
     for index, wrapper in enumerate(entries):
-        if not isinstance(wrapper, Mapping) or not isinstance(wrapper.get(object_field), Mapping):
+        if not isinstance(wrapper, Mapping) or not isinstance(
+            wrapper.get(object_field),
+            Mapping,
+        ):
             raise KernelError(code, f"{collection_field}[{index}] is malformed")
         identifier = wrapper[object_field].get(id_field)
         if not isinstance(identifier, str) or not identifier:
-            raise KernelError(code, f"{collection_field}[{index}] has no {id_field}")
+            raise KernelError(
+                code,
+                f"{collection_field}[{index}] has no {id_field}",
+            )
         if identifier in seen:
             raise KernelError(code, f"duplicate {id_field} {identifier!r}")
         seen.add(identifier)
@@ -164,7 +213,13 @@ def validate_pinned_protocol(
     chain: Mapping[str, Any],
     reconciliation: Mapping[str, Any],
 ) -> None:
-    _unique_nested_ids(event_stream, "events", "event", "event_id", "E-EVENT-DUPLICATE")
+    _unique_nested_ids(
+        event_stream,
+        "events",
+        "event",
+        "event_id",
+        "E-EVENT-DUPLICATE",
+    )
     _unique_nested_ids(
         acknowledgement_stream,
         "acknowledgements",
@@ -176,10 +231,16 @@ def validate_pinned_protocol(
         raise KernelError("E-CHAIN-MODE", "unsupported chain mode")
     source = reconciliation.get("source")
     if not isinstance(source, Mapping):
-        raise KernelError("E-RECONCILIATION-SOURCE", "reconciliation source must be an object")
+        raise KernelError(
+            "E-RECONCILIATION-SOURCE",
+            "reconciliation source must be an object",
+        )
     for field, expected in EXPECTED_PHASE17_SOURCE.items():
         if source.get(field) != expected:
-            raise KernelError("E-RECONCILIATION-PROVENANCE", f"Phase 17 provenance field {field!r} mismatch")
+            raise KernelError(
+                "E-RECONCILIATION-PROVENANCE",
+                f"Phase 17 provenance field {field!r} mismatch",
+            )
 
 
 def import_pinned_offline_batch(
@@ -202,9 +263,15 @@ def audit_pinned_offline_protocol(
     export_documents: Mapping[str, bytes],
     repository: KernelRepository,
 ) -> dict[str, Any]:
+    _validate_snapshot_identity(snapshot)
     validate_pinned_batch(batch)
     validate_pinned_receipt(principia_receipt)
-    validate_pinned_protocol(event_stream, acknowledgement_stream, chain, reconciliation)
+    validate_pinned_protocol(
+        event_stream,
+        acknowledgement_stream,
+        chain,
+        reconciliation,
+    )
     report = audit_offline_protocol(
         batch,
         principia_receipt,
