@@ -69,6 +69,21 @@ class OfflineProtocolTests(unittest.TestCase):
             self.repository,
         )
 
+    def write_snapshot_copy(self, snapshot: dict) -> Path:
+        handle = tempfile.NamedTemporaryFile(
+            mode="w",
+            suffix=".json",
+            dir=FIXTURES,
+            encoding="utf-8",
+            delete=False,
+        )
+        try:
+            json.dump(snapshot, handle)
+            handle.flush()
+            return Path(handle.name)
+        finally:
+            handle.close()
+
     def test_snapshot_is_exact_and_offline(self) -> None:
         self.assertEqual(self.snapshot["source_commit"], EXPECTED_PRINCIPIA_COMMIT)
         self.assertEqual(self.snapshot["source_pull_request"], 25)
@@ -78,16 +93,22 @@ class OfflineProtocolTests(unittest.TestCase):
     def test_snapshot_fixture_path_cannot_escape_repository(self) -> None:
         snapshot = copy.deepcopy(self.snapshot)
         snapshot["files"][0]["fixture_path"] = "../../etc/passwd"
-        with tempfile.NamedTemporaryFile(
-            mode="w",
-            suffix=".json",
-            dir=FIXTURES,
-            encoding="utf-8",
-        ) as handle:
-            json.dump(snapshot, handle)
-            handle.flush()
+        path = self.write_snapshot_copy(snapshot)
+        try:
             with self.assertRaisesRegex(KernelError, "E-SNAPSHOT-PATH-ESCAPE"):
-                validate_pinned_snapshot(Path(handle.name))
+                validate_pinned_snapshot(path)
+        finally:
+            path.unlink(missing_ok=True)
+
+    def test_snapshot_mapping_cannot_drift(self) -> None:
+        snapshot = copy.deepcopy(self.snapshot)
+        snapshot["files"][0]["source_blob_sha"] = "0" * 40
+        path = self.write_snapshot_copy(snapshot)
+        try:
+            with self.assertRaisesRegex(KernelError, "E-SNAPSHOT-MAPPING"):
+                validate_pinned_snapshot(path)
+        finally:
+            path.unlink(missing_ok=True)
 
     def test_atomic_batch_reimports_three_exact_artifacts(self) -> None:
         receipt = import_pinned_offline_batch(
