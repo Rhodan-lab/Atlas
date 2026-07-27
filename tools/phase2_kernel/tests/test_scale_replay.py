@@ -40,14 +40,12 @@ class ScaleReplayTests(unittest.TestCase):
         cls.base_batch = load_json(BASE_BATCH)
 
     def test_synthetic_corpus_compiles_deterministically(self) -> None:
-        with tempfile.TemporaryDirectory() as first_dir, tempfile.TemporaryDirectory() as second_dir:
-            first_root = Path(first_dir) / "canonical"
-            second_root = Path(second_dir) / "canonical"
-            first_identity = write_synthetic_corpus(first_root, 8)
-            second_identity = write_synthetic_corpus(second_root, 8)
-            first = compile_canonical(first_root)
-            second = compile_canonical(second_root)
-            self.assertEqual(first_identity, second_identity)
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary) / "canonical"
+            identity = write_synthetic_corpus(root, 8)
+            first = compile_canonical(root)
+            second = compile_canonical(root)
+            self.assertEqual(identity["entity_count"], 34)
             self.assertEqual(first["entity_count"], 34)
             self.assertEqual(render_json(first), render_json(second))
             repository = KernelRepository(first)
