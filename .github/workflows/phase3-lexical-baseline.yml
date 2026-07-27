@@ -44,7 +44,7 @@ jobs:
       - name: Run lexical baseline tests
         run: python -m unittest tools.phase3_retrieval.tests.test_lexical -v
 
-      - name: Generate lexical index, results, metrics, and report
+      - name: Generate and verify exact lexical evidence
         run: |
           python -m tools.phase3_retrieval.lexical \
             --query-set content/fixtures/phase3_retrieval/reference-query-set.v01.json \
@@ -55,44 +55,74 @@ jobs:
             --metric-output phase3-lexical-metrics.json \
             --report-output phase3-lexical-report.json
           python - <<'PY'
+          import hashlib
           import json
           from pathlib import Path
 
-          index = json.loads(Path('phase3-lexical-index.json').read_text(encoding='utf-8'))
-          results = json.loads(Path('phase3-lexical-results.json').read_text(encoding='utf-8'))
-          metrics = json.loads(Path('phase3-lexical-metrics.json').read_text(encoding='utf-8'))
-          report = json.loads(Path('phase3-lexical-report.json').read_text(encoding='utf-8'))
+          query_path = Path('content/fixtures/phase3_retrieval/reference-query-set.v01.json')
+          baseline = json.loads(
+              Path('content/fixtures/phase3_retrieval/lexical-baseline.json').read_text(encoding='utf-8')
+          )
+          index_path = Path('phase3-lexical-index.json')
+          result_path = Path('phase3-lexical-results.json')
+          metric_path = Path('phase3-lexical-metrics.json')
+          report_path = Path('phase3-lexical-report.json')
+          index = json.loads(index_path.read_text(encoding='utf-8'))
+          results = json.loads(result_path.read_text(encoding='utf-8'))
+          metrics = json.loads(metric_path.read_text(encoding='utf-8'))
+          report = json.loads(report_path.read_text(encoding='utf-8'))
 
-          assert index['contract'] == 'atlas-lexical-index/0.1'
-          assert index['entity_count'] == 34
+          assert baseline['contract'] == 'atlas-phase3-lexical-baseline/0.1'
+          assert baseline['mode'] == 'retrieval-evaluation'
+          assert baseline['quality_claim'] == 'bounded-reference-fixture-only'
+          assert baseline['python_artifacts_byte_identical'] is True
+          assert baseline['replaceable'] is True
+          assert baseline['rebuild_verified'] is True
+          assert baseline['live'] is False
+          assert baseline['repository_mutation'] is False
+          assert hashlib.sha256(query_path.read_bytes()).hexdigest() == baseline['query_set_sha256']
+
+          assert index['contract'] == baseline['index_contract'] == 'atlas-lexical-index/0.1'
+          assert index['source_digest'] == baseline['source_digest']
+          assert index['entity_count'] == baseline['entity_count'] == 34
+          assert len(index['corpus']['document_frequencies']) == baseline['term_count'] == 424
+          assert index['build_digest'] == baseline['index_build_digest']
+          assert hashlib.sha256(index_path.read_bytes()).hexdigest() == baseline['index_artifact_sha256']
           assert index['replaceable'] is True
           assert index['canonical_mutation'] is False
           assert index['live'] is False
-          assert len(index['build_digest']) == 64
           assert index['tokenizer']['stemming'] is False
           assert index['tokenizer']['query_expansion'] is False
           assert index['scoring']['algorithm'] == 'BM25F'
           assert index['scoring']['tie_break'] == 'exact-key-ascending'
 
           assert results['contract'] == 'atlas-retrieval-result-set/0.1'
-          assert results['query_set_id'] == 'retrieval-query-set:phase3-reference-en-v1'
-          assert results['query_set_version'] == 1
-          assert len(results['responses']) == 13
+          assert results['query_set_id'] == baseline['query_set_id']
+          assert results['query_set_version'] == baseline['query_set_version'] == 1
+          assert len(results['responses']) == baseline['query_count'] == 13
+          assert hashlib.sha256(result_path.read_bytes()).hexdigest() == baseline['result_set_sha256']
           assert results['advisory_only'] is True
           assert results['live'] is False
           assert results['repository_mutation'] is False
 
           assert metrics['contract'] == 'atlas-retrieval-metric-report/0.1'
-          assert metrics['cutoff'] == 5
-          assert metrics['evaluated_ranked_queries'] == 12
-          assert metrics['expected_error_queries'] == 1
-          assert metrics['metrics']['unavailable_revision_rate'] == 1.0
-          assert all(0.0 <= value <= 1.0 for value in metrics['metrics'].values())
+          assert metrics['cutoff'] == baseline['cutoff'] == 5
+          assert metrics['evaluated_ranked_queries'] == baseline['ranked_query_count'] == 12
+          assert metrics['expected_error_queries'] == baseline['expected_error_query_count'] == 1
+          assert metrics['result_set_sha256'] == baseline['result_set_sha256']
+          assert metrics['metrics'] == baseline['metrics']
+          assert metrics['tie_count'] == baseline['tie_count'] == 0
+          assert hashlib.sha256(metric_path.read_bytes()).hexdigest() == baseline['metric_artifact_sha256']
 
           assert report['contract'] == 'atlas-lexical-baseline-report/0.1'
           assert report['decision'] == 'lexical-baseline-candidate'
-          assert report['entity_count'] == 34
-          assert report['query_count'] == 13
+          assert report['entity_count'] == baseline['entity_count']
+          assert report['query_count'] == baseline['query_count']
+          assert report['cutoff'] == baseline['cutoff']
+          assert report['limit'] == baseline['limit'] == 10
+          assert report['metrics'] == baseline['metrics']
+          assert report['result_set_sha256'] == baseline['result_set_sha256']
+          assert report['tie_count'] == baseline['tie_count']
           assert report['deterministic_index'] is True
           assert report['rebuild_verified'] is True
           assert report['replaceable'] is True
@@ -100,16 +130,17 @@ jobs:
           assert report['embeddings'] is False
           assert report['vector_database'] is False
           assert report['judgment_specific_tuning'] is False
-          assert report['quality_claim'] == 'bounded-reference-fixture-only'
+          assert report['quality_claim'] == baseline['quality_claim']
           assert report['advisory_only'] is True
           assert report['live'] is False
           assert report['repository_mutation'] is False
+          assert hashlib.sha256(report_path.read_bytes()).hexdigest() == baseline['report_artifact_sha256']
 
           print('lexical-build-digest=' + index['build_digest'])
           print('lexical-result-set-sha256=' + metrics['result_set_sha256'])
           print('lexical-tie-count=' + str(metrics['tie_count']))
           print('lexical-metrics=' + json.dumps(metrics['metrics'], sort_keys=True, separators=(',', ':')))
-          print('phase3-lexical=pass; entities=34; queries=13; cutoff=5; replaceable=true; embeddings=false; live=false')
+          print('phase3-lexical=pass; entities=34; queries=13; cutoff=5; exact-baseline=true; replaceable=true; embeddings=false; live=false')
           PY
 
       - name: Upload lexical baseline evidence
