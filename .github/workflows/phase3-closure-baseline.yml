@@ -1,0 +1,92 @@
+name: Phase 3 Closure Baseline
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "content/canonical/**"
+      - "content/fixtures/phase3_retrieval/**"
+      - "docs/phase-3/**"
+      - "tools/phase2_kernel/**"
+      - "tools/phase3_retrieval/**"
+      - ".github/workflows/phase3-closure-baseline.yml"
+  pull_request:
+    paths:
+      - "content/canonical/**"
+      - "content/fixtures/phase3_retrieval/**"
+      - "docs/phase-3/**"
+      - "tools/phase2_kernel/**"
+      - "tools/phase3_retrieval/**"
+      - ".github/workflows/phase3-closure-baseline.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  completion-baseline:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+
+      - name: Install pinned dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+
+      - name: Verify pinned Phase 3 completion semantics
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m unittest \
+            tools.phase3_retrieval.tests.test_completion_baseline \
+            -v 2>&1 | tee phase3-completion-baseline-tests.txt
+
+      - name: Regenerate completion report
+        run: |
+          python -m tools.phase3_retrieval.closure \
+            --output phase3-completion-report.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          baseline = json.loads(
+              Path('content/fixtures/phase3_retrieval/phase3-completion-baseline.json').read_text(encoding='utf-8')
+          )
+          report = json.loads(
+              Path('phase3-completion-report.json').read_text(encoding='utf-8')
+          )
+          assert report['decision'] == baseline['decision']
+          assert report['preferred_bounded_retrieval'] == baseline['preferred_bounded_retrieval']
+          assert report['semantic_infrastructure_decision'] == baseline['semantic_infrastructure_decision']
+          assert report['accepted_workstreams'] == baseline['accepted_workstreams']
+          assert report['exit_gates'] == baseline['exit_gates']
+          assert report['phase4_entry_boundary'] == baseline['phase4_entry_boundary']
+          assert report['evidence']['lexical']['index_build_digest'] == baseline['expected_evidence']['lexical']['index_build_digest']
+          assert report['evidence']['structured']['index_build_digest'] == baseline['expected_evidence']['structured']['index_build_digest']
+          assert report['evidence']['rank_fusion']['manifest_build_digest'] == baseline['expected_evidence']['rank_fusion']['manifest_build_digest']
+          assert report['evidence']['research_foundations']['report_digest'] == baseline['expected_evidence']['research_foundations']['report_digest']
+          assert len(report['report_digest']) == 64
+          print('phase3-completion-self-digest=' + report['report_digest'])
+          print('phase3-completion-baseline=pass; decision=' + report['decision'])
+          PY
+
+      - name: Upload completion baseline evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase3-completion-baseline-python-${{ matrix.python-version }}
+          path: |
+            phase3-completion-baseline-tests.txt
+            phase3-completion-report.json
+          if-no-files-found: error
+          retention-days: 30
