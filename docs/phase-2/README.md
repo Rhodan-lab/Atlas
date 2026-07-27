@@ -4,7 +4,7 @@
 
 Active after Phase 1 completion under the explicitly labeled AI-reviewed policy.
 
-The first workstream built the deterministic kernel and bounded bridge receiver through PR #19. The second workstream accepted the exact non-live Principia v0.2 importer baseline through PRs #20 and #21. The third workstream audits the later Principia Phase 16–18 offline evidence chain against fresh Atlas computation.
+The first workstream built the deterministic kernel and bounded bridge receiver through PR #19. The second workstream accepted the exact non-live Principia v0.2 importer baseline through PRs #20 and #21. The third workstream accepted the later Principia Phase 16–18 offline evidence audit through PRs #22 and #23. The fourth workstream hardens serialized-runtime admission and canonical failure semantics.
 
 ## Goal
 
@@ -50,7 +50,7 @@ The old ID-only shape remains an explicit rejection fixture. The merged Principi
 
 ### Offline multi-artifact and protocol audit
 
-The current workstream pins the Principia repository at commit `4ecb41ad4f9f524e83cc0db43f672bd9dcf3b67a`, which contains the merged Phase 18 offline reconciliation simulation. It adds:
+The accepted workstream pins the Principia repository at commit `4ecb41ad4f9f524e83cc0db43f672bd9dcf3b67a`, which contains the merged Phase 18 offline reconciliation simulation. It adds:
 
 - byte-exact Git-blob verification for nine pinned Principia files;
 - atomic re-import of three Principia artifacts;
@@ -64,6 +64,18 @@ The current workstream pins the Principia repository at commit `4ecb41ad4f9f524e
 - deterministic failure tests for partial batches, digest corruption, stale artifact references, and `live: true`.
 
 The lifecycle events are accepted only as `bounded-synthetic` test fixtures. They do not establish that Atlas actually deprecated or retracted an entity. The audit reports `verified-no-mutation` and never changes canonical Atlas content, lifecycle state, Principia pedagogical status, Principia release status, or either repository.
+
+### Runtime hardening and failure semantics
+
+The active candidate adds a strict public admission boundary for `atlas-kernel-runtime/0.1`.
+
+- `KernelRepository` validates the runtime before indexing it;
+- `runtime-validate` emits `atlas-runtime-validation-report/0.1`;
+- entity identity, ordering, metadata, digests, references, relations, revision indexes, and reverse indexes must agree exactly;
+- malformed records are rejected rather than dropped or repaired;
+- missing canonical references and malformed authored structures fail before runtime emission;
+- deterministic corruption manifests cover runtime and canonical failure cases;
+- validation remains read-only with `mutation: false`.
 
 ## Non-goals
 
@@ -97,9 +109,11 @@ See:
 - `docs/phase-2/bridge-receiver.md`;
 - `docs/phase-2/principia-v02-compatibility.md`;
 - `docs/phase-2/offline-protocol-audit.md`;
+- `docs/phase-2/runtime-hardening.md`;
 - `docs/phase-2/benchmark-policy.md`;
 - `content/fixtures/phase2_bridge/`;
 - `content/fixtures/phase2_protocol/`;
+- `content/fixtures/phase2_runtime/`;
 - `tools/phase2_kernel/`.
 
 ## Exit evidence

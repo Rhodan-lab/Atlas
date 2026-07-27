@@ -1,0 +1,76 @@
+{
+  "contract": "atlas-runtime-failure-fixtures/0.1",
+  "mode": "runtime-hardening-candidate",
+  "cases": [
+    {
+      "name": "source-contract-mismatch",
+      "expected_error": "E-RUNTIME-SOURCE-CONTRACT"
+    },
+    {
+      "name": "source-digest-malformed",
+      "expected_error": "E-RUNTIME-DIGEST"
+    },
+    {
+      "name": "source-digest-mismatch",
+      "expected_error": "E-RUNTIME-SOURCE-DIGEST"
+    },
+    {
+      "name": "entity-count-mismatch",
+      "expected_error": "E-RUNTIME-ENTITY-COUNT"
+    },
+    {
+      "name": "duplicate-entity",
+      "expected_error": "E-RUNTIME-DUPLICATE"
+    },
+    {
+      "name": "entity-key-mismatch",
+      "expected_error": "E-RUNTIME-KEY-MISMATCH"
+    },
+    {
+      "name": "entity-order-nondeterministic",
+      "expected_error": "E-RUNTIME-ENTITY-ORDER"
+    },
+    {
+      "name": "metadata-identity-mismatch",
+      "expected_error": "E-RUNTIME-METADATA"
+    },
+    {
+      "name": "reference-order-nondeterministic",
+      "expected_error": "E-RUNTIME-REFERENCE-ORDER"
+    },
+    {
+      "name": "reference-target-missing",
+      "expected_error": "E-RUNTIME-REFERENCE-TARGET"
+    },
+    {
+      "name": "relation-target-missing",
+      "expected_error": "E-RUNTIME-RELATION-TARGET"
+    },
+    {
+      "name": "relation-reference-drift",
+      "expected_error": "E-RUNTIME-RELATION-REFERENCE"
+    },
+    {
+      "name": "revision-index-missing",
+      "expected_error": "E-RUNTIME-REVISION-INDEX"
+    },
+    {
+      "name": "revision-index-orphan",
+      "expected_error": "E-RUNTIME-REVISION-INDEX"
+    },
+    {
+      "name": "reverse-index-missing",
+      "expected_error": "E-RUNTIME-REVERSE-INDEX"
+    },
+    {
+      "name": "reverse-dependent-missing",
+      "expected_error": "E-RUNTIME-REVERSE-INDEX"
+    },
+    {
+      "name": "reverse-index-drift",
+      "expected_error": "E-RUNTIME-REVERSE-INDEX"
+    }
+  ],
+  "mutation": false,
+  "live": false
+}

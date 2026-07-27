@@ -14,7 +14,6 @@ from .kernel import (
     EXTERNAL_DEPENDENT_CONTRACT,
     RUNTIME_CONTRACT,
     KernelError,
-    KernelRepository,
     impact_report,
     import_principia_export,
     load_json,
@@ -46,6 +45,11 @@ from .offline_protocol_policy import (
     validate_pinned_receipt,
     validate_pinned_snapshot,
 )
+from .repository import (
+    RUNTIME_VALIDATION_CONTRACT,
+    KernelRepository,
+    validate_runtime,
+)
 
 __all__ = [
     "ATLAS_BATCH_RECEIPT_CONTRACT",
@@ -62,6 +66,7 @@ __all__ = [
     "PRINCIPIA_EXTERNAL_DEPENDENT_CONTRACT",
     "PRINCIPIA_RECONCILIATION_CONTRACT",
     "RUNTIME_CONTRACT",
+    "RUNTIME_VALIDATION_CONTRACT",
     "SNAPSHOT_CONTRACT",
     "KernelError",
     "KernelRepository",
@@ -85,5 +90,6 @@ __all__ = [
     "validate_pinned_protocol",
     "validate_pinned_receipt",
     "validate_pinned_snapshot",
+    "validate_runtime",
     "verify_principia_receipt",
 ]

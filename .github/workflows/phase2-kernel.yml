@@ -7,6 +7,7 @@ on:
       - "content/canonical/**"
       - "content/fixtures/phase2_bridge/**"
       - "content/fixtures/phase2_protocol/**"
+      - "content/fixtures/phase2_runtime/**"
       - "docs/phase-2/**"
       - "tools/phase2_kernel/**"
       - ".github/workflows/phase2-kernel.yml"
@@ -15,6 +16,7 @@ on:
       - "content/canonical/**"
       - "content/fixtures/phase2_bridge/**"
       - "content/fixtures/phase2_protocol/**"
+      - "content/fixtures/phase2_runtime/**"
       - "docs/phase-2/**"
       - "tools/phase2_kernel/**"
       - ".github/workflows/phase2-kernel.yml"
@@ -64,6 +66,34 @@ jobs:
           python -m tools.phase2_kernel.cli compile --output /tmp/atlas-runtime-a.json
           python -m tools.phase2_kernel.cli compile --output /tmp/atlas-runtime-b.json
           cmp /tmp/atlas-runtime-a.json /tmp/atlas-runtime-b.json
+
+      - name: Strictly validate the compiled runtime
+        run: |
+          python -m tools.phase2_kernel.cli runtime-validate \
+            /tmp/atlas-runtime-a.json \
+            --output phase2-runtime-validation.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path('phase2-runtime-validation.json').read_text(encoding='utf-8'))
+          assert report['contract'] == 'atlas-runtime-validation-report/0.1'
+          assert report['decision'] == 'valid'
+          assert report['entity_count'] >= 34
+          assert report['reference_count'] > 0
+          assert report['relation_count'] > 0
+          assert report['reverse_edge_count'] > 0
+          assert report['mutation'] is False
+          print('atlas-runtime-admission=pass; decision=valid; mutation=false')
+          PY
+
+      - name: Upload runtime validation report
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase2-runtime-validation-python-${{ matrix.python-version }}
+          path: phase2-runtime-validation.json
+          if-no-files-found: error
+          retention-days: 30
 
       - name: Validate merged Principia PR 16 candidate
         run: |
