@@ -19,7 +19,8 @@ Phase 1 is closed under an explicitly **AI-reviewed** policy. No human or expert
 - optional admission boundary — PR #17, commit `01feffc696cc207305ef74c92d600f37f1e240a4`;
 - Phase 1 AI review and Phase 2 activation — PR #18, commit `f90fa53f99ec9780451c9c50c57625759ba3b2b5`;
 - first Phase 2 kernel and bridge receiver — PR #19, commit `8f1e473578d9086a73dae44f0b6001b246cfbc20`;
-- Principia v0.2 importer baseline — PR #20, commit `1cc4aec6908a8703a7f505478329c633a23b4ef9`.
+- Principia v0.2 importer implementation — PR #20, commit `1cc4aec6908a8703a7f505478329c633a23b4ef9`;
+- accepted Principia importer governance baseline — PR #21, commit `9370cc746e9756e433ac3772d56d079c9803b144`.
 
 ## Language policy
 
@@ -117,7 +118,7 @@ This receiver is not a live integration. It does not clone Principia, call Princ
 
 ## Phase 2 workstream 2 — accepted
 
-PR #20 established and validated the Principia importer baseline using the exact export merged through Principia PR #16.
+PR #20 established and validated the Principia importer baseline using the exact export merged through Principia PR #16. PR #21 finalized the accepted governance record.
 
 Atlas importer baseline:
 
@@ -127,6 +128,8 @@ mode: importer-candidate
 live: false
 accepted_pr: 20
 accepted_merge_commit: 1cc4aec6908a8703a7f505478329c633a23b4ef9
+governance_pr: 21
+governance_merge_commit: 9370cc746e9756e433ac3772d56d079c9803b144
 ```
 
 Pinned Principia source identity:
@@ -170,6 +173,67 @@ Atlas reports both the Principia-declared action and the effective lifecycle act
 
 PR #20 measurements on the 34-entity corpus passed their regression budgets on Python 3.11 and 3.13. These measurements are operational small-corpus evidence, not production-scale claims.
 
+## Phase 2 workstream 3 — offline protocol audit candidate
+
+Principia was inspected before this workstream began. Its current main commit `4ecb41ad4f9f524e83cc0db43f672bd9dcf3b67a` contains the merged Phase 18 offline reconciliation simulation and earlier Phase 16–17 evidence.
+
+External-source observation:
+
+- Principia PR #25 is merged at that commit;
+- the pinned Phase 18 artifacts exist on main;
+- Principia `PROJECT_STATE.md` still contains candidate-era exact-head-validation-pending wording;
+- Atlas records that inconsistency but does not change or reinterpret Principia governance.
+
+The candidate extends Atlas from one imported external dependent to a pinned offline evidence chain containing:
+
+```text
+3 Principia artifact exports
+1 atomic multi-artifact batch
+1 Principia batch receipt
+2 bounded-synthetic lifecycle events
+2 Principia acknowledgements
+1 event/acknowledgement digest chain
+1 reconciliation report
+```
+
+Candidate state:
+
+```yaml
+snapshot_contract: atlas-principia-offline-snapshot/0.1
+batch_receipt_contract: atlas-principia-offline-batch-receipt/0.1
+protocol_audit_contract: atlas-principia-offline-protocol-audit/0.1
+mode: offline-protocol-audit-candidate
+live: false
+fixture_kind: bounded-synthetic
+```
+
+The audit:
+
+- verifies exact Principia source paths and Git blob SHAs;
+- atomically re-imports `principia:failure-pattern:feedback-instability@1`, `principia:investigation:room-cooling@1`, and `principia:system-dossier:refrigerator@1`;
+- compares all normalized records against Principia's Phase 16 receipt;
+- independently recomputes lifecycle fan-out from the imported dependency records;
+- verifies event and acknowledgement digests, order, predecessors, and chain heads;
+- rejects weakened actions and affected-artifact-set drift;
+- verifies the Phase 18 reconciliation report;
+- rejects partial batches, corrupted exports, stale reconciliation references, automatic mutation, status inheritance, and `live: true`.
+
+The two lifecycle events are Principia-authored `bounded-synthetic` fixtures. Atlas does not accept them as real lifecycle transitions and does not change the actual status of `concept:en:feedback@1` or `claim:en:model-oscillation-does-not-prove-real-system@1`.
+
+A passing audit may report only:
+
+```yaml
+decision: verified-no-mutation
+record_count: 3
+event_count: 2
+acknowledgement_count: 2
+reconciled_count: 2
+live: false
+automatic_status_change: false
+automatic_release_action: false
+repository_mutation: false
+```
+
 ## Principia & Atlas boundary
 
 Atlas is the knowledge and governance layer of the future **Principia & Atlas** system.
@@ -178,6 +242,7 @@ Atlas is the knowledge and governance layer of the future **Principia & Atlas** 
 - Principia owns causal explanation, learning pathways, investigations, simulations, system dossiers, failure analysis, and design experiences.
 - Principia may reference exact Atlas revisions.
 - Atlas may report dependency impact when upstream knowledge changes.
+- Principia may acknowledge an offline impact report, but that acknowledgement does not command or mutate Atlas.
 - Neither repository inherits the other repository's status automatically.
 - The repositories remain separate and independently buildable.
 - No live cross-repository dependency is declared during Phase 2.
@@ -195,6 +260,7 @@ Still frozen:
 - automatic conversion of AI review into human verification;
 - direct repository merger with Principia;
 - live Principia dependency;
+- accepting external synthetic events as canonical Atlas lifecycle history;
 - automatic status or release mutation;
 - treating prototype runtime formats as canonical before kernel evaluation.
 
@@ -207,16 +273,19 @@ Allowed:
 - optional human verification that remains separately labeled;
 - read-only exact-revision Principia compatibility;
 - pinned external fixtures and impact reports;
+- atomic offline multi-artifact import tests;
+- bounded-synthetic event and acknowledgement audits;
 - lifecycle escalation reporting;
 - benchmark and regression maintenance.
 
 ## Immediate next actions
 
-1. add malformed runtime and missing canonical-reference fixtures beyond bridge-specific cases;
-2. build a larger deterministic synthetic corpus for scaled benchmarks;
-3. test multiple external dependents and mixed lifecycle states;
-4. define bounded deprecation and retraction event fixtures without activating synchronization;
-5. keep `live: false` until independent machine contracts pass in both repositories and a separate activation decision is recorded;
-6. produce the Phase 2 completion report before retrieval work.
+1. validate the offline protocol audit candidate on Python 3.11 and 3.13 and all repository-wide workflows;
+2. merge the workstream only if the exact tested head remains unchanged and all gates pass;
+3. add malformed runtime and missing canonical-reference fixtures beyond bridge-specific cases;
+4. build a larger deterministic synthetic corpus for scaled benchmarks;
+5. test multiple independent batches, receipt-chain continuation, idempotent replay, and conflicting sequence recovery;
+6. keep `live: false` until independent machine contracts pass in both repositories and a separate activation decision is recorded;
+7. produce the Phase 2 completion report before retrieval work.
 
-**Phase 1 is complete under the AI-reviewed policy. Phase 2 is active. PR #19 and PR #20 are accepted. The Principia v0.2 importer baseline is recorded as `mode: importer-candidate` with `live: false`. Human verification remains optional and must never be implied when it did not occur.**
+**Phase 1 is complete under the AI-reviewed policy. Phase 2 is active. PRs #19–#21 are accepted. The offline multi-artifact and lifecycle-protocol audit is a non-live candidate and does not establish real Atlas lifecycle transitions or human verification.**
