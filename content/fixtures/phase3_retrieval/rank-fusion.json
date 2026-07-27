@@ -2,7 +2,7 @@
   "accepted_judgments_unchanged": true,
   "additional_index_documents": 0,
   "additional_index_terms": 0,
-  "candidate_contract": "atlas-phase3-rank-fusion-candidate/0.1",
+  "contract": "atlas-phase3-rank-fusion-candidate/0.1",
   "cutoff": 5,
   "decision": "rejected",
   "embeddings": false,
