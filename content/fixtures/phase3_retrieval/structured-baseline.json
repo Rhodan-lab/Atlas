@@ -1,7 +1,7 @@
 {
   "accepted_judgments_unchanged": true,
-  "baseline_contract": "atlas-phase3-structured-baseline/0.1",
   "canonical_body_indexed": false,
+  "contract": "atlas-phase3-structured-baseline/0.1",
   "cutoff": 5,
   "entity_count": 34,
   "expected_error_query_count": 1,
