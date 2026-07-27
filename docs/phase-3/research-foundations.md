@@ -139,6 +139,70 @@ The positive filters cover:
 3. recommender evidence with explicit `contextualizes` role;
 4. recommender claims and synthesis records for a saved research trail.
 
+## Pinned candidate evidence
+
+The exact evidence is pinned in `content/fixtures/phase3_retrieval/research-foundations-baseline.json`.
+
+```yaml
+fixture_id: research-foundations:phase3-reference-en-v1
+fixture_version: 1
+entity_count: 34
+filters: 4
+filter_result_items: 9
+trails: 1
+trail_entries: 5
+contradiction_candidates: 1
+duplicate_candidates: 1
+negative_cases: 5
+report_digest: 733aeb28a3147a36d1cc7d3406ab98fa81522cb4b4e87e3aa792aaf54893a394
+report_artifact_sha256: bdf56d085025e624b80fd7e0b35a362e16331e593185184d5500c7603b3910bd
+filter_result_artifact_sha256: 3f25421b72350be1d8d820baaa9b549ead5d9d8caa5bb61538cd0ecc545c3f67
+python_substantive_artifacts_byte_identical: true
+```
+
+The four filter results contain exact entity counts `1, 1, 1, 6` and preserve these exact keys:
+
+```text
+model:en:delayed-correction-recurrence@2
+
+evidence:en:fluorescent-catalase-assay-neutral-ph@1
+
+evidence:en:dsa-recommender-transparency-and-choice@1
+
+claim:en:facebook-exposure-reflects-network-ranking-and-clicks@1
+claim:en:recommender-effects-are-context-dependent@1
+claim:en:transparency-and-nonprofiling-are-eu-governance-responses@1
+claim:en:twitter-ranking-changed-relative-political-amplification@1
+claim:en:users-should-have-recommender-explanation-and-choice@1
+synthesis:en:recommender-exposure-and-governance@1
+```
+
+Python 3.11 and Python 3.13 produced byte-identical research reports and filter-result artifacts. Unittest transcripts differ only in elapsed-time text and are not treated as substantive evidence.
+
+The validated research trail is:
+
+```yaml
+id: trail:en:recommender-cross-platform-generalization
+revision: 1
+entry_count: 5
+authority: research-only
+```
+
+The validated advisory candidates are:
+
+```yaml
+contradiction:
+  id: candidate:contradiction:facebook-twitter-exposure-effects
+  assessment: scope-difference-likely
+  decision: valid-candidate-not-proven-contradiction
+duplicate:
+  id: candidate:duplicate:recommender-context-claim-and-synthesis
+  assessment: related-not-duplicate
+  decision: valid-candidate-not-proven-duplicate
+```
+
+The candidate intentionally demonstrates that discovery may conclude “likely scope difference” or “related but not duplicate.” Candidate generation is not forced to produce a contradiction or duplicate.
+
 ## Validation and negative boundaries
 
 Machine validation reconstructs filter results from the canonical runtime and rejects:
@@ -155,6 +219,16 @@ Machine validation reconstructs filter results from the canonical runtime and re
 - automatic duplicate merging;
 - canonical-copy or lifecycle authority escalation;
 - live or repository-mutating records.
+
+The pinned negative errors are:
+
+```text
+E-FILTER-DOMAIN
+E-FILTER-DATE
+E-REVISION-MISSING
+E-CANDIDATE-PAIR
+E-DUPLICATE-AUTHORITY
+```
 
 ## Semantic-infrastructure boundary
 
