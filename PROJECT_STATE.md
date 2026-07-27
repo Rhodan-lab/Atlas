@@ -16,7 +16,7 @@ Phase 1 is complete under an explicitly **AI-reviewed** policy. Phase 2 is compl
 - deterministic machine attestations — PR #8, commit `a4d73fc4dfc7f8fa03aa7f913473110943b41f9e`;
 - optional human handoff — PR #9, commit `5dcd4964b04617d1c40a4458b2c646c43ebd09ed`;
 - optional exact-snapshot intake — PR #10, commit `9809bcb523954770e87c78154cdb124f37aadf46`;
-- optional admission boundary — PR #17, commit `01feffc696cc207305ef74c92d600f37aadf46`;
+- optional admission boundary — PR #17, commit `01feffc696cc207305ef74c92d600f37f1e240a4`;
 - Phase 1 AI review and Phase 2 activation — PR #18, commit `f90fa53f99ec9780451c9c50c57625759ba3b2b5`;
 - first Phase 2 kernel and bridge receiver — PR #19, commit `8f1e473578d9086a73dae44f0b6001b246cfbc20`;
 - Principia v0.2 importer implementation — PR #20, commit `1cc4aec6908a8703a7f505478329c633a23b4ef9`;
