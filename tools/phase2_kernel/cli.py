@@ -14,10 +14,10 @@ from .kernel import (
     load_json,
     render_json,
 )
-from .offline_protocol import (
-    audit_offline_protocol,
-    import_offline_batch,
-    load_snapshot_documents,
+from .offline_protocol_policy import (
+    audit_pinned_offline_protocol,
+    import_pinned_offline_batch,
+    load_pinned_snapshot_documents,
 )
 
 PROTOCOL_FIXTURES = Path("content/fixtures/phase2_protocol")
@@ -112,7 +112,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     offline_batch = subparsers.add_parser(
         "offline-batch-import",
-        help="atomically re-import a pinned Principia multi-artifact batch",
+        help="atomically re-import the pinned Principia multi-artifact batch",
     )
     _add_protocol_arguments(offline_batch)
     _add_repository_arguments(offline_batch)
@@ -195,16 +195,17 @@ def main(argv: list[str] | None = None) -> int:
                 args.output,
             )
         elif args.command == "offline-batch-import":
-            _, documents = load_snapshot_documents(args.snapshot)
-            receipt = import_offline_batch(
+            _, documents = load_pinned_snapshot_documents(args.snapshot)
+            receipt = import_pinned_offline_batch(
                 load_json(args.batch),
                 documents,
                 repository,
             )
             _write_or_print(receipt, args.output)
         elif args.command == "offline-protocol-audit":
-            _, documents = load_snapshot_documents(args.snapshot)
-            report = audit_offline_protocol(
+            snapshot, documents = load_pinned_snapshot_documents(args.snapshot)
+            report = audit_pinned_offline_protocol(
+                snapshot,
                 load_json(args.batch),
                 load_json(args.receipt),
                 load_json(args.events),
