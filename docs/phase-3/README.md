@@ -13,29 +13,67 @@ live: false
 canonical_mutation: false
 ```
 
-## Accepted workstream 1
+## Accepted workstream 1 — evaluation contract
 
-PR #30 established the retrieval evaluation boundary before ranking implementation.
+PR #30 established the retrieval evaluation boundary, and PR #31 finalized its governance record.
 
 ```yaml
-workstream: 1
-mode: retrieval-evaluation
-state: accepted
 query_set_contract: atlas-retrieval-query-set/0.1
 result_set_contract: atlas-retrieval-result-set/0.1
 metric_report_contract: atlas-retrieval-metric-report/0.1
 query_set_id: retrieval-query-set:phase3-reference-en-v1
 query_set_version: 1
 query_count: 13
+ranked_query_count: 12
+expected_error_query_count: 1
 entity_count: 34
-accepted_pr: 30
-tested_head: 3cd4c103da12c140e1a4d0b7bf2bdb8cca5e9727
-accepted_merge_commit: 973827e6e7644f79437f3705c73f9e6d83e9a477
+positive_judgment_count: 26
+implicit_grade_zero_judgment_count: 382
+state: accepted
 live: false
 repository_mutation: false
 ```
 
-The accepted fixture contains 12 ranked queries and one unavailable-revision error, with 26 positive graded targets and 382 implicit grade-0 judgments over the pinned corpus. It includes direct, compositional, ambiguous, cross-slice, contested-normative, and exact-revision-error cases. See [`evaluation-contract.md`](evaluation-contract.md).
+The accepted fixture includes direct, compositional, ambiguous, cross-slice, contested-normative, and exact-revision-error cases. See [`evaluation-contract.md`](evaluation-contract.md).
+
+## Accepted workstream 2 — lexical baseline
+
+PR #32 established the first transparent ranking baseline over the unchanged accepted query set.
+
+```yaml
+index_contract: atlas-lexical-index/0.1
+tokenizer_contract: atlas-english-tokenizer/0.1
+scoring_contract: atlas-bm25f-scoring/0.1
+state: accepted
+accepted_pr: 32
+tested_head: 2fb6a5cb31cc98b9daac942a1745a9bd9effe9ff
+accepted_merge_commit: 444011821969285da78e6c7fc4ceadec1efca322
+entity_count: 34
+term_count: 424
+cutoff: 5
+result_limit: 10
+precision_at_5: 0.3
+recall_at_5: 0.708333333333
+mean_reciprocal_rank: 0.652777777778
+ndcg_at_5: 0.589071924873
+zero_result_rate: 0.0
+unavailable_revision_rate: 1.0
+tie_count: 0
+replaceable: true
+rebuild_verified: true
+quality_claim: bounded-reference-fixture-only
+external_services: false
+embeddings: false
+vector_database: false
+live: false
+repository_mutation: false
+```
+
+The tokenizer uses NFKC case folding, `[a-z0-9]+`, a fixed English stopword list, no stemming, and no query expansion. The BM25F baseline scores body, stable ID, title, and entity type with public fixed weights and exact-key ascending tie handling.
+
+The exact evidence is pinned in `content/fixtures/phase3_retrieval/lexical-baseline.json`. Full method, digests, metrics, and limitations are recorded in [`lexical-baseline.md`](lexical-baseline.md).
+
+The accepted metrics are not production quality estimates. The baseline exposes moderate ranking quality and specific weaknesses in methodological scope, formal-model prioritization, cross-platform context, and cross-slice abstraction.
 
 ## Goal
 
@@ -43,94 +81,27 @@ Evaluate whether Atlas can retrieve relevant, inspectable, versioned knowledge w
 
 Phase 3 is not a production-search launch. It is a bounded evidence phase.
 
-## Why retrieval begins now
-
-Phase 2 established that the Atlas kernel is deterministic, strictly admitted, safely failing, measurable at larger scale, replay-safe, replaceable, and reproducible from canonical Markdown. Its accepted completion report recommends:
-
-```text
-proceed-bounded-retrieval-evaluation
-```
-
-That recommendation permits comparative retrieval experiments. It does not permit production claims, live synchronization, canonical writes, unversioned lookup, or automatic lifecycle action.
-
-## Required evidence
+## Accepted evidence requirements
 
 ### Query and judgment contract
 
-Workstream 1 now provides a machine-readable contract containing:
-
-- stable query-set and query IDs;
-- query text and intended information need;
-- exact relevant entity IDs and revisions;
-- graded relevance judgments and rationales;
-- slice and difficulty metadata;
-- ambiguity and disagreement notes;
-- an exhaustive grade-0 policy over the pinned corpus.
-
-Judgments are evaluation fixtures, not new canonical scientific claims.
-
-### Baselines before infrastructure commitments
-
-The next accepted retrieval candidates must include:
-
-1. a deterministic lexical baseline;
-2. a deterministic structured-field baseline.
-
-The structured baseline may use authored and compiled fields such as:
-
-- title;
-- entity type;
-- canonical metadata;
-- claims and questions;
-- relations;
-- provenance-linked source identity;
-- status, staleness, confidence, and review level.
-
-Embedding, vector, or learned-ranking experiments may begin only after these baselines exist and use the same accepted judgment set.
-
-### Evaluation metrics
-
-The accepted metric contract requires:
-
-- precision at a declared cutoff;
-- recall at a declared cutoff;
-- mean reciprocal rank;
-- normalized discounted cumulative gain at the cutoff;
-- zero-result and unavailable-revision rates;
-- deterministic tie counts and tie-breaking behavior.
-
-Metrics must be reported with the exact fixture version, result-set digest, and index implementation. Workstream 1 defines the fields but does not establish a quality threshold.
+Workstream 1 provides stable query-set and query IDs, exact graded targets, explicit ambiguity records, and an exhaustive grade-0 policy over the pinned corpus. Judgments are evaluation fixtures rather than canonical scientific claims.
 
 ### Result contract
 
-Every retrieval result must expose:
+Every result must expose exact ID and revision, deterministic score and rank, canonical metadata, matched fields, explanation evidence, provenance, review level, lifecycle, staleness, index contract, build digest, and canonical source digest.
 
-- exact entity ID;
-- positive revision;
-- entity type and title;
-- deterministic score and rank;
-- matched fields and explanation evidence;
-- provenance where applicable;
-- review level;
-- lifecycle and staleness visibility;
-- index contract and build digest.
+A result may not substitute an implicit `latest` revision. Equal scores use ascending exact keys.
 
-A result may not silently substitute another revision or an implicit `latest` entity. Equal-score ties use ascending exact entity keys.
+### Metric contract
 
-### Replaceability and rollback
+Reports bind the exact query-set version and result-set digest and expose precision, recall, MRR, nDCG, zero-result rate, unavailable-revision rate, and deterministic tie count.
 
-Every generated retrieval index must be:
+### Replaceability
 
-- reproducible from canonical Markdown and accepted operational fixtures;
-- disposable without knowledge loss;
-- validated before query use;
-- rebuildable deterministically;
-- removable without changing canonical content;
-- comparable against the accepted lexical and structured baselines.
+Every index must be reproducible, disposable, validated before query use, byte-identically rebuildable, removable without canonical mutation, and comparable against accepted baselines.
 
-Rollback means deleting the generated index and rebuilding it. Mutable index state is never knowledge authority.
-
-## Initial workstreams
+## Workstreams
 
 ### Workstream 1 — evaluation contract and fixtures — accepted
 
@@ -143,26 +114,31 @@ Accepted evidence:
 - `.github/workflows/phase3-retrieval-contract.yml`;
 - `docs/phase-3/evaluation-contract.md`.
 
-The workstream rejects duplicate queries, unavailable positive targets, mismatched revision errors, unversioned results, canonical metadata drift, malformed ranks, increasing scores, nondeterministic ties, malformed metrics, non-replaceable indexes, live authority, and repository mutation.
+### Workstream 2 — deterministic lexical baseline — accepted
 
-### Workstream 2 — lexical baseline — next
+Accepted evidence:
 
-- use the accepted query set unchanged;
-- tokenize and normalize deterministically;
-- index canonical exact revisions;
-- implement transparent scoring;
-- define deterministic tie-breaking;
-- emit contract-valid matched-field and provenance evidence;
-- compute the accepted metrics;
+- `content/fixtures/phase3_retrieval/lexical-baseline.json`;
+- `tools/phase3_retrieval/lexical.py`;
+- `tools/phase3_retrieval/tests/test_lexical.py`;
+- `.github/workflows/phase3-lexical-baseline.yml`;
+- `docs/phase-3/lexical-baseline.md`.
+
+The index is byte-identical across repeated builds and Python 3.11/3.13 evidence runs. Deletion and canonical rebuild are verified. No external services, embeddings, vectors, learned ranking, query expansion, or judgment-specific tuning are used.
+
+### Workstream 3 — structured-field baseline — next
+
+The next candidate must:
+
+- use the exact accepted query-set version unchanged;
+- declare field and graph weights before evaluation;
+- score canonical titles, types, metadata, relations, and provenance transparently;
+- preserve exact revisions, canonical metadata, lifecycle, review level, and provenance;
+- emit accepted result and metric contracts;
+- compare aggregate and query-level results against the lexical baseline;
+- report gains, regressions, and unresolved cases honestly;
 - validate deletion and byte-identical rebuild;
-- record quality limitations without production claims.
-
-### Workstream 3 — structured baseline
-
-- score declared canonical fields and graph relationships;
-- preserve exact revisions and provenance;
-- compare against lexical results on the same fixture set;
-- report gains, regressions, and unresolved query classes.
+- avoid embeddings, vector infrastructure, learned weights, and judgment-specific tuning.
 
 ### Workstream 4 — comparative retrieval experiments
 
@@ -177,16 +153,15 @@ Only after Workstreams 1–3 are accepted:
 
 Still out of scope:
 
-- production search quality claims;
+- production search-quality claims;
 - polished search UI;
-- personalized ranking;
-- user profiling;
+- personalized ranking or user profiling;
 - autonomous agents changing knowledge state;
 - live Principia synchronization;
 - retrieval-generated canonical content;
 - automatic review, lifecycle, promotion, or release mutation;
 - active multilingual retrieval;
-- choosing a vector database by popularity rather than evidence.
+- vector database selection before comparative evidence.
 
 ## Authority boundary
 

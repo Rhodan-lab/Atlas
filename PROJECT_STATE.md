@@ -4,7 +4,7 @@
 
 **Phase 3 — Retrieval Evaluation (active)**
 
-Phase 1 is complete under an explicitly **AI-reviewed** policy. Phase 2 is complete under deterministic kernel, compatibility, failure, scale, replay, replaceability, and rollback evidence. Phase 3 Workstream 1 is accepted. No human or expert verification is claimed, no live Principia dependency is active, and retrieval has advisory authority only.
+Phase 1 is complete under an explicitly **AI-reviewed** policy. Phase 2 is complete under deterministic kernel, compatibility, failure, scale, replay, replaceability, and rollback evidence. Phase 3 Workstreams 1 and 2 are accepted. No human or expert verification is claimed, no live Principia dependency is active, and retrieval has advisory authority only.
 
 ## Accepted history
 
@@ -29,7 +29,9 @@ Phase 1 is complete under an explicitly **AI-reviewed** policy. Phase 2 is compl
 - accepted scale and replay governance record — PR #27, commit `fae9fc301a6d6d4bb91d8939c7d9a7fd6b48374b`;
 - Phase 2 closure, replaceability, and retrieval-entry evidence — PR #28, commit `99b5c4db514da8ac1f6f30740fae66d42e242a74`;
 - Phase 2 closure governance and Phase 3 activation — PR #29, commit `9374db0359b19366bd32fe5ea65980bab67068c0`;
-- Phase 3 retrieval evaluation contracts and judgments — PR #30, commit `973827e6e7644f79437f3705c73f9e6d83e9a477`.
+- Phase 3 retrieval evaluation contracts and judgments — PR #30, commit `973827e6e7644f79437f3705c73f9e6d83e9a477`;
+- accepted retrieval-contract governance record — PR #31, commit `bbf8f3e79518473fc929b0d1f9363484146205db`;
+- deterministic lexical retrieval baseline — PR #32, commit `444011821969285da78e6c7fc4ceadec1efca322`.
 
 ## Language policy
 
@@ -87,23 +89,7 @@ Active evidence:
 
 Phase 2 established the smallest dependable, deterministic, read-only kernel over canonical `atlas-content/0.1` Markdown.
 
-Accepted capabilities:
-
-- deterministic canonical-to-runtime compilation;
-- strict admission of `atlas-kernel-runtime/0.1`;
-- exact `ENTITY_ID@REVISION` lookup;
-- typed relation traversal;
-- synthesis-to-source provenance traversal;
-- reverse-dependency and lifecycle-impact queries;
-- deterministic failure behavior for malformed or incompatible content and runtime records;
-- exact-revision Principia compatibility with `live: false`;
-- atomic multi-artifact offline protocol validation;
-- lifecycle escalation reporting without automatic action;
-- representative and 1,026-entity scaled measurements;
-- append-only receipt replay, idempotency, and deterministic recovery failures;
-- storage-neutral portable snapshots;
-- independent query-engine equivalence;
-- deterministic migration and rollback rebuilding from canonical Markdown.
+Accepted capabilities include deterministic compilation, strict runtime admission, exact-revision lookup, typed relation and provenance traversal, reverse-dependency impact, safe failures, non-live Principia compatibility, atomic offline protocol validation, lifecycle escalation reporting, scaled measurements, receipt replay and recovery, portable snapshots, independent query-engine equivalence, and deterministic migration and rollback.
 
 ### Accepted closure evidence
 
@@ -126,9 +112,7 @@ automatic_release_action: false
 repository_mutation: false
 ```
 
-The portable query engine independently reconstructs generated revision and reverse-dependency indexes and matches the standard repository for exact lookup, relation traversal, provenance traversal, and transitive impact for every canonical exact revision.
-
-Generated runtimes, indexes, caches, and portable snapshots remain disposable. Canonical Markdown and pinned external fixtures remain authoritative. Rollback means deleting generated representations and rebuilding byte-identically from those authoritative sources.
+Generated runtimes, indexes, caches, and portable snapshots remain disposable. Canonical Markdown and pinned external fixtures remain authoritative.
 
 ## Authority order
 
@@ -161,7 +145,7 @@ Required outcomes:
 
 ## Phase 3 workstream 1 — accepted
 
-PR #30 established the retrieval evaluation boundary before ranking implementation.
+PR #30 established the retrieval evaluation boundary before ranking implementation. PR #31 finalized the accepted governance record.
 
 ```yaml
 query_set_contract: atlas-retrieval-query-set/0.1
@@ -170,8 +154,10 @@ metric_report_contract: atlas-retrieval-metric-report/0.1
 mode: retrieval-evaluation
 state: accepted
 accepted_pr: 30
+governance_pr: 31
 tested_head: 3cd4c103da12c140e1a4d0b7bf2bdb8cca5e9727
 accepted_merge_commit: 973827e6e7644f79437f3705c73f9e6d83e9a477
+governance_merge_commit: bbf8f3e79518473fc929b0d1f9363484146205db
 query_set_id: retrieval-query-set:phase3-reference-en-v1
 query_set_version: 1
 entity_count: 34
@@ -187,11 +173,61 @@ live: false
 repository_mutation: false
 ```
 
-The accepted fixture spans catalase, delayed feedback, recommendation systems, and cross-slice scope reasoning. It includes direct, compositional, ambiguous, contested-normative, and unavailable-revision cases.
+For each ranked query, every unlisted exact entity in the pinned corpus receives grade 0. Listed exact targets receive grades 1–3 with explicit rationales. The judgments are evaluation fixtures, not canonical scientific claims or human relevance consensus.
 
-For each of the 12 ranked queries, every unlisted exact entity in the pinned 34-entity corpus receives grade 0. Listed exact targets receive grades 1–3 with explicit rationales. The judgments are evaluation fixtures, not canonical scientific claims or human relevance consensus.
+## Phase 3 workstream 2 — accepted
 
-Accepted result contracts require exact revisions, canonical metadata agreement, inspectable match evidence, provenance, deterministic rank order, ascending exact-key tie handling, a replaceable index contract, and the canonical source digest. Metric reports bind the exact result-set digest and expose precision, recall, MRR, nDCG, zero-result rate, unavailable-revision rate, and tie count.
+PR #32 established the first transparent ranking baseline against the unchanged Workstream 1 fixture.
+
+```yaml
+index_contract: atlas-lexical-index/0.1
+tokenizer_contract: atlas-english-tokenizer/0.1
+scoring_contract: atlas-bm25f-scoring/0.1
+baseline_contract: atlas-phase3-lexical-baseline/0.1
+mode: retrieval-evaluation
+state: accepted
+accepted_pr: 32
+tested_head: 2fb6a5cb31cc98b9daac942a1745a9bd9effe9ff
+accepted_merge_commit: 444011821969285da78e6c7fc4ceadec1efca322
+query_set_id: retrieval-query-set:phase3-reference-en-v1
+query_set_version: 1
+entity_count: 34
+term_count: 424
+cutoff: 5
+result_limit: 10
+source_digest: 684d08f23db50c2d994ea07293c6aaea2cbcb24492b062663b2e43144f07d3b1
+index_build_digest: 4da6848c020458694db5d26d44be2ddc2580e9c0c41656ce7dcb44a75da82f16
+result_set_sha256: 400adae2eb62e275a02bb5838fc93964ea8a541e498617527b543f4932c8196c
+precision_at_5: 0.3
+recall_at_5: 0.708333333333
+mean_reciprocal_rank: 0.652777777778
+ndcg_at_5: 0.589071924873
+zero_result_rate: 0.0
+unavailable_revision_rate: 1.0
+tie_count: 0
+deterministic_index: true
+rebuild_verified: true
+replaceable: true
+quality_claim: bounded-reference-fixture-only
+external_services: false
+embeddings: false
+vector_database: false
+judgment_specific_tuning: false
+retrieval_authority: advisory-only
+live: false
+repository_mutation: false
+```
+
+The tokenizer uses NFKC case folding, `[a-z0-9]+`, a fixed stopword list, no stemming, and no query expansion. BM25F scores canonical body, stable ID, title, and type with public fixed weights and exact-key ascending ties.
+
+The evidence is intentionally not described as strong production quality. It shows moderate graded ranking performance and exposes concrete weaknesses:
+
+- specific assay evidence can outrank methodological scope;
+- the exact formal model can rank below related prose records;
+- cross-platform context can lose to named study records;
+- cross-slice methodological abstraction is incomplete.
+
+These are comparison targets for Workstream 3 rather than reasons to rewrite the accepted judgments or tune the lexical baseline after seeing results.
 
 ## Phase 3 entry boundary
 
@@ -202,7 +238,7 @@ Allowed:
 - deterministic ranking and tie-breaking;
 - advisory result sets with exact revisions and provenance;
 - replaceable generated indexes;
-- comparative embedding or vector experiments only after lexical and structured baselines exist.
+- comparative embedding or vector experiments only after lexical and structured baselines are accepted.
 
 Still frozen:
 
@@ -221,24 +257,20 @@ Still frozen:
 
 ## Principia & Atlas boundary
 
-Atlas is the knowledge and governance layer of the future **Principia & Atlas** system.
-
 - Atlas owns canonical knowledge identity, sources, evidence, claims, models, provenance, revision, review level, lifecycle, and staleness.
 - Principia owns causal explanation, pathways, investigations, simulations, system dossiers, failure analysis, design experiences, and its own publication readiness.
 - Principia may reference exact Atlas revisions.
-- Atlas may report dependency impact when upstream knowledge changes.
 - Neither repository inherits the other repository's status automatically.
-- The repositories remain separate and independently buildable.
-- No live cross-repository dependency is activated by Phase 3 entry.
+- No live cross-repository dependency is activated by Phase 3 evaluation.
 
 ## Immediate next actions
 
-1. implement a deterministic lexical baseline without external services;
-2. use the accepted query set unchanged and emit contract-valid result and metric reports;
-3. tokenize and normalize transparently with deterministic scoring and tie handling;
-4. preserve exact revisions, canonical metadata, matched-field evidence, and provenance;
-5. prove index deletion and byte-identical rebuild from canonical content;
-6. implement a structured-field baseline only after the lexical candidate is accepted;
-7. keep vector infrastructure, live synchronization, canonical writes, and automatic mutation frozen.
+1. implement a deterministic structured-field baseline against the unchanged query-set version;
+2. declare field and graph weights before evaluation and avoid judgment-specific tuning;
+3. score canonical metadata, titles, types, exact relations, and provenance-linked source identity transparently;
+4. emit contract-valid results and metrics with exact revisions and visible provenance;
+5. compare every metric and query-level gain or regression against the accepted lexical evidence;
+6. prove index deletion and byte-identical canonical rebuild;
+7. keep embeddings, vector infrastructure, live synchronization, canonical writes, and automatic authority frozen until a separate comparative decision.
 
-**Phase 1 and Phase 2 are complete. Phase 3 Workstream 1 is accepted. Workstream 2 — deterministic lexical retrieval — is next. Retrieval remains bounded, advisory, exact-revision, provenance-visible, replaceable, and `live: false`.**
+**Phase 1 and Phase 2 are complete. Phase 3 Workstreams 1 and 2 are accepted. Workstream 3 — deterministic structured-field retrieval — is next. Retrieval remains bounded, advisory, exact-revision, provenance-visible, replaceable, and `live: false`.**
