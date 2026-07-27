@@ -1,0 +1,56 @@
+{
+  "contract": "atlas-principia-offline-snapshot/0.1",
+  "source_repository": "Rhodan-lab/principle-to-system",
+  "source_commit": "4ecb41ad4f9f524e83cc0db43f672bd9dcf3b67a",
+  "source_pull_request": 25,
+  "source_state_observation": "Phase 18 merged while Principia PROJECT_STATE.md still contains candidate-era exact-head-pending wording",
+  "mode": "offline-protocol-audit-candidate",
+  "live": false,
+  "files": [
+    {
+      "source_path": "integration/principia-atlas/exports/feedback-instability.external-dependent.fixture.json",
+      "fixture_path": "content/fixtures/phase2_bridge/principia-feedback-pr16-v02.json",
+      "source_blob_sha": "a0ab1e098b17a5cfe9fee521394513461a2f4e51"
+    },
+    {
+      "source_path": "integration/principia-atlas/exports/room-cooling.external-dependent.fixture.json",
+      "fixture_path": "content/fixtures/phase2_protocol/room-cooling.external-dependent.v02.json",
+      "source_blob_sha": "e2857218e60d60b39003c0541166ea946cdbcbdd"
+    },
+    {
+      "source_path": "integration/principia-atlas/exports/refrigerator.external-dependent.fixture.json",
+      "fixture_path": "content/fixtures/phase2_protocol/refrigerator.external-dependent.v02.json",
+      "source_blob_sha": "65e3471e4d66a515dd0c048ae8bbd7f087dde3e0"
+    },
+    {
+      "source_path": "integration/principia-atlas/pilot/thermal-control.multi-artifact.batch.v02.json",
+      "fixture_path": "content/fixtures/phase2_protocol/thermal-control.multi-artifact.batch.v02.json",
+      "source_blob_sha": "7a466a8e4503e6aed9c30e549a3ace184788bd98"
+    },
+    {
+      "source_path": "integration/principia-atlas/pilot/thermal-control.multi-artifact.receipt.v02.json",
+      "fixture_path": "content/fixtures/phase2_protocol/thermal-control.multi-artifact.receipt.v02.json",
+      "source_blob_sha": "d3a7e84d42d7ba62697738cb8e70943abd99f7fc"
+    },
+    {
+      "source_path": "integration/principia-atlas/pilot/thermal-control.lifecycle-events.v01.json",
+      "fixture_path": "content/fixtures/phase2_protocol/thermal-control.lifecycle-events.v01.json",
+      "source_blob_sha": "f2f2bbdc3a4a72c5633ec3fd04670acdb59908f7"
+    },
+    {
+      "source_path": "integration/principia-atlas/pilot/thermal-control.lifecycle-acknowledgements.v01.json",
+      "fixture_path": "content/fixtures/phase2_protocol/thermal-control.lifecycle-acknowledgements.v01.json",
+      "source_blob_sha": "7060a49303cba9d8bd600136ec087115f40b7262"
+    },
+    {
+      "source_path": "integration/principia-atlas/pilot/thermal-control.event-protocol-chain.v01.json",
+      "fixture_path": "content/fixtures/phase2_protocol/thermal-control.event-protocol-chain.v01.json",
+      "source_blob_sha": "19c1cf5f64a25cdf818de404b6f8c6fadb022d5b"
+    },
+    {
+      "source_path": "integration/principia-atlas/pilot/thermal-control.reconciliation-report.v01.json",
+      "fixture_path": "content/fixtures/phase2_protocol/thermal-control.reconciliation-report.v01.json",
+      "source_blob_sha": "77c8104b0a04f81df187e33a2265181343e31df7"
+    }
+  ]
+}
