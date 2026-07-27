@@ -42,7 +42,10 @@ jobs:
         run: python -m pip install -r tools/foundation-validator/requirements.txt
 
       - name: Run structured baseline tests
-        run: python -m unittest tools.phase3_retrieval.tests.test_structured -v
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m unittest tools.phase3_retrieval.tests.test_structured -v 2>&1 | tee phase3-structured-tests.txt
 
       - name: Generate structured index, results, metrics, and report
         run: |
@@ -80,10 +83,12 @@ jobs:
           PY
 
       - name: Upload structured baseline evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: phase3-structured-baseline-python-${{ matrix.python-version }}
           path: |
+            phase3-structured-tests.txt
             phase3-structured-index.json
             phase3-structured-results.json
             phase3-structured-metrics.json
