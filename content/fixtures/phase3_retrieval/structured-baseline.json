@@ -1,0 +1,71 @@
+{
+  "accepted_judgments_unchanged": true,
+  "baseline_contract": "atlas-phase3-structured-baseline/0.1",
+  "canonical_body_indexed": false,
+  "cutoff": 5,
+  "entity_count": 34,
+  "expected_error_query_count": 1,
+  "field_weights": {
+    "graph": 1.25,
+    "id": 1.5,
+    "lifecycle": 0.25,
+    "primary": 2.5,
+    "provenance": 1.0,
+    "title": 3.0,
+    "type": 0.75
+  },
+  "index_artifact_sha256": "8a9fad9c89d647cfc39de86b363fe34e4b20bc0aecbda7cb93ec93b146be0f70",
+  "index_build_digest": "91af098baa9bdb6dd6fc55f58f579b6b3be01637562f5797ec1c948a65c748f2",
+  "index_contract": "atlas-structured-index/0.1",
+  "known_limitations": [
+    "specific fluorescent-assay evidence still outranks the methodological catalase scope claim for the direct optimum query",
+    "the foam-proxy query can rank the question and broad catalase concept above the observation model",
+    "randomized Twitter evidence can outrank the causal claim even when the claim is the more direct answer target",
+    "the cross-slice scope query still misses the recommender context-dependent claim within the top-five cutoff"
+  ],
+  "lexical_baseline_sha256": "760bbd400e919b594850064aefa00d4bfde71d2fcdaa5d97fbd34e7e3f181ef9",
+  "lexical_metrics": {
+    "mean_reciprocal_rank": 0.652777777778,
+    "ndcg_at_k": 0.589071924873,
+    "precision_at_k": 0.3,
+    "recall_at_k": 0.708333333333,
+    "unavailable_revision_rate": 1.0,
+    "zero_result_rate": 0.0
+  },
+  "limit": 10,
+  "live": false,
+  "metric_artifact_sha256": "9755c533220517914a1fe696df1ce5cf3357be20ce034ef17f83f886e371b884",
+  "metric_delta_from_lexical": {
+    "mean_reciprocal_rank": 0.118055555555,
+    "ndcg_at_k": 0.165705459938,
+    "precision_at_k": 0.066666666667,
+    "recall_at_k": 0.145833333334,
+    "unavailable_revision_rate": 0.0,
+    "zero_result_rate": 0.0
+  },
+  "metrics": {
+    "mean_reciprocal_rank": 0.770833333333,
+    "ndcg_at_k": 0.754777384811,
+    "precision_at_k": 0.366666666667,
+    "recall_at_k": 0.854166666667,
+    "unavailable_revision_rate": 1.0,
+    "zero_result_rate": 0.0
+  },
+  "mode": "retrieval-evaluation",
+  "python_evidence_artifacts_byte_identical": true,
+  "quality_claim": "bounded-reference-fixture-only",
+  "query_count": 13,
+  "query_set_id": "retrieval-query-set:phase3-reference-en-v1",
+  "query_set_sha256": "e8b27966a87eaf6fd07585dfcdb10a08ac0b322db6a31cc5a3638f2f27e3b302",
+  "query_set_version": 1,
+  "ranked_query_count": 12,
+  "rebuild_verified": true,
+  "replaceable": true,
+  "report_artifact_sha256": "8af02b7de37e57578df0c96755c1aeaa25d5628b58cfe3487e9d8c65bf5c4760",
+  "repository_mutation": false,
+  "result_set_sha256": "45f215c726e03aa6bfbb1d701291a4a575dd7dc20f435741ec57eb97c939f77c",
+  "scoring_contract": "atlas-structured-bm25f-scoring/0.1",
+  "source_digest": "684d08f23db50c2d994ea07293c6aaea2cbcb24492b062663b2e43144f07d3b1",
+  "term_count": 868,
+  "tie_count": 0
+}
