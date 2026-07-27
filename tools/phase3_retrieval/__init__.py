@@ -23,6 +23,16 @@ from .lexical import (
     tokenize,
     validate_lexical_index,
 )
+from .structured import (
+    STRUCTURED_BASELINE_REPORT_CONTRACT,
+    STRUCTURED_INDEX_CONTRACT,
+    STRUCTURED_SCORING_CONTRACT,
+    build_structured_index,
+    run_structured_baseline,
+    run_structured_queries,
+    search_structured_index,
+    validate_structured_index,
+)
 
 __all__ = [
     "LEXICAL_BASELINE_REPORT_CONTRACT",
@@ -32,16 +42,24 @@ __all__ = [
     "QUERY_SET_CONTRACT",
     "RESULT_SET_CONTRACT",
     "SCORING_CONTRACT",
+    "STRUCTURED_BASELINE_REPORT_CONTRACT",
+    "STRUCTURED_INDEX_CONTRACT",
+    "STRUCTURED_SCORING_CONTRACT",
     "TOKENIZER_CONTRACT",
     "VALIDATION_REPORT_CONTRACT",
     "build_lexical_index",
+    "build_structured_index",
     "evaluate_result_set",
     "run_lexical_baseline",
     "run_lexical_queries",
+    "run_structured_baseline",
+    "run_structured_queries",
     "search_lexical_index",
+    "search_structured_index",
     "tokenize",
     "validate_lexical_index",
     "validate_metric_report",
     "validate_query_set",
     "validate_result_set",
+    "validate_structured_index",
 ]

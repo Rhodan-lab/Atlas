@@ -1,0 +1,174 @@
+name: Phase 3 Structured Baseline
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "content/canonical/**"
+      - "content/fixtures/phase3_retrieval/**"
+      - "docs/phase-3/**"
+      - "tools/phase3_retrieval/**"
+      - ".github/workflows/phase3-structured-baseline.yml"
+  pull_request:
+    paths:
+      - "content/canonical/**"
+      - "content/fixtures/phase3_retrieval/**"
+      - "docs/phase-3/**"
+      - "tools/phase3_retrieval/**"
+      - ".github/workflows/phase3-structured-baseline.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  structured-baseline:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+
+      - name: Install pinned dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+
+      - name: Run structured baseline tests
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m unittest tools.phase3_retrieval.tests.test_structured -v 2>&1 | tee phase3-structured-tests.txt
+
+      - name: Generate and verify exact structured evidence
+        run: |
+          python -m tools.phase3_retrieval.structured \
+            --query-set content/fixtures/phase3_retrieval/reference-query-set.v01.json \
+            --lexical-baseline content/fixtures/phase3_retrieval/lexical-baseline.json \
+            --cutoff 5 \
+            --limit 10 \
+            --index-output phase3-structured-index.json \
+            --result-output phase3-structured-results.json \
+            --metric-output phase3-structured-metrics.json \
+            --report-output phase3-structured-report.json
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          query_path = Path('content/fixtures/phase3_retrieval/reference-query-set.v01.json')
+          lexical_path = Path('content/fixtures/phase3_retrieval/lexical-baseline.json')
+          baseline = json.loads(
+              Path('content/fixtures/phase3_retrieval/structured-baseline.json').read_text(encoding='utf-8')
+          )
+          index_path = Path('phase3-structured-index.json')
+          result_path = Path('phase3-structured-results.json')
+          metric_path = Path('phase3-structured-metrics.json')
+          report_path = Path('phase3-structured-report.json')
+          index = json.loads(index_path.read_text(encoding='utf-8'))
+          results = json.loads(result_path.read_text(encoding='utf-8'))
+          metrics = json.loads(metric_path.read_text(encoding='utf-8'))
+          report = json.loads(report_path.read_text(encoding='utf-8'))
+
+          assert baseline['contract'] == 'atlas-phase3-structured-baseline/0.1'
+          assert baseline['mode'] == 'retrieval-evaluation'
+          assert baseline['quality_claim'] == 'bounded-reference-fixture-only'
+          assert baseline['python_evidence_artifacts_byte_identical'] is True
+          assert baseline['canonical_body_indexed'] is False
+          assert baseline['accepted_judgments_unchanged'] is True
+          assert baseline['replaceable'] is True
+          assert baseline['rebuild_verified'] is True
+          assert baseline['live'] is False
+          assert baseline['repository_mutation'] is False
+          assert hashlib.sha256(query_path.read_bytes()).hexdigest() == baseline['query_set_sha256']
+          assert hashlib.sha256(lexical_path.read_bytes()).hexdigest() == baseline['lexical_baseline_sha256']
+
+          assert index['contract'] == baseline['index_contract'] == 'atlas-structured-index/0.1'
+          assert index['source_digest'] == baseline['source_digest']
+          assert index['entity_count'] == baseline['entity_count'] == 34
+          assert len(index['corpus']['document_frequencies']) == baseline['term_count'] == 868
+          assert index['build_digest'] == baseline['index_build_digest']
+          assert hashlib.sha256(index_path.read_bytes()).hexdigest() == baseline['index_artifact_sha256']
+          assert index['replaceable'] is True
+          assert index['canonical_mutation'] is False
+          assert index['live'] is False
+          assert index['field_policy']['canonical_body_indexed'] is False
+          assert index['field_policy']['query_expansion'] is False
+          assert index['field_policy']['stemming'] is False
+          assert index['scoring']['contract'] == baseline['scoring_contract']
+          assert index['scoring']['algorithm'] == 'BM25F'
+          assert index['scoring']['field_weights'] == baseline['field_weights']
+          assert index['scoring']['tie_break'] == 'exact-key-ascending'
+
+          assert results['contract'] == 'atlas-retrieval-result-set/0.1'
+          assert results['query_set_id'] == baseline['query_set_id']
+          assert results['query_set_version'] == baseline['query_set_version'] == 1
+          assert len(results['responses']) == baseline['query_count'] == 13
+          assert hashlib.sha256(result_path.read_bytes()).hexdigest() == baseline['result_set_sha256']
+          assert results['advisory_only'] is True
+          assert results['live'] is False
+          assert results['repository_mutation'] is False
+
+          assert metrics['contract'] == 'atlas-retrieval-metric-report/0.1'
+          assert metrics['cutoff'] == baseline['cutoff'] == 5
+          assert metrics['evaluated_ranked_queries'] == baseline['ranked_query_count'] == 12
+          assert metrics['expected_error_queries'] == baseline['expected_error_query_count'] == 1
+          assert metrics['result_set_sha256'] == baseline['result_set_sha256']
+          assert metrics['metrics'] == baseline['metrics']
+          assert metrics['tie_count'] == baseline['tie_count'] == 0
+          assert hashlib.sha256(metric_path.read_bytes()).hexdigest() == baseline['metric_artifact_sha256']
+
+          assert report['contract'] == 'atlas-structured-baseline-report/0.1'
+          assert report['decision'] == 'structured-baseline-candidate'
+          assert report['entity_count'] == baseline['entity_count']
+          assert report['query_count'] == baseline['query_count']
+          assert report['cutoff'] == baseline['cutoff']
+          assert report['limit'] == baseline['limit'] == 10
+          assert report['metrics'] == baseline['metrics']
+          assert report['lexical_baseline_metrics'] == baseline['lexical_metrics']
+          assert report['metric_delta_from_lexical'] == baseline['metric_delta_from_lexical']
+          assert report['result_set_sha256'] == baseline['result_set_sha256']
+          assert report['tie_count'] == baseline['tie_count']
+          assert report['deterministic_index'] is True
+          assert report['rebuild_verified'] is True
+          assert report['replaceable'] is True
+          assert report['canonical_body_indexed'] is False
+          assert report['accepted_judgments_unchanged'] is True
+          assert report['external_services'] is False
+          assert report['embeddings'] is False
+          assert report['vector_database'] is False
+          assert report['judgment_specific_tuning'] is False
+          assert report['quality_claim'] == baseline['quality_claim']
+          assert report['advisory_only'] is True
+          assert report['live'] is False
+          assert report['repository_mutation'] is False
+          assert hashlib.sha256(report_path.read_bytes()).hexdigest() == baseline['report_artifact_sha256']
+
+          print('structured-build-digest=' + index['build_digest'])
+          print('structured-result-set-sha256=' + metrics['result_set_sha256'])
+          print('structured-tie-count=' + str(metrics['tie_count']))
+          print('structured-metrics=' + json.dumps(metrics['metrics'], sort_keys=True, separators=(',', ':')))
+          print('structured-delta=' + json.dumps(report['metric_delta_from_lexical'], sort_keys=True, separators=(',', ':')))
+          print('phase3-structured=pass; entities=34; queries=13; cutoff=5; exact-baseline=true; body=false; replaceable=true; embeddings=false; live=false')
+          PY
+
+      - name: Upload structured baseline evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase3-structured-baseline-python-${{ matrix.python-version }}
+          path: |
+            phase3-structured-tests.txt
+            phase3-structured-index.json
+            phase3-structured-results.json
+            phase3-structured-metrics.json
+            phase3-structured-report.json
+          if-no-files-found: error
+          retention-days: 30
