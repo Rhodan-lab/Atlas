@@ -4,7 +4,7 @@
 
 Active after Phase 1 completion under the explicitly labeled AI-reviewed policy.
 
-The first workstream built the deterministic kernel and bounded bridge receiver through PR #19. The second workstream accepted the exact non-live Principia v0.2 importer baseline through PRs #20 and #21. The third workstream accepted the later Principia Phase 16–18 offline evidence audit through PRs #22 and #23. The fourth workstream hardens serialized-runtime admission and canonical failure semantics.
+The first workstream built the deterministic kernel and bounded bridge receiver through PR #19. The second workstream accepted the exact non-live Principia v0.2 importer baseline through PRs #20 and #21. The third workstream accepted the later Principia Phase 16–18 offline evidence audit through PRs #22 and #23. The fourth workstream accepted strict serialized-runtime admission and canonical failure semantics through PRs #24 and #25. The fifth workstream measures deterministic scale and validates multi-batch replay and recovery.
 
 ## Goal
 
@@ -67,7 +67,7 @@ The lifecycle events are accepted only as `bounded-synthetic` test fixtures. The
 
 ### Runtime hardening and failure semantics
 
-The active candidate adds a strict public admission boundary for `atlas-kernel-runtime/0.1`.
+The accepted fourth workstream adds a strict public admission boundary for `atlas-kernel-runtime/0.1`.
 
 - `KernelRepository` validates the runtime before indexing it;
 - `runtime-validate` emits `atlas-runtime-validation-report/0.1`;
@@ -76,6 +76,22 @@ The active candidate adds a strict public admission boundary for `atlas-kernel-r
 - missing canonical references and malformed authored structures fail before runtime emission;
 - deterministic corruption manifests cover runtime and canonical failure cases;
 - validation remains read-only with `mutation: false`.
+
+### Scale, replay, and recovery
+
+The fifth workstream candidate adds:
+
+- a deterministic temporary corpus with 1,026 exact entity revisions;
+- 256 synthetic external dependents sharing a measurable impact fan-out;
+- scaled compilation, runtime-admission, lookup, provenance, import, and impact measurements;
+- byte-identical double compilation and source-digest verification;
+- an append-only `atlas-principia-offline-receipt-ledger/0.1`;
+- two accepted independent batch sequences;
+- exact duplicate replay as an idempotent no-op;
+- deterministic rejection of conflicting sequence, skipped sequence, wrong predecessor, duplicate batch ID, and corrupted ledger state;
+- Python 3.11 and 3.13 CI evidence.
+
+The synthetic corpus is generated only in temporary test directories. It does not expand canonical Atlas content. Replay evidence remains `live: false` and performs no repository or status mutation.
 
 ## Non-goals
 
@@ -110,10 +126,12 @@ See:
 - `docs/phase-2/principia-v02-compatibility.md`;
 - `docs/phase-2/offline-protocol-audit.md`;
 - `docs/phase-2/runtime-hardening.md`;
+- `docs/phase-2/scale-replay.md`;
 - `docs/phase-2/benchmark-policy.md`;
 - `content/fixtures/phase2_bridge/`;
 - `content/fixtures/phase2_protocol/`;
 - `content/fixtures/phase2_runtime/`;
+- `content/fixtures/phase2_scale/`;
 - `tools/phase2_kernel/`.
 
 ## Exit evidence
@@ -129,5 +147,6 @@ Phase 2 closes only when:
 - multi-artifact import and protocol evidence fail atomically and deterministically;
 - performance is measured on representative and larger deterministic corpora;
 - lifecycle escalation is tested;
+- receipt replay and recovery semantics are deterministic;
 - the selected kernel remains replaceable;
 - a completion report recommends or rejects retrieval work.
