@@ -23,7 +23,8 @@ Phase 1 is closed under an explicitly **AI-reviewed** policy. No human or expert
 - accepted Principia importer governance baseline — PR #21, commit `9370cc746e9756e433ac3772d56d079c9803b144`;
 - offline multi-artifact and lifecycle-protocol audit — PR #22, commit `1096a2176eb50e1921081bb3f46eeac8b13bd2c3`;
 - accepted offline protocol governance record — PR #23, commit `ec666b59c4834c9a716006be9f9830d20178af34`;
-- runtime hardening and failure semantics — PR #24, commit `7596e4fbae099304d64a5b2371c0fb4a2e55ffc4`.
+- runtime hardening and failure semantics — PR #24, commit `7596e4fbae099304d64a5b2371c0fb4a2e55ffc4`;
+- scale, replay, and recovery validation — PR #26, commit `dd0c64447fb70727d260362f9877ffc6be560c3c`.
 
 ## Language policy
 
@@ -250,6 +251,48 @@ mutation: false
 
 Validation passed on Python 3.11 and 3.13, Foundation Contract, Atlas CI, TypeScript, Rust, Python 3.11–3.13, C++ on Ubuntu/macOS/Windows, and end-to-end contracts.
 
+## Phase 2 workstream 5 — accepted
+
+PR #26 established deterministic scale, replay, and recovery evidence without expanding canonical Atlas content.
+
+Accepted workstream state:
+
+```yaml
+scaled_contract: atlas-kernel-scaled-benchmark/0.1
+replay_contract: atlas-principia-offline-replay-matrix/0.1
+ledger_contract: atlas-principia-offline-receipt-ledger/0.1
+mode: scale-replay-candidate
+state: accepted
+accepted_pr: 26
+tested_head: a5bf1d6bf481c3d8f35312050f12ec4ab48b1f08
+accepted_merge_commit: dd0c64447fb70727d260362f9877ffc6be560c3c
+live: false
+automatic_status_change: false
+automatic_release_action: false
+repository_mutation: false
+```
+
+The accepted scale evidence uses an isolated deterministic corpus with:
+
+```text
+256 groups
+1,026 exact entity revisions
+256 synthetic Principia external dependents
+```
+
+The corpus exists only in temporary test directories and is not canonical Atlas knowledge. Two independent compilations must remain byte-identical and preserve the exact source digest.
+
+The accepted replay evidence:
+
+- admits two independently normalized batch sequences;
+- records append-only receipt-chain continuation;
+- treats an exact duplicate replay as an idempotent no-op;
+- rejects conflicting sequence, skipped sequence, wrong predecessor, duplicate batch ID, and corrupted ledger digest;
+- reports `decision: verified-no-mutation`;
+- performs no status, release, repository, or live-integration mutation.
+
+Validation passed on the exact tested head through Phase 2 Scale and Replay, Phase 2 Knowledge Kernel, Foundation Contract, Atlas CI, TypeScript, Rust, Python 3.11–3.13, C++ on Ubuntu/macOS/Windows, and end-to-end contracts.
+
 ## Principia & Atlas boundary
 
 Atlas is the knowledge and governance layer of the future **Principia & Atlas** system.
@@ -295,14 +338,15 @@ Allowed:
 - atomic offline multi-artifact import tests;
 - bounded-synthetic event and acknowledgement audits;
 - lifecycle escalation reporting;
+- scaled deterministic corpus benchmarks;
+- append-only offline receipt replay and recovery tests;
 - benchmark and regression maintenance.
 
 ## Immediate next actions
 
-1. build a larger deterministic synthetic corpus for scaled compilation, lookup, provenance, import, and impact benchmarks;
-2. test multiple independent batches, receipt-chain continuation, idempotent replay, skipped sequences, and conflicting sequence recovery;
-3. define Phase 2 closure evidence and the remaining retrieval-entry blockers;
-4. keep `live: false` until independent machine contracts pass in both repositories and a separate activation decision is recorded;
-5. produce the Phase 2 completion report before retrieval work.
+1. define Phase 2 closure evidence and the remaining retrieval-entry blockers;
+2. verify kernel replaceability, migration boundaries, and rollback expectations;
+3. produce the Phase 2 completion report with an explicit retrieval-entry recommendation;
+4. keep `live: false` until independent machine contracts pass in both repositories and a separate activation decision is recorded.
 
-**Phase 1 is complete under the AI-reviewed policy. Phase 2 remains active. PRs #19–#24 are accepted. Runtime hardening is accepted as `mode: runtime-hardening-candidate` with `live: false`; retrieval and live integration remain frozen.**
+**Phase 1 is complete under the AI-reviewed policy. Phase 2 remains active. PRs #19–#26 are accepted. Scale, replay, and recovery are accepted as `mode: scale-replay-candidate` with `live: false`; retrieval and live integration remain frozen pending the Phase 2 completion report.**
