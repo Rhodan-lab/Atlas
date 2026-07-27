@@ -13,6 +13,25 @@ live: false
 canonical_mutation: false
 ```
 
+## Active candidate
+
+Workstream 1 defines the retrieval evaluation boundary before ranking implementation begins.
+
+```yaml
+workstream: 1
+mode: retrieval-evaluation
+state: candidate
+query_set_contract: atlas-retrieval-query-set/0.1
+result_set_contract: atlas-retrieval-result-set/0.1
+metric_report_contract: atlas-retrieval-metric-report/0.1
+query_count: 13
+entity_count: 34
+live: false
+repository_mutation: false
+```
+
+The candidate includes direct, compositional, ambiguous, cross-slice, and unavailable-revision cases. It does not implement retrieval or claim quality. See [`evaluation-contract.md`](evaluation-contract.md).
+
 ## Goal
 
 Evaluate whether Atlas can retrieve relevant, inspectable, versioned knowledge while preserving canonical authority, exact revisions, provenance, review level, lifecycle visibility, deterministic behavior, and index replaceability.
@@ -112,10 +131,16 @@ Rollback means deleting the generated index and rebuilding it. Mutable index sta
 
 ### Workstream 1 — evaluation contract and fixtures
 
+Candidate scope:
+
 - define query, judgment, result, and metric contracts;
 - create a bounded fixture set spanning catalase, delayed feedback, and recommendation systems;
-- include straightforward, compositional, ambiguous, and unavailable-revision cases;
-- record explicit fixture limitations.
+- include straightforward, compositional, ambiguous, cross-slice, and unavailable-revision cases;
+- treat every unlisted exact entity as grade 0 over the pinned corpus;
+- record explicit fixture limitations;
+- reject unversioned results, mismatched metadata, nondeterministic ties, malformed metrics, and live authority.
+
+Acceptance requires exact-head Phase 3 contract CI and the complete Atlas regression suite.
 
 ### Workstream 2 — lexical baseline
 
