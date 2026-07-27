@@ -1,0 +1,106 @@
+name: Phase 3 Closure
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "content/canonical/**"
+      - "content/fixtures/phase3_retrieval/**"
+      - "docs/foundation/05-phase-gates.md"
+      - "docs/phase-3/**"
+      - "tools/phase2_kernel/**"
+      - "tools/phase3_retrieval/**"
+      - ".github/workflows/phase3-closure.yml"
+  pull_request:
+    paths:
+      - "content/canonical/**"
+      - "content/fixtures/phase3_retrieval/**"
+      - "docs/foundation/05-phase-gates.md"
+      - "docs/phase-3/**"
+      - "tools/phase2_kernel/**"
+      - "tools/phase3_retrieval/**"
+      - ".github/workflows/phase3-closure.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  phase3-closure:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+
+      - name: Install pinned dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+
+      - name: Run Phase 3 closure tests
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m unittest tools.phase3_retrieval.tests.test_closure -v 2>&1 | tee phase3-closure-tests.txt
+
+      - name: Generate Phase 3 completion report
+        run: |
+          python -m tools.phase3_retrieval.closure \
+            --output phase3-completion-report.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path('phase3-completion-report.json').read_text(encoding='utf-8'))
+          assert report['contract'] == 'atlas-phase3-completion-report/0.1'
+          assert report['mode'] == 'retrieval-evaluation'
+          assert report['phase'] == 3
+          assert report['state'] == 'closure-candidate'
+          assert report['decision'] == 'proceed-phase4-interactive-experience'
+          assert report['preferred_bounded_retrieval'] == 'structured-field-baseline'
+          assert report['semantic_infrastructure_decision'] == 'defer-until-broader-benchmark-and-architecture-approval'
+          assert report['accepted_workstreams'] == [1, 2, 3, 5]
+          assert all(report['exit_gates'].values())
+          assert report['evaluated_rejected_candidates'][0]['decision'] == 'rejected'
+          assert report['phase4_entry_boundary']['atlas_semantics_authoritative'] is True
+          assert report['phase4_entry_boundary']['principia_status_separate'] is True
+          assert report['phase4_entry_boundary']['production_retrieval_quality_claim'] is False
+          assert report['phase4_entry_boundary']['vector_database'] is False
+          assert report['phase4_entry_boundary']['live_principia_dependency'] is False
+          assert report['phase4_entry_boundary']['canonical_mutation'] is False
+          assert report['retrieval_authority'] == 'advisory-only'
+          assert report['exact_revision_required'] is True
+          assert report['replaceable'] is True
+          assert report['automatic_status_change'] is False
+          assert report['automatic_merge_or_resolution'] is False
+          assert report['automatic_release_action'] is False
+          assert report['canonical_copy_authority'] is False
+          assert report['external_services'] is False
+          assert report['embeddings'] is False
+          assert report['vector_database'] is False
+          assert report['live'] is False
+          assert report['repository_mutation'] is False
+          print('phase3-completion-report-digest=' + report['report_digest'])
+          print('phase3-exit-gates=' + json.dumps(report['exit_gates'], sort_keys=True, separators=(',', ':')))
+          print('phase3-decision=' + report['decision'])
+          print('phase3-closure=candidate; preferred=structured-field-baseline; semantic-infrastructure=deferred; live=false')
+          PY
+
+      - name: Upload Phase 3 closure evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase3-closure-python-${{ matrix.python-version }}
+          path: |
+            phase3-closure-tests.txt
+            phase3-completion-report.json
+          if-no-files-found: error
+          retention-days: 30
