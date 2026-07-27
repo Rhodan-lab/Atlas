@@ -8,17 +8,13 @@ from pathlib import Path
 
 from .bridge import import_principia_candidate, lifecycle_impact_report
 from .compiler import compile_canonical
-from .kernel import (
-    KernelError,
-    KernelRepository,
-    load_json,
-    render_json,
-)
+from .kernel import KernelError, load_json, render_json
 from .offline_protocol_policy import (
     audit_pinned_offline_protocol,
     import_pinned_offline_batch,
     load_pinned_snapshot_documents,
 )
+from .repository import KernelRepository, validate_runtime
 
 PROTOCOL_FIXTURES = Path("content/fixtures/phase2_protocol")
 
@@ -76,6 +72,13 @@ def build_parser() -> argparse.ArgumentParser:
         "--canonical-root", type=Path, default=Path("content/canonical")
     )
     compile_parser.add_argument("--output", type=Path)
+
+    runtime_validate = subparsers.add_parser(
+        "runtime-validate",
+        help="strictly validate a serialized Atlas runtime before query use",
+    )
+    runtime_validate.add_argument("runtime", type=Path)
+    runtime_validate.add_argument("--output", type=Path)
 
     lookup_parser = subparsers.add_parser(
         "lookup", help="read one exact entity revision"
@@ -160,6 +163,9 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.command == "compile":
             _write_or_print(compile_canonical(args.canonical_root), args.output)
+            return 0
+        if args.command == "runtime-validate":
+            _write_or_print(validate_runtime(load_json(args.runtime)), args.output)
             return 0
         repository = _repository(args.runtime, args.canonical_root)
         if args.command == "lookup":
