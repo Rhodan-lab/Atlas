@@ -11,6 +11,10 @@
       "expected_error": "E-RUNTIME-DIGEST"
     },
     {
+      "name": "source-digest-mismatch",
+      "expected_error": "E-RUNTIME-SOURCE-DIGEST"
+    },
+    {
       "name": "entity-count-mismatch",
       "expected_error": "E-RUNTIME-ENTITY-COUNT"
     },
