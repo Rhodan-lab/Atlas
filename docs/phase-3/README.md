@@ -38,7 +38,7 @@ The accepted fixture includes direct, compositional, ambiguous, cross-slice, con
 
 ## Accepted workstream 2 — lexical baseline
 
-PR #32 established the first transparent ranking baseline over the unchanged accepted query set.
+PR #32 established the first transparent ranking baseline over the unchanged accepted query set, and PR #33 finalized its governance record.
 
 ```yaml
 index_contract: atlas-lexical-index/0.1
@@ -73,7 +73,48 @@ The tokenizer uses NFKC case folding, `[a-z0-9]+`, a fixed English stopword list
 
 The exact evidence is pinned in `content/fixtures/phase3_retrieval/lexical-baseline.json`. Full method, digests, metrics, and limitations are recorded in [`lexical-baseline.md`](lexical-baseline.md).
 
-The accepted metrics are not production quality estimates. The baseline exposes moderate ranking quality and specific weaknesses in methodological scope, formal-model prioritization, cross-platform context, and cross-slice abstraction.
+## Active workstream 3 candidate — structured-field baseline
+
+PR #34 evaluates whether canonical structure, graph context, and provenance improve retrieval without indexing canonical body text.
+
+```yaml
+index_contract: atlas-structured-index/0.1
+scoring_contract: atlas-structured-bm25f-scoring/0.1
+state: structured-baseline-candidate
+entity_count: 34
+term_count: 868
+cutoff: 5
+result_limit: 10
+precision_at_5: 0.366666666667
+recall_at_5: 0.854166666667
+mean_reciprocal_rank: 0.770833333333
+ndcg_at_5: 0.754777384811
+zero_result_rate: 0.0
+unavailable_revision_rate: 1.0
+tie_count: 0
+precision_delta_from_lexical: 0.066666666667
+recall_delta_from_lexical: 0.145833333334
+mrr_delta_from_lexical: 0.118055555555
+ndcg_delta_from_lexical: 0.165705459938
+canonical_body_indexed: false
+accepted_judgments_unchanged: true
+python_evidence_artifacts_byte_identical: true
+replaceable: true
+rebuild_verified: true
+quality_claim: bounded-reference-fixture-only
+external_services: false
+embeddings: false
+vector_database: false
+judgment_specific_tuning: false
+live: false
+repository_mutation: false
+```
+
+The structured index scores stable identity, title, type, substantive front-matter values, lifecycle and review fields, outbound graph references and relations, inbound dependents, and provenance-linked source identity. It reconstructs these fields from the canonical runtime during validation.
+
+The exact candidate evidence is pinned in `content/fixtures/phase3_retrieval/structured-baseline.json`. The method, digests, improvements, and unresolved failures are recorded in [`structured-baseline.md`](structured-baseline.md).
+
+The aggregate improvement is real but bounded. Specific evidence can still outrank scope or causal claims, and the cross-slice query still misses one context-dependent claim inside the top-five cutoff. These weaknesses remain visible for later comparative work.
 
 ## Goal
 
@@ -124,27 +165,23 @@ Accepted evidence:
 - `.github/workflows/phase3-lexical-baseline.yml`;
 - `docs/phase-3/lexical-baseline.md`.
 
-The index is byte-identical across repeated builds and Python 3.11/3.13 evidence runs. Deletion and canonical rebuild are verified. No external services, embeddings, vectors, learned ranking, query expansion, or judgment-specific tuning are used.
+### Workstream 3 — structured-field baseline — candidate
 
-### Workstream 3 — structured-field baseline — next
+Candidate evidence:
 
-The next candidate must:
+- `content/fixtures/phase3_retrieval/structured-baseline.json`;
+- `tools/phase3_retrieval/structured.py`;
+- `tools/phase3_retrieval/tests/test_structured.py`;
+- `.github/workflows/phase3-structured-baseline.yml`;
+- `docs/phase-3/structured-baseline.md`.
 
-- use the exact accepted query-set version unchanged;
-- declare field and graph weights before evaluation;
-- score canonical titles, types, metadata, relations, and provenance transparently;
-- preserve exact revisions, canonical metadata, lifecycle, review level, and provenance;
-- emit accepted result and metric contracts;
-- compare aggregate and query-level results against the lexical baseline;
-- report gains, regressions, and unresolved cases honestly;
-- validate deletion and byte-identical rebuild;
-- avoid embeddings, vector infrastructure, learned weights, and judgment-specific tuning.
+Acceptance requires exact-head Python 3.11/3.13 evidence, the complete retrieval regressions, the Atlas platform matrix, and end-to-end integration.
 
 ### Workstream 4 — comparative retrieval experiments
 
 Only after Workstreams 1–3 are accepted:
 
-- test embedding, vector, hybrid, or reranking candidates;
+- test bounded hybrid, embedding, vector, or reranking candidates;
 - keep external services optional and replaceable;
 - compare quality, determinism, latency, storage, failure behavior, and inspectability;
 - reject infrastructure commitment when evidence does not justify it.
