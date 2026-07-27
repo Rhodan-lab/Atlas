@@ -1,0 +1,234 @@
+name: Phase 3 Rank Fusion
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "content/canonical/**"
+      - "content/fixtures/phase3_retrieval/**"
+      - "docs/phase-3/**"
+      - "tools/phase3_retrieval/**"
+      - ".github/workflows/phase3-rank-fusion.yml"
+  pull_request:
+    paths:
+      - "content/canonical/**"
+      - "content/fixtures/phase3_retrieval/**"
+      - "docs/phase-3/**"
+      - "tools/phase3_retrieval/**"
+      - ".github/workflows/phase3-rank-fusion.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  rank-fusion:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+
+      - name: Install pinned dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+
+      - name: Run rank-fusion tests
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m unittest tools.phase3_retrieval.tests.test_fusion -v 2>&1 | tee phase3-rank-fusion-tests.txt
+
+      - name: Generate and verify rejected rank-fusion evidence
+        run: |
+          python -m tools.phase3_retrieval.fusion \
+            --query-set content/fixtures/phase3_retrieval/reference-query-set.v01.json \
+            --lexical-baseline content/fixtures/phase3_retrieval/lexical-baseline.json \
+            --structured-baseline content/fixtures/phase3_retrieval/structured-baseline.json \
+            --cutoff 5 \
+            --limit 10 \
+            --manifest-output phase3-rank-fusion-manifest.json \
+            --result-output phase3-rank-fusion-results.json \
+            --metric-output phase3-rank-fusion-metrics.json \
+            --report-output phase3-rank-fusion-report.json
+          python - <<'PY'
+          import hashlib
+          import json
+          from collections import Counter
+          from pathlib import Path
+
+          from tools.phase2_kernel import load_json
+          from tools.phase3_retrieval.lexical import _json_sha256
+
+          query_path = Path('content/fixtures/phase3_retrieval/reference-query-set.v01.json')
+          lexical_path = Path('content/fixtures/phase3_retrieval/lexical-baseline.json')
+          structured_path = Path('content/fixtures/phase3_retrieval/structured-baseline.json')
+          pinned = load_json(Path('content/fixtures/phase3_retrieval/rank-fusion.json'))
+          lexical = load_json(lexical_path)
+          structured = load_json(structured_path)
+          manifest_path = Path('phase3-rank-fusion-manifest.json')
+          result_path = Path('phase3-rank-fusion-results.json')
+          metric_path = Path('phase3-rank-fusion-metrics.json')
+          report_path = Path('phase3-rank-fusion-report.json')
+          manifest = load_json(manifest_path)
+          results = load_json(result_path)
+          metrics = load_json(metric_path)
+          report = load_json(report_path)
+
+          assert pinned['contract'] == 'atlas-phase3-rank-fusion-candidate/0.1'
+          assert pinned['mode'] == 'retrieval-evaluation'
+          assert pinned['decision'] == 'rejected'
+          assert pinned['recommendation'] == 'reject-candidate-no-quality-gain-over-structured'
+          assert pinned['quality_claim'] == 'bounded-reference-fixture-only'
+          assert pinned['python_evidence_artifacts_byte_identical'] is True
+          assert pinned['accepted_judgments_unchanged'] is True
+          assert pinned['additional_index_documents'] == 0
+          assert pinned['additional_index_terms'] == 0
+          assert pinned['external_services'] is False
+          assert pinned['embeddings'] is False
+          assert pinned['vector_database'] is False
+          assert pinned['learned_weights'] is False
+          assert pinned['judgment_specific_tuning'] is False
+          assert pinned['replaceable'] is True
+          assert pinned['live'] is False
+          assert pinned['repository_mutation'] is False
+          assert hashlib.sha256(query_path.read_bytes()).hexdigest() == pinned['query_set_sha256']
+          assert _json_sha256(lexical) == pinned['lexical_baseline_sha256']
+          assert _json_sha256(structured) == pinned['structured_baseline_sha256']
+
+          assert manifest['contract'] == pinned['fusion_manifest_contract'] == 'atlas-rank-fusion-manifest/0.1'
+          assert manifest['build_digest'] == pinned['fusion_manifest_build_digest']
+          assert manifest['source_digest'] == pinned['source_digest']
+          assert manifest['entity_count'] == pinned['entity_count'] == 34
+          assert manifest['query_set'] == {'id': pinned['query_set_id'], 'version': pinned['query_set_version']}
+          assert manifest['inputs']['lexical']['baseline_sha256'] == pinned['lexical_baseline_sha256']
+          assert manifest['inputs']['structured']['baseline_sha256'] == pinned['structured_baseline_sha256']
+          assert manifest['method']['contract'] == pinned['method']['contract']
+          assert manifest['method']['rrf_k'] == pinned['method']['rrf_k'] == 60
+          assert manifest['method']['weights'] == {
+              'lexical': pinned['method']['lexical_weight'],
+              'structured': pinned['method']['structured_weight'],
+          }
+          assert manifest['method']['input_limit'] == pinned['method']['input_limit'] == 10
+          assert manifest['method']['output_limit'] == pinned['method']['output_limit'] == 10
+          assert manifest['method']['raw_score_blending'] is False
+          assert manifest['method']['tie_break'] == pinned['method']['tie_break']
+          assert manifest['accepted_judgments_unchanged'] is True
+          assert manifest['replaceable'] is True
+          assert manifest['external_services'] is False
+          assert manifest['embeddings'] is False
+          assert manifest['vector_database'] is False
+          assert manifest['learned_weights'] is False
+          assert manifest['judgment_specific_tuning'] is False
+          assert manifest['live'] is False
+          assert manifest['repository_mutation'] is False
+          assert hashlib.sha256(manifest_path.read_bytes()).hexdigest() == pinned['fusion_manifest_artifact_sha256']
+          assert len(manifest_path.read_bytes()) == pinned['manifest_bytes']
+
+          assert results['contract'] == 'atlas-retrieval-result-set/0.1'
+          assert results['query_set_id'] == pinned['query_set_id']
+          assert results['query_set_version'] == pinned['query_set_version'] == 1
+          assert len(results['responses']) == pinned['query_count'] == 13
+          assert results['index']['contract'] == pinned['fusion_manifest_contract']
+          assert results['index']['build_digest'] == pinned['fusion_manifest_build_digest']
+          assert results['advisory_only'] is True
+          assert results['live'] is False
+          assert results['repository_mutation'] is False
+          assert hashlib.sha256(result_path.read_bytes()).hexdigest() == pinned['fusion_result_artifact_sha256']
+          assert len(result_path.read_bytes()) == pinned['result_set_bytes']
+
+          assert metrics['contract'] == 'atlas-retrieval-metric-report/0.1'
+          assert metrics['cutoff'] == pinned['cutoff'] == 5
+          assert metrics['evaluated_ranked_queries'] == pinned['ranked_query_count'] == 12
+          assert metrics['expected_error_queries'] == pinned['expected_error_query_count'] == 1
+          assert metrics['result_set_sha256'] == pinned['fusion_result_set_sha256']
+          assert metrics['metrics'] == pinned['metrics']
+          assert metrics['tie_count'] == pinned['tie_count'] == 9
+          assert hashlib.sha256(metric_path.read_bytes()).hexdigest() == pinned['fusion_metric_artifact_sha256']
+          assert len(metric_path.read_bytes()) == pinned['metric_report_bytes']
+
+          assert report['contract'] == 'atlas-rank-fusion-report/0.1'
+          assert report['decision'] == 'rank-fusion-candidate'
+          assert report['recommendation'] == pinned['recommendation']
+          assert report['entity_count'] == pinned['entity_count']
+          assert report['query_count'] == pinned['query_count']
+          assert report['cutoff'] == pinned['cutoff']
+          assert report['limit'] == pinned['limit']
+          assert report['metrics'] == pinned['metrics']
+          assert report['lexical_baseline_metrics'] == pinned['lexical_metrics']
+          assert report['structured_baseline_metrics'] == pinned['structured_metrics']
+          assert report['metric_delta_from_lexical'] == pinned['metric_delta_from_lexical']
+          assert report['metric_delta_from_structured'] == pinned['metric_delta_from_structured']
+          assert report['result_set_sha256'] == pinned['fusion_result_set_sha256']
+          assert report['tie_count'] == pinned['tie_count']
+          assert report['complexity']['input_ranked_items'] == pinned['input_ranked_items']
+          assert report['complexity']['output_ranked_items'] == pinned['output_ranked_items']
+          assert report['complexity']['additional_index_documents'] == pinned['additional_index_documents']
+          assert report['complexity']['additional_index_terms'] == pinned['additional_index_terms']
+          assert report['complexity']['embedding_dimensions'] == 0
+          assert report['complexity']['external_calls'] == 0
+          assert report['complexity']['manifest_bytes'] == pinned['manifest_bytes']
+          assert report['complexity']['result_set_bytes'] == pinned['result_set_bytes']
+          assert report['complexity']['metric_report_bytes'] == pinned['metric_report_bytes']
+          assert report['inspectability'] == pinned['inspectability']
+          assert report['deterministic'] is True
+          assert report['accepted_judgments_unchanged'] is True
+          assert report['replaceable'] is True
+          assert report['external_services'] is False
+          assert report['embeddings'] is False
+          assert report['vector_database'] is False
+          assert report['learned_weights'] is False
+          assert report['judgment_specific_tuning'] is False
+          assert report['advisory_only'] is True
+          assert report['live'] is False
+          assert report['repository_mutation'] is False
+          assert hashlib.sha256(report_path.read_bytes()).hexdigest() == pinned['fusion_report_artifact_sha256']
+
+          lexical_outcomes = Counter(
+              item['fusion_vs_lexical']['outcome']
+              for item in report['query_level_comparison']
+          )
+          structured_outcomes = Counter(
+              item['fusion_vs_structured']['outcome']
+              for item in report['query_level_comparison']
+          )
+          assert dict(sorted(lexical_outcomes.items())) == {
+              key: value for key, value in sorted(pinned['query_level_outcomes_vs_lexical'].items()) if value
+          }
+          assert dict(sorted(structured_outcomes.items())) == dict(sorted(pinned['query_level_outcomes_vs_structured'].items()))
+          assert all(
+              pinned['metric_delta_from_structured'][key] < 0
+              for key in ('precision_at_k', 'recall_at_k', 'mean_reciprocal_rank', 'ndcg_at_k')
+          )
+
+          print('fusion-build-digest=' + manifest['build_digest'])
+          print('fusion-result-set-sha256=' + metrics['result_set_sha256'])
+          print('fusion-tie-count=' + str(metrics['tie_count']))
+          print('fusion-metrics=' + json.dumps(metrics['metrics'], sort_keys=True, separators=(',', ':')))
+          print('fusion-delta-lexical=' + json.dumps(report['metric_delta_from_lexical'], sort_keys=True, separators=(',', ':')))
+          print('fusion-delta-structured=' + json.dumps(report['metric_delta_from_structured'], sort_keys=True, separators=(',', ':')))
+          print('fusion-recommendation=' + report['recommendation'])
+          print('phase3-rank-fusion=pass-rejected; k=60; weights=1,1; exact-evidence=true; new-index=false; embeddings=false; live=false')
+          PY
+
+      - name: Upload rank-fusion evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase3-rank-fusion-python-${{ matrix.python-version }}
+          path: |
+            phase3-rank-fusion-tests.txt
+            phase3-rank-fusion-manifest.json
+            phase3-rank-fusion-results.json
+            phase3-rank-fusion-metrics.json
+            phase3-rank-fusion-report.json
+          if-no-files-found: error
+          retention-days: 30

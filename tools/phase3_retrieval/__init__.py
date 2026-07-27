@@ -10,6 +10,15 @@ from .contracts import (
     validate_query_set,
     validate_result_set,
 )
+from .fusion import (
+    FUSION_MANIFEST_CONTRACT,
+    FUSION_REPORT_CONTRACT,
+    FUSION_SCORING_CONTRACT,
+    build_fusion_manifest,
+    fuse_result_sets,
+    run_rank_fusion_candidate,
+    validate_fusion_manifest,
+)
 from .lexical import (
     LEXICAL_BASELINE_REPORT_CONTRACT,
     LEXICAL_INDEX_CONTRACT,
@@ -35,6 +44,9 @@ from .structured import (
 )
 
 __all__ = [
+    "FUSION_MANIFEST_CONTRACT",
+    "FUSION_REPORT_CONTRACT",
+    "FUSION_SCORING_CONTRACT",
     "LEXICAL_BASELINE_REPORT_CONTRACT",
     "LEXICAL_INDEX_CONTRACT",
     "METRIC_REPORT_CONTRACT",
@@ -47,16 +59,20 @@ __all__ = [
     "STRUCTURED_SCORING_CONTRACT",
     "TOKENIZER_CONTRACT",
     "VALIDATION_REPORT_CONTRACT",
+    "build_fusion_manifest",
     "build_lexical_index",
     "build_structured_index",
     "evaluate_result_set",
+    "fuse_result_sets",
     "run_lexical_baseline",
     "run_lexical_queries",
+    "run_rank_fusion_candidate",
     "run_structured_baseline",
     "run_structured_queries",
     "search_lexical_index",
     "search_structured_index",
     "tokenize",
+    "validate_fusion_manifest",
     "validate_lexical_index",
     "validate_metric_report",
     "validate_query_set",

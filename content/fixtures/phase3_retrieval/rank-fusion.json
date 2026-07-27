@@ -1,0 +1,119 @@
+{
+  "accepted_judgments_unchanged": true,
+  "additional_index_documents": 0,
+  "additional_index_terms": 0,
+  "contract": "atlas-phase3-rank-fusion-candidate/0.1",
+  "cutoff": 5,
+  "decision": "rejected",
+  "embeddings": false,
+  "entity_count": 34,
+  "expected_error_query_count": 1,
+  "external_services": false,
+  "fusion_manifest_artifact_sha256": "440491079148bab55ffaa54e00363ced6934d8b1e1af0c57a0a3967f9259720f",
+  "fusion_manifest_build_digest": "1ad4dbab8ab538d44a3e09e263b9c116687c9d4cfb5d4254ca88305565b64d6e",
+  "fusion_manifest_contract": "atlas-rank-fusion-manifest/0.1",
+  "fusion_metric_artifact_sha256": "90d8fc54abed82f06de88664509ebc5a14d919893051f2db9835bd5e7d5a06cd",
+  "fusion_report_artifact_sha256": "d59c4f25cb92e649fd170ce02c54dd7d574ace71f54c8031f6259280cc647a5b",
+  "fusion_result_artifact_sha256": "7193a359331d06205695798716452b91955029f5cd904181ea1f96913b1aef1c",
+  "fusion_result_set_sha256": "7193a359331d06205695798716452b91955029f5cd904181ea1f96913b1aef1c",
+  "input_ranked_items": 230,
+  "inspectability": {
+    "component_contributions_visible": true,
+    "component_ranks_visible": true,
+    "matched_fields_source_prefixed": true,
+    "raw_score_blending": false
+  },
+  "judgment_specific_tuning": false,
+  "known_findings": [
+    "fusion improves all core metrics over the lexical baseline",
+    "fusion loses all core metrics to the structured baseline",
+    "fusion improves the catalase foam-proxy and recommender Twitter-causal queries relative to structured retrieval",
+    "fusion regresses on seven queries relative to structured retrieval, especially scope, model-boundary, and cross-slice queries",
+    "the candidate adds a fusion layer and nine deterministic score ties without adding a searchable index or semantic infrastructure"
+  ],
+  "learned_weights": false,
+  "lexical_baseline_sha256": "760bbd400e919b594850064aefa00d4bfde71d2fcdaa5d97fbd34e7e3f181ef9",
+  "lexical_metrics": {
+    "mean_reciprocal_rank": 0.652777777778,
+    "ndcg_at_k": 0.589071924873,
+    "precision_at_k": 0.3,
+    "recall_at_k": 0.708333333333,
+    "unavailable_revision_rate": 1.0,
+    "zero_result_rate": 0.0
+  },
+  "limit": 10,
+  "live": false,
+  "manifest_bytes": 1855,
+  "method": {
+    "contract": "atlas-reciprocal-rank-fusion/0.1",
+    "input_limit": 10,
+    "lexical_weight": 1.0,
+    "output_limit": 10,
+    "raw_score_blending": false,
+    "rrf_k": 60,
+    "structured_weight": 1.0,
+    "tie_break": "exact-key-ascending"
+  },
+  "metric_delta_from_lexical": {
+    "mean_reciprocal_rank": 0.083333333333,
+    "ndcg_at_k": 0.088947506363,
+    "precision_at_k": 0.05,
+    "recall_at_k": 0.083333333334,
+    "unavailable_revision_rate": 0.0,
+    "zero_result_rate": 0.0
+  },
+  "metric_delta_from_structured": {
+    "mean_reciprocal_rank": -0.034722222222,
+    "ndcg_at_k": -0.076757953575,
+    "precision_at_k": -0.016666666667,
+    "recall_at_k": -0.0625,
+    "unavailable_revision_rate": 0.0,
+    "zero_result_rate": 0.0
+  },
+  "metric_report_bytes": 633,
+  "metrics": {
+    "mean_reciprocal_rank": 0.736111111111,
+    "ndcg_at_k": 0.678019431236,
+    "precision_at_k": 0.35,
+    "recall_at_k": 0.791666666667,
+    "unavailable_revision_rate": 1.0,
+    "zero_result_rate": 0.0
+  },
+  "mode": "retrieval-evaluation",
+  "output_ranked_items": 118,
+  "python_evidence_artifacts_byte_identical": true,
+  "quality_claim": "bounded-reference-fixture-only",
+  "query_count": 13,
+  "query_level_outcomes_vs_lexical": {
+    "gain": 7,
+    "mixed": 0,
+    "regression": 1,
+    "unchanged": 4
+  },
+  "query_level_outcomes_vs_structured": {
+    "gain": 2,
+    "mixed": 1,
+    "regression": 7,
+    "unchanged": 2
+  },
+  "query_set_id": "retrieval-query-set:phase3-reference-en-v1",
+  "query_set_sha256": "e8b27966a87eaf6fd07585dfcdb10a08ac0b322db6a31cc5a3638f2f27e3b302",
+  "query_set_version": 1,
+  "ranked_query_count": 12,
+  "recommendation": "reject-candidate-no-quality-gain-over-structured",
+  "replaceable": true,
+  "repository_mutation": false,
+  "result_set_bytes": 106273,
+  "source_digest": "684d08f23db50c2d994ea07293c6aaea2cbcb24492b062663b2e43144f07d3b1",
+  "structured_baseline_sha256": "fc2bf63814e029ceffd6b66f493ae7f0fc30b8bff207ffd39393b8739de9dca5",
+  "structured_metrics": {
+    "mean_reciprocal_rank": 0.770833333333,
+    "ndcg_at_k": 0.754777384811,
+    "precision_at_k": 0.366666666667,
+    "recall_at_k": 0.854166666667,
+    "unavailable_revision_rate": 1.0,
+    "zero_result_rate": 0.0
+  },
+  "tie_count": 9,
+  "vector_database": false
+}
