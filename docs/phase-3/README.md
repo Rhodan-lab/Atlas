@@ -8,6 +8,7 @@ mode: retrieval-evaluation
 accepted_workstreams: [1, 2, 3]
 workstream_4_candidate_1: evaluated-rejected
 active_workstream: 5
+workstream_5_state: research-foundation-candidate
 preferred_bounded_ranking: structured-field-baseline
 retrieval_authority: advisory-only
 exact_revision_required: true
@@ -106,37 +107,21 @@ Evidence: `content/fixtures/phase3_retrieval/structured-baseline.json` and [`str
 
 ## Workstream 4 candidate 1 — reciprocal-rank fusion — evaluated and rejected
 
-PR #36 evaluated the method declared before scoring:
+PR #36 evaluated the predeclared equal-weight RRF method.
 
 ```yaml
 method: reciprocal-rank-fusion
 rrf_k: 60
 lexical_weight: 1.0
 structured_weight: 1.0
-input_limit: 10
-output_limit: 10
-raw_score_blending: false
-query_set: unchanged
-judgments: unchanged
-tie_break: exact-key-ascending
-```
-
-Pinned result:
-
-```yaml
 state: evaluated-rejected
 tested_head: cec57a7a090dbdc8238a19a21f9d84e38a836917
 evidence_merge_commit: e6010893112b10362a15392d8635a0297b055267
 recommendation: reject-candidate-no-quality-gain-over-structured
-manifest_build_digest: 1ad4dbab8ab538d44a3e09e263b9c116687c9d4cfb5d4254ca88305565b64d6e
-result_set_sha256: 7193a359331d06205695798716452b91955029f5cd904181ea1f96913b1aef1c
 precision_at_5: 0.35
 recall_at_5: 0.791666666667
 mean_reciprocal_rank: 0.736111111111
 ndcg_at_5: 0.678019431236
-zero_result_rate: 0.0
-unavailable_revision_rate: 1.0
-tie_count: 9
 precision_delta_from_structured: -0.016666666667
 recall_delta_from_structured: -0.0625
 mrr_delta_from_structured: -0.034722222222
@@ -145,79 +130,77 @@ query_gains_vs_structured: 2
 query_mixed_vs_structured: 1
 query_regressions_vs_structured: 7
 query_unchanged_vs_structured: 2
-additional_index_documents: 0
-additional_index_terms: 0
-python_evidence_artifacts_byte_identical: true
+tie_count: 9
 ```
 
-Fusion improves all four core metrics over lexical retrieval but loses all four to structured retrieval. Under the predeclared rule, the extra layer is rejected as the preferred method. No post-hoc weight or judgment change is permitted.
+Fusion improves all four core metrics over lexical retrieval but loses all four to structured retrieval. Under the predeclared rule, the added layer is rejected. No post-hoc weight or judgment change is permitted.
 
 Evidence: `content/fixtures/phase3_retrieval/rank-fusion.json` and [`rank-fusion.md`](rank-fusion.md).
 
-## Workstream 5 — active research trails and candidate discovery
+## Workstream 5 — research trails and candidate discovery — candidate
 
-The authoritative Phase 3 gate also requires filters, saved research trails, and contradiction or duplicate candidates. These foundations must exist before Phase 3 can close or semantic infrastructure can be justified.
+PR #38 defines the remaining research foundations required by the Phase 3 gate.
 
-### Filter contract
-
-Required deterministic dimensions:
+### Contracts
 
 ```yaml
-filters:
-  - entity-type
-  - status
-  - domain
-  - date
-  - evidence-role
+filter_contract: atlas-retrieval-filter/0.1
+filtered_result_contract: atlas-filtered-result-set/0.1
+research_trail_contract: atlas-research-trail/0.1
+contradiction_candidate_contract: atlas-contradiction-candidate/0.1
+duplicate_candidate_contract: atlas-duplicate-candidate/0.1
+```
+
+Filters support entity type, status, canonical domain collection, inclusive updated-date bounds, and explicit evidence relation role. They preserve exact revisions, provenance, review level, lifecycle status, and staleness.
+
+Saved trails bind accepted query text, an exact filter revision, accepted structured-baseline identity, exact entity revisions, original ranks, include/exclude/context actions, rationales, dates, and open questions. Trails are research references, not canonical copies.
+
+Contradiction and duplicate records are advisory candidates. A candidate does not prove a contradiction or duplicate and cannot resolve, merge, deprecate, or alter either entity automatically.
+
+### Pinned candidate evidence
+
+```yaml
+state: research-foundation-candidate
+fixture_id: research-foundations:phase3-reference-en-v1
+fixture_version: 1
+entity_count: 34
+filters: 4
+filter_result_items: 9
+trails: 1
+trail_entries: 5
+contradiction_candidates: 1
+duplicate_candidates: 1
+negative_cases: 5
+report_digest: 733aeb28a3147a36d1cc7d3406ab98fa81522cb4b4e87e3aa792aaf54893a394
+report_artifact_sha256: bdf56d085025e624b80fd7e0b35a362e16331e593185184d5500c7603b3910bd
+filter_result_artifact_sha256: 3f25421b72350be1d8d820baaa9b549ead5d9d8caa5bb61538cd0ecc545c3f67
+python_substantive_artifacts_byte_identical: true
 exact_revision_preserved: true
 provenance_visible: true
 review_and_staleness_visible: true
-implicit_latest: forbidden
+canonical_copy_authority: false
+automatic_merge_or_resolution: false
+embeddings: false
+vector_database: false
+live: false
+repository_mutation: false
 ```
 
-Filtering may narrow advisory results. It may not rewrite ranks, hide status, replace revisions, or mutate canonical content.
+The reference trail contains five exact-revision decisions for the cross-platform recommender query.
 
-### Saved research-trail contract
+The contradiction candidate is assessed `scope-difference-likely`; the duplicate candidate is assessed `related-not-duplicate`. These results prove that discovery remains a request for inspection rather than a forced assertion.
 
-A trail is a versioned research record containing:
+Pinned negative errors:
 
-- stable trail ID and revision;
-- query and filter snapshot;
-- exact selected entity revisions;
-- exclusions and rationale;
-- ranking and explanation snapshot;
-- notes, open questions, and decision state;
-- provenance-visible references;
-- created and updated timestamps.
-
-A trail stores references and research decisions. It may not copy canonical knowledge into a new authority, promote lifecycle state, or silently follow `latest` revisions.
-
-### Candidate-discovery contracts
-
-Two advisory candidate types are required:
-
-```yaml
-contradiction_candidate:
-  authority: advisory-only
-  required: [exact-revisions, compared-statements, scope-analysis, evidence-paths, rationale]
-  automatic_resolution: forbidden
-duplicate_candidate:
-  authority: advisory-only
-  required: [exact-revisions, similarity-basis, semantic-differences, provenance, rationale]
-  automatic_merge: forbidden
+```text
+E-FILTER-DOMAIN
+E-FILTER-DATE
+E-REVISION-MISSING
+E-CANDIDATE-PAIR
+E-DUPLICATE-AUTHORITY
 ```
 
-A candidate means “inspect this possible relationship,” not “a contradiction or duplicate has been proven.”
-
-### Workstream 5 evidence
-
-The workstream must include:
-
-- valid filter, trail, contradiction-candidate, and duplicate-candidate fixtures;
-- malformed, unavailable-revision, stale-revision, ambiguous-scope, and authority-escalation negatives;
-- deterministic validation on Python 3.11 and 3.13;
-- replaceable generated reports;
-- no canonical, review, lifecycle, merge, or release mutation.
+Evidence: `content/fixtures/phase3_retrieval/research-foundations.v01.json`, `content/fixtures/phase3_retrieval/research-foundations-baseline.json`, and [`research-foundations.md`](research-foundations.md).
 
 ## Semantic infrastructure decision
 
@@ -226,7 +209,7 @@ Embedding, vector, learned-ranking, and external semantic-service experiments re
 1. Workstream 5 contracts are accepted;
 2. the relevance collection is broadened beyond 34 entities and 13 queries;
 3. hard negatives and candidate-discovery cases are included;
-4. the architecture decision compares quality, determinism, inspectability, storage, latency, failure behavior, and replaceability.
+4. any semantic architecture is compared on quality, determinism, inspectability, storage, latency, failure behavior, and replaceability.
 
 No vector database is selected by the current evidence.
 
@@ -260,6 +243,15 @@ No vector database is selected by the current evidence.
 - `tools/phase3_retrieval/fusion.py`;
 - `.github/workflows/phase3-rank-fusion.yml`;
 - `docs/phase-3/rank-fusion.md`.
+
+### Workstream 5 — candidate
+
+- `content/fixtures/phase3_retrieval/research-foundations.v01.json`;
+- `content/fixtures/phase3_retrieval/research-foundations-baseline.json`;
+- `tools/phase3_retrieval/research.py`;
+- `tools/phase3_retrieval/tests/test_research.py`;
+- `.github/workflows/phase3-research-foundations.yml`;
+- `docs/phase-3/research-foundations.md`.
 
 ## Non-goals
 
