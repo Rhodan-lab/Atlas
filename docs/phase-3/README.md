@@ -9,6 +9,8 @@ phase: 3
 mode: retrieval-evaluation
 accepted_workstreams: [1, 2, 3]
 active_workstream: 4
+latest_candidate: reciprocal-rank-fusion
+latest_candidate_decision: rejected
 retrieval_authority: advisory-only
 exact_revision_required: true
 live: false
@@ -73,11 +75,11 @@ repository_mutation: false
 
 The tokenizer uses NFKC case folding, `[a-z0-9]+`, a fixed English stopword list, no stemming, and no query expansion. BM25F scores body, stable ID, title, and type with fixed public weights and exact-key ascending ties.
 
-The exact evidence is pinned in `content/fixtures/phase3_retrieval/lexical-baseline.json`. See [`lexical-baseline.md`](lexical-baseline.md).
+Evidence: `content/fixtures/phase3_retrieval/lexical-baseline.json` and [`lexical-baseline.md`](lexical-baseline.md).
 
 ## Accepted Workstream 3 — structured-field baseline
 
-PR #34 established the structured-field baseline over the unchanged accepted query set.
+PR #34 established the structured-field baseline over the unchanged accepted query set, and PR #35 activated Workstream 4.
 
 ```yaml
 index_contract: atlas-structured-index/0.1
@@ -115,23 +117,22 @@ live: false
 repository_mutation: false
 ```
 
-The structured index scores stable identity, title, type, substantive front-matter values, lifecycle and review fields, outbound graph references and relations, inbound dependents, and provenance-linked source identity. Canonical Markdown body text is excluded and validation reconstructs every field from the canonical runtime.
+The structured index scores stable identity, title, type, substantive front-matter values, lifecycle and review fields, outbound graph references and relations, inbound dependents, and provenance-linked source identity. Canonical body text is excluded.
 
-The exact evidence is pinned in `content/fixtures/phase3_retrieval/structured-baseline.json`. See [`structured-baseline.md`](structured-baseline.md).
+Evidence: `content/fixtures/phase3_retrieval/structured-baseline.json` and [`structured-baseline.md`](structured-baseline.md).
 
-The aggregate improvement is accepted as bounded fixture evidence, not a production estimate. Remaining failures are preserved: evidence can outrank methodological or causal claims, and the cross-slice query still misses one context-dependent target inside the top five.
+## Workstream 4 candidate 1 — equal-weight reciprocal-rank fusion — rejected
 
-## Active Workstream 4 — comparative retrieval experiments
-
-The first candidate is declared before evaluation:
+The method was declared before evaluation:
 
 ```yaml
-candidate: deterministic-rank-fusion
 method: reciprocal-rank-fusion
 rrf_k: 60
 lexical_weight: 1.0
 structured_weight: 1.0
-inputs: accepted-exact-result-rankings
+input_limit: 10
+output_limit: 10
+raw_score_blending: false
 query_set: unchanged
 judgments: unchanged
 tie_break: exact-key-ascending
@@ -140,14 +141,44 @@ embeddings: false
 vector_database: false
 learned_weights: false
 judgment_specific_tuning: false
-retrieval_authority: advisory-only
-live: false
-repository_mutation: false
 ```
 
-This bounded hybrid must compare against both accepted baselines, preserve exact revisions and provenance, report aggregate and query-level gains and regressions, and justify its added complexity. It must be rejected when evidence does not support it.
+Pinned evidence:
 
-Embedding or vector experiments remain separate later candidates. No vector database is selected by Workstream 4 entry.
+```yaml
+state: evaluated-rejected
+recommendation: reject-candidate-no-quality-gain-over-structured
+manifest_build_digest: 1ad4dbab8ab538d44a3e09e263b9c116687c9d4cfb5d4254ca88305565b64d6e
+result_set_sha256: 7193a359331d06205695798716452b91955029f5cd904181ea1f96913b1aef1c
+precision_at_5: 0.35
+recall_at_5: 0.791666666667
+mean_reciprocal_rank: 0.736111111111
+ndcg_at_5: 0.678019431236
+zero_result_rate: 0.0
+unavailable_revision_rate: 1.0
+tie_count: 9
+precision_delta_from_lexical: 0.05
+recall_delta_from_lexical: 0.083333333334
+mrr_delta_from_lexical: 0.083333333333
+ndcg_delta_from_lexical: 0.088947506363
+precision_delta_from_structured: -0.016666666667
+recall_delta_from_structured: -0.0625
+mrr_delta_from_structured: -0.034722222222
+ndcg_delta_from_structured: -0.076757953575
+query_gains_vs_structured: 2
+query_mixed_vs_structured: 1
+query_regressions_vs_structured: 7
+query_unchanged_vs_structured: 2
+additional_index_documents: 0
+additional_index_terms: 0
+python_evidence_artifacts_byte_identical: true
+```
+
+Fusion improves every core metric over lexical retrieval, but loses every core metric to structured retrieval. Under the predeclared rule, the extra layer is rejected as the preferred method. It remains useful negative evidence: global equal weighting repairs two structured failures but dilutes stronger structured rankings on seven queries.
+
+Evidence: `content/fixtures/phase3_retrieval/rank-fusion.json` and [`rank-fusion.md`](rank-fusion.md).
+
+This result does not justify changing the weights after evaluation and does not justify selecting a vector database.
 
 ## Goal
 
@@ -173,7 +204,7 @@ Reports bind the exact query-set version and result-set digest and expose precis
 
 ### Replaceability
 
-Every index and comparison artifact must be reproducible, disposable, validated before query use, byte-identically rebuildable, removable without canonical mutation, and comparable against accepted baselines.
+Every index and comparison artifact must be reproducible, disposable, validated before use, byte-identically rebuildable, removable without canonical mutation, and comparable against accepted baselines.
 
 ## Evidence files
 
@@ -182,7 +213,6 @@ Every index and comparison artifact must be reproducible, disposable, validated 
 - `content/fixtures/phase3_retrieval/reference-query-set.v01.json`;
 - `content/fixtures/phase3_retrieval/contract-baseline.json`;
 - `tools/phase3_retrieval/contracts.py`;
-- `tools/phase3_retrieval/tests/test_contracts.py`;
 - `.github/workflows/phase3-retrieval-contract.yml`;
 - `docs/phase-3/evaluation-contract.md`.
 
@@ -190,7 +220,6 @@ Every index and comparison artifact must be reproducible, disposable, validated 
 
 - `content/fixtures/phase3_retrieval/lexical-baseline.json`;
 - `tools/phase3_retrieval/lexical.py`;
-- `tools/phase3_retrieval/tests/test_lexical.py`;
 - `.github/workflows/phase3-lexical-baseline.yml`;
 - `docs/phase-3/lexical-baseline.md`.
 
@@ -198,9 +227,15 @@ Every index and comparison artifact must be reproducible, disposable, validated 
 
 - `content/fixtures/phase3_retrieval/structured-baseline.json`;
 - `tools/phase3_retrieval/structured.py`;
-- `tools/phase3_retrieval/tests/test_structured.py`;
 - `.github/workflows/phase3-structured-baseline.yml`;
 - `docs/phase-3/structured-baseline.md`.
+
+### Workstream 4 candidate 1 — evaluated and rejected
+
+- `content/fixtures/phase3_retrieval/rank-fusion.json`;
+- `tools/phase3_retrieval/fusion.py`;
+- `.github/workflows/phase3-rank-fusion.yml`;
+- `docs/phase-3/rank-fusion.md`.
 
 ## Non-goals
 
@@ -214,7 +249,7 @@ Still out of scope:
 - retrieval-generated canonical content;
 - automatic review, lifecycle, promotion, or release mutation;
 - active multilingual retrieval;
-- vector database selection before comparative evidence.
+- vector database selection without comparative evidence.
 
 ## Authority boundary
 
