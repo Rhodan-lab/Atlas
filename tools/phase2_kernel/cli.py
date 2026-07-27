@@ -14,6 +14,13 @@ from .kernel import (
     load_json,
     render_json,
 )
+from .offline_protocol import (
+    audit_offline_protocol,
+    import_offline_batch,
+    load_snapshot_documents,
+)
+
+PROTOCOL_FIXTURES = Path("content/fixtures/phase2_protocol")
 
 
 def _write_or_print(payload: dict[str, object], output: Path | None) -> None:
@@ -38,6 +45,26 @@ def _split_exact(value: str) -> tuple[str, int]:
     return entity_id, int(revision)
 
 
+def _add_repository_arguments(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--runtime", type=Path)
+    parser.add_argument(
+        "--canonical-root", type=Path, default=Path("content/canonical")
+    )
+
+
+def _add_protocol_arguments(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--snapshot",
+        type=Path,
+        default=PROTOCOL_FIXTURES / "principia-phase18.snapshot.json",
+    )
+    parser.add_argument(
+        "--batch",
+        type=Path,
+        default=PROTOCOL_FIXTURES / "thermal-control.multi-artifact.batch.v02.json",
+    )
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -54,49 +81,76 @@ def build_parser() -> argparse.ArgumentParser:
         "lookup", help="read one exact entity revision"
     )
     lookup_parser.add_argument("exact_reference")
-    lookup_parser.add_argument("--runtime", type=Path)
-    lookup_parser.add_argument(
-        "--canonical-root", type=Path, default=Path("content/canonical")
-    )
+    _add_repository_arguments(lookup_parser)
 
     provenance_parser = subparsers.add_parser(
         "provenance", help="trace an entity to source entities"
     )
     provenance_parser.add_argument("exact_reference")
-    provenance_parser.add_argument("--runtime", type=Path)
-    provenance_parser.add_argument(
-        "--canonical-root", type=Path, default=Path("content/canonical")
-    )
+    _add_repository_arguments(provenance_parser)
 
     bridge_validate = subparsers.add_parser(
         "bridge-validate", help="validate and normalize a Principia export"
     )
     bridge_validate.add_argument("export", type=Path)
-    bridge_validate.add_argument("--runtime", type=Path)
-    bridge_validate.add_argument(
-        "--canonical-root", type=Path, default=Path("content/canonical")
-    )
+    _add_repository_arguments(bridge_validate)
 
     bridge_import = subparsers.add_parser(
         "bridge-import", help="write a normalized external-dependent record"
     )
     bridge_import.add_argument("export", type=Path)
     bridge_import.add_argument("--output", type=Path, required=True)
-    bridge_import.add_argument("--runtime", type=Path)
-    bridge_import.add_argument(
-        "--canonical-root", type=Path, default=Path("content/canonical")
-    )
+    _add_repository_arguments(bridge_import)
 
     impact = subparsers.add_parser(
         "impact", help="report internal and external lifecycle impact"
     )
     impact.add_argument("exact_reference")
     impact.add_argument("--external", type=Path, action="append", default=[])
-    impact.add_argument("--runtime", type=Path)
-    impact.add_argument(
-        "--canonical-root", type=Path, default=Path("content/canonical")
-    )
+    _add_repository_arguments(impact)
     impact.add_argument("--output", type=Path)
+
+    offline_batch = subparsers.add_parser(
+        "offline-batch-import",
+        help="atomically re-import a pinned Principia multi-artifact batch",
+    )
+    _add_protocol_arguments(offline_batch)
+    _add_repository_arguments(offline_batch)
+    offline_batch.add_argument("--output", type=Path)
+
+    offline_audit = subparsers.add_parser(
+        "offline-protocol-audit",
+        help="audit the pinned Principia batch, events, acknowledgements, and reconciliation",
+    )
+    _add_protocol_arguments(offline_audit)
+    _add_repository_arguments(offline_audit)
+    offline_audit.add_argument(
+        "--receipt",
+        type=Path,
+        default=PROTOCOL_FIXTURES / "thermal-control.multi-artifact.receipt.v02.json",
+    )
+    offline_audit.add_argument(
+        "--events",
+        type=Path,
+        default=PROTOCOL_FIXTURES / "thermal-control.lifecycle-events.v01.json",
+    )
+    offline_audit.add_argument(
+        "--acknowledgements",
+        type=Path,
+        default=PROTOCOL_FIXTURES
+        / "thermal-control.lifecycle-acknowledgements.v01.json",
+    )
+    offline_audit.add_argument(
+        "--chain",
+        type=Path,
+        default=PROTOCOL_FIXTURES / "thermal-control.event-protocol-chain.v01.json",
+    )
+    offline_audit.add_argument(
+        "--reconciliation",
+        type=Path,
+        default=PROTOCOL_FIXTURES / "thermal-control.reconciliation-report.v01.json",
+    )
+    offline_audit.add_argument("--output", type=Path)
     return parser
 
 
@@ -140,8 +194,29 @@ def main(argv: list[str] | None = None) -> int:
                 ),
                 args.output,
             )
+        elif args.command == "offline-batch-import":
+            _, documents = load_snapshot_documents(args.snapshot)
+            receipt = import_offline_batch(
+                load_json(args.batch),
+                documents,
+                repository,
+            )
+            _write_or_print(receipt, args.output)
+        elif args.command == "offline-protocol-audit":
+            _, documents = load_snapshot_documents(args.snapshot)
+            report = audit_offline_protocol(
+                load_json(args.batch),
+                load_json(args.receipt),
+                load_json(args.events),
+                load_json(args.acknowledgements),
+                load_json(args.chain),
+                load_json(args.reconciliation),
+                documents,
+                repository,
+            )
+            _write_or_print(report, args.output)
         return 0
-    except KernelError as exc:
+    except (KernelError, OSError) as exc:
         print(str(exc), file=sys.stderr)
         return 1
 
