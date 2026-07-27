@@ -1,0 +1,116 @@
+name: Phase 3 Rank Fusion
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "content/canonical/**"
+      - "content/fixtures/phase3_retrieval/**"
+      - "docs/phase-3/**"
+      - "tools/phase3_retrieval/**"
+      - ".github/workflows/phase3-rank-fusion.yml"
+  pull_request:
+    paths:
+      - "content/canonical/**"
+      - "content/fixtures/phase3_retrieval/**"
+      - "docs/phase-3/**"
+      - "tools/phase3_retrieval/**"
+      - ".github/workflows/phase3-rank-fusion.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  rank-fusion:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+
+      - name: Install pinned dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+
+      - name: Run rank-fusion tests
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m unittest tools.phase3_retrieval.tests.test_fusion -v 2>&1 | tee phase3-rank-fusion-tests.txt
+
+      - name: Generate rank-fusion evidence
+        run: |
+          python -m tools.phase3_retrieval.fusion \
+            --query-set content/fixtures/phase3_retrieval/reference-query-set.v01.json \
+            --lexical-baseline content/fixtures/phase3_retrieval/lexical-baseline.json \
+            --structured-baseline content/fixtures/phase3_retrieval/structured-baseline.json \
+            --cutoff 5 \
+            --limit 10 \
+            --manifest-output phase3-rank-fusion-manifest.json \
+            --result-output phase3-rank-fusion-results.json \
+            --metric-output phase3-rank-fusion-metrics.json \
+            --report-output phase3-rank-fusion-report.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          manifest = json.loads(Path('phase3-rank-fusion-manifest.json').read_text(encoding='utf-8'))
+          metrics = json.loads(Path('phase3-rank-fusion-metrics.json').read_text(encoding='utf-8'))
+          report = json.loads(Path('phase3-rank-fusion-report.json').read_text(encoding='utf-8'))
+          assert manifest['contract'] == 'atlas-rank-fusion-manifest/0.1'
+          assert manifest['method']['contract'] == 'atlas-reciprocal-rank-fusion/0.1'
+          assert manifest['method']['rrf_k'] == 60
+          assert manifest['method']['weights'] == {'lexical': 1.0, 'structured': 1.0}
+          assert manifest['method']['raw_score_blending'] is False
+          assert manifest['accepted_judgments_unchanged'] is True
+          assert manifest['replaceable'] is True
+          assert manifest['external_services'] is False
+          assert manifest['embeddings'] is False
+          assert manifest['vector_database'] is False
+          assert manifest['learned_weights'] is False
+          assert manifest['judgment_specific_tuning'] is False
+          assert manifest['live'] is False
+          assert manifest['repository_mutation'] is False
+          assert report['contract'] == 'atlas-rank-fusion-report/0.1'
+          assert report['decision'] == 'rank-fusion-candidate'
+          assert report['deterministic'] is True
+          assert report['accepted_judgments_unchanged'] is True
+          assert report['complexity']['additional_index_documents'] == 0
+          assert report['complexity']['additional_index_terms'] == 0
+          assert report['complexity']['embedding_dimensions'] == 0
+          assert report['complexity']['external_calls'] == 0
+          assert report['inspectability']['component_ranks_visible'] is True
+          assert report['inspectability']['component_contributions_visible'] is True
+          assert report['inspectability']['raw_score_blending'] is False
+          print('fusion-build-digest=' + manifest['build_digest'])
+          print('fusion-result-set-sha256=' + metrics['result_set_sha256'])
+          print('fusion-tie-count=' + str(metrics['tie_count']))
+          print('fusion-metrics=' + json.dumps(metrics['metrics'], sort_keys=True, separators=(',', ':')))
+          print('fusion-delta-lexical=' + json.dumps(report['metric_delta_from_lexical'], sort_keys=True, separators=(',', ':')))
+          print('fusion-delta-structured=' + json.dumps(report['metric_delta_from_structured'], sort_keys=True, separators=(',', ':')))
+          print('fusion-recommendation=' + report['recommendation'])
+          print('phase3-rank-fusion=candidate; k=60; weights=1,1; new-index=false; embeddings=false; live=false')
+          PY
+
+      - name: Upload rank-fusion evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase3-rank-fusion-python-${{ matrix.python-version }}
+          path: |
+            phase3-rank-fusion-tests.txt
+            phase3-rank-fusion-manifest.json
+            phase3-rank-fusion-results.json
+            phase3-rank-fusion-metrics.json
+            phase3-rank-fusion-report.json
+          if-no-files-found: error
+          retention-days: 30
