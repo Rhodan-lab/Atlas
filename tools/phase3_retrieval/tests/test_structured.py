@@ -67,7 +67,7 @@ class StructuredBaselineTests(unittest.TestCase):
         results = run_structured_queries(index, self.query_set, self.repository, limit=10)
         errors = [response for response in results["responses"] if response["outcome"] == "error"]
         self.assertEqual(len(errors), 1)
-        self.assertEqual(errors[0]["error"], "E-ENTITY-REVISION-NOT-FOUND")
+        self.assertEqual(errors[0]["error"], "E-REVISION-MISSING")
 
     def test_delete_and_rebuild_is_byte_identical(self) -> None:
         first = build_structured_index(CANONICAL)
