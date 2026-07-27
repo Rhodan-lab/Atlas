@@ -1,0 +1,362 @@
+{
+  "contract": "atlas-retrieval-query-set/0.1",
+  "corpus_contract": "atlas-content/0.1",
+  "corpus_entity_count": 34,
+  "id": "retrieval-query-set:phase3-reference-en-v1",
+  "judgment_policy": {
+    "authority": "evaluation-only",
+    "exhaustive_over_pinned_corpus": true,
+    "grade_scale": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "unlisted_grade": 0
+  },
+  "language": "en",
+  "live": false,
+  "minimum_queries_per_slice": {
+    "catalase": 4,
+    "cross-slice": 1,
+    "feedback": 4,
+    "recommenders": 4
+  },
+  "mode": "retrieval-evaluation",
+  "queries": [
+    {
+      "difficulty": "direct",
+      "expected": {
+        "judgments": [
+          {
+            "grade": 3,
+            "id": "claim:en:catalase-optimum-requires-assay-scope",
+            "rationale": "The claim directly states that optimum values require enzyme-source and assay scope.",
+            "revision": 1
+          },
+          {
+            "grade": 2,
+            "id": "synthesis:en:catalase-assay-conditions",
+            "rationale": "The synthesis explains why reported values belong to defined preparations and methods.",
+            "revision": 1
+          }
+        ],
+        "kind": "ranked"
+      },
+      "id": "query:retrieval:catalase-optimum-scope",
+      "intent": "Find the methodological boundary on interpreting catalase optima.",
+      "slice": "catalase",
+      "text": "Why can a reported optimum pH not be generalized across all catalase assays?"
+    },
+    {
+      "difficulty": "direct",
+      "expected": {
+        "judgments": [
+          {
+            "grade": 3,
+            "id": "model:en:catalase-assay-observation",
+            "rationale": "The model separates catalytic activity from assay signals and names foam instability as a failure mode.",
+            "revision": 1
+          },
+          {
+            "grade": 2,
+            "id": "synthesis:en:catalase-assay-conditions",
+            "rationale": "The synthesis states that a classroom-visible reaction is an uncalibrated proxy.",
+            "revision": 1
+          }
+        ],
+        "kind": "ranked"
+      },
+      "id": "query:retrieval:catalase-foam-proxy",
+      "intent": "Distinguish an observed foam signal from purified-enzyme kinetics.",
+      "slice": "catalase",
+      "text": "What does foam height represent in a classroom catalase experiment?"
+    },
+    {
+      "difficulty": "compositional",
+      "expected": {
+        "judgments": [
+          {
+            "grade": 3,
+            "id": "model:en:catalase-assay-observation",
+            "rationale": "The model lists inputs, assumptions, calibration needs, and failure modes affecting the measured signal.",
+            "revision": 1
+          },
+          {
+            "grade": 2,
+            "id": "claim:en:catalase-optimum-requires-assay-scope",
+            "rationale": "The claim requires exposure duration and measurement method to remain visible when interpreting results.",
+            "revision": 1
+          }
+        ],
+        "kind": "ranked"
+      },
+      "id": "query:retrieval:catalase-assay-distortion",
+      "intent": "Retrieve both the observation model and the scope rule for assay interpretation.",
+      "slice": "catalase",
+      "text": "Which experimental factors can distort the signal measured in a catalase assay?"
+    },
+    {
+      "ambiguity": {
+        "note": "The query omits enzyme source, assay definition, exposure duration, and measurement method.",
+        "status": "needs-scope"
+      },
+      "difficulty": "ambiguous",
+      "expected": {
+        "judgments": [
+          {
+            "grade": 3,
+            "id": "claim:en:catalase-optimum-requires-assay-scope",
+            "rationale": "The strongest answer is the scope requirement, because the query omits enzyme source and assay definition.",
+            "revision": 1
+          },
+          {
+            "grade": 2,
+            "id": "synthesis:en:catalase-assay-conditions",
+            "rationale": "The synthesis supplies the broader limitation that different preparations and methods need not share one optimum.",
+            "revision": 1
+          }
+        ],
+        "kind": "ranked"
+      },
+      "id": "query:retrieval:catalase-universal-temperature",
+      "intent": "Respond to an underspecified optimum question without inventing a universal value.",
+      "slice": "catalase",
+      "text": "What is the optimum temperature for catalase?"
+    },
+    {
+      "difficulty": "direct",
+      "expected": {
+        "judgments": [
+          {
+            "grade": 3,
+            "id": "model:en:delayed-correction-recurrence",
+            "rationale": "The model gives the recurrence, gain, delay, initial history, and proof conditions.",
+            "revision": 2
+          },
+          {
+            "grade": 2,
+            "id": "evidence:en:delayed-feedback-periodic-sequence",
+            "rationale": "The evidence records the exact generated states for k=1, d=1, x0=1, and x1=0.",
+            "revision": 2
+          }
+        ],
+        "kind": "ranked"
+      },
+      "id": "query:retrieval:feedback-period-six-conditions",
+      "intent": "Retrieve the exact formal model and its generated sequence evidence.",
+      "slice": "feedback",
+      "text": "Which recurrence, parameters, and initial conditions generate the exact period-six orbit?"
+    },
+    {
+      "difficulty": "direct",
+      "expected": {
+        "judgments": [
+          {
+            "grade": 3,
+            "id": "evidence:en:delayed-feedback-periodic-sequence",
+            "rationale": "The evidence shows that the ordered pair returns and excludes shorter periods.",
+            "revision": 2
+          },
+          {
+            "grade": 3,
+            "id": "model:en:delayed-correction-recurrence",
+            "rationale": "The deterministic second-order recurrence explains why the returned state pair forces future repetition.",
+            "revision": 2
+          }
+        ],
+        "kind": "ranked"
+      },
+      "id": "query:retrieval:feedback-ordered-pair-proof",
+      "intent": "Retrieve the deterministic ordered-state return proof.",
+      "slice": "feedback",
+      "text": "Why does the displayed delayed-feedback sequence continue repeating instead of stopping after eight shown states?"
+    },
+    {
+      "difficulty": "compositional",
+      "expected": {
+        "judgments": [
+          {
+            "grade": 3,
+            "id": "claim:en:model-oscillation-does-not-prove-real-system",
+            "rationale": "The claim directly rejects automatic transfer from simplified model oscillation to real-system behavior.",
+            "revision": 1
+          },
+          {
+            "grade": 2,
+            "id": "synthesis:en:delayed-feedback-and-oscillation",
+            "rationale": "The synthesis distinguishes one bounded periodic orbit from universal instability claims.",
+            "revision": 2
+          }
+        ],
+        "kind": "ranked"
+      },
+      "id": "query:retrieval:feedback-model-world-boundary",
+      "intent": "Retrieve the exact model-to-world inference boundary and the bounded synthesis.",
+      "slice": "feedback",
+      "text": "Does delayed feedback always make a real system oscillate or become unstable?"
+    },
+    {
+      "difficulty": "exact-revision-error",
+      "expected": {
+        "available_revisions": [
+          2
+        ],
+        "error": "E-REVISION-MISSING",
+        "kind": "error",
+        "target": {
+          "id": "model:en:delayed-correction-recurrence",
+          "revision": 3
+        }
+      },
+      "id": "query:retrieval:feedback-unavailable-revision",
+      "intent": "Verify that retrieval rejects an unavailable exact revision instead of substituting the current revision.",
+      "slice": "feedback",
+      "text": "Return model:en:delayed-correction-recurrence at revision 3."
+    },
+    {
+      "difficulty": "direct",
+      "expected": {
+        "judgments": [
+          {
+            "grade": 3,
+            "id": "claim:en:facebook-exposure-reflects-network-ranking-and-clicks",
+            "rationale": "The claim directly preserves network composition, ranking, and click selection as distinct pathways.",
+            "revision": 1
+          },
+          {
+            "grade": 2,
+            "id": "synthesis:en:recommender-exposure-and-governance",
+            "rationale": "The synthesis places the Facebook pathway within a broader exposure model.",
+            "revision": 1
+          }
+        ],
+        "kind": "ranked"
+      },
+      "id": "query:retrieval:recommender-facebook-pathway",
+      "intent": "Retrieve the scoped multi-stage Facebook exposure claim.",
+      "slice": "recommenders",
+      "text": "In the Facebook study, did social connections, ranking, or user clicks shape cross-cutting exposure?"
+    },
+    {
+      "difficulty": "direct",
+      "expected": {
+        "judgments": [
+          {
+            "grade": 3,
+            "id": "claim:en:twitter-ranking-changed-relative-political-amplification",
+            "rationale": "The claim records the randomized comparison with the reverse-chronological control feed.",
+            "revision": 1
+          },
+          {
+            "grade": 2,
+            "id": "claim:en:recommender-effects-are-context-dependent",
+            "rationale": "The context claim prevents the Twitter result from becoming a universal recommender claim.",
+            "revision": 1
+          }
+        ],
+        "kind": "ranked"
+      },
+      "id": "query:retrieval:recommender-twitter-causal",
+      "intent": "Retrieve the causal claim while preserving its platform, period, and outcome scope.",
+      "slice": "recommenders",
+      "text": "What did the randomized Twitter comparison show about algorithmic ranking and political amplification?"
+    },
+    {
+      "difficulty": "compositional",
+      "expected": {
+        "judgments": [
+          {
+            "grade": 3,
+            "id": "claim:en:recommender-effects-are-context-dependent",
+            "rationale": "The claim directly rejects generalization across different platforms, designs, populations, periods, and outcomes.",
+            "revision": 1
+          },
+          {
+            "grade": 2,
+            "id": "synthesis:en:recommender-exposure-and-governance",
+            "rationale": "The synthesis says the studies should not be merged into one universal estimate.",
+            "revision": 1
+          },
+          {
+            "grade": 1,
+            "id": "claim:en:facebook-exposure-reflects-network-ranking-and-clicks",
+            "rationale": "The Facebook claim supplies one scoped observational pathway.",
+            "revision": 1
+          },
+          {
+            "grade": 1,
+            "id": "claim:en:twitter-ranking-changed-relative-political-amplification",
+            "rationale": "The Twitter claim supplies a different randomized causal comparison.",
+            "revision": 1
+          }
+        ],
+        "kind": "ranked"
+      },
+      "id": "query:retrieval:recommender-cross-platform-generalization",
+      "intent": "Retrieve the cross-platform scope limitation and the two study-specific claims.",
+      "slice": "recommenders",
+      "text": "Can the Facebook and Twitter studies be combined into one universal recommender effect size?"
+    },
+    {
+      "ambiguity": {
+        "note": "Evidence can inform the policy question, but the conclusion also depends on explicit autonomy, accountability, fairness, accessibility, safety, and feasibility judgments.",
+        "status": "contested-normative"
+      },
+      "difficulty": "ambiguous",
+      "expected": {
+        "judgments": [
+          {
+            "grade": 3,
+            "id": "claim:en:users-should-have-recommender-explanation-and-choice",
+            "rationale": "The normative claim states the recommendation, values, alternatives, and feasibility limits.",
+            "revision": 1
+          },
+          {
+            "grade": 2,
+            "id": "synthesis:en:recommender-exposure-and-governance",
+            "rationale": "The synthesis separates empirical, legal, and normative reasoning and keeps the recommendation contestable.",
+            "revision": 1
+          }
+        ],
+        "kind": "ranked"
+      },
+      "id": "query:retrieval:recommender-explanation-choice",
+      "intent": "Retrieve the explicit normative claim and the evidence-value boundary rather than presenting policy as an empirical fact.",
+      "slice": "recommenders",
+      "text": "Should users receive explanations and choices about recommender ranking?"
+    },
+    {
+      "difficulty": "compositional",
+      "expected": {
+        "judgments": [
+          {
+            "grade": 3,
+            "id": "claim:en:catalase-optimum-requires-assay-scope",
+            "rationale": "The catalase claim requires enzyme-source and assay scope.",
+            "revision": 1
+          },
+          {
+            "grade": 3,
+            "id": "claim:en:recommender-effects-are-context-dependent",
+            "rationale": "The recommender claim requires platform, population, outcome, and time-period scope.",
+            "revision": 1
+          }
+        ],
+        "kind": "ranked"
+      },
+      "id": "query:retrieval:scope-across-domains",
+      "intent": "Retrieve the shared reasoning pattern that measured effects remain scoped to methods and contexts.",
+      "slice": "cross-slice",
+      "text": "What do catalase optimum claims and recommender effect claims have in common?"
+    }
+  ],
+  "repository_mutation": false,
+  "required_slices": [
+    "catalase",
+    "cross-slice",
+    "feedback",
+    "recommenders"
+  ],
+  "version": 1
+}
