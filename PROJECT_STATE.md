@@ -21,7 +21,9 @@ Phase 1 is closed under an explicitly **AI-reviewed** policy. No human or expert
 - first Phase 2 kernel and bridge receiver — PR #19, commit `8f1e473578d9086a73dae44f0b6001b246cfbc20`;
 - Principia v0.2 importer implementation — PR #20, commit `1cc4aec6908a8703a7f505478329c633a23b4ef9`;
 - accepted Principia importer governance baseline — PR #21, commit `9370cc746e9756e433ac3772d56d079c9803b144`;
-- offline multi-artifact and lifecycle-protocol audit — PR #22, commit `1096a2176eb50e1921081bb3f46eeac8b13bd2c3`.
+- offline multi-artifact and lifecycle-protocol audit — PR #22, commit `1096a2176eb50e1921081bb3f46eeac8b13bd2c3`;
+- accepted offline protocol governance record — PR #23, commit `ec666b59c4834c9a716006be9f9830d20178af34`;
+- runtime hardening and failure semantics — PR #24, commit `7596e4fbae099304d64a5b2371c0fb4a2e55ffc4`.
 
 ## Language policy
 
@@ -133,32 +135,12 @@ governance_pr: 21
 governance_merge_commit: 9370cc746e9756e433ac3772d56d079c9803b144
 ```
 
-Pinned Principia source identity:
-
-```text
-Principia PR: #16
-Principia head: 405cfabb6eba71b42bd42ed81b922b458f9175e7
-Principia merge: eb3a00dfbfdfaa5470cb40505fa213e5349a917f
-Principia source bridge mode: bridge-candidate
-```
-
 Accepted exact dependencies:
 
 - `claim:en:model-oscillation-does-not-prove-real-system@1`;
 - `concept:en:feedback@1`;
 - `concept:en:oscillation@1`;
 - `model:en:delayed-correction-recurrence@2`.
-
-Accepted importer evidence:
-
-- pinned copy of the generated Principia export;
-- source path, Git blob SHA, and SHA-256 verification;
-- adapter from the Principia v0.2 wire format into the Atlas receiver;
-- verification that `depends_on` exactly mirrors `depends_on_exact`;
-- exact admission of all four accepted dependencies;
-- preserved separation of Atlas and Principia status;
-- lifecycle-aware impact escalation;
-- representative benchmarks for compilation, lookup, provenance, bridge import, and impact reporting.
 
 Lifecycle policy:
 
@@ -172,20 +154,9 @@ retracted             -> block-release
 
 Atlas reports both the Principia-declared action and the effective lifecycle action. It does not mutate either repository or execute the action automatically.
 
-PR #20 measurements on the 34-entity corpus passed their regression budgets on Python 3.11 and 3.13. These measurements are operational small-corpus evidence, not production-scale claims.
-
 ## Phase 2 workstream 3 — accepted
 
-Principia was inspected before this workstream began. The pinned main commit `4ecb41ad4f9f524e83cc0db43f672bd9dcf3b67a` contains the merged Phase 18 offline reconciliation simulation and earlier Phase 16–17 evidence.
-
-External-source observation:
-
-- Principia PR #25 is merged at that pinned commit;
-- the pinned Phase 18 artifacts exist on main;
-- Principia `PROJECT_STATE.md` at that commit still contains candidate-era exact-head-validation-pending wording;
-- Atlas records that inconsistency but does not change or reinterpret Principia governance.
-
-Accepted workstream state:
+The accepted offline protocol workstream pins Principia commit `4ecb41ad4f9f524e83cc0db43f672bd9dcf3b67a` and records:
 
 ```yaml
 snapshot_contract: atlas-principia-offline-snapshot/0.1
@@ -200,35 +171,11 @@ live: false
 fixture_kind: bounded-synthetic
 ```
 
-The mode remains `offline-protocol-audit-candidate` because this is still an offline, non-live protocol maturity level. The implementation workstream itself is accepted.
+The accepted evidence chain contains three Principia artifact exports, one atomic batch, one Principia receipt, two bounded-synthetic lifecycle events, two acknowledgements, one digest chain, and one reconciliation report.
 
-The accepted evidence chain contains:
+The audit binds exact source paths, Atlas fixture paths, Git blob SHAs, the accepted Atlas importer snapshot, lifecycle fan-out, acknowledgement actions, affected-artifact sets, chain heads, and Phase 17–18 provenance.
 
-```text
-3 Principia artifact exports
-1 atomic multi-artifact batch
-1 Principia batch receipt
-2 bounded-synthetic lifecycle events
-2 Principia acknowledgements
-1 event/acknowledgement digest chain
-1 reconciliation report
-```
-
-The audit:
-
-- binds the exact nine source-path, Atlas-fixture-path, and Git-blob-SHA mappings;
-- rejects fixture path escape and snapshot mapping substitution;
-- binds the complete accepted Atlas PR #20/#21 importer snapshot;
-- atomically re-imports `principia:failure-pattern:feedback-instability@1`, `principia:investigation:room-cooling@1`, and `principia:system-dossier:refrigerator@1`;
-- compares all normalized records against Principia's Phase 16 receipt;
-- independently recomputes lifecycle fan-out from the imported dependency records;
-- verifies unique protocol identities, events, and acknowledgements;
-- verifies event and acknowledgement digests, order, predecessors, and chain heads;
-- rejects weakened actions and affected-artifact-set drift;
-- binds Phase 17 provenance and verifies the Phase 18 reconciliation report;
-- rejects partial batches, corrupted exports, stale reconciliation references, automatic mutation, status inheritance, and `live: true`.
-
-The two lifecycle events are Principia-authored `bounded-synthetic` fixtures. Atlas does not accept them as real lifecycle transitions and does not change the actual status of `concept:en:feedback@1` or `claim:en:model-oscillation-does-not-prove-real-system@1`.
+The lifecycle events remain Principia-authored `bounded-synthetic` fixtures. Atlas does not accept them as real lifecycle transitions and does not change actual Atlas entity status.
 
 Accepted audit result:
 
@@ -248,15 +195,60 @@ automatic_release_action: false
 repository_mutation: false
 ```
 
-Validation passed on the exact tested head through:
+## Phase 2 workstream 4 — accepted
 
-- Phase 2 Knowledge Kernel on Python 3.11 and 3.13;
-- Foundation Contract;
-- Phase 1 AI Review regression;
-- Atlas CI;
-- TypeScript, Rust, and Python 3.11–3.13;
-- C++ on Ubuntu, macOS, and Windows;
-- end-to-end contracts.
+PR #24 established strict runtime admission and canonical failure semantics.
+
+Accepted workstream state:
+
+```yaml
+runtime_contract: atlas-kernel-runtime/0.1
+validation_contract: atlas-runtime-validation-report/0.1
+mode: runtime-hardening-candidate
+state: accepted
+accepted_pr: 24
+tested_head: a7b2998937f6225462bf2b0f3820e5bf76ac56d8
+accepted_merge_commit: 7596e4fbae099304d64a5b2371c0fb4a2e55ffc4
+live: false
+mutation: false
+```
+
+The public `KernelRepository` now validates a complete serialized runtime before indexing it. Admission checks:
+
+- runtime and source contracts;
+- recomputed source digest from ordered entity paths and source hashes;
+- exact entity count, identity, revision, type, key, path, and deterministic order;
+- source and body digest shape;
+- runtime-to-metadata identity agreement;
+- sorted, duplicate-free references and exact targets;
+- sorted, duplicate-free relations and exact targets;
+- relation-to-reference graph agreement;
+- an exact `revisions_by_id` index;
+- a complete reverse-dependency index that exactly mirrors references.
+
+Failure evidence includes:
+
+```text
+17 serialized-runtime corruption cases
+5 authored-corpus failure cases
+22 deterministic negative fixtures total
+```
+
+The authored-corpus fixtures cover missing canonical references, invalid relation targets, duplicate exact entities, duplicate YAML keys, and malformed relation structures.
+
+Accepted runtime validation result:
+
+```yaml
+contract: atlas-runtime-validation-report/0.1
+decision: valid
+entity_count: 34
+reference_count: 50
+relation_count: 7
+reverse_edge_count: 50
+mutation: false
+```
+
+Validation passed on Python 3.11 and 3.13, Foundation Contract, Atlas CI, TypeScript, Rust, Python 3.11–3.13, C++ on Ubuntu/macOS/Windows, and end-to-end contracts.
 
 ## Principia & Atlas boundary
 
@@ -286,12 +278,15 @@ Still frozen:
 - live Principia dependency;
 - accepting external synthetic events as canonical Atlas lifecycle history;
 - automatic status or release mutation;
+- repairing or silently dropping malformed runtime records;
 - treating prototype runtime formats as canonical before kernel evaluation.
 
 Allowed:
 
 - minimal knowledge-kernel implementation;
 - deterministic compilation and queries;
+- strict serialized-runtime admission;
+- deterministic canonical and runtime failure fixtures;
 - English canonical content corrections;
 - explicitly labeled AI reviews;
 - optional human verification that remains separately labeled;
@@ -304,11 +299,10 @@ Allowed:
 
 ## Immediate next actions
 
-1. add malformed runtime and missing canonical-reference fixtures beyond bridge-specific cases;
-2. build a larger deterministic synthetic corpus for scaled benchmarks;
-3. test multiple independent batches, receipt-chain continuation, idempotent replay, and conflicting sequence recovery;
-4. define the Phase 2 closure evidence and remaining retrieval-entry blockers;
-5. keep `live: false` until independent machine contracts pass in both repositories and a separate activation decision is recorded;
-6. produce the Phase 2 completion report before retrieval work.
+1. build a larger deterministic synthetic corpus for scaled compilation, lookup, provenance, import, and impact benchmarks;
+2. test multiple independent batches, receipt-chain continuation, idempotent replay, skipped sequences, and conflicting sequence recovery;
+3. define Phase 2 closure evidence and the remaining retrieval-entry blockers;
+4. keep `live: false` until independent machine contracts pass in both repositories and a separate activation decision is recorded;
+5. produce the Phase 2 completion report before retrieval work.
 
-**Phase 1 is complete under the AI-reviewed policy. Phase 2 is active. PRs #19–#22 are accepted. The offline multi-artifact and lifecycle-protocol audit remains non-live, treats lifecycle events as bounded-synthetic fixtures only, and does not imply human verification.**
+**Phase 1 is complete under the AI-reviewed policy. Phase 2 remains active. PRs #19–#24 are accepted. Runtime hardening is accepted as `mode: runtime-hardening-candidate` with `live: false`; retrieval and live integration remain frozen.**
