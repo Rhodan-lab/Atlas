@@ -1,0 +1,95 @@
+name: Phase 3 Retrieval Contract
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "content/canonical/**"
+      - "content/fixtures/phase3_retrieval/**"
+      - "docs/phase-3/**"
+      - "tools/phase3_retrieval/**"
+      - ".github/workflows/phase3-retrieval-contract.yml"
+  pull_request:
+    paths:
+      - "content/canonical/**"
+      - "content/fixtures/phase3_retrieval/**"
+      - "docs/phase-3/**"
+      - "tools/phase3_retrieval/**"
+      - ".github/workflows/phase3-retrieval-contract.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  retrieval-contract:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+
+      - name: Install pinned dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+
+      - name: Run retrieval contract tests
+        run: python -m unittest tools.phase3_retrieval.tests.test_contracts -v
+
+      - name: Validate the reference query and judgment set
+        run: |
+          python -m tools.phase3_retrieval.contracts \
+            validate-query-set \
+            --query-set content/fixtures/phase3_retrieval/reference-query-set.v01.json \
+            --output phase3-retrieval-contract-report.json
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          query_path = Path('content/fixtures/phase3_retrieval/reference-query-set.v01.json')
+          baseline = json.loads(
+              Path('content/fixtures/phase3_retrieval/contract-baseline.json').read_text(encoding='utf-8')
+          )
+          report = json.loads(
+              Path('phase3-retrieval-contract-report.json').read_text(encoding='utf-8')
+          )
+
+          assert baseline['contract'] == 'atlas-phase3-retrieval-contract-baseline/0.1'
+          assert baseline['mode'] == 'retrieval-evaluation'
+          assert baseline['live'] is False
+          assert baseline['repository_mutation'] is False
+          assert hashlib.sha256(query_path.read_bytes()).hexdigest() == baseline['query_set_sha256']
+
+          assert report['contract'] == 'atlas-retrieval-contract-validation/0.1'
+          assert report['validated_contract'] == 'atlas-retrieval-query-set/0.1'
+          assert report['decision'] == 'valid'
+          assert report['entity_count'] == baseline['entity_count'] == 34
+          assert report['query_count'] == baseline['query_count'] == 13
+          assert report['ranked_query_count'] == baseline['ranked_query_count'] == 12
+          assert report['expected_error_query_count'] == baseline['expected_error_query_count'] == 1
+          assert report['positive_judgment_count'] == baseline['positive_judgment_count'] == 26
+          assert report['implicit_nonrelevant_judgment_count'] == baseline['implicit_nonrelevant_judgment_count'] == 382
+          assert report['slice_counts'] == baseline['slice_counts']
+          assert report['difficulty_counts'] == baseline['difficulty_counts']
+          assert report['judgment_authority'] == 'evaluation-only'
+          assert report['live'] is False
+          assert report['repository_mutation'] is False
+          print('phase3-retrieval-contract=pass; queries=13; ranked=12; expected-errors=1; positive=26; implicit-grade-zero=382; live=false')
+          PY
+
+      - name: Upload retrieval contract evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase3-retrieval-contract-python-${{ matrix.python-version }}
+          path: phase3-retrieval-contract-report.json
+          if-no-files-found: error
+          retention-days: 30
