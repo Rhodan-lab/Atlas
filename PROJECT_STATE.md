@@ -4,7 +4,7 @@
 
 **Phase 3 — Retrieval Evaluation (active)**
 
-Phase 1 is complete under an explicitly **AI-reviewed** policy. Phase 2 is complete under deterministic kernel, compatibility, failure, scale, replay, replaceability, and rollback evidence. No human or expert verification is claimed, no live Principia dependency is active, and retrieval has advisory authority only.
+Phase 1 is complete under an explicitly **AI-reviewed** policy. Phase 2 is complete under deterministic kernel, compatibility, failure, scale, replay, replaceability, and rollback evidence. Phase 3 Workstream 1 is accepted. No human or expert verification is claimed, no live Principia dependency is active, and retrieval has advisory authority only.
 
 ## Accepted history
 
@@ -27,7 +27,9 @@ Phase 1 is complete under an explicitly **AI-reviewed** policy. Phase 2 is compl
 - accepted runtime-hardening governance record — PR #25, commit `e66975a9a2e74f97fcd799ee80b47483a8390f0d`;
 - scale, replay, and recovery validation — PR #26, commit `dd0c64447fb70727d260362f9877ffc6be560c3c`;
 - accepted scale and replay governance record — PR #27, commit `fae9fc301a6d6d4bb91d8939c7d9a7fd6b48374b`;
-- Phase 2 closure, replaceability, and retrieval-entry evidence — PR #28, commit `99b5c4db514da8ac1f6f30740fae66d42e242a74`.
+- Phase 2 closure, replaceability, and retrieval-entry evidence — PR #28, commit `99b5c4db514da8ac1f6f30740fae66d42e242a74`;
+- Phase 2 closure governance and Phase 3 activation — PR #29, commit `9374db0359b19366bd32fe5ea65980bab67068c0`;
+- Phase 3 retrieval evaluation contracts and judgments — PR #30, commit `973827e6e7644f79437f3705c73f9e6d83e9a477`.
 
 ## Language policy
 
@@ -157,6 +159,40 @@ Required outcomes:
 9. comparative evidence before any embedding or vector-store commitment;
 10. a Phase 3 completion report recommending or rejecting broader retrieval work.
 
+## Phase 3 workstream 1 — accepted
+
+PR #30 established the retrieval evaluation boundary before ranking implementation.
+
+```yaml
+query_set_contract: atlas-retrieval-query-set/0.1
+result_set_contract: atlas-retrieval-result-set/0.1
+metric_report_contract: atlas-retrieval-metric-report/0.1
+mode: retrieval-evaluation
+state: accepted
+accepted_pr: 30
+tested_head: 3cd4c103da12c140e1a4d0b7bf2bdb8cca5e9727
+accepted_merge_commit: 973827e6e7644f79437f3705c73f9e6d83e9a477
+query_set_id: retrieval-query-set:phase3-reference-en-v1
+query_set_version: 1
+entity_count: 34
+query_count: 13
+ranked_query_count: 12
+expected_error_query_count: 1
+positive_judgment_count: 26
+implicit_grade_zero_judgment_count: 382
+judgment_authority: evaluation-only
+retrieval_authority: advisory-only
+exact_revision_required: true
+live: false
+repository_mutation: false
+```
+
+The accepted fixture spans catalase, delayed feedback, recommendation systems, and cross-slice scope reasoning. It includes direct, compositional, ambiguous, contested-normative, and unavailable-revision cases.
+
+For each of the 12 ranked queries, every unlisted exact entity in the pinned 34-entity corpus receives grade 0. Listed exact targets receive grades 1–3 with explicit rationales. The judgments are evaluation fixtures, not canonical scientific claims or human relevance consensus.
+
+Accepted result contracts require exact revisions, canonical metadata agreement, inspectable match evidence, provenance, deterministic rank order, ascending exact-key tie handling, a replaceable index contract, and the canonical source digest. Metric reports bind the exact result-set digest and expose precision, recall, MRR, nDCG, zero-result rate, unavailable-revision rate, and tie count.
+
 ## Phase 3 entry boundary
 
 Allowed:
@@ -197,11 +233,12 @@ Atlas is the knowledge and governance layer of the future **Principia & Atlas** 
 
 ## Immediate next actions
 
-1. define the Phase 3 query-and-judgment contract;
-2. create a bounded fixture set spanning all three English reference slices;
-3. implement a deterministic lexical baseline without external services;
-4. implement a structured-field baseline over titles, types, claims, relations, and provenance;
-5. define relevance metrics, tie rules, and exact-revision result contracts;
-6. keep vector infrastructure, live synchronization, and automatic mutation frozen until comparative evidence supports a separate decision.
+1. implement a deterministic lexical baseline without external services;
+2. use the accepted query set unchanged and emit contract-valid result and metric reports;
+3. tokenize and normalize transparently with deterministic scoring and tie handling;
+4. preserve exact revisions, canonical metadata, matched-field evidence, and provenance;
+5. prove index deletion and byte-identical rebuild from canonical content;
+6. implement a structured-field baseline only after the lexical candidate is accepted;
+7. keep vector infrastructure, live synchronization, canonical writes, and automatic mutation frozen.
 
-**Phase 1 and Phase 2 are complete. Phase 3 — Retrieval Evaluation is active. Retrieval remains bounded, advisory, exact-revision, provenance-visible, replaceable, and `live: false`.**
+**Phase 1 and Phase 2 are complete. Phase 3 Workstream 1 is accepted. Workstream 2 — deterministic lexical retrieval — is next. Retrieval remains bounded, advisory, exact-revision, provenance-visible, replaceable, and `live: false`.**
