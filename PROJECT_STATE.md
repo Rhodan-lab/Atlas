@@ -2,9 +2,9 @@
 
 ## Current status
 
-**Phase 2 — Minimal Knowledge Kernel (active)**
+**Phase 3 — Retrieval Evaluation (active)**
 
-Phase 1 is closed under an explicitly **AI-reviewed** policy. No human or expert verification is claimed.
+Phase 1 is complete under an explicitly **AI-reviewed** policy. Phase 2 is complete under deterministic kernel, compatibility, failure, scale, replay, replaceability, and rollback evidence. No human or expert verification is claimed, no live Principia dependency is active, and retrieval has advisory authority only.
 
 ## Accepted history
 
@@ -24,7 +24,10 @@ Phase 1 is closed under an explicitly **AI-reviewed** policy. No human or expert
 - offline multi-artifact and lifecycle-protocol audit — PR #22, commit `1096a2176eb50e1921081bb3f46eeac8b13bd2c3`;
 - accepted offline protocol governance record — PR #23, commit `ec666b59c4834c9a716006be9f9830d20178af34`;
 - runtime hardening and failure semantics — PR #24, commit `7596e4fbae099304d64a5b2371c0fb4a2e55ffc4`;
-- scale, replay, and recovery validation — PR #26, commit `dd0c64447fb70727d260362f9877ffc6be560c3c`.
+- accepted runtime-hardening governance record — PR #25, commit `e66975a9a2e74f97fcd799ee80b47483a8390f0d`;
+- scale, replay, and recovery validation — PR #26, commit `dd0c64447fb70727d260362f9877ffc6be560c3c`;
+- accepted scale and replay governance record — PR #27, commit `fae9fc301a6d6d4bb91d8939c7d9a7fd6b48374b`;
+- Phase 2 closure, replaceability, and retrieval-entry evidence — PR #28, commit `99b5c4db514da8ac1f6f30740fae66d42e242a74`.
 
 ## Language policy
 
@@ -40,8 +43,8 @@ Atlas distinguishes review levels instead of presenting all review as equivalent
 
 An AI-reviewed artifact has:
 
-- an identified AI reviewer;
-- explicit model and non-human status;
+- an identified AI reviewer and model family;
+- explicit non-human status;
 - exact entity revisions;
 - source-use checks;
 - reproducibility or mathematical checks where applicable;
@@ -49,304 +52,156 @@ An AI-reviewed artifact has:
 - explicit limitations;
 - `human_verified: false`.
 
-AI review is sufficient for the current Atlas development phase and does not require a separate human reviewer duty.
+AI review is sufficient for current Atlas development and is not human verification.
 
 ### Human-verified
 
-Human verification is an optional stronger layer. Existing handoff, intake, admission, coverage, and promotion tools remain available for future use, but they are not active Phase 2 gates.
+Human verification remains an optional stronger layer. Historical handoff, intake, admission, coverage, and promotion tools remain available, but they are not active Phase 3 gates.
 
 Atlas must never convert an AI review into a human review or invent reviewer identity, credentials, independence, or accountability.
 
-## Phase 1 completion evidence
+## Phase 1 completion
 
-The active completion evidence remains:
+The delayed-feedback slice is accepted at `ai-reviewed` with:
+
+```yaml
+reviewer: GPT-5.6 Thinking
+reviewer_kind: ai
+human_verified: false
+human_review_required: false
+overall_outcome: pass
+entity_count: 10
+```
+
+For `x[t+1] = x[t] - x[t-1]`, `x0 = 1`, and `x1 = 0`, the exact orbit is bounded and periodic with period 6. This is a formal result for one recurrence and initial history. It is not empirical evidence about a real system and not a general theorem that delay causes instability.
+
+Active evidence:
 
 - `content/reviews/ai/feedback-delayed-comprehensive.json`;
 - `docs/phase-1/ai-review-report.md`;
-- `tools/foundation-validator/phase1_ai_review.py`;
-- corrected delayed-feedback canonical revisions.
+- `tools/foundation-validator/phase1_ai_review.py`.
 
-The reviewer is `GPT-5.6 Thinking`, reviewer kind `ai`, with `human_verified: false` and `human_review_required: false`.
+## Phase 2 completion
 
-For:
+Phase 2 established the smallest dependable, deterministic, read-only kernel over canonical `atlas-content/0.1` Markdown.
 
-```text
-x[t+1] = x[t] - x[t-1]
-x0 = 1
-x1 = 0
+Accepted capabilities:
+
+- deterministic canonical-to-runtime compilation;
+- strict admission of `atlas-kernel-runtime/0.1`;
+- exact `ENTITY_ID@REVISION` lookup;
+- typed relation traversal;
+- synthesis-to-source provenance traversal;
+- reverse-dependency and lifecycle-impact queries;
+- deterministic failure behavior for malformed or incompatible content and runtime records;
+- exact-revision Principia compatibility with `live: false`;
+- atomic multi-artifact offline protocol validation;
+- lifecycle escalation reporting without automatic action;
+- representative and 1,026-entity scaled measurements;
+- append-only receipt replay, idempotency, and deterministic recovery failures;
+- storage-neutral portable snapshots;
+- independent query-engine equivalence;
+- deterministic migration and rollback rebuilding from canonical Markdown.
+
+### Accepted closure evidence
+
+```yaml
+completion_contract: atlas-phase2-completion-report/0.1
+portable_contract: atlas-kernel-portable-snapshot/0.1
+mode: phase2-closure-candidate
+state: accepted
+accepted_pr: 28
+tested_head: ad8bc4fa66eb894ca72b13f81be5e3c14bbd241a
+accepted_merge_commit: 99b5c4db514da8ac1f6f30740fae66d42e242a74
+entity_count: 34
+query_equivalence_checks: 136
+query_decision: equivalent
+migration_decision: replaceable
+retrieval_decision: proceed-bounded-retrieval-evaluation
+live: false
+automatic_status_change: false
+automatic_release_action: false
+repository_mutation: false
 ```
 
-the orbit is bounded and periodic with exact period 6. This is a formal result for one recurrence and initial history. It is not empirical evidence about a real system and not a general theorem that delay causes instability.
+The portable query engine independently reconstructs generated revision and reverse-dependency indexes and matches the standard repository for exact lookup, relation traversal, provenance traversal, and transitive impact for every canonical exact revision.
+
+Generated runtimes, indexes, caches, and portable snapshots remain disposable. Canonical Markdown and pinned external fixtures remain authoritative. Rollback means deleting generated representations and rebuilding byte-identically from those authoritative sources.
 
 ## Authority order
 
 1. `PROJECT_STATE.md`;
 2. accepted foundation documents in `docs/foundation/`;
-3. accepted ADRs;
+3. accepted phase completion reports and ADRs;
 4. canonical authored content;
 5. identified review records and reports, with review level visible;
 6. generated manifests and operational artifacts;
-7. experimental runtime and adapter code.
+7. experimental runtime, retrieval, adapter, and index code.
 
-## Phase 2 objective
+## Phase 3 objective
 
-Phase 2 builds the smallest dependable runtime over authored `atlas-content/0.1` Markdown.
+Phase 3 evaluates whether Atlas can retrieve relevant, versioned knowledge without weakening identity, provenance, review, lifecycle, or replaceability guarantees.
+
+Phase 3 is an evaluation phase, not a production-search deployment phase.
 
 Required outcomes:
 
-- canonical-to-runtime compilation;
-- read-only exact-revision entity repository;
-- typed relation traversal;
-- synthesis-to-source provenance queries;
-- dependency and revision-impact queries;
-- deterministic command and library interfaces;
-- compatibility and failure tests;
-- representative and scaled performance measurements;
-- no change to authored Markdown meaning.
+1. a versioned query-and-judgment fixture set;
+2. deterministic lexical retrieval baseline;
+3. deterministic structured-field retrieval baseline;
+4. explicit relevance metrics and deterministic tie handling;
+5. exact entity ID and revision in every result;
+6. visible provenance, review level, lifecycle, and staleness in every result;
+7. safe failures for unavailable revisions and malformed indexes;
+8. deletion and canonical rebuild tests for every generated index;
+9. comparative evidence before any embedding or vector-store commitment;
+10. a Phase 3 completion report recommending or rejecting broader retrieval work.
 
-## Phase 2 workstream 1 — accepted
+## Phase 3 entry boundary
 
-PR #19 implemented:
+Allowed:
 
-- `atlas-kernel-runtime/0.1` deterministic compilation;
-- path-form-independent source identity;
-- exact `ENTITY_ID@REVISION` lookup;
-- typed relation and explicit provenance traversal;
-- internal reverse-dependency impact queries;
-- Atlas-local bridge receiver validation;
-- normalized `atlas-external-dependent/0.1` operational records;
-- deterministic rejection of ID-only exports, stale revisions, status inheritance, and `live: true`;
-- Python 3.11 and 3.13 machine gates.
+- bounded lexical and structured retrieval experiments;
+- versioned query and relevance fixtures;
+- deterministic ranking and tie-breaking;
+- advisory result sets with exact revisions and provenance;
+- replaceable generated indexes;
+- comparative embedding or vector experiments only after lexical and structured baselines exist.
 
-This receiver is not a live integration. It does not clone Principia, call Principia during Atlas validation, copy Principia status, or modify canonical Atlas meaning.
+Still frozen:
 
-## Phase 2 workstream 2 — accepted
-
-PR #20 established and validated the Principia importer baseline using the exact export merged through Principia PR #16. PR #21 finalized the accepted governance record.
-
-Atlas importer baseline:
-
-```yaml
-contract: principia-atlas-external-dependent/0.2
-mode: importer-candidate
-live: false
-accepted_pr: 20
-accepted_merge_commit: 1cc4aec6908a8703a7f505478329c633a23b4ef9
-governance_pr: 21
-governance_merge_commit: 9370cc746e9756e433ac3772d56d079c9803b144
-```
-
-Accepted exact dependencies:
-
-- `claim:en:model-oscillation-does-not-prove-real-system@1`;
-- `concept:en:feedback@1`;
-- `concept:en:oscillation@1`;
-- `model:en:delayed-correction-recurrence@2`.
-
-Lifecycle policy:
-
-```text
-current               -> preserve declared action
-deprecated            -> at least revalidate
-review-required stale -> at least revalidate
-confirmed stale       -> at least revalidate
-retracted             -> block-release
-```
-
-Atlas reports both the Principia-declared action and the effective lifecycle action. It does not mutate either repository or execute the action automatically.
-
-## Phase 2 workstream 3 — accepted
-
-The accepted offline protocol workstream pins Principia commit `4ecb41ad4f9f524e83cc0db43f672bd9dcf3b67a` and records:
-
-```yaml
-snapshot_contract: atlas-principia-offline-snapshot/0.1
-batch_receipt_contract: atlas-principia-offline-batch-receipt/0.1
-protocol_audit_contract: atlas-principia-offline-protocol-audit/0.1
-mode: offline-protocol-audit-candidate
-state: accepted
-accepted_pr: 22
-tested_head: 3a0e726869f5cc589606149b822865fa84724ac5
-accepted_merge_commit: 1096a2176eb50e1921081bb3f46eeac8b13bd2c3
-live: false
-fixture_kind: bounded-synthetic
-```
-
-The accepted evidence chain contains three Principia artifact exports, one atomic batch, one Principia receipt, two bounded-synthetic lifecycle events, two acknowledgements, one digest chain, and one reconciliation report.
-
-The audit binds exact source paths, Atlas fixture paths, Git blob SHAs, the accepted Atlas importer snapshot, lifecycle fan-out, acknowledgement actions, affected-artifact sets, chain heads, and Phase 17–18 provenance.
-
-The lifecycle events remain Principia-authored `bounded-synthetic` fixtures. Atlas does not accept them as real lifecycle transitions and does not change actual Atlas entity status.
-
-Accepted audit result:
-
-```yaml
-contract: atlas-principia-offline-protocol-audit/0.1
-decision: verified-no-mutation
-source_repository: Rhodan-lab/principle-to-system
-source_pull_request: 25
-source_commit: 4ecb41ad4f9f524e83cc0db43f672bd9dcf3b67a
-record_count: 3
-event_count: 2
-acknowledgement_count: 2
-reconciled_count: 2
-live: false
-automatic_status_change: false
-automatic_release_action: false
-repository_mutation: false
-```
-
-## Phase 2 workstream 4 — accepted
-
-PR #24 established strict runtime admission and canonical failure semantics.
-
-Accepted workstream state:
-
-```yaml
-runtime_contract: atlas-kernel-runtime/0.1
-validation_contract: atlas-runtime-validation-report/0.1
-mode: runtime-hardening-candidate
-state: accepted
-accepted_pr: 24
-tested_head: a7b2998937f6225462bf2b0f3820e5bf76ac56d8
-accepted_merge_commit: 7596e4fbae099304d64a5b2371c0fb4a2e55ffc4
-live: false
-mutation: false
-```
-
-The public `KernelRepository` now validates a complete serialized runtime before indexing it. Admission checks:
-
-- runtime and source contracts;
-- recomputed source digest from ordered entity paths and source hashes;
-- exact entity count, identity, revision, type, key, path, and deterministic order;
-- source and body digest shape;
-- runtime-to-metadata identity agreement;
-- sorted, duplicate-free references and exact targets;
-- sorted, duplicate-free relations and exact targets;
-- relation-to-reference graph agreement;
-- an exact `revisions_by_id` index;
-- a complete reverse-dependency index that exactly mirrors references.
-
-Failure evidence includes:
-
-```text
-17 serialized-runtime corruption cases
-5 authored-corpus failure cases
-22 deterministic negative fixtures total
-```
-
-The authored-corpus fixtures cover missing canonical references, invalid relation targets, duplicate exact entities, duplicate YAML keys, and malformed relation structures.
-
-Accepted runtime validation result:
-
-```yaml
-contract: atlas-runtime-validation-report/0.1
-decision: valid
-entity_count: 34
-reference_count: 50
-relation_count: 7
-reverse_edge_count: 50
-mutation: false
-```
-
-Validation passed on Python 3.11 and 3.13, Foundation Contract, Atlas CI, TypeScript, Rust, Python 3.11–3.13, C++ on Ubuntu/macOS/Windows, and end-to-end contracts.
-
-## Phase 2 workstream 5 — accepted
-
-PR #26 established deterministic scale, replay, and recovery evidence without expanding canonical Atlas content.
-
-Accepted workstream state:
-
-```yaml
-scaled_contract: atlas-kernel-scaled-benchmark/0.1
-replay_contract: atlas-principia-offline-replay-matrix/0.1
-ledger_contract: atlas-principia-offline-receipt-ledger/0.1
-mode: scale-replay-candidate
-state: accepted
-accepted_pr: 26
-tested_head: a5bf1d6bf481c3d8f35312050f12ec4ab48b1f08
-accepted_merge_commit: dd0c64447fb70727d260362f9877ffc6be560c3c
-live: false
-automatic_status_change: false
-automatic_release_action: false
-repository_mutation: false
-```
-
-The accepted scale evidence uses an isolated deterministic corpus with:
-
-```text
-256 groups
-1,026 exact entity revisions
-256 synthetic Principia external dependents
-```
-
-The corpus exists only in temporary test directories and is not canonical Atlas knowledge. Two independent compilations must remain byte-identical and preserve the exact source digest.
-
-The accepted replay evidence:
-
-- admits two independently normalized batch sequences;
-- records append-only receipt-chain continuation;
-- treats an exact duplicate replay as an idempotent no-op;
-- rejects conflicting sequence, skipped sequence, wrong predecessor, duplicate batch ID, and corrupted ledger digest;
-- reports `decision: verified-no-mutation`;
-- performs no status, release, repository, or live-integration mutation.
-
-Validation passed on the exact tested head through Phase 2 Scale and Replay, Phase 2 Knowledge Kernel, Foundation Contract, Atlas CI, TypeScript, Rust, Python 3.11–3.13, C++ on Ubuntu/macOS/Windows, and end-to-end contracts.
+- production retrieval-quality claims;
+- vector database commitment before comparative evaluation;
+- unversioned or implicit `latest` lookup;
+- retrieval-generated writes to canonical content;
+- retrieval-driven lifecycle, review, promotion, or release mutation;
+- live Principia synchronization;
+- accepting external synthetic events as canonical lifecycle history;
+- polished product UI;
+- plugins and autonomous synchronization;
+- active translated corpus;
+- hidden or autonomous authority claims;
+- automatic conversion of AI review into human verification.
 
 ## Principia & Atlas boundary
 
 Atlas is the knowledge and governance layer of the future **Principia & Atlas** system.
 
 - Atlas owns canonical knowledge identity, sources, evidence, claims, models, provenance, revision, review level, lifecycle, and staleness.
-- Principia owns causal explanation, learning pathways, investigations, simulations, system dossiers, failure analysis, and design experiences.
+- Principia owns causal explanation, pathways, investigations, simulations, system dossiers, failure analysis, design experiences, and its own publication readiness.
 - Principia may reference exact Atlas revisions.
 - Atlas may report dependency impact when upstream knowledge changes.
-- Principia may acknowledge an offline impact report, but that acknowledgement does not command or mutate Atlas.
 - Neither repository inherits the other repository's status automatically.
 - The repositories remain separate and independently buildable.
-- No live cross-repository dependency is declared during Phase 2.
-
-## Current restrictions
-
-Still frozen:
-
-- polished product UI;
-- specialized retrieval and ranking;
-- vector database selection;
-- synchronization and plugins;
-- active translated corpus;
-- hidden or autonomous authority claims;
-- automatic conversion of AI review into human verification;
-- direct repository merger with Principia;
-- live Principia dependency;
-- accepting external synthetic events as canonical Atlas lifecycle history;
-- automatic status or release mutation;
-- repairing or silently dropping malformed runtime records;
-- treating prototype runtime formats as canonical before kernel evaluation.
-
-Allowed:
-
-- minimal knowledge-kernel implementation;
-- deterministic compilation and queries;
-- strict serialized-runtime admission;
-- deterministic canonical and runtime failure fixtures;
-- English canonical content corrections;
-- explicitly labeled AI reviews;
-- optional human verification that remains separately labeled;
-- read-only exact-revision Principia compatibility;
-- pinned external fixtures and impact reports;
-- atomic offline multi-artifact import tests;
-- bounded-synthetic event and acknowledgement audits;
-- lifecycle escalation reporting;
-- scaled deterministic corpus benchmarks;
-- append-only offline receipt replay and recovery tests;
-- benchmark and regression maintenance.
+- No live cross-repository dependency is activated by Phase 3 entry.
 
 ## Immediate next actions
 
-1. define Phase 2 closure evidence and the remaining retrieval-entry blockers;
-2. verify kernel replaceability, migration boundaries, and rollback expectations;
-3. produce the Phase 2 completion report with an explicit retrieval-entry recommendation;
-4. keep `live: false` until independent machine contracts pass in both repositories and a separate activation decision is recorded.
+1. define the Phase 3 query-and-judgment contract;
+2. create a bounded fixture set spanning all three English reference slices;
+3. implement a deterministic lexical baseline without external services;
+4. implement a structured-field baseline over titles, types, claims, relations, and provenance;
+5. define relevance metrics, tie rules, and exact-revision result contracts;
+6. keep vector infrastructure, live synchronization, and automatic mutation frozen until comparative evidence supports a separate decision.
 
-**Phase 1 is complete under the AI-reviewed policy. Phase 2 remains active. PRs #19–#26 are accepted. Scale, replay, and recovery are accepted as `mode: scale-replay-candidate` with `live: false`; retrieval and live integration remain frozen pending the Phase 2 completion report.**
+**Phase 1 and Phase 2 are complete. Phase 3 — Retrieval Evaluation is active. Retrieval remains bounded, advisory, exact-revision, provenance-visible, replaceable, and `live: false`.**
