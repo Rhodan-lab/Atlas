@@ -1,0 +1,42 @@
+{
+  "contract": "atlas-phase3-lexical-baseline/0.1",
+  "cutoff": 5,
+  "entity_count": 34,
+  "expected_error_query_count": 1,
+  "index_artifact_sha256": "4c37fc7e8c90f4a00c9c1f66f5f4472517aeec35547cac76ec0a6b0ad94e6640",
+  "index_build_digest": "4da6848c020458694db5d26d44be2ddc2580e9c0c41656ce7dcb44a75da82f16",
+  "index_contract": "atlas-lexical-index/0.1",
+  "known_limitations": [
+    "specific assay evidence can outrank the methodological scope claim",
+    "the formal delayed-feedback model can rank below related claim or evidence records",
+    "cross-platform context claims are not reliably promoted by surface lexical overlap",
+    "the cross-slice scope query retrieves the catalase target but can miss the recommender context target within the cutoff"
+  ],
+  "limit": 10,
+  "live": false,
+  "metric_artifact_sha256": "c96a6ab51f06e316d87424f3381833b16563237a957f2a5af38730262e95d0f7",
+  "metrics": {
+    "mean_reciprocal_rank": 0.652777777778,
+    "ndcg_at_k": 0.589071924873,
+    "precision_at_k": 0.3,
+    "recall_at_k": 0.708333333333,
+    "unavailable_revision_rate": 1.0,
+    "zero_result_rate": 0.0
+  },
+  "mode": "retrieval-evaluation",
+  "python_artifacts_byte_identical": true,
+  "quality_claim": "bounded-reference-fixture-only",
+  "query_count": 13,
+  "query_set_id": "retrieval-query-set:phase3-reference-en-v1",
+  "query_set_sha256": "e8b27966a87eaf6fd07585dfcdb10a08ac0b322db6a31cc5a3638f2f27e3b302",
+  "query_set_version": 1,
+  "ranked_query_count": 12,
+  "rebuild_verified": true,
+  "replaceable": true,
+  "report_artifact_sha256": "6e41b67d303061363c2d6bb6eb7faa225c07feabce1fbc16caf4eceae8bf2d9c",
+  "repository_mutation": false,
+  "result_set_sha256": "400adae2eb62e275a02bb5838fc93964ea8a541e498617527b543f4932c8196c",
+  "source_digest": "684d08f23db50c2d994ea07293c6aaea2cbcb24492b062663b2e43144f07d3b1",
+  "term_count": 424,
+  "tie_count": 0
+}
