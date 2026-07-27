@@ -44,7 +44,7 @@ mutation: false
 Admission verifies:
 
 1. runtime and source contracts;
-2. source-root and source-digest shape;
+2. source-root shape and source-digest recomputation from ordered entity paths and source hashes;
 3. exact entity count;
 4. canonical entity IDs, types, revisions, and exact keys;
 5. deterministic entity ordering;
@@ -52,7 +52,7 @@ Admission verifies:
 7. runtime-to-metadata identity agreement;
 8. deterministic, duplicate-free references;
 9. exact reference targets;
-10. deterministic relation records and exact relation targets;
+10. deterministic, duplicate-free relation records and exact relation targets;
 11. relation targets represented in the reference graph;
 12. an exact `revisions_by_id` index;
 13. a complete, deterministic reverse-dependency index;
@@ -67,6 +67,7 @@ Representative deterministic errors include:
 ```text
 E-RUNTIME-SOURCE-CONTRACT
 E-RUNTIME-DIGEST
+E-RUNTIME-SOURCE-DIGEST
 E-RUNTIME-ENTITY-COUNT
 E-RUNTIME-DUPLICATE
 E-RUNTIME-KEY-MISMATCH
