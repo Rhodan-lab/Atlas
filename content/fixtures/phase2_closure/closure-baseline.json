@@ -1,0 +1,18 @@
+{
+  "blocked_capabilities": [
+    "automatic lifecycle or release mutation",
+    "canonical content writes from retrieval output",
+    "live Principia synchronization",
+    "production retrieval quality claims",
+    "unversioned latest-entity lookup",
+    "vector database commitment before comparative evaluation"
+  ],
+  "contract": "atlas-phase2-closure-baseline/0.1",
+  "entity_count": 34,
+  "expected_query_checks": 136,
+  "live": false,
+  "mode": "phase2-closure-candidate",
+  "next_phase": "phase-3-retrieval-evaluation-candidate",
+  "repository_mutation": false,
+  "retrieval_decision": "proceed-bounded-retrieval-evaluation"
+}

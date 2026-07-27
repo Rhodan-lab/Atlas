@@ -1,0 +1,100 @@
+name: Phase 2 Closure
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "content/fixtures/phase2_closure/**"
+      - "content/canonical/**"
+      - "docs/phase-2/**"
+      - "tools/phase2_kernel/closure.py"
+      - "tools/phase2_kernel/tests/test_closure.py"
+      - "tools/phase2_kernel/__init__.py"
+      - ".github/workflows/phase2-closure.yml"
+  pull_request:
+    paths:
+      - "content/fixtures/phase2_closure/**"
+      - "content/canonical/**"
+      - "docs/phase-2/**"
+      - "tools/phase2_kernel/closure.py"
+      - "tools/phase2_kernel/tests/test_closure.py"
+      - "tools/phase2_kernel/__init__.py"
+      - ".github/workflows/phase2-closure.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  closure:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+
+      - name: Install pinned dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+
+      - name: Run closure tests
+        run: python -m unittest tools.phase2_kernel.tests.test_closure -v
+
+      - name: Generate Phase 2 completion evidence
+        run: |
+          python -m tools.phase2_kernel.closure \
+            --output phase2-completion-report.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          baseline = json.loads(
+              Path('content/fixtures/phase2_closure/closure-baseline.json').read_text(encoding='utf-8')
+          )
+          report = json.loads(
+              Path('phase2-completion-report.json').read_text(encoding='utf-8')
+          )
+
+          assert baseline['contract'] == 'atlas-phase2-closure-baseline/0.1'
+          assert baseline['mode'] == 'phase2-closure-candidate'
+          assert baseline['live'] is False
+          assert baseline['repository_mutation'] is False
+
+          assert report['contract'] == 'atlas-phase2-completion-report/0.1'
+          assert report['mode'] == baseline['mode']
+          assert report['decision'] == 'phase2-complete-candidate'
+          assert report['entity_count'] == baseline['entity_count'] == 34
+          assert report['deterministic_compilation'] is True
+          assert report['strict_runtime_admission'] is True
+          assert report['query_equivalence']['decision'] == 'equivalent'
+          assert report['query_equivalence']['total_checks'] == baseline['expected_query_checks'] == 136
+          assert report['migration_and_rollback']['decision'] == 'replaceable'
+          assert report['migration_and_rollback']['generated_indexes_excluded'] is True
+          assert report['migration_and_rollback']['alternate_repository_implementation'] is True
+          assert report['migration_and_rollback']['rollback_rebuild_verified'] is True
+          assert report['retrieval_entry']['decision'] == baseline['retrieval_decision']
+          assert report['retrieval_entry']['next_phase'] == baseline['next_phase']
+          assert report['retrieval_entry']['blocked'] == baseline['blocked_capabilities']
+          assert report['live'] is False
+          assert report['automatic_status_change'] is False
+          assert report['automatic_release_action'] is False
+          assert report['repository_mutation'] is False
+          assert len(report['migration_and_rollback']['portable_snapshot_sha256']) == 64
+          print('phase2-closure=pass; entities=34; query-checks=136; replaceable=true; retrieval=bounded; live=false')
+          PY
+
+      - name: Upload Phase 2 completion evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase2-closure-python-${{ matrix.python-version }}
+          path: phase2-completion-report.json
+          if-no-files-found: error
+          retention-days: 30
