@@ -1,0 +1,33 @@
+{
+  "contract": "atlas-canonical-failure-fixtures/0.1",
+  "mode": "runtime-hardening-candidate",
+  "cases": [
+    {
+      "name": "missing-reference",
+      "path": "content/fixtures/phase2_runtime/canonical/missing-reference",
+      "expected_error": "E-CANONICAL-REFERENCE-MISSING"
+    },
+    {
+      "name": "invalid-relation-target",
+      "path": "content/fixtures/phase2_runtime/canonical/invalid-relation-target",
+      "expected_error": "E-RELATION-TARGET"
+    },
+    {
+      "name": "duplicate-exact-entity",
+      "path": "content/fixtures/phase2_runtime/canonical/duplicate-exact-entity",
+      "expected_error": "E-ENTITY-DUPLICATE"
+    },
+    {
+      "name": "duplicate-yaml-key",
+      "path": "content/fixtures/phase2_runtime/canonical/duplicate-yaml-key",
+      "expected_error": "E-YAML-PARSE"
+    },
+    {
+      "name": "malformed-relations",
+      "path": "content/fixtures/phase2_runtime/canonical/malformed-relations",
+      "expected_error": "E-RELATION-STRUCTURE"
+    }
+  ],
+  "mutation": false,
+  "live": false
+}
