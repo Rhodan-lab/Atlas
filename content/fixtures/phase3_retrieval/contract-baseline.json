@@ -1,0 +1,25 @@
+{
+  "contract": "atlas-phase3-retrieval-contract-baseline/0.1",
+  "difficulty_counts": {
+    "ambiguous": 2,
+    "compositional": 4,
+    "direct": 6,
+    "exact-revision-error": 1
+  },
+  "entity_count": 34,
+  "expected_error_query_count": 1,
+  "implicit_nonrelevant_judgment_count": 382,
+  "live": false,
+  "mode": "retrieval-evaluation",
+  "positive_judgment_count": 26,
+  "query_count": 13,
+  "query_set_sha256": "e8b27966a87eaf6fd07585dfcdb10a08ac0b322db6a31cc5a3638f2f27e3b302",
+  "ranked_query_count": 12,
+  "repository_mutation": false,
+  "slice_counts": {
+    "catalase": 4,
+    "cross-slice": 1,
+    "feedback": 4,
+    "recommenders": 4
+  }
+}
