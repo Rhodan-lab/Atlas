@@ -1,0 +1,9 @@
+{
+  "compile_iterations": 2,
+  "contract": "atlas-phase2-scale-profile/0.1",
+  "external_dependents": 256,
+  "groups": 256,
+  "live": false,
+  "mode": "scale-replay-candidate",
+  "operation_iterations": 5
+}
