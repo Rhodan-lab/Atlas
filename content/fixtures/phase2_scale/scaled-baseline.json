@@ -1,0 +1,19 @@
+{
+  "contract": "atlas-phase2-scale-baseline/0.1",
+  "entity_count": 1026,
+  "external_dependent_count": 256,
+  "live": false,
+  "mode": "scale-replay-candidate",
+  "profile_sha256": "a4ecf087234bbf7db76f4abc7362f55b571f5bec1692139a9a1c84e7102ac8d2",
+  "rejected_errors": [
+    "E-REPLAY-BATCH-ID",
+    "E-REPLAY-CONFLICT",
+    "E-REPLAY-LEDGER-DIGEST",
+    "E-REPLAY-PREDECESSOR",
+    "E-REPLAY-SKIPPED"
+  ],
+  "replay_head_receipt_sha256": "fad8bea02e83d0cc43b6aa5ec0a7cdadeb7385e320fb8e6663334a1482dd1dae",
+  "replay_head_sequence": 2,
+  "runtime_source_digest": "2914e98134cdab6b21e8a2001cfd7395d752b3db6a487049e3de17cc44450408",
+  "synthetic_only": true
+}

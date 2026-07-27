@@ -1,0 +1,127 @@
+name: Phase 2 Scale and Replay
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "content/fixtures/phase2_scale/**"
+      - "content/fixtures/phase2_protocol/**"
+      - "docs/phase-2/**"
+      - "tools/phase2_kernel/scale_replay.py"
+      - "tools/phase2_kernel/tests/test_scale_replay.py"
+      - "tools/phase2_kernel/__init__.py"
+      - ".github/workflows/phase2-scale-replay.yml"
+  pull_request:
+    paths:
+      - "content/fixtures/phase2_scale/**"
+      - "content/fixtures/phase2_protocol/**"
+      - "docs/phase-2/**"
+      - "tools/phase2_kernel/scale_replay.py"
+      - "tools/phase2_kernel/tests/test_scale_replay.py"
+      - "tools/phase2_kernel/__init__.py"
+      - ".github/workflows/phase2-scale-replay.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  scale-replay:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+
+      - name: Install pinned dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+
+      - name: Run scale and replay tests
+        run: python -m unittest tools.phase2_kernel.tests.test_scale_replay -v
+
+      - name: Run scaled synthetic benchmark
+        run: |
+          python -m tools.phase2_kernel.scale_replay benchmark \
+            --profile content/fixtures/phase2_scale/scaled-benchmark-profile.json \
+            --enforce \
+            --output phase2-scaled-benchmark.json
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          profile_path = Path('content/fixtures/phase2_scale/scaled-benchmark-profile.json')
+          baseline = json.loads(Path('content/fixtures/phase2_scale/scaled-baseline.json').read_text(encoding='utf-8'))
+          report = json.loads(Path('phase2-scaled-benchmark.json').read_text(encoding='utf-8'))
+
+          assert baseline['contract'] == 'atlas-phase2-scale-baseline/0.1'
+          assert baseline['mode'] == 'scale-replay-candidate'
+          assert baseline['live'] is False
+          assert baseline['synthetic_only'] is True
+          assert hashlib.sha256(profile_path.read_bytes()).hexdigest() == baseline['profile_sha256']
+
+          assert report['contract'] == 'atlas-kernel-scaled-benchmark/0.1'
+          assert report['mode'] == baseline['mode']
+          assert report['entity_count'] == baseline['entity_count'] == 1026
+          assert report['external_dependent_count'] == baseline['external_dependent_count'] == 256
+          assert report['runtime_source_digest'] == baseline['runtime_source_digest']
+          assert report['deterministic_runtime'] is True
+          assert report['live'] is False
+          assert report['mutation'] is False
+          assert set(report['metrics']) == {
+              'bridge_import_all',
+              'compile',
+              'exact_lookup',
+              'impact_all',
+              'provenance',
+              'runtime_admission',
+          }
+          print('scaled-benchmark=pass; entities=1026; external-dependents=256; baseline-bound=true; live=false')
+          PY
+
+      - name: Run multi-batch replay and recovery matrix
+        run: |
+          python -m tools.phase2_kernel.scale_replay replay-matrix \
+            --output phase2-replay-matrix.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          baseline = json.loads(Path('content/fixtures/phase2_scale/scaled-baseline.json').read_text(encoding='utf-8'))
+          report = json.loads(Path('phase2-replay-matrix.json').read_text(encoding='utf-8'))
+          rejected = sorted(case['error'] for case in report['rejected_cases'])
+
+          assert report['contract'] == 'atlas-principia-offline-replay-matrix/0.1'
+          assert report['mode'] == baseline['mode']
+          assert report['decision'] == 'verified-no-mutation'
+          assert report['accepted_sequences'] == [1, 2]
+          assert report['final_head_sequence'] == baseline['replay_head_sequence'] == 2
+          assert report['final_head_receipt_sha256'] == baseline['replay_head_receipt_sha256']
+          assert report['idempotent_replay'] is True
+          assert rejected == sorted(baseline['rejected_errors'])
+          assert len(rejected) == 5
+          assert report['live'] is False
+          assert report['automatic_status_change'] is False
+          assert report['automatic_release_action'] is False
+          assert report['repository_mutation'] is False
+          print('replay-matrix=pass; accepted=2; idempotent=true; rejected=5; baseline-bound=true; live=false')
+          PY
+
+      - name: Upload scale and replay evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase2-scale-replay-python-${{ matrix.python-version }}
+          path: |
+            phase2-scaled-benchmark.json
+            phase2-replay-matrix.json
+          if-no-files-found: error
+          retention-days: 30
