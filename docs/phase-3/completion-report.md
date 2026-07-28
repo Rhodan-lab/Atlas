@@ -2,7 +2,7 @@
 
 ## Status
 
-Closure candidate.
+Closure candidate with pinned deterministic evidence.
 
 ```yaml
 phase: 3
@@ -16,6 +16,32 @@ exact_revision_required: true
 live: false
 repository_mutation: false
 ```
+
+## Pinned closure evidence
+
+The completion report was generated independently on Python 3.11 and Python 3.13. The substantive JSON artifacts were byte-identical.
+
+```yaml
+report_contract: atlas-phase3-completion-report/0.1
+report_digest: 3823a2283bbecdc7a407c720e7ef60898a734253f0738442b365036e20401a70
+report_artifact_sha256: 7b2029987c3fd1adf926df33bdf0232967260ad1c1b0332d88abd52cc7051de5
+report_artifact_bytes: 5244
+python_versions: [3.11, 3.13]
+python_reports_byte_identical: true
+exit_gate_count: 8
+all_exit_gates_passed: true
+```
+
+Passed gates:
+
+- documented relevance collection;
+- visible review status and provenance;
+- explainable ranking behavior;
+- specialized boundaries passing architecture policy;
+- retrieval failure unable to corrupt authority;
+- operational filters and research trails;
+- advisory candidate discovery;
+- replaceable generated artifacts.
 
 ## Purpose
 
@@ -102,6 +128,7 @@ The closure proof maps the authoritative gates in `docs/foundation/05-phase-gate
 5. **Retrieval failure cannot corrupt authority** — unavailable revisions fail explicitly, indexes are generated and replaceable, trails cannot copy canonical authority, and candidates cannot mutate knowledge state.
 6. **Filters and trails are operational** — deterministic exact-revision fixtures and negative cases pass.
 7. **Candidate discovery remains advisory** — contradiction and duplicate candidates require evidence and rationale without automatic resolution.
+8. **Generated artifacts remain replaceable** — accepted indexes and reports can be deleted and deterministically rebuilt from canonical content and pinned fixtures.
 
 ## Semantic infrastructure decision
 
