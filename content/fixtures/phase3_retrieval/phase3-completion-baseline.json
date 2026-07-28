@@ -97,6 +97,7 @@
     "local_first": true,
     "principia_status_separate": true,
     "production_retrieval_quality_claim": false,
+    "purpose": "build a unified Principia and Atlas interactive experience over proven semantics",
     "vector_database": false
   },
   "preferred_bounded_retrieval": "structured-field-baseline",
