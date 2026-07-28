@@ -1,0 +1,47 @@
+{
+  "authorized_changes": [
+    "atomic runtime status semantics",
+    "labelled dynamic content panels",
+    "visible focus on the main skip-link target",
+    "explicit unknown-route failure without silent fallback"
+  ],
+  "base_baseline_contract": "atlas-phase4-reference-shell-baseline/0.1",
+  "base_baseline_sha256": "02365709eae81143be6a8122e0d8ae5620bbeb2eb6b6b6eb964a948e40413448",
+  "browser_evidence_report_digest": "dd1242387ff68024b478c81c74cc7b11308a4c37aeb1b23dd1859be8caafb5e1",
+  "canonical_mutation": false,
+  "contract": "atlas-phase4-reference-shell-accessibility-patch/0.1",
+  "current_static_assets": {
+    "app.js": {
+      "sha256": "c95e09f93e0eac242fa63c88bd7c9b0fac947c7047fae4fad7271d96c6c67765"
+    },
+    "index.html": {
+      "sha256": "1b00a15a32ee2523cab99068b7d093569f8d033ad1c6f9b6b7c2e85928cd6e1a"
+    },
+    "styles.css": {
+      "sha256": "7187549623ffc180420bff4dd58c04a15a7fbedcb168e82ff4439d9ba4bfc1b6"
+    }
+  },
+  "decision": "authorize-bounded-browser-evidence-fixes",
+  "generated_artifacts_unchanged": {
+    "shell_build_report_sha256": "c9ca4259944bc4a90c42df26c4927c3f546a8358235b4e08a40715c692fa1eff",
+    "shell_data_sha256": "e0f9fcbff9b86cbd4fffcb43d9c2aff64c2eb602f9b2fa0a02b8804bd18eb762"
+  },
+  "historical_static_assets": {
+    "app.js": {
+      "sha256": "2ac8f4343d8fe1d52d22a416897103bc7b231416d0214c7449f3cbb627d3b854"
+    },
+    "index.html": {
+      "sha256": "dd3854ea5e5dfd10a43ba7f28dbbac24a33acf3ca309b646e9256cd6cd52955d"
+    },
+    "styles.css": {
+      "sha256": "95d18d801687489e18edd7bee3a9ea43e40bf80607c586de2915ff35a6853579"
+    }
+  },
+  "interaction_semantics_changed": false,
+  "live": false,
+  "live_principia_dependency": false,
+  "mode": "interactive-experience-foundation",
+  "production_frontend_architecture_selected": false,
+  "repository_mutation": false,
+  "state": "accessibility-patch-candidate"
+}
