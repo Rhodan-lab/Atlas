@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Local-first reference shell for exact-revision Atlas and Principia interaction fixtures">
+  <title>Atlas Reference Shell</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="masthead">
+    <div>
+      <p class="eyebrow">PHASE 4 · LOCAL REFERENCE SHELL</p>
+      <h1>Atlas × Principia</h1>
+      <p class="lede">Inspect exact knowledge revisions, evidence paths, retrieval explanations, research decisions, and offline bridge warnings without granting the interface authority.</p>
+    </div>
+    <div class="status-card" aria-live="polite">
+      <span class="status-dot" aria-hidden="true"></span>
+      <div>
+        <strong id="runtime-status">Loading local fixture…</strong>
+        <small id="runtime-detail">No cloud or account required</small>
+      </div>
+    </div>
+  </header>
+
+  <div class="shell-grid">
+    <aside class="sidebar" aria-labelledby="navigation-title">
+      <div class="sidebar-heading">
+        <p class="eyebrow">REFERENCE WORKFLOWS</p>
+        <h2 id="navigation-title">Views</h2>
+      </div>
+      <nav aria-label="Reference views">
+        <ul id="view-list" class="view-list"></ul>
+      </nav>
+      <button id="failure-button" class="failure-button" type="button">Inspect failure states</button>
+      <section class="boundary-card" aria-labelledby="boundary-title">
+        <h3 id="boundary-title">Authority boundary</h3>
+        <dl id="authority-summary" class="compact-list"></dl>
+      </section>
+    </aside>
+
+    <main id="main-content" class="content" tabindex="-1">
+      <section id="loading-panel" class="panel" aria-live="polite">
+        <p class="eyebrow">LOADING</p>
+        <h2>Assembling the local reference state</h2>
+        <p>The shell reads one deterministic generated file. It does not call an API.</p>
+      </section>
+      <section id="view-panel" class="panel" hidden aria-live="polite"></section>
+      <section id="failure-panel" class="panel" hidden aria-live="polite"></section>
+      <section id="error-panel" class="panel error-panel" hidden role="alert"></section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <span>Exact revisions</span>
+    <span>Inspectable provenance</span>
+    <span>Keyboard navigation</span>
+    <span>Offline fixtures</span>
+    <span>No canonical writes</span>
+  </footer>
+
+  <noscript>
+    <p class="noscript">JavaScript is required to inspect the generated fixture. The canonical Markdown remains available without this shell.</p>
+  </noscript>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
