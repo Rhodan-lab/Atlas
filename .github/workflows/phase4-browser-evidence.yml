@@ -44,13 +44,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+          cache: npm
+          cache-dependency-path: tools/phase4_browser/package-lock.json
 
       - name: Install pinned Python dependencies
         run: python -m pip install -r tools/foundation-validator/requirements.txt
 
-      - name: Generate initial Node lock and install pinned Playwright
+      - name: Install locked Playwright dependency graph
         working-directory: tools/phase4_browser
-        run: npm install --ignore-scripts --no-audit --no-fund
+        run: npm ci --ignore-scripts --no-audit --no-fund
 
       - name: Install pinned Chromium and Linux dependencies
         working-directory: tools/phase4_browser
@@ -98,17 +100,21 @@ jobs:
         working-directory: tools/phase4_browser
         env:
           CI: "true"
+        shell: bash
         run: |
+          set -o pipefail
           npm run evidence -- \
             --base-url http://127.0.0.1:8766 \
             --repo-root "${{ github.workspace }}" \
             --shell-dir "${{ github.workspace }}/phase4-browser-shell" \
-            --output-dir "${{ github.workspace }}/phase4-browser-evidence-a"
+            --output-dir "${{ github.workspace }}/phase4-browser-evidence-a" \
+            2>&1 | tee "${{ github.workspace }}/phase4-browser-run-a.log"
           npm run evidence -- \
             --base-url http://127.0.0.1:8766 \
             --repo-root "${{ github.workspace }}" \
             --shell-dir "${{ github.workspace }}/phase4-browser-shell" \
-            --output-dir "${{ github.workspace }}/phase4-browser-evidence-b"
+            --output-dir "${{ github.workspace }}/phase4-browser-evidence-b" \
+            2>&1 | tee "${{ github.workspace }}/phase4-browser-run-b.log"
 
       - name: Verify repeated-run byte identity
         run: diff -ru phase4-browser-evidence-a phase4-browser-evidence-b
@@ -177,7 +183,7 @@ jobs:
             kill "$(cat phase4-browser-server.pid)" || true
           fi
 
-      - name: Upload browser evidence and generated lock
+      - name: Upload browser evidence and diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -189,6 +195,8 @@ jobs:
             phase4-browser-shell-report.json
             phase4-browser-static-sha256.txt
             phase4-browser-server.log
+            phase4-browser-run-a.log
+            phase4-browser-run-b.log
             tools/phase4_browser/package-lock.json
           if-no-files-found: error
           retention-days: 30
