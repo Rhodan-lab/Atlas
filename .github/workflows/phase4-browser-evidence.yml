@@ -7,6 +7,7 @@ on:
       - "apps/reference-shell/**"
       - "content/canonical/**"
       - "content/fixtures/phase4_interaction/**"
+      - "content/fixtures/phase4_browser/**"
       - "docs/phase-4/**"
       - "tools/phase2_kernel/**"
       - "tools/phase4_interaction/**"
@@ -17,6 +18,7 @@ on:
       - "apps/reference-shell/**"
       - "content/canonical/**"
       - "content/fixtures/phase4_interaction/**"
+      - "content/fixtures/phase4_browser/**"
       - "docs/phase-4/**"
       - "tools/phase2_kernel/**"
       - "tools/phase4_interaction/**"
@@ -129,7 +131,7 @@ jobs:
           ATLAS_BROWSER_EVIDENCE_DIR: phase4-browser-evidence-a
         run: python -m unittest tools.phase4_browser.tests.test_validate -v
 
-      - name: Verify browser evidence summary
+      - name: Verify pinned browser evidence baseline
         run: |
           python - <<'PY'
           import hashlib
@@ -137,42 +139,81 @@ jobs:
           from pathlib import Path
 
           root = Path('phase4-browser-evidence-a')
-          report_path = root / 'browser-evidence-report.json'
-          manifest_path = root / 'browser-manifest.json'
-          report_bytes = report_path.read_bytes()
-          manifest = json.loads(manifest_path.read_bytes())
-          report = json.loads(report_bytes)
+          baseline = json.loads(Path('content/fixtures/phase4_browser/browser-evidence-baseline.json').read_text(encoding='utf-8'))
+          patch = json.loads(Path('content/fixtures/phase4_interaction/reference-shell-accessibility-patch.json').read_text(encoding='utf-8'))
+          report = json.loads((root / 'browser-evidence-report.json').read_text(encoding='utf-8'))
+          manifest = json.loads((root / 'browser-manifest.json').read_text(encoding='utf-8'))
 
-          assert manifest['contract'] == 'atlas-phase4-browser-evidence-manifest/0.1'
-          assert manifest['engine_name'] == 'chromium'
-          assert manifest['playwright_version'] == '1.62.0'
+          assert baseline['contract'] == 'atlas-phase4-browser-evidence-baseline/0.1'
+          assert baseline['state'] == 'browser-evidence-candidate'
+          assert baseline['decision'] == 'browser-evidence-candidate'
+          assert baseline['browser_engine'] == {
+              'name': 'chromium',
+              'playwright_version': '1.62.0',
+              'version': '151.0.7922.34',
+          }
+          assert manifest['engine_name'] == baseline['browser_engine']['name']
+          assert manifest['engine_version'] == baseline['browser_engine']['version']
+          assert manifest['playwright_version'] == baseline['browser_engine']['playwright_version']
           assert manifest['external_network_allowed'] is False
-          assert report['contract'] == 'atlas-phase4-browser-evidence-report/0.1'
-          assert report['state'] == 'browser-evidence-candidate'
-          assert report['workflow_count'] == 8
-          assert report['keyboard_workflow_count'] == 9
+          assert report['report_digest'] == baseline['evidence_files']['browser-evidence-report.json']['report_digest']
+          assert report['workflow_count'] == baseline['workflow_count']
+          assert report['keyboard_workflow_count'] == baseline['keyboard_workflow_count']
           assert report['accepted_failure_state_count'] == 5
-          assert report['viewport_count'] == 2
-          assert report['external_request_count'] == 0
-          assert report['exact_revision_preserved'] is True
-          assert report['principia_status_separate'] is True
-          assert report['non_graph_workflow_equivalence'] is True
-          assert report['visible_focus_verified'] is True
-          assert report['reduced_motion_verified'] is True
-          assert report['offline_after_local_boot_verified'] is True
-          assert report['production_frontend_architecture_selected'] is False
-          assert report['live_principia_dependency'] is False
-          assert report['canonical_mutation'] is False
-          assert report['human_verified'] is False
-          assert report['accessibility_certified'] is False
-          assert report['live'] is False
-          assert report['repository_mutation'] is False
+          assert report['viewport_count'] == baseline['viewport_count']
+          assert report['external_request_count'] == baseline['external_request_count']
+          assert report['exact_revision_preserved'] == baseline['exact_revision_preserved']
+          assert report['principia_status_separate'] == baseline['principia_status_separate']
+          assert report['non_graph_workflow_equivalence'] == baseline['non_graph_workflow_equivalence']
+          assert report['visible_focus_verified'] == baseline['visible_focus_verified']
+          assert report['reduced_motion_verified'] == baseline['reduced_motion_verified']
+          assert report['offline_after_local_boot_verified'] == baseline['offline_after_local_boot_verified']
+          assert report['production_frontend_architecture_selected'] == baseline['production_frontend_architecture_selected']
+          assert report['live_principia_dependency'] == baseline['live_principia_dependency']
+          assert report['human_verified'] == baseline['human_verified']
+          assert report['accessibility_certified'] == baseline['accessibility_certified']
+          assert report['live'] == baseline['live']
+          assert report['repository_mutation'] == baseline['repository_mutation']
+
+          for filename, expected in baseline['evidence_files'].items():
+              payload = (root / filename).read_bytes()
+              record = json.loads(payload)
+              assert record['contract'] == expected['contract']
+              assert len(payload) == expected['artifact_bytes']
+              assert hashlib.sha256(payload).hexdigest() == expected['artifact_sha256']
+              assert record['report_digest'] == expected['report_digest']
+
+          validation_bytes = Path('phase4-browser-validation.json').read_bytes()
+          validation = json.loads(validation_bytes)
+          assert len(validation_bytes) == baseline['python_validation']['artifact_bytes']
+          assert hashlib.sha256(validation_bytes).hexdigest() == baseline['python_validation']['artifact_sha256']
+          assert validation['contract'] == baseline['python_validation']['contract']
+          assert validation['decision'] == baseline['python_validation']['decision']
+
+          lock_bytes = Path('tools/phase4_browser/package-lock.json').read_bytes()
+          assert len(lock_bytes) == baseline['package_lock']['artifact_bytes']
+          assert hashlib.sha256(lock_bytes).hexdigest() == baseline['package_lock']['artifact_sha256']
+
+          network = json.loads((root / 'browser-network.json').read_text(encoding='utf-8'))
+          assert network['request_count'] == baseline['network_evidence']['request_count']
+          assert network['loopback_request_count'] == baseline['network_evidence']['loopback_request_count']
+          assert network['external_request_count'] == 0
+          assert sorted(record['url'] for record in network['request_records']) == baseline['network_evidence']['resources']
+
+          assert baseline['repeated_run_substantive_artifacts_byte_identical'] is True
+          assert baseline['shell_generated_artifacts_unchanged'] is True
+          assert patch['contract'] == baseline['shell_compatibility_patch_contract']
+          for name, expected in patch['current_static_assets'].items():
+              payload = Path('phase4-browser-shell', name).read_bytes()
+              assert hashlib.sha256(payload).hexdigest() == expected['sha256']
+          assert hashlib.sha256(Path('phase4-browser-shell/data/reference-shell-data.json').read_bytes()).hexdigest() == patch['generated_artifacts_unchanged']['shell_data_sha256']
+          assert hashlib.sha256(Path('phase4-browser-shell-report.json').read_bytes()).hexdigest() == patch['generated_artifacts_unchanged']['shell_build_report_sha256']
 
           print('phase4-browser-engine=' + manifest['engine_name'] + '@' + manifest['engine_version'])
-          print('phase4-browser-report-bytes=' + str(len(report_bytes)))
-          print('phase4-browser-report-sha256=' + hashlib.sha256(report_bytes).hexdigest())
+          print('phase4-browser-report-bytes=' + str(baseline['evidence_files']['browser-evidence-report.json']['artifact_bytes']))
+          print('phase4-browser-report-sha256=' + baseline['evidence_files']['browser-evidence-report.json']['artifact_sha256'])
           print('phase4-browser-report-digest=' + report['report_digest'])
-          print('phase4-browser-evidence=candidate; external-requests=0; human-verified=false')
+          print('phase4-browser-evidence=pinned-candidate; external-requests=0; human-verified=false')
           PY
 
       - name: Stop loopback server
