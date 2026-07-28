@@ -2,7 +2,7 @@
 
 ## Status
 
-Closure candidate.
+Closure candidate with pinned evidence.
 
 ```yaml
 phase: 4
@@ -29,6 +29,7 @@ accepted_pr: 42
 tested_head: 8172a46cd400fbcf0bce225ca908275c0d1edfdf
 accepted_merge_commit: 1f15cee1f0ed86c5a85750659b4d35e1d535564f
 baseline_contract: atlas-phase4-interaction-contract-baseline/0.1
+baseline_sha256: 6660a453f6878b510698494340d40cf23e46326347e6761e14e0ba0e7c811e0e
 report_contract: atlas-phase4-interaction-contract-report/0.1
 report_digest: 9cbaa5f4675d995a183a6be5bee0b364eb7b6ae1da2ab9affc59b6d5fc452296
 ```
@@ -50,6 +51,7 @@ accepted_pr: 43
 tested_head: ae6e662656c40c2108c0ef52dd2c1d7f0e2f1c0f
 accepted_merge_commit: 4992d0caa0eb37db5b58158a9dd53a8ca10f1405
 baseline_contract: atlas-phase4-reference-shell-baseline/0.1
+baseline_sha256: 02365709eae81143be6a8122e0d8ae5620bbeb2eb6b6b6eb964a948e40413448
 shell_data_contract: atlas-reference-shell-data/0.1
 shell_build_report_contract: atlas-reference-shell-build-report/0.1
 shell_build_digest: ebc90a5781b7e974fe30034898364d87ebb5ed00ac05ce6cf0c27d6ded32b223
@@ -58,11 +60,25 @@ shell_report_digest: cfa4e37b07ed95337bb1fd1cb9e795656da78020d31b46eaf19828332c7
 
 The shell is static, local-first, deterministic, replaceable, and runnable without an account, API, cloud database, graph view, remote asset, or live Principia connection.
 
+## Pinned completion evidence
+
+```yaml
+completion_contract: atlas-phase4-workstream1-completion-report/0.1
+completion_baseline_contract: atlas-phase4-workstream1-completion-baseline/0.1
+report_artifact_bytes: 3996
+report_artifact_sha256: 03ba1f02d7ca2cfb7432919c7bdca110edbd497fc8c2be2c2216b099abe0cb23
+report_digest: a3167ee2dc7a02c47468a1b850e15b495f3ed6058399205fc2cdf906d922aaa3
+python_substantive_artifacts_byte_identical: true
+exit_gate_count: 10
+```
+
+The completion report was byte-identical on Python 3.11 and Python 3.13. Test logs may differ only in runtime timing and are not substantive evidence artifacts.
+
 ## Closure proof
 
 The executable closure command recomputes the interaction fixture and shell data, verifies both pinned baselines, verifies every static asset byte identity, and emits `atlas-phase4-workstream1-completion-report/0.1`.
 
-The required exit gates are:
+The ten passing exit gates are:
 
 1. interaction contracts are executable;
 2. representative positive and negative workflows are pinned;
@@ -75,7 +91,7 @@ The required exit gates are:
 9. the minimal reference shell is runnable locally;
 10. any implementation expansion remains inside the accepted safety boundary.
 
-The closure command fails unless all ten gates pass.
+The closure command and pinned-baseline workflow fail unless every gate and artifact identity matches.
 
 ## Workstream 2 recommendation
 
@@ -126,6 +142,4 @@ repository_mutation: false
 
 ## Recommendation
 
-Accept Workstream 1 only after the final exact candidate head passes the Workstream 1 closure workflow on Python 3.11 and 3.13, both accepted Phase 4 workflows, Foundation, the complete Atlas platform matrix, and end-to-end integration.
-
-The generated completion-report digest and artifact SHA-256 must be pinned before merge.
+Accept Workstream 1 only after the final exact candidate head passes the pinned Workstream 1 closure workflow on Python 3.11 and 3.13, both accepted Phase 4 workflows, Foundation, the complete Atlas platform matrix, and end-to-end integration.
