@@ -43,6 +43,7 @@ export async function desktopEvidence(browser, baseUrl, shellData, workspaceExpo
     assertEvidence(focus.visible, "E-WS-BROWSER-FOCUS", `focus must be visible for ${route.id}`);
     await page.keyboard.press("Enter");
     await page.waitForFunction(expected => location.hash === expected, route.hash);
+    await page.waitForFunction(expected => document.querySelector(`a[data-route-id="${expected}"]`)?.getAttribute("aria-current") === "page", route.id);
     const observed = await currentView(page);
     assertEvidence(observed.current_route === route.id, "E-WS-BROWSER-ROUTE", `route ${route.id} must be current`);
     assertEvidence(observed.error_hidden === true, "E-WS-BROWSER-ROUTE", `route ${route.id} must not expose an error`);
