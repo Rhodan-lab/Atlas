@@ -1,0 +1,127 @@
+name: Phase 4 Workstream 2 Closure
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "content/fixtures/phase4_browser/**"
+      - "content/fixtures/phase4_interaction/**"
+      - "docs/phase-4/**"
+      - "tools/phase4_browser/**"
+      - ".github/workflows/phase4-workstream2-closure.yml"
+  pull_request:
+    paths:
+      - "content/fixtures/phase4_browser/**"
+      - "content/fixtures/phase4_interaction/**"
+      - "docs/phase-4/**"
+      - "tools/phase4_browser/**"
+      - ".github/workflows/phase4-workstream2-closure.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  closure:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+
+      - name: Install pinned dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+
+      - name: Run Workstream 2 completion tests
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m unittest tools.phase4_browser.tests.test_completion -v 2>&1 | tee phase4-workstream2-tests.txt
+
+      - name: Generate Workstream 2 completion report
+        run: |
+          python -m tools.phase4_browser.completion \
+            --output phase4-workstream2-completion-report.json
+
+      - name: Verify closure semantics
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          path = Path('phase4-workstream2-completion-report.json')
+          payload = path.read_bytes()
+          report = json.loads(payload)
+
+          assert report['contract'] == 'atlas-phase4-workstream2-completion-report/0.1'
+          assert report['mode'] == 'interactive-experience-foundation'
+          assert report['phase'] == 4
+          assert report['workstream'] == 2
+          assert report['state'] == 'closure-candidate'
+          assert report['decision'] == 'proceed-workstream3-read-only-research-workspace'
+          assert len(report['exit_gates']) == 12
+          assert all(report['exit_gates'].values())
+          assert report['evidence_summary'] == {
+              'evidence_file_count': 6,
+              'external_request_count': 0,
+              'keyboard_workflow_count': 9,
+              'loopback_request_count': 4,
+              'repeated_run_byte_identical': True,
+              'viewport_count': 2,
+              'workflow_count': 8,
+          }
+          boundary = report['workstream3_entry_boundary']
+          assert boundary['workspace_authority'] == 'ephemeral-research-only'
+          assert boundary['canonical_copy_authority'] is False
+          assert boundary['canonical_mutation'] is False
+          assert boundary['lifecycle_mutation'] is False
+          assert boundary['review_mutation'] is False
+          assert boundary['automatic_merge_or_resolution'] is False
+          assert boundary['exact_revision_required'] is True
+          assert boundary['principia_status_separate'] is True
+          assert boundary['non_graph_workflow_required'] is True
+          assert boundary['local_first'] is True
+          assert boundary['deterministic_export_required'] is True
+          assert boundary['account_required'] is False
+          assert boundary['cloud_required'] is False
+          assert boundary['external_network_required'] is False
+          assert boundary['production_frontend_architecture_selected'] is False
+          assert boundary['live_principia_dependency'] is False
+          assert boundary['repository_mutation'] is False
+          assert report['review_policy']['human_verified'] is False
+          assert report['review_policy']['accessibility_certified'] is False
+          assert report['review_policy']['assistive_technology_user_reviewed'] is False
+          assert report['review_policy']['human_usability_reviewed'] is False
+          assert report['production_frontend_architecture_selected'] is False
+          assert report['live_principia_dependency'] is False
+          assert report['canonical_mutation'] is False
+          assert report['live'] is False
+          assert report['repository_mutation'] is False
+
+          print('phase4-workstream2-report-bytes=' + str(len(payload)))
+          print('phase4-workstream2-report-sha256=' + hashlib.sha256(payload).hexdigest())
+          print('phase4-workstream2-report-digest=' + report['report_digest'])
+          print('phase4-workstream2-exit-gates=' + str(len(report['exit_gates'])))
+          print('phase4-workstream2=closure-candidate; next=read-only-research-workspace')
+          PY
+
+      - name: Upload Workstream 2 closure evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase4-workstream2-closure-python-${{ matrix.python-version }}
+          path: |
+            phase4-workstream2-completion-report.json
+            phase4-workstream2-tests.txt
+          if-no-files-found: error
+          retention-days: 30
