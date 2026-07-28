@@ -1,0 +1,158 @@
+{
+  "contract": "atlas-phase4-workspace-contract-baseline/0.1",
+  "export": {
+    "artifact": {
+      "bytes": 11347,
+      "sha256": "43f28738c4678dfcd0f7a3e4d31480f891112a8c9bd220929f8f32cd80edb98a"
+    },
+    "candidate_count": 2,
+    "contract": "atlas-research-workspace-export/0.1",
+    "entry_count": 5,
+    "principia_reference_count": 1,
+    "report_digest": "82f08c18ae76b4b4d091fe0d8be7d54cf5d10d989443132a26e550056af3f56a",
+    "warning_count": 1
+  },
+  "fixture": {
+    "bytes": 8961,
+    "contract": "atlas-phase4-workspace-fixtures/0.1",
+    "id": "workspace-fixtures:phase4-reference-en-v1",
+    "sha256": "3493c963163a2ba52d6de92fdf8193f9c7f9d7eb967211d7e13ef7b596b24f86",
+    "version": 1
+  },
+  "manifest": {
+    "artifact": {
+      "bytes": 1094,
+      "sha256": "8240d78b29f610cb7c566dfad50432473949c5a63b9de9c522ab28751d80fd09"
+    },
+    "contract": "atlas-research-workspace-manifest/0.1",
+    "file_count": 1,
+    "report_digest": "9aefaf24b130718f284eecb5502b3c1dd144347f6fdcfc85b47d8ec6ce3fda68"
+  },
+  "python_substantive_artifacts_byte_identical": true,
+  "report": {
+    "artifact": {
+      "bytes": 4186,
+      "sha256": "41d555a077e63b47da5159e48a5aa37d93bc6cbd149b86baf372ff932b7e5a94"
+    },
+    "record": {
+      "account_required": false,
+      "automatic_merge_or_resolution": false,
+      "canonical_copy_authority": false,
+      "canonical_mutation": false,
+      "cloud_required": false,
+      "contract": "atlas-phase4-workspace-contract-report/0.1",
+      "counts": {
+        "candidates": 2,
+        "entries": 5,
+        "negative_cases": 10,
+        "open_questions": 2,
+        "principia_references": 1,
+        "warnings": 1
+      },
+      "decision": "workspace-contract-candidate",
+      "decision_counts": {
+        "context": 2,
+        "exclude": 1,
+        "include": 2
+      },
+      "deterministic_export": true,
+      "entity_count": 34,
+      "exact_revision_preserved": true,
+      "export_digest": "82f08c18ae76b4b4d091fe0d8be7d54cf5d10d989443132a26e550056af3f56a",
+      "external_network_required": false,
+      "fixture_id": "workspace-fixtures:phase4-reference-en-v1",
+      "fixture_version": 1,
+      "lifecycle_mutation": false,
+      "live": false,
+      "live_principia_dependency": false,
+      "manifest_digest": "9aefaf24b130718f284eecb5502b3c1dd144347f6fdcfc85b47d8ec6ce3fda68",
+      "mode": "interactive-experience-foundation",
+      "negative_validations": [
+        {
+          "decision": "rejected-as-required",
+          "id": "negative:workspace-implicit-latest",
+          "mutation": "implicit-latest",
+          "observed_error": "E-WORKSPACE-LATEST",
+          "preserved_previous_valid_workspace": true
+        },
+        {
+          "decision": "rejected-as-required",
+          "id": "negative:workspace-duplicate-entry-id",
+          "mutation": "duplicate-entry-id",
+          "observed_error": "E-WORKSPACE-DUPLICATE-ENTRY",
+          "preserved_previous_valid_workspace": true
+        },
+        {
+          "decision": "rejected-as-required",
+          "id": "negative:workspace-copied-authority",
+          "mutation": "copied-authority",
+          "observed_error": "E-WORKSPACE-COPIED-AUTHORITY",
+          "preserved_previous_valid_workspace": true
+        },
+        {
+          "decision": "rejected-as-required",
+          "id": "negative:workspace-resolved-candidate",
+          "mutation": "resolve-candidate",
+          "observed_error": "E-WORKSPACE-CANDIDATE-AUTHORITY",
+          "preserved_previous_valid_workspace": true
+        },
+        {
+          "decision": "rejected-as-required",
+          "id": "negative:workspace-unavailable-revision",
+          "mutation": "unavailable-revision",
+          "observed_error": "E-WORKSPACE-UNAVAILABLE-REVISION",
+          "preserved_previous_valid_workspace": true
+        },
+        {
+          "decision": "rejected-as-required",
+          "id": "negative:workspace-lifecycle-mutation",
+          "mutation": "lifecycle-mutation",
+          "observed_error": "E-WORKSPACE-LIFECYCLE-MUTATION",
+          "preserved_previous_valid_workspace": true
+        },
+        {
+          "decision": "rejected-as-required",
+          "id": "negative:workspace-live-principia",
+          "mutation": "live-principia",
+          "observed_error": "E-WORKSPACE-PRINCIPIA-STATUS",
+          "preserved_previous_valid_workspace": true
+        },
+        {
+          "decision": "rejected-as-required",
+          "id": "negative:workspace-nondeterministic-timestamp",
+          "mutation": "nondeterministic-timestamp",
+          "observed_error": "E-WORKSPACE-DETERMINISM",
+          "preserved_previous_valid_workspace": true
+        },
+        {
+          "decision": "rejected-as-required",
+          "id": "negative:workspace-external-network",
+          "mutation": "external-network",
+          "observed_error": "E-WORKSPACE-NETWORK",
+          "preserved_previous_valid_workspace": true
+        },
+        {
+          "decision": "rejected-as-required",
+          "id": "negative:workspace-missing-non-graph",
+          "mutation": "missing-non-graph",
+          "observed_error": "E-WORKSPACE-NON-GRAPH",
+          "preserved_previous_valid_workspace": true
+        }
+      ],
+      "non_graph_workflow_complete": true,
+      "phase": 4,
+      "principia_status_separate": true,
+      "production_frontend_architecture_selected": false,
+      "replaceable": true,
+      "report_digest": "6aec854b297b51b0dde2e65a944453d7af2a8e36b77bd78302cbb0e2f405b402",
+      "repository_mutation": false,
+      "review_mutation": false,
+      "source_digest": "684d08f23db50c2d994ea07293c6aaea2cbcb24492b062663b2e43144f07d3b1",
+      "state": "workspace-contract-candidate",
+      "workspace_authority": "ephemeral-research-only",
+      "workspace_validation_digest": "2fb3b233a33475ade5355932cae9e22eee0eb173b942e5eb72cf8659ae53ade2",
+      "workstream": 3
+    },
+    "report_digest": "6aec854b297b51b0dde2e65a944453d7af2a8e36b77bd78302cbb0e2f405b402"
+  }
+}
