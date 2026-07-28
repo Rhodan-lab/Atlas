@@ -1,0 +1,145 @@
+name: Phase 4 Workstream 1 Closure
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/reference-shell/**"
+      - "content/canonical/**"
+      - "content/fixtures/phase4_interaction/**"
+      - "docs/phase-4/**"
+      - "tools/phase2_kernel/**"
+      - "tools/phase4_interaction/**"
+      - ".github/workflows/phase4-workstream1-closure.yml"
+  pull_request:
+    paths:
+      - "apps/reference-shell/**"
+      - "content/canonical/**"
+      - "content/fixtures/phase4_interaction/**"
+      - "docs/phase-4/**"
+      - "tools/phase2_kernel/**"
+      - "tools/phase4_interaction/**"
+      - ".github/workflows/phase4-workstream1-closure.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  closure:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+
+      - name: Install pinned dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+
+      - name: Run Workstream 1 closure tests
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m unittest tools.phase4_interaction.tests.test_completion -v 2>&1 | tee phase4-workstream1-tests.txt
+
+      - name: Generate Workstream 1 completion report
+        run: |
+          python -m tools.phase4_interaction.completion \
+            --output phase4-workstream1-completion-report.json
+
+      - name: Verify pinned closure semantics
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          path = Path('phase4-workstream1-completion-report.json')
+          baseline_path = Path('content/fixtures/phase4_interaction/workstream1-completion-baseline.json')
+          payload = path.read_bytes()
+          report = json.loads(payload)
+          baseline = json.loads(baseline_path.read_bytes())
+
+          assert baseline['contract'] == 'atlas-phase4-workstream1-completion-baseline/0.1'
+          assert baseline['report_contract'] == 'atlas-phase4-workstream1-completion-report/0.1'
+          assert len(payload) == baseline['report_artifact_bytes']
+          assert hashlib.sha256(payload).hexdigest() == baseline['report_artifact_sha256']
+          assert report['report_digest'] == baseline['report_digest']
+
+          comparable_fields = [
+              'accepted_evidence',
+              'automatic_release_action',
+              'automatic_status_change',
+              'canonical_mutation',
+              'counts',
+              'decision',
+              'embeddings',
+              'entity_count',
+              'exact_revision_required',
+              'exit_gates',
+              'external_services',
+              'implementation_expansion',
+              'live',
+              'live_principia_dependency',
+              'local_first',
+              'mode',
+              'phase',
+              'principia_status_separate',
+              'production_retrieval_quality_claim',
+              'repository_mutation',
+              'retrieval_authority',
+              'source_digest',
+              'state',
+              'vector_database',
+              'workflow_kinds',
+              'workstream',
+              'workstream2_entry_boundary',
+          ]
+          for field in comparable_fields:
+              assert report[field] == baseline[field], field
+
+          assert baseline['python_substantive_artifacts_byte_identical'] is True
+          assert report['contract'] == 'atlas-phase4-workstream1-completion-report/0.1'
+          assert report['state'] == 'closure-candidate'
+          assert report['decision'] == 'proceed-workstream2-browser-accessibility-evidence'
+          assert report['implementation_expansion'] == 'bounded-browser-evidence-only'
+          assert len(report['exit_gates']) == 10
+          assert all(report['exit_gates'].values())
+          assert report['entity_count'] == 34
+          boundary = report['workstream2_entry_boundary']
+          assert boundary['browser_automation_required'] is True
+          assert boundary['keyboard_workflows_required'] is True
+          assert boundary['focus_visibility_required'] is True
+          assert boundary['non_graph_workflow_equivalence_required'] is True
+          assert boundary['external_network_requests'] is False
+          assert boundary['production_frontend_architecture_selected'] is False
+          assert boundary['live_principia_dependency'] is False
+          assert boundary['canonical_mutation'] is False
+          assert boundary['repository_mutation'] is False
+
+          print('phase4-workstream1-report-bytes=' + str(len(payload)))
+          print('phase4-workstream1-report-sha256=' + hashlib.sha256(payload).hexdigest())
+          print('phase4-workstream1-report-digest=' + report['report_digest'])
+          print('phase4-workstream1-exit-gates=' + str(len(report['exit_gates'])))
+          print('phase4-workstream1=closure-candidate; next=browser-accessibility-evidence')
+          PY
+
+      - name: Upload Workstream 1 closure evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase4-workstream1-closure-python-${{ matrix.python-version }}
+          path: |
+            phase4-workstream1-completion-report.json
+            phase4-workstream1-tests.txt
+          if-no-files-found: error
+          retention-days: 30

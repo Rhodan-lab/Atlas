@@ -1,0 +1,106 @@
+{
+  "accepted_evidence": {
+    "interaction_contracts": {
+      "baseline_sha256": "6660a453f6878b510698494340d40cf23e46326347e6761e14e0ba0e7c811e0e",
+      "merge_commit": "1f15cee1f0ed86c5a85750659b4d35e1d535564f",
+      "pr": 42,
+      "report_digest": "9cbaa5f4675d995a183a6be5bee0b364eb7b6ae1da2ab9affc59b6d5fc452296",
+      "tested_head": "8172a46cd400fbcf0bce225ca908275c0d1edfdf"
+    },
+    "reference_shell": {
+      "baseline_sha256": "02365709eae81143be6a8122e0d8ae5620bbeb2eb6b6b6eb964a948e40413448",
+      "build_digest": "ebc90a5781b7e974fe30034898364d87ebb5ed00ac05ce6cf0c27d6ded32b223",
+      "merge_commit": "4992d0caa0eb37db5b58158a9dd53a8ca10f1405",
+      "pr": 43,
+      "report_digest": "cfa4e37b07ed95337bb1fd1cb9e795656da78020d31b46eaf19828332c74d696",
+      "static_assets": {
+        "app.js": {
+          "bytes": 11280,
+          "sha256": "2ac8f4343d8fe1d52d22a416897103bc7b231416d0214c7449f3cbb627d3b854"
+        },
+        "index.html": {
+          "bytes": 2786,
+          "sha256": "dd3854ea5e5dfd10a43ba7f28dbbac24a33acf3ca309b646e9256cd6cd52955d"
+        },
+        "styles.css": {
+          "bytes": 8273,
+          "sha256": "95d18d801687489e18edd7bee3a9ea43e40bf80607c586de2915ff35a6853579"
+        }
+      },
+      "tested_head": "ae6e662656c40c2108c0ef52dd2c1d7f0e2f1c0f"
+    }
+  },
+  "automatic_release_action": false,
+  "automatic_status_change": false,
+  "canonical_mutation": false,
+  "contract": "atlas-phase4-workstream1-completion-baseline/0.1",
+  "counts": {
+    "failure_states": 5,
+    "impact_warnings": 1,
+    "negative_cases": 6,
+    "principia_references": 1,
+    "states": 8,
+    "views": 8
+  },
+  "decision": "proceed-workstream2-browser-accessibility-evidence",
+  "embeddings": false,
+  "entity_count": 34,
+  "exact_revision_required": true,
+  "exit_gates": {
+    "accessibility_and_non_graph_requirements_machine_checkable": true,
+    "atlas_and_principia_status_separate": true,
+    "exact_revisions_and_authority_visible": true,
+    "expansion_boundary_remains_safe": true,
+    "generated_artifacts_deterministic_and_replaceable": true,
+    "interaction_contracts_executable": true,
+    "interface_state_cannot_mutate_authority": true,
+    "minimal_reference_shell_runnable_locally": true,
+    "offline_and_missing_reference_failures_explicit": true,
+    "representative_workflows_pinned": true
+  },
+  "external_services": false,
+  "implementation_expansion": "bounded-browser-evidence-only",
+  "live": false,
+  "live_principia_dependency": false,
+  "local_first": true,
+  "mode": "interactive-experience-foundation",
+  "phase": 4,
+  "principia_status_separate": true,
+  "production_retrieval_quality_claim": false,
+  "python_substantive_artifacts_byte_identical": true,
+  "report_artifact_bytes": 3996,
+  "report_artifact_sha256": "03ba1f02d7ca2cfb7432919c7bdca110edbd497fc8c2be2c2216b099abe0cb23",
+  "report_contract": "atlas-phase4-workstream1-completion-report/0.1",
+  "report_digest": "a3167ee2dc7a02c47468a1b850e15b495f3ed6058399205fc2cdf906d922aaa3",
+  "repository_mutation": false,
+  "retrieval_authority": "advisory-only",
+  "source_digest": "684d08f23db50c2d994ea07293c6aaea2cbcb24492b062663b2e43144f07d3b1",
+  "state": "closure-candidate",
+  "vector_database": false,
+  "workflow_kinds": [
+    "candidate",
+    "entity",
+    "filter",
+    "impact-warning",
+    "principia-reference",
+    "provenance",
+    "research-trail",
+    "retrieval"
+  ],
+  "workstream": 1,
+  "workstream2_entry_boundary": {
+    "browser_automation_required": true,
+    "canonical_mutation": false,
+    "external_network_requests": false,
+    "failure_state_visibility_required": true,
+    "focus_visibility_required": true,
+    "keyboard_workflows_required": true,
+    "landmark_heading_and_label_checks_required": true,
+    "live_principia_dependency": false,
+    "non_graph_workflow_equivalence_required": true,
+    "offline_package_required": true,
+    "production_frontend_architecture_selected": false,
+    "purpose": "collect real-browser accessibility and workflow evidence over the accepted static shell",
+    "repository_mutation": false
+  }
+}
