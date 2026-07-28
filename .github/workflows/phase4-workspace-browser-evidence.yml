@@ -142,6 +142,104 @@ jobs:
           ATLAS_WORKSPACE_BROWSER_EVIDENCE_DIR: phase4-workspace-browser-a
         run: python -m unittest tools.phase4_workspace_browser.tests.test_validate -v
 
+      - name: Verify pinned workspace browser baseline
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          baseline_path = Path('content/fixtures/phase4_workspace/workspace-browser-baseline.json')
+          baseline = json.loads(baseline_path.read_bytes())
+          root = Path('phase4-workspace-browser-a')
+
+          assert baseline['contract'] == 'atlas-phase4-workspace-browser-baseline/0.1'
+          assert baseline['phase'] == 4
+          assert baseline['workstream'] == 3
+          assert baseline['slice'] == 2
+          assert baseline['state'] == 'workspace-browser-candidate'
+          assert baseline['repeated_run_substantive_artifacts_byte_identical'] is True
+
+          records = {}
+          for name, expected in baseline['evidence'].items():
+              path = root / expected['file']
+              payload = path.read_bytes()
+              record = json.loads(payload)
+              assert len(payload) == expected['artifact']['bytes'], name
+              assert hashlib.sha256(payload).hexdigest() == expected['artifact']['sha256'], name
+              assert record['contract'] == expected['contract'], name
+              assert record['report_digest'] == expected['report_digest'], name
+              records[name] = record
+
+          validation_path = Path(baseline['validation']['file'])
+          validation_bytes = validation_path.read_bytes()
+          validation = json.loads(validation_bytes)
+          assert len(validation_bytes) == baseline['validation']['artifact']['bytes']
+          assert hashlib.sha256(validation_bytes).hexdigest() == baseline['validation']['artifact']['sha256']
+          assert validation['contract'] == baseline['validation']['contract']
+          assert validation['decision'] == baseline['validation']['decision']
+          assert validation['report_digest'] == baseline['validation']['report_digest']
+
+          report = records['report']
+          manifest = records['manifest']
+          assert report['engine_name'] == baseline['engine']['name']
+          assert report['engine_version'] == baseline['engine']['version']
+          assert report['playwright_version'] == baseline['engine']['playwright_version']
+          assert manifest['engine_name'] == baseline['engine']['name']
+          assert manifest['engine_version'] == baseline['engine']['version']
+          assert manifest['playwright_version'] == baseline['engine']['playwright_version']
+
+          count_fields = {
+              'routes': 'route_count',
+              'keyboard_routes': 'keyboard_route_count',
+              'entries': 'entry_count',
+              'candidates': 'candidate_count',
+              'principia_references': 'principia_reference_count',
+              'warnings': 'warning_count',
+              'viewports': 'viewport_count',
+              'external_requests': 'external_request_count',
+          }
+          for baseline_name, report_name in count_fields.items():
+              assert report[report_name] == baseline['counts'][baseline_name], baseline_name
+
+          for claim, expected in baseline['claims'].items():
+              assert report[claim] == expected, claim
+          for field, expected in baseline['authority'].items():
+              if field == 'browser_state_authority':
+                  assert records['workflow'][field] == expected
+              else:
+                  assert report[field] == expected, field
+
+          export_path = Path('phase4-workspace-shell/data/workspace-export.json')
+          manifest_path = Path('phase4-workspace-shell/data/workspace-manifest.json')
+          for name, path in [('export', export_path), ('manifest', manifest_path)]:
+              expected = baseline['accepted_workspace'][name]
+              payload = path.read_bytes()
+              record = json.loads(payload)
+              assert len(payload) == expected['artifact']['bytes']
+              assert hashlib.sha256(payload).hexdigest() == expected['artifact']['sha256']
+              assert record['contract'] == expected['contract']
+              assert record['report_digest'] == expected['report_digest']
+
+          shell = baseline['workspace_shell']
+          index_bytes = Path('phase4-workspace-shell/index.html').read_bytes()
+          assert len(index_bytes) == shell['accessibility_patch']['index_html']['bytes']
+          assert hashlib.sha256(index_bytes).hexdigest() == shell['accessibility_patch']['index_html']['sha256']
+          shell_data_bytes = Path('phase4-workspace-shell/data/workspace-shell-data.json').read_bytes()
+          shell_data = json.loads(shell_data_bytes)
+          assert len(shell_data_bytes) == shell['shell_data']['bytes']
+          assert hashlib.sha256(shell_data_bytes).hexdigest() == shell['shell_data']['sha256']
+          assert shell_data['build_digest'] == shell['shell_data']['build_digest']
+          shell_report_bytes = Path('phase4-workspace-shell-report.json').read_bytes()
+          shell_report = json.loads(shell_report_bytes)
+          assert len(shell_report_bytes) == shell['build_report']['bytes']
+          assert hashlib.sha256(shell_report_bytes).hexdigest() == shell['build_report']['sha256']
+          assert shell_report['report_digest'] == shell['build_report']['report_digest']
+
+          print('workspace-browser-baseline-sha256=' + hashlib.sha256(baseline_path.read_bytes()).hexdigest())
+          print('workspace-browser-baseline=pinned-candidate; artifacts=6; validation=valid; external=0; mutation=false')
+          PY
+
       - name: Verify browser evidence summary
         run: |
           python - <<'PY'
@@ -225,5 +323,6 @@ jobs:
             phase4-workspace-browser-server.log
             phase4-workspace-browser-a.log
             phase4-workspace-browser-b.log
+            content/fixtures/phase4_workspace/workspace-browser-baseline.json
           if-no-files-found: error
           retention-days: 30
