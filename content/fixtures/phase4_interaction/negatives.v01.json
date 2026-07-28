@@ -1,0 +1,137 @@
+{
+  "negative_cases": [
+    {
+      "expected_error": "E-INTERACTION-ACCESSIBILITY",
+      "kind": "view",
+      "record": {
+        "atlas_refs": [{"id": "model:en:delayed-correction-recurrence", "revision": 2}],
+        "authority": {"advisory_only": true, "exact_revision_visible": true, "lifecycle_visible": true, "provenance_visible": true, "review_level_visible": true, "staleness_visible": true},
+        "automatic_release_action": false,
+        "automatic_status_change": false,
+        "canonical_mutation": false,
+        "contract": "atlas-interaction-view/0.1",
+        "graph_required": true,
+        "id": "view:negative:graph-required",
+        "keyboard_path": ["open-entity", "inspect-identity", "inspect-revision"],
+        "kind": "entity",
+        "live": false,
+        "non_graph_path": ["entity-list", "entity-detail"],
+        "repository_mutation": false,
+        "revision": 1,
+        "title": "Delayed-correction model at revision 2"
+      }
+    },
+    {
+      "expected_error": "E-INTERACTION-STATE-AUTHORITY",
+      "kind": "state",
+      "record": {
+        "active_view": {"id": "view:entity:feedback-model", "revision": 1},
+        "automatic_release_action": false,
+        "automatic_status_change": false,
+        "canonical_copy": false,
+        "canonical_mutation": false,
+        "contract": "atlas-interaction-state/0.1",
+        "deterministic_navigation": true,
+        "history": [{"id": "view:entity:feedback-model", "revision": 1}],
+        "id": "state:negative:live",
+        "live": true,
+        "mode": "interactive-experience-foundation",
+        "offline_capable": true,
+        "repository_mutation": false,
+        "revision": 1,
+        "route": "/atlas/models/delayed-correction-recurrence/revisions/2"
+      }
+    },
+    {
+      "expected_error": "E-PRINCIPIA-REFERENCE",
+      "kind": "principia-reference",
+      "record": {
+        "atlas_references": [
+          {"id": "model:en:delayed-correction-recurrence", "revision": 2},
+          {"id": "evidence:en:delayed-feedback-periodic-sequence", "revision": 2}
+        ],
+        "automatic_release_action": false,
+        "automatic_status_change": false,
+        "automatic_status_inheritance": false,
+        "canonical_mutation": false,
+        "contract": "atlas-principia-reference-envelope/0.1",
+        "fixture_only": true,
+        "id": "principia-reference:negative:missing-revision",
+        "impact_state": "fixture-only",
+        "implicit_latest": false,
+        "live": false,
+        "principia_artifact_id": "principia:investigation:period-six-feedback",
+        "principia_status": "draft",
+        "principia_status_separate": true,
+        "reference_purpose": "Explain the exact recurrence and generated orbit without inheriting Atlas lifecycle status.",
+        "repository_mutation": false,
+        "revision": 1
+      }
+    },
+    {
+      "expected_error": "E-IMPACT-AUTHORITY",
+      "kind": "impact-warning",
+      "record": {
+        "automatic_release_action": false,
+        "automatic_status_change": false,
+        "automatic_update": true,
+        "available_revisions": [2],
+        "canonical_mutation": false,
+        "contract": "atlas-cross-repository-impact-warning/0.1",
+        "id": "impact-warning:negative:auto-update",
+        "impact_state": "unavailable",
+        "implicit_latest": false,
+        "live": false,
+        "message": "The requested Atlas revision is unavailable; the interface must not substitute revision 2 silently.",
+        "recovery_actions": ["show-available-revisions", "return-to-pinned-reference", "open-impact-details"],
+        "repository_mutation": false,
+        "revision": 1,
+        "severity": "blocking",
+        "target": {"id": "model:en:delayed-correction-recurrence", "revision": 3}
+      }
+    },
+    {
+      "expected_error": "E-INTERACTION-FAILURE-AUTHORITY",
+      "kind": "failure-state",
+      "record": {
+        "automatic_release_action": false,
+        "automatic_status_change": false,
+        "canonical_copy": false,
+        "canonical_mutation": true,
+        "category": "malformed-state",
+        "contract": "atlas-interaction-failure/0.1",
+        "error_code": "E-INTERACTION-STATE-CONTRACT",
+        "id": "failure:negative:canonical-mutation",
+        "implicit_latest": false,
+        "live": false,
+        "preserve_previous_state": true,
+        "recovery_actions": ["show-validation-errors", "return-to-previous-state"],
+        "repository_mutation": false,
+        "revision": 1,
+        "silent_fallback": false,
+        "summary": "The interaction state does not match the versioned contract."
+      }
+    },
+    {
+      "expected_error": "E-INTERACTION-VIEW-KIND",
+      "kind": "view",
+      "record": {
+        "atlas_refs": [{"id": "model:en:delayed-correction-recurrence", "revision": 2}],
+        "authority": {"advisory_only": true, "exact_revision_visible": true, "lifecycle_visible": true, "provenance_visible": true, "review_level_visible": true, "staleness_visible": true},
+        "automatic_release_action": false,
+        "automatic_status_change": false,
+        "canonical_mutation": false,
+        "contract": "atlas-interaction-view/0.1",
+        "graph_required": false,
+        "id": "view:negative:unknown-kind",
+        "keyboard_path": ["open-entity", "inspect-identity", "inspect-revision"],
+        "kind": "dashboard",
+        "live": false,
+        "non_graph_path": ["entity-list", "entity-detail"],
+        "repository_mutation": false,
+        "revision": 1,
+        "title": "Delayed-correction model at revision 2"
+      }
+    }
+  ]
+}
