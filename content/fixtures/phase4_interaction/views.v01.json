@@ -1,0 +1,186 @@
+{
+  "views": [
+    {
+      "atlas_refs": [{"id": "model:en:delayed-correction-recurrence", "revision": 2}],
+      "authority": {"advisory_only": true, "exact_revision_visible": true, "lifecycle_visible": true, "provenance_visible": true, "review_level_visible": true, "staleness_visible": true},
+      "automatic_release_action": false,
+      "automatic_status_change": false,
+      "canonical_mutation": false,
+      "contract": "atlas-interaction-view/0.1",
+      "graph_required": false,
+      "id": "view:entity:feedback-model",
+      "keyboard_path": ["open-entity", "inspect-identity", "inspect-revision"],
+      "kind": "entity",
+      "live": false,
+      "non_graph_path": ["entity-list", "entity-detail"],
+      "repository_mutation": false,
+      "revision": 1,
+      "title": "Delayed-correction model at revision 2"
+    },
+    {
+      "atlas_refs": [
+        {"id": "claim:en:catalase-optimum-requires-assay-scope", "revision": 1},
+        {"id": "evidence:en:fluorescent-catalase-assay-neutral-ph", "revision": 1},
+        {"id": "synthesis:en:catalase-assay-conditions", "revision": 1}
+      ],
+      "authority": {"advisory_only": true, "exact_revision_visible": true, "lifecycle_visible": true, "provenance_visible": true, "review_level_visible": true, "staleness_visible": true},
+      "automatic_release_action": false,
+      "automatic_status_change": false,
+      "canonical_mutation": false,
+      "contract": "atlas-interaction-view/0.1",
+      "graph_required": false,
+      "id": "view:provenance:catalase-scope",
+      "keyboard_path": ["open-claim", "open-provenance", "open-source"],
+      "kind": "provenance",
+      "live": false,
+      "non_graph_path": ["claim-detail", "provenance-list", "source-detail"],
+      "repository_mutation": false,
+      "revision": 1,
+      "title": "Catalase scope provenance trail"
+    },
+    {
+      "atlas_refs": [
+        {"id": "claim:en:recommender-effects-are-context-dependent", "revision": 1},
+        {"id": "synthesis:en:recommender-exposure-and-governance", "revision": 1}
+      ],
+      "authority": {"advisory_only": true, "exact_revision_visible": true, "lifecycle_visible": true, "provenance_visible": true, "review_level_visible": true, "staleness_visible": true},
+      "automatic_release_action": false,
+      "automatic_status_change": false,
+      "canonical_mutation": false,
+      "contract": "atlas-interaction-view/0.1",
+      "generated_artifact": {
+        "advisory_only": true,
+        "build_digest": "91af098baa9bdb6dd6fc55f58f579b6b3be01637562f5797ec1c948a65c748f2",
+        "contract": "atlas-phase3-structured-baseline/0.1",
+        "replaceable": true,
+        "source_digest": "684d08f23db50c2d994ea07293c6aaea2cbcb24492b062663b2e43144f07d3b1"
+      },
+      "graph_required": false,
+      "id": "view:retrieval:recommender-scope",
+      "keyboard_path": ["open-search", "run-structured-query", "inspect-ranking"],
+      "kind": "retrieval",
+      "live": false,
+      "non_graph_path": ["search-form", "result-list", "result-explanation"],
+      "repository_mutation": false,
+      "revision": 1,
+      "title": "Explainable recommender-scope retrieval"
+    },
+    {
+      "atlas_refs": [{"id": "evidence:en:fluorescent-catalase-assay-neutral-ph", "revision": 1}],
+      "authority": {"advisory_only": true, "exact_revision_visible": true, "lifecycle_visible": true, "provenance_visible": true, "review_level_visible": true, "staleness_visible": true},
+      "automatic_release_action": false,
+      "automatic_status_change": false,
+      "canonical_mutation": false,
+      "contract": "atlas-interaction-view/0.1",
+      "generated_artifact": {
+        "advisory_only": true,
+        "build_digest": "82256be703ea84dc02b6e3b7c2d795ee2cbb2ba9e4237229b7debc26741d829e",
+        "contract": "atlas-filtered-result-set/0.1",
+        "replaceable": true,
+        "source_digest": "684d08f23db50c2d994ea07293c6aaea2cbcb24492b062663b2e43144f07d3b1"
+      },
+      "graph_required": false,
+      "id": "view:filter:catalase-support",
+      "keyboard_path": ["open-filters", "select-evidence-role", "inspect-filtered-result"],
+      "kind": "filter",
+      "live": false,
+      "non_graph_path": ["filter-form", "filtered-result-list"],
+      "repository_mutation": false,
+      "revision": 1,
+      "title": "Catalase supporting-evidence filter"
+    },
+    {
+      "atlas_refs": [
+        {"id": "claim:en:facebook-exposure-reflects-network-ranking-and-clicks", "revision": 1},
+        {"id": "claim:en:recommender-effects-are-context-dependent", "revision": 1},
+        {"id": "claim:en:twitter-ranking-changed-relative-political-amplification", "revision": 1},
+        {"id": "synthesis:en:recommender-exposure-and-governance", "revision": 1}
+      ],
+      "authority": {"advisory_only": true, "exact_revision_visible": true, "lifecycle_visible": true, "provenance_visible": true, "review_level_visible": true, "staleness_visible": true},
+      "automatic_release_action": false,
+      "automatic_status_change": false,
+      "canonical_mutation": false,
+      "contract": "atlas-interaction-view/0.1",
+      "generated_artifact": {
+        "advisory_only": true,
+        "build_digest": "733aeb28a3147a36d1cc7d3406ab98fa81522cb4b4e87e3aa792aaf54893a394",
+        "contract": "atlas-research-trail/0.1",
+        "replaceable": true,
+        "source_digest": "684d08f23db50c2d994ea07293c6aaea2cbcb24492b062663b2e43144f07d3b1"
+      },
+      "graph_required": false,
+      "id": "view:research-trail:recommender-generalization",
+      "keyboard_path": ["open-trail", "inspect-decision", "inspect-open-question"],
+      "kind": "research-trail",
+      "live": false,
+      "non_graph_path": ["trail-summary", "trail-entry-list", "trail-open-questions"],
+      "repository_mutation": false,
+      "revision": 1,
+      "title": "Cross-platform recommender research trail"
+    },
+    {
+      "atlas_refs": [
+        {"id": "claim:en:facebook-exposure-reflects-network-ranking-and-clicks", "revision": 1},
+        {"id": "claim:en:twitter-ranking-changed-relative-political-amplification", "revision": 1}
+      ],
+      "authority": {"advisory_only": true, "exact_revision_visible": true, "lifecycle_visible": true, "provenance_visible": true, "review_level_visible": true, "staleness_visible": true},
+      "automatic_release_action": false,
+      "automatic_status_change": false,
+      "canonical_mutation": false,
+      "contract": "atlas-interaction-view/0.1",
+      "generated_artifact": {
+        "advisory_only": true,
+        "build_digest": "733aeb28a3147a36d1cc7d3406ab98fa81522cb4b4e87e3aa792aaf54893a394",
+        "contract": "atlas-contradiction-candidate/0.1",
+        "replaceable": true,
+        "source_digest": "684d08f23db50c2d994ea07293c6aaea2cbcb24492b062663b2e43144f07d3b1"
+      },
+      "graph_required": false,
+      "id": "view:candidate:recommender-comparison",
+      "keyboard_path": ["open-candidates", "inspect-scope", "inspect-evidence-path"],
+      "kind": "candidate",
+      "live": false,
+      "non_graph_path": ["candidate-list", "candidate-detail", "evidence-path-list"],
+      "repository_mutation": false,
+      "revision": 1,
+      "title": "Advisory recommender comparison candidate"
+    },
+    {
+      "atlas_refs": [
+        {"id": "model:en:delayed-correction-recurrence", "revision": 2},
+        {"id": "evidence:en:delayed-feedback-periodic-sequence", "revision": 2}
+      ],
+      "authority": {"advisory_only": true, "exact_revision_visible": true, "lifecycle_visible": true, "provenance_visible": true, "review_level_visible": true, "staleness_visible": true},
+      "automatic_release_action": false,
+      "automatic_status_change": false,
+      "canonical_mutation": false,
+      "contract": "atlas-interaction-view/0.1",
+      "graph_required": false,
+      "id": "view:principia-reference:feedback-orbit",
+      "keyboard_path": ["open-principia-reference", "inspect-separate-status", "inspect-atlas-reference"],
+      "kind": "principia-reference",
+      "live": false,
+      "non_graph_path": ["principia-reference-list", "principia-reference-detail"],
+      "repository_mutation": false,
+      "revision": 1,
+      "title": "Offline Principia reference to the period-six orbit"
+    },
+    {
+      "atlas_refs": [{"id": "model:en:delayed-correction-recurrence", "revision": 2}],
+      "authority": {"advisory_only": true, "exact_revision_visible": true, "lifecycle_visible": true, "provenance_visible": true, "review_level_visible": true, "staleness_visible": true},
+      "automatic_release_action": false,
+      "automatic_status_change": false,
+      "canonical_mutation": false,
+      "contract": "atlas-interaction-view/0.1",
+      "graph_required": false,
+      "id": "view:impact-warning:missing-feedback-revision",
+      "keyboard_path": ["open-warning", "inspect-target", "inspect-recovery"],
+      "kind": "impact-warning",
+      "live": false,
+      "non_graph_path": ["warning-summary", "warning-target", "recovery-actions"],
+      "repository_mutation": false,
+      "revision": 1,
+      "title": "Unavailable Atlas revision warning"
+    }
+  ]
+}

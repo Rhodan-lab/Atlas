@@ -1,0 +1,14 @@
+{
+  "contract": "atlas-phase4-interaction-fixture-manifest/0.1",
+  "assembled_contract": "atlas-phase4-interaction-fixtures/0.1",
+  "id": "interaction-fixtures:phase4-reference-en-v1",
+  "version": 1,
+  "mode": "interactive-experience-foundation",
+  "source_digest": "684d08f23db50c2d994ea07293c6aaea2cbcb24492b062663b2e43144f07d3b1",
+  "parts": {
+    "views": "views.v01.json",
+    "states": "states.v01.json",
+    "bridge_and_failures": "bridge-failures.v01.json",
+    "negative_cases": "negatives.v01.json"
+  }
+}
