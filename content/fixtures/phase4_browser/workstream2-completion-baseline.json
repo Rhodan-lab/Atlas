@@ -1,0 +1,108 @@
+{
+  "contract": "atlas-phase4-workstream2-completion-baseline/0.1",
+  "python_substantive_artifacts_byte_identical": true,
+  "report_artifact_bytes": 4070,
+  "report_artifact_sha256": "4cccee425316ed329979cb9f5eb900a7a7ee3656c72822ecffa8f4f15ef76786",
+  "report_contract": "atlas-phase4-workstream2-completion-report/0.1",
+  "report_digest": "926eb576fb216fca2d1f5a52d11f977f7c743c058d9a8a31d81ffc265f2d9913",
+  "report": {
+    "accepted_evidence": {
+      "browser_evidence": {
+        "baseline_sha256": "a8fe22c6e5bf8df73eccb132d687d4dfda20f7f91a2b41391996248216e1eab3",
+        "engine": {
+          "name": "chromium",
+          "playwright_version": "1.62.0",
+          "version": "151.0.7922.34"
+        },
+        "merge_commit": "d5577d9664a16b89d4c2597229f418a7f4a8f849",
+        "pr": 46,
+        "report_artifact_bytes": 2350,
+        "report_artifact_sha256": "b3e72b7969802edf75b96870ec283dde597fb12723fb7f56c297e86bf502f855",
+        "report_digest": "dd1242387ff68024b478c81c74cc7b11308a4c37aeb1b23dd1859be8caafb5e1",
+        "tested_head": "05e829dcf0c331188f4e75a7ffe8e9b1434b2aab"
+      },
+      "shell_accessibility_patch": {
+        "contract": "atlas-phase4-reference-shell-accessibility-patch/0.1",
+        "generated_artifacts_unchanged": {
+          "shell_build_report_sha256": "c9ca4259944bc4a90c42df26c4927c3f546a8358235b4e08a40715c692fa1eff",
+          "shell_data_sha256": "e0f9fcbff9b86cbd4fffcb43d9c2aff64c2eb602f9b2fa0a02b8804bd18eb762"
+        },
+        "interaction_semantics_changed": false,
+        "sha256": "1cc3c66bb0884465fbefbcb5bd575db97d1f5f44be874417fa79144ec80c8411"
+      },
+      "workstream1_history": {
+        "completion_baseline_sha256": "101e3c5ceb4b28edb1c6292acafcc083adafaef248c31f504624706b9e299e07",
+        "report_artifact_sha256": "03ba1f02d7ca2cfb7432919c7bdca110edbd497fc8c2be2c2216b099abe0cb23",
+        "report_digest": "a3167ee2dc7a02c47468a1b850e15b495f3ed6058399205fc2cdf906d922aaa3"
+      }
+    },
+    "automatic_release_action": false,
+    "automatic_status_change": false,
+    "canonical_mutation": false,
+    "contract": "atlas-phase4-workstream2-completion-report/0.1",
+    "decision": "proceed-workstream3-read-only-research-workspace",
+    "embeddings": false,
+    "evidence_summary": {
+      "evidence_file_count": 6,
+      "external_request_count": 0,
+      "keyboard_workflow_count": 9,
+      "loopback_request_count": 4,
+      "repeated_run_byte_identical": true,
+      "viewport_count": 2,
+      "workflow_count": 8
+    },
+    "exit_gates": {
+      "bounded_desktop_and_mobile_viewports_pass": true,
+      "browser_contracts_versioned_and_pinned": true,
+      "deep_links_reload_and_history_deterministic": true,
+      "engine_and_environment_pinned": true,
+      "focus_semantics_and_errors_recorded": true,
+      "historical_workstream1_evidence_preserved": true,
+      "limitations_and_non_human_review_explicit": true,
+      "non_graph_equivalence_complete": true,
+      "repeated_runs_byte_identical": true,
+      "required_workflows_pass_by_keyboard": true,
+      "warnings_and_failures_explicit_and_non_mutating": true,
+      "zero_external_requests": true
+    },
+    "external_services": false,
+    "live": false,
+    "live_principia_dependency": false,
+    "mode": "interactive-experience-foundation",
+    "phase": 4,
+    "production_frontend_architecture_selected": false,
+    "production_retrieval_quality_claim": false,
+    "report_digest": "926eb576fb216fca2d1f5a52d11f977f7c743c058d9a8a31d81ffc265f2d9913",
+    "repository_mutation": false,
+    "review_policy": {
+      "accessibility_certified": false,
+      "active_review_level": "ai-reviewed",
+      "assistive_technology_user_reviewed": false,
+      "human_usability_reviewed": false,
+      "human_verified": false
+    },
+    "state": "closure-candidate",
+    "vector_database": false,
+    "workstream": 2,
+    "workstream3_entry_boundary": {
+      "account_required": false,
+      "automatic_merge_or_resolution": false,
+      "canonical_copy_authority": false,
+      "canonical_mutation": false,
+      "cloud_required": false,
+      "deterministic_export_required": true,
+      "exact_revision_required": true,
+      "external_network_required": false,
+      "lifecycle_mutation": false,
+      "live_principia_dependency": false,
+      "local_first": true,
+      "non_graph_workflow_required": true,
+      "principia_status_separate": true,
+      "production_frontend_architecture_selected": false,
+      "purpose": "compose accepted exact-revision views into a read-only multi-step research workspace",
+      "repository_mutation": false,
+      "review_mutation": false,
+      "workspace_authority": "ephemeral-research-only"
+    }
+  }
+}
