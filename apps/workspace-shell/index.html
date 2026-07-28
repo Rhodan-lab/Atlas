@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Local read-only browser workspace over an accepted exact-revision Atlas export">
+  <title>Atlas Research Workspace</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to workspace content</a>
+
+  <header class="masthead">
+    <div class="masthead-copy">
+      <p class="eyebrow">PHASE 4 · READ-ONLY RESEARCH WORKSPACE</p>
+      <h1>Atlas Research Workspace</h1>
+      <p class="lede">Inspect an accepted exact-revision research package without changing Atlas, Principia, review, lifecycle, or repository state.</p>
+    </div>
+    <div class="runtime-card" role="status" aria-live="polite" aria-atomic="true">
+      <span class="status-dot" aria-hidden="true"></span>
+      <div>
+        <strong id="runtime-status">Loading accepted workspace…</strong>
+        <small id="runtime-detail">Local package · no account or cloud required</small>
+      </div>
+    </div>
+  </header>
+
+  <div class="workspace-grid">
+    <aside class="sidebar" aria-labelledby="workspace-navigation-title">
+      <div class="sidebar-heading">
+        <p class="eyebrow">WORKSPACE ROUTES</p>
+        <h2 id="workspace-navigation-title">Research package</h2>
+      </div>
+      <nav aria-label="Workspace views">
+        <ul id="route-list" class="route-list"></ul>
+      </nav>
+
+      <section class="boundary-card" aria-labelledby="workspace-boundary-title">
+        <h3 id="workspace-boundary-title">Authority boundary</h3>
+        <dl id="authority-summary" class="compact-list"></dl>
+      </section>
+
+      <button id="download-export" class="download-button" type="button" disabled>
+        Download accepted export
+      </button>
+      <p id="download-note" class="download-note">The download is local and reproduces the accepted export bytes.</p>
+    </aside>
+
+    <main id="main-content" class="content" tabindex="-1" aria-label="Research workspace content">
+      <section id="loading-panel" class="panel" aria-live="polite" aria-atomic="true" aria-labelledby="loading-title">
+        <p class="eyebrow">LOADING</p>
+        <h2 id="loading-title">Verifying the local workspace package</h2>
+        <p>The shell reads deterministic local JSON files generated from accepted evidence. It does not call an API.</p>
+      </section>
+      <section id="content-panel" class="panel" hidden aria-live="polite" aria-atomic="true"></section>
+      <section id="error-panel" class="panel error-panel" hidden role="alert" aria-atomic="true"></section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <span>Exact revisions</span>
+    <span>Stable entry order</span>
+    <span>Unresolved candidates</span>
+    <span>Separate Principia status</span>
+    <span>Zero canonical writes</span>
+  </footer>
+
+  <noscript>
+    <p class="noscript">JavaScript is required to inspect this generated local package. The accepted JSON export remains readable without the shell.</p>
+  </noscript>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
