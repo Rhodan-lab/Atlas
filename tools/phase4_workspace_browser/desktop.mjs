@@ -27,17 +27,19 @@ export async function desktopEvidence(browser, baseUrl, shellData, workspaceExpo
   const mainFocus = await focusEvidence(page);
   assertEvidence(mainFocus.descriptor === "overview" && mainFocus.visible, "E-WS-BROWSER-SKIP", "skip link must visibly focus the route-safe workspace content target");
 
-  await page.reload({ waitUntil: "networkidle" });
+  await page.goto(`${baseUrl}/`, { waitUntil: "networkidle" });
   await waitReady(page);
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-
   const routeOrder = shellData.routes.map(item => item.id);
   const domRouteOrder = await page.locator("a[data-route-id]").evaluateAll(nodes => nodes.map(node => node.dataset.routeId));
   assertEvidence(JSON.stringify(routeOrder) === JSON.stringify(domRouteOrder), "E-WS-BROWSER-ORDER", "navigation must preserve accepted route order");
 
   const routeRecords = [];
-  for (const route of shellData.routes) {
+  for (const [routeIndex, route] of shellData.routes.entries()) {
+    await page.goto(`${baseUrl}/`, { waitUntil: "networkidle" });
+    await waitReady(page);
+    for (let tabIndex = 0; tabIndex < routeIndex + 2; tabIndex += 1) {
+      await page.keyboard.press("Tab");
+    }
     const focus = await focusEvidence(page);
     assertEvidence(focus.descriptor === route.id, "E-WS-BROWSER-FOCUS-ORDER", `expected ${route.id}, observed ${focus.descriptor}`);
     assertEvidence(focus.visible, "E-WS-BROWSER-FOCUS", `focus must be visible for ${route.id}`);
@@ -69,7 +71,6 @@ export async function desktopEvidence(browser, baseUrl, shellData, workspaceExpo
       non_graph_available: true,
       outcome: "pass",
     });
-    await page.keyboard.press("Tab");
   }
 
   const candidates = await openRoute(page, "candidates");
