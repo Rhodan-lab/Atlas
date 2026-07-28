@@ -52,7 +52,7 @@ jobs:
           python -m tools.phase4_browser.completion \
             --output phase4-workstream2-completion-report.json
 
-      - name: Verify closure semantics
+      - name: Verify pinned closure evidence
         run: |
           python - <<'PY'
           import hashlib
@@ -62,6 +62,17 @@ jobs:
           path = Path('phase4-workstream2-completion-report.json')
           payload = path.read_bytes()
           report = json.loads(payload)
+          baseline = json.loads(
+              Path('content/fixtures/phase4_browser/workstream2-completion-baseline.json').read_text(encoding='utf-8')
+          )
+
+          assert baseline['contract'] == 'atlas-phase4-workstream2-completion-baseline/0.1'
+          assert baseline['report_contract'] == 'atlas-phase4-workstream2-completion-report/0.1'
+          assert baseline['python_substantive_artifacts_byte_identical'] is True
+          assert report == baseline['report']
+          assert len(payload) == baseline['report_artifact_bytes']
+          assert hashlib.sha256(payload).hexdigest() == baseline['report_artifact_sha256']
+          assert report['report_digest'] == baseline['report_digest']
 
           assert report['contract'] == 'atlas-phase4-workstream2-completion-report/0.1'
           assert report['mode'] == 'interactive-experience-foundation'
@@ -112,7 +123,7 @@ jobs:
           print('phase4-workstream2-report-sha256=' + hashlib.sha256(payload).hexdigest())
           print('phase4-workstream2-report-digest=' + report['report_digest'])
           print('phase4-workstream2-exit-gates=' + str(len(report['exit_gates'])))
-          print('phase4-workstream2=closure-candidate; next=read-only-research-workspace')
+          print('phase4-workstream2=pinned-closure-candidate; next=read-only-research-workspace')
           PY
 
       - name: Upload Workstream 2 closure evidence
@@ -123,5 +134,6 @@ jobs:
           path: |
             phase4-workstream2-completion-report.json
             phase4-workstream2-tests.txt
+            content/fixtures/phase4_browser/workstream2-completion-baseline.json
           if-no-files-found: error
           retention-days: 30
