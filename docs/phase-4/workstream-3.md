@@ -7,9 +7,10 @@ phase: 4
 workstream: 3
 mode: interactive-experience-foundation
 state: active
-active_slice: 2
-slice_name: local-browser-workspace-composition
+active_slice: 3
+slice_name: workstream-3-closure-and-recommendation
 slice_1: accepted
+slice_2: accepted
 workspace_authority: ephemeral-research-only
 browser_state_authority: ephemeral-only
 exact_revision_required: true
@@ -33,7 +34,7 @@ repository_mutation: false
 
 Compose accepted exact-revision Atlas views and pinned offline Principia references into a deterministic, read-only, multi-step research workspace. The workspace may organize evidence, questions, decisions, candidates, comparisons, and exports, but it has no canonical, review, lifecycle, merge, release, or repository authority.
 
-Workstream 3 is a composition and evidence workstream. It does not authorize a production frontend architecture, live synchronization, accounts, cloud persistence, canonical editing, or automatic candidate resolution.
+Workstream 3 is a composition and evidence workstream. It does not authorize a production frontend architecture, live synchronization, accounts, cloud persistence, canonical editing, automatic candidate resolution, or inherited Principia status.
 
 ## Slice 1 — accepted workspace data and export contracts
 
@@ -106,137 +107,182 @@ The validator rejects:
 
 Every rejected operation records that the previous valid workspace remains preserved. No failure silently substitutes a revision, reorders entries, merges candidates, inherits status, or writes repository state.
 
-## Slice 2 — active local browser workspace composition
+## Slice 2 — accepted local browser workspace composition
 
-### Purpose
-
-Expose the accepted Slice 1 export and manifest through a small, replaceable static local experience. The browser layer is a deterministic reader and navigator, not a second workspace engine.
-
-The browser may not:
-
-- recompute retrieval rankings;
-- create, remove, reorder, or reinterpret accepted entries;
-- change include, exclude, or context decisions;
-- resolve advisory candidates;
-- infer Atlas status from Principia or Principia status from Atlas;
-- change canonical, review, lifecycle, merge, release, or repository state;
-- select a production frontend framework or deployment architecture.
-
-### Accepted input authority
+### Accepted static shell
 
 ```yaml
-input_export_contract: atlas-research-workspace-export/0.1
-input_export_sha256: 43f28738c4678dfcd0f7a3e4d31480f891112a8c9bd220929f8f32cd80edb98a
-input_export_digest: 82f08c18ae76b4b4d091fe0d8be7d54cf5d10d989443132a26e550056af3f56a
-input_manifest_contract: atlas-research-workspace-manifest/0.1
-input_manifest_sha256: 8240d78b29f610cb7c566dfad50432473949c5a63b9de9c522ab28751d80fd09
-input_manifest_digest: 9aefaf24b130718f284eecb5502b3c1dd144347f6fdcfc85b47d8ec6ce3fda68
-input_authority: accepted-workspace-export-only
+state: accepted
+accepted_pr: 52
+tested_head: f273c79b26d9b943a9b57a259645c8b0c6a5de48
+accepted_merge_commit: dcad8aaedbf9b212ed926c09bbb50690c8fae19b
+shell_data_contract: atlas-workspace-shell-data/0.1
+shell_validation_contract: atlas-workspace-shell-validation/0.1
+shell_build_report_contract: atlas-workspace-shell-build-report/0.1
+shell_baseline_contract: atlas-phase4-workspace-shell-baseline/0.1
+route_count: 13
+entry_route_count: 5
+shell_data_bytes: 5955
+shell_data_sha256: a2dd3979c35cee4d081511cadf98499e325dfd22d814cae097cfd3e98f3f5c0c
+shell_build_digest: b4aa3fab14ecc66ee602c9c40dc88b10add23d3391915a72c31968c681edcaee
+shell_report_bytes: 1448
+shell_report_sha256: b8b29a61495ecfc420de9324006b6f8efac455905c7b2b69f03639d995e7f932
+shell_report_digest: f1b13c7c202f93a1682d9366fcbef5265a7ae36f335d4e10ddff71ce216e955b
+python_substantive_artifacts_byte_identical: true
 ```
 
-The package builder must regenerate those accepted artifacts from canonical and pinned fixture inputs, verify the accepted baseline, and copy the exact bytes into the static package. It may not maintain a manually edited duplicate export.
+The shell is a replaceable static reader over the accepted Slice 1 export and manifest. It provides deterministic routes for overview, five ordered entries, candidates, Principia, warnings, questions, limitations, evidence, and a complete text summary. It uses URL and in-memory state only and does not maintain an editable duplicate workspace model.
 
-### Required static views
-
-The bounded package must expose deterministic, exact routes for:
-
-1. workspace overview and authority;
-2. five ordered entry decisions;
-3. unresolved contradiction and duplicate candidates;
-4. the fixture-only Principia reference with separate status;
-5. the impact warning;
-6. open questions;
-7. limitations and non-goals;
-8. accepted export and manifest identities;
-9. a complete text-only or non-graph summary.
-
-A graph view is optional and is not required for acceptance. No route may use implicit `latest` or silently fall back to a different entry.
-
-### Browser state boundary
-
-Browser state must remain ephemeral and non-authoritative.
-
-Allowed state:
-
-- the current deterministic route;
-- the currently focused or expanded read-only section;
-- a bounded in-memory navigation position;
-- a URL hash or query representation containing only accepted route identifiers.
-
-Forbidden state:
-
-- canonical or lifecycle state;
-- edited decisions or reordered entries;
-- candidate resolution;
-- Principia status inheritance;
-- hidden persistence that becomes authority;
-- account, cloud, analytics, or external-service state;
-- credentials or repository write tokens.
-
-If local or session storage is used at all, it must be proven disposable, non-authoritative, and unnecessary for exact reload. The preferred first implementation uses URL and in-memory state only.
-
-### Local export action
-
-The browser may offer one local download action only when it reproduces the accepted `workspace-export.json` bytes exactly.
-
-The action must:
-
-- use the accepted filename or a deterministic equivalent;
-- preserve byte identity and SHA-256;
-- require no network request;
-- create no Atlas or Principia write;
-- make its research-only authority visible;
-- remain optional to navigation and inspection.
-
-### Required browser evidence
-
-The first browser candidate must use the accepted pinned browser toolchain unless separately amended:
+### Accepted browser contracts
 
 ```yaml
-engine: chromium
-engine_version: 151.0.7922.34
-playwright_version: 1.62.0
-viewports:
-  - desktop: 1440x1000
-  - mobile: 390x844
-external_request_count: 0
-human_verified: false
-accessibility_certified: false
-```
-
-Evidence must prove:
-
-1. skip navigation, landmarks, heading hierarchy, names, labels, and live/error regions;
-2. complete keyboard operation and visible focus;
-3. exact entry order, decisions, revisions, and digests;
-4. deterministic deep links, reload, back, and forward behavior;
-5. complete non-graph and text-equivalent navigation;
-6. unresolved candidate status and separate Principia status;
-7. warning, limitation, and non-mutation authority visibility;
-8. reduced-motion and bounded desktop/mobile behavior;
-9. zero external requests after local boot;
-10. local download byte identity with the accepted export;
-11. failure preservation for unknown routes and unavailable artifacts;
-12. no account, cloud service, live dependency, canonical write, or production architecture.
-
-Evidence directories must be generated twice and compared byte-for-byte. Independent validation must verify all child hashes and semantic digests.
-
-### Candidate browser contracts
-
-Contract names remain candidates until executable evidence is built. Expected families include:
-
-```yaml
-workspace_shell_data: atlas-workspace-shell-data/0.1
-workspace_shell_build_report: atlas-workspace-shell-build-report/0.1
 workspace_browser_workflow: atlas-workspace-browser-workflow-evidence/0.1
 workspace_browser_accessibility: atlas-workspace-browser-accessibility-report/0.1
 workspace_browser_network: atlas-workspace-browser-network-report/0.1
 workspace_browser_failure: atlas-workspace-browser-failure-evidence/0.1
 workspace_browser_manifest: atlas-phase4-workspace-browser-manifest/0.1
 workspace_browser_report: atlas-phase4-workspace-browser-report/0.1
+workspace_browser_validation: atlas-phase4-workspace-browser-validation/0.1
+workspace_browser_baseline: atlas-phase4-workspace-browser-baseline/0.1
 ```
 
-These names are not accepted contracts until exact fixtures, negative cases, repeatability evidence, and immutable-head CI pass.
+### Accepted browser evidence
+
+```yaml
+state: accepted
+accepted_pr: 54
+tested_head: f2a9eb6f4dce8ee770024127c795598e37335921
+accepted_merge_commit: 6fb5932c4a6dbe26aa005da280d80bac1e61ad18
+engine: chromium
+engine_version: 151.0.7922.34
+playwright_version: 1.62.0
+route_count: 13
+keyboard_route_count: 13
+entry_count: 5
+candidate_count: 2
+principia_reference_count: 1
+warning_count: 1
+viewport_count: 2
+request_count: 120
+external_request_count: 0
+repeated_run_substantive_artifacts_byte_identical: true
+report_artifact_bytes: 2281
+report_artifact_sha256: a1f259d1cbfc40d87311a5955e6fe77f932e652b3e8ccfad19d12f629c5103f2
+report_digest: 971c44ef7863d313dceffc7356187b94a15d6543e346654cbf6eadc116213311
+human_verified: false
+accessibility_certified: false
+```
+
+The 120 requests are bounded loopback requests produced by fresh keyboard traversals, direct-link and history checks, mobile evidence, and the explicit missing-artifact test. One loopback request is deliberately blocked by the test harness. No external request, remote asset, credential, analytics endpoint, or cloud service is used.
+
+### Route-safe skip-navigation patch
+
+Pinned browser evidence found that the original `#main-content` skip target conflicted with the hash router. The accepted compatibility patch moves the target to `#overview` and adds a focusable marker inside `<main>`.
+
+```yaml
+patched_index_html_bytes: 3232
+patched_index_html_sha256: ae7eafc4dccae669f25ed4f6e6e5bc8e81bce8dcabcc81b5d585d4d09fb5e921
+interaction_semantics_changed: false
+workspace_data_changed: false
+workspace_export_changed: false
+workspace_manifest_changed: false
+```
+
+The patch changes no workspace decision, route set, accepted digest, lifecycle rule, review rule, Principia status, or repository authority.
+
+### Accepted browser evidence coverage
+
+The accepted evidence proves:
+
+1. route-safe skip navigation, landmarks, heading hierarchy, accessible names, status, and alert regions;
+2. keyboard-only operation and visible focus for all thirteen routes;
+3. exact entry order, decisions, revisions, and digests;
+4. deterministic deep links, reload, back, and forward behavior;
+5. complete non-graph and text-equivalent navigation;
+6. unresolved candidate status and separate Principia status;
+7. warning, limitation, and non-mutation authority visibility;
+8. reduced-motion and bounded desktop/mobile behavior;
+9. zero external requests;
+10. local download byte identity with the accepted export;
+11. explicit unknown-route and missing-artifact failures without fallback or persistence;
+12. no account, cloud service, live dependency, canonical write, or production architecture.
+
+The complete evidence directory is generated twice and compared byte-for-byte. Independent validation verifies all child hashes and semantic digests. Resealed tamper tests reject external requests, download drift, false human-verification claims, and candidate resolution.
+
+## Slice 3 — active Workstream 3 closure and recommendation
+
+### Purpose
+
+Close Workstream 3 without expanding its authority. Slice 3 may inspect and bind accepted Slice 1 and Slice 2 evidence, create deterministic closure artifacts, and recommend or reject one bounded next experiment. It may not implement the recommendation, select production architecture, or activate any frozen capability.
+
+### Candidate closure contracts
+
+```yaml
+completion_report: atlas-phase4-workstream3-completion-report/0.1
+completion_baseline: atlas-phase4-workstream3-completion-baseline/0.1
+```
+
+These names remain candidates until executable evidence, negative cases, repeated-run identity, and immutable-head CI pass.
+
+### Required closure inputs
+
+The completion report must bind:
+
+- PR #50 Slice 1 tested head, merge commit, fixture, report, export, manifest, and baseline identities;
+- PR #52 shell tested head, merge commit, static package identity, shell data, build report, and shell baseline;
+- PR #54 browser tested head, merge commit, baseline, engine, workflow, accessibility, network, failure, manifest, report, and validation identities;
+- the route-safe skip-navigation patch identity;
+- all relevant authority and limitation fields.
+
+It may not regenerate accepted decisions, modify evidence records, or reinterpret candidate status.
+
+### Closure gates
+
+Workstream 3 closes only when the completion evidence proves:
+
+1. Slice 1 and Slice 2 accepted identities are exact and immutable;
+2. the bounded local browser package is deterministic and replaceable;
+3. routes preserve exact revisions, entry order, decisions, candidates, warnings, limitations, and authority;
+4. keyboard and non-graph multi-step operation pass in the pinned browser;
+5. local download reproduces the accepted export bytes;
+6. repeated shell and browser evidence remains byte-identical;
+7. generated browser state is disposable and unnecessary for exact reload;
+8. unknown routes and unavailable artifacts fail visibly while preserving prior valid state;
+9. no workspace or browser action can mutate canonical, review, lifecycle, merge, release, Principia, or repository state;
+10. the workspace operates locally without accounts, cloud services, credentials, or external network access;
+11. migration and rollback boundaries are explicit and do not choose production infrastructure;
+12. completion artifacts reproduce byte-identically across Python 3.11 and 3.13;
+13. one bounded recommendation is issued with limitations and evidence visible.
+
+### Allowed closure decisions
+
+Exactly one decision may be issued:
+
+```yaml
+allowed_decisions:
+  - proceed-bounded-workspace-fixture-evaluation
+  - hold-accepted-bounded-workspace
+  - reject-broader-workspace-implementation
+```
+
+A `proceed` decision authorizes only another non-production, fixture-bound evaluation under separate governance. It does not authorize a production frontend, deployment, accounts, cloud persistence, live synchronization, semantic infrastructure, canonical editing, or automated authority.
+
+### Required negative cases
+
+The closure validator must reject at least:
+
+- a mismatched accepted Slice 1 artifact or digest;
+- a mismatched accepted Slice 2 shell artifact or digest;
+- a mismatched browser engine or evidence artifact;
+- a false human-verification or accessibility-certification claim;
+- any production architecture selection;
+- any live Principia dependency;
+- any account, cloud, credential, or external-network requirement;
+- any canonical, review, lifecycle, candidate-resolution, release, or repository mutation authority;
+- any recommendation outside the allowed decision set;
+- any missing replaceability, migration, rollback, or limitation evidence.
+
+Every rejection must preserve the accepted Workstream 3 state.
 
 ## Workspace authority
 
@@ -248,7 +294,8 @@ A workspace is an ephemeral research artifact. It may:
 - record questions, rationales, and bounded include, exclude, or context decisions in accepted fixtures;
 - produce deterministic read-only exports;
 - expose accepted artifacts through a bounded local browser package;
-- preserve provenance, review level, lifecycle, staleness, and authority labels from referenced records.
+- preserve provenance, review level, lifecycle, staleness, and authority labels from referenced records;
+- produce deterministic closure evidence and a bounded recommendation.
 
 A workspace may not:
 
@@ -259,29 +306,17 @@ A workspace may not:
 - replace exact revisions with implicit `latest`;
 - infer that a workspace decision is an Atlas governance decision;
 - write to the repository, require an account, or depend on cloud persistence;
-- activate live Principia synchronization or external semantic services.
-
-## Workstream 3 exit criteria
-
-Workstream 3 closes only when:
-
-- the accepted Slice 1 contracts and artifacts remain pinned;
-- the bounded local browser package is deterministic and replaceable;
-- browser routes preserve exact revisions, entry order, decisions, candidates, warnings, and authority;
-- keyboard and non-graph multi-step operation pass in the pinned browser;
-- local download reproduces the accepted export bytes;
-- repeated browser evidence is byte-identical;
-- no workspace or browser action can mutate canonical, review, lifecycle, merge, release, Principia, or repository state;
-- the workspace operates locally without accounts, cloud services, or external network access;
-- a completion report recommends or rejects broader workspace implementation.
+- activate live Principia synchronization or external semantic services;
+- select a production frontend, hosting, or deployment architecture.
 
 ## Immediate implementation sequence
 
-1. generate the accepted export and manifest into a replaceable static package;
-2. create the smallest semantic HTML, CSS, and JavaScript reader for the required routes;
-3. add explicit unknown-route and missing-artifact failures that preserve the prior valid view;
-4. add deterministic route, history, keyboard, focus, non-graph, reduced-motion, and mobile tests;
-5. intercept and reject all external browser requests;
-6. verify local download byte identity with the accepted export;
-7. pin shell and browser evidence across repeated runs;
-8. keep production architecture, live synchronization, accounts, cloud persistence, canonical writes, and automatic authority frozen.
+1. define the completion-report and completion-baseline schemas;
+2. load and verify accepted Slice 1 and Slice 2 baselines and identities;
+3. map all thirteen closure gates to deterministic executable evidence;
+4. document replaceability, migration, rollback, and failure-preservation boundaries;
+5. implement negative cases for identity drift and authority escalation;
+6. build the completion report and baseline twice on Python 3.11 and 3.13;
+7. require byte identity and immutable-head CI;
+8. issue one bounded recommendation without implementing it;
+9. keep production architecture, live synchronization, accounts, cloud persistence, canonical writes, and automatic authority frozen.
