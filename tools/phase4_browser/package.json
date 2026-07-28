@@ -8,7 +8,8 @@
   },
   "scripts": {
     "evidence": "node run-evidence.mjs",
-    "check": "node --check run-evidence.mjs"
+    "workspace-evidence": "node --import ./workspace-css-polyfill.mjs run-workspace-evidence.mjs",
+    "check": "node --check run-evidence.mjs && node --check run-workspace-evidence.mjs && node --check workspace-css-polyfill.mjs"
   },
   "devDependencies": {
     "playwright": "1.62.0"
