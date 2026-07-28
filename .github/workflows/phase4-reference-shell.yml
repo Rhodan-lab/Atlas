@@ -69,14 +69,17 @@ jobs:
             --output-dir phase4-reference-shell \
             --report-output phase4-reference-shell-report.json
 
-      - name: Verify pinned shell evidence
+      - name: Verify pinned shell evidence and compatibility patch
         run: |
           python - <<'PY'
           import hashlib
           import json
           from pathlib import Path
 
-          baseline = json.loads(Path('content/fixtures/phase4_interaction/reference-shell-baseline.json').read_text(encoding='utf-8'))
+          baseline_path = Path('content/fixtures/phase4_interaction/reference-shell-baseline.json')
+          patch_path = Path('content/fixtures/phase4_interaction/reference-shell-accessibility-patch.json')
+          baseline = json.loads(baseline_path.read_text(encoding='utf-8'))
+          patch = json.loads(patch_path.read_text(encoding='utf-8'))
           data_path = Path('phase4-reference-shell/data/reference-shell-data.json')
           report_path = Path('phase4-reference-shell-report.json')
           data_bytes = data_path.read_bytes()
@@ -84,7 +87,22 @@ jobs:
           data = json.loads(data_bytes)
           report = json.loads(report_bytes)
 
+          baseline_semantic_sha = hashlib.sha256(
+              json.dumps(baseline, sort_keys=True, separators=(',', ':'), ensure_ascii=False).encode('utf-8')
+          ).hexdigest()
           assert baseline['contract'] == 'atlas-phase4-reference-shell-baseline/0.1'
+          assert patch['contract'] == 'atlas-phase4-reference-shell-accessibility-patch/0.1'
+          assert patch['base_baseline_contract'] == baseline['contract']
+          assert patch['base_baseline_sha256'] == baseline_semantic_sha
+          assert patch['state'] == 'accessibility-patch-candidate'
+          assert patch['decision'] == 'authorize-bounded-browser-evidence-fixes'
+          assert patch['interaction_semantics_changed'] is False
+          assert patch['production_frontend_architecture_selected'] is False
+          assert patch['live_principia_dependency'] is False
+          assert patch['canonical_mutation'] is False
+          assert patch['live'] is False
+          assert patch['repository_mutation'] is False
+
           assert data['contract'] == baseline['shell_data']['contract']
           assert data['mode'] == baseline['mode']
           assert data['source_digest'] == baseline['source_digest']
@@ -136,17 +154,19 @@ jobs:
           assert data_sha == baseline['shell_data']['artifact_sha256']
           assert len(report_bytes) == baseline['shell_build_report']['artifact_bytes']
           assert report_sha == baseline['shell_build_report']['artifact_sha256']
+          assert patch['generated_artifacts_unchanged']['shell_data_sha256'] == data_sha
+          assert patch['generated_artifacts_unchanged']['shell_build_report_sha256'] == report_sha
 
-          for name, expected in baseline['static_assets'].items():
+          for name, accepted in baseline['static_assets'].items():
+              assert patch['historical_static_assets'][name]['sha256'] == accepted['sha256']
               payload = Path('phase4-reference-shell', name).read_bytes()
-              assert len(payload) == expected['bytes']
-              assert hashlib.sha256(payload).hexdigest() == expected['sha256']
+              assert hashlib.sha256(payload).hexdigest() == patch['current_static_assets'][name]['sha256']
 
           print('phase4-reference-shell-data-sha256=' + data_sha)
           print('phase4-reference-shell-report-sha256=' + report_sha)
           print('phase4-reference-shell-build-digest=' + data['build_digest'])
           print('phase4-reference-shell-report-digest=' + report['report_digest'])
-          print('phase4-reference-shell=accepted-evidence-candidate; api=false; cloud=false; live=false; canonical-mutation=false')
+          print('phase4-reference-shell=accepted-with-authorized-accessibility-patch; live=false; canonical-mutation=false')
           PY
 
       - name: Smoke-test local static server
