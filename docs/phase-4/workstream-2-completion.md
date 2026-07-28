@@ -2,7 +2,7 @@
 
 ## Status
 
-Closure candidate.
+Pinned closure candidate.
 
 ```yaml
 phase: 4
@@ -10,6 +10,7 @@ workstream: 2
 mode: interactive-experience-foundation
 state: closure-candidate
 decision: proceed-workstream3-read-only-research-workspace
+exit_gate_count: 12
 human_verified: false
 accessibility_certified: false
 production_frontend_architecture_selected: false
@@ -20,7 +21,20 @@ repository_mutation: false
 
 ## Purpose
 
-Determine whether the accepted local reference shell has enough real-browser evidence to leave primitive interaction validation and begin composing complete read-only research workflows without claiming accessibility certification, usability validation, production browser support, or a production frontend architecture.
+Determine whether the accepted local reference shell has enough bounded real-browser evidence to leave primitive interaction validation and begin composing complete read-only research workflows without claiming accessibility certification, usability validation, production browser support, or a production frontend architecture.
+
+## Pinned completion evidence
+
+```yaml
+completion_contract: atlas-phase4-workstream2-completion-report/0.1
+completion_baseline_contract: atlas-phase4-workstream2-completion-baseline/0.1
+report_artifact_bytes: 4070
+report_artifact_sha256: 4cccee425316ed329979cb9f5eb900a7a7ee3656c72822ecffa8f4f15ef76786
+report_digest: 926eb576fb216fca2d1f5a52d11f977f7c743c058d9a8a31d81ffc265f2d9913
+python_substantive_artifacts_byte_identical: true
+```
+
+The closure workflow regenerates the report independently on Python 3.11 and 3.13, compares the complete semantic record with the pinned baseline, and enforces the exact byte length and SHA-256.
 
 ## Accepted browser evidence
 
@@ -57,11 +71,11 @@ workstream1_report_digest: a3167ee2dc7a02c47468a1b850e15b495f3ed6058399205fc2cdf
 
 The accepted historical Workstream 1 completion report remains byte-identical.
 
-## Closure proof
+## Closure gates
 
-The executable completion command validates the browser baseline, browser-engine identity, six evidence files, package lock, zero-external-request record, accessibility patch, and Workstream 1 completion baseline.
+The completion command validates the browser baseline, exact browser-engine identity, six evidence files, package lock, zero-external-request record, accessibility patch, and Workstream 1 completion baseline.
 
-The twelve required exit gates are:
+All twelve gates must pass:
 
 1. browser contracts are versioned and pinned;
 2. browser engine and environment are pinned;
@@ -76,13 +90,11 @@ The twelve required exit gates are:
 11. limitations and non-human review are explicit;
 12. historical Workstream 1 evidence remains preserved.
 
-The completion command fails unless all twelve gates pass.
-
 ## Decision
 
-Proceed to **Phase 4 Workstream 3 — Read-Only Research Workspace Composition**.
+Proceed to **Phase 4 Workstream 3 — Read-Only Research Workspace Composition** after this closure evidence is accepted through an exact-head merge and a separate governance transition.
 
-This decision authorizes composition of accepted primitive views into complete multi-step research workflows. It does not authorize production productization or any write path.
+The decision authorizes composition of accepted primitive views into complete multi-step research workflows. It does not authorize production productization or any write path.
 
 ## Workstream 3 objective
 
@@ -119,9 +131,7 @@ live_principia_dependency: false
 repository_mutation: false
 ```
 
-## Required Workstream 3 contracts
-
-Candidate contract families should cover:
+## Required Workstream 3 contract families
 
 - workspace identity and revision;
 - ordered exact-revision workspace entries;
@@ -131,7 +141,7 @@ Candidate contract families should cover:
 - offline Principia references with separate status;
 - deterministic export package and manifest;
 - explicit stale, unavailable, mismatch, and authority failures;
-- browser state restoration without canonical persistence.
+- browser-state restoration without canonical persistence.
 
 Contract names are not accepted until executable evidence is built.
 
@@ -150,6 +160,4 @@ Contract names are not accepted until executable evidence is built.
 
 ## Acceptance condition
 
-Accept Workstream 2 only after the final exact candidate head passes the completion proof on Python 3.11 and 3.13, pinned Browser Evidence, Workstream 1 Closure, Reference Shell compatibility, Interaction Contract, Foundation and authority checks, the full Atlas platform matrix, and end-to-end integration.
-
-The generated Workstream 2 completion-report artifact identity must be pinned before merge.
+Accept Workstream 2 only after the final exact candidate head passes the pinned completion proof on Python 3.11 and 3.13, Browser Evidence, Workstream 1 Closure, Reference Shell compatibility, Interaction Contract, Foundation and authority checks, the complete Atlas platform matrix, and end-to-end integration.
