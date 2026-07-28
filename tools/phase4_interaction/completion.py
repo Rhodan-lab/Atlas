@@ -86,7 +86,7 @@ def run_workstream1_closure(
         raise KernelError("E-PHASE4-W1-INTERACTION", "interaction fixture digest differs from pinned evidence")
     if interaction_report["counts"] != interaction_baseline["counts"]:
         raise KernelError("E-PHASE4-W1-INTERACTION", "interaction counts differ from pinned evidence")
-    observed_negative_errors = [item["error"] for item in interaction_report["negative_validations"]]
+    observed_negative_errors = [item["observed_error"] for item in interaction_report["negative_validations"]]
     if observed_negative_errors != interaction_baseline["negative_errors"]:
         raise KernelError("E-PHASE4-W1-INTERACTION", "interaction negative boundaries differ from pinned evidence")
 
