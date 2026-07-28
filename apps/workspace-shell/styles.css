@@ -156,10 +156,9 @@ h3 {
 
 .sidebar {
   align-self: start;
-  position: sticky;
-  top: 1rem;
-  max-height: calc(100vh - 2rem);
-  overflow: auto;
+  position: static;
+  max-height: none;
+  overflow: visible;
   padding: 1.25rem;
   border: 1px solid var(--line);
   border-radius: 0.8rem;
