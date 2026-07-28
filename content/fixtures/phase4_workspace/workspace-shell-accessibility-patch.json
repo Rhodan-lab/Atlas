@@ -1,0 +1,36 @@
+{
+  "contract": "atlas-phase4-workspace-shell-accessibility-patch/0.1",
+  "state": "compatibility-patch-candidate",
+  "reason": "Remove the desktop nested-scroll sidebar so sequential keyboard traversal reaches all thirteen accepted routes before the download action.",
+  "accepted_shell": {
+    "accepted_pr": 52,
+    "tested_head": "f273c79b26d9b943a9b57a259645c8b0c6a5de48",
+    "accepted_merge_commit": "dcad8aaedbf9b212ed926c09bbb50690c8fae19b",
+    "baseline_contract": "atlas-phase4-workspace-shell-baseline/0.1",
+    "styles_bytes": 8427,
+    "styles_sha256": "6016098e9461be50f6b5346d76b58d0111dfae8d42355884bf25e9885546e98f"
+  },
+  "transformation": {
+    "id": "remove-desktop-sidebar-nested-scroll",
+    "occurrence_count": 1,
+    "accepted_block": "  position: sticky;\n  top: 1rem;\n  max-height: calc(100vh - 2rem);\n  overflow: auto;\n",
+    "replacement_block": "  position: static;\n  max-height: none;\n  overflow: visible;\n",
+    "current_styles_bytes": 8403
+  },
+  "interaction_semantics_changed": false,
+  "route_registry_changed": false,
+  "workspace_export_changed": false,
+  "workspace_manifest_changed": false,
+  "shell_data_changed": false,
+  "shell_build_report_changed": false,
+  "entry_order_changed": false,
+  "decision_semantics_changed": false,
+  "candidate_state_changed": false,
+  "principia_status_changed": false,
+  "canonical_mutation": false,
+  "lifecycle_mutation": false,
+  "review_mutation": false,
+  "repository_mutation": false,
+  "production_frontend_architecture_selected": false,
+  "live_principia_dependency": false
+}
