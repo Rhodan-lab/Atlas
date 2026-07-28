@@ -1,0 +1,234 @@
+name: Phase 4 Workspace Browser Evidence
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/workspace-shell/**"
+      - "content/canonical/**"
+      - "content/fixtures/phase3_retrieval/**"
+      - "content/fixtures/phase4_interaction/**"
+      - "content/fixtures/phase4_workspace/**"
+      - "docs/phase-4/**"
+      - "tools/phase2_kernel/**"
+      - "tools/phase3_retrieval/**"
+      - "tools/phase4_browser/**"
+      - "tools/phase4_workspace/**"
+      - "tools/phase4_workspace_browser/**"
+      - ".github/workflows/phase4-workspace-browser-evidence.yml"
+  pull_request:
+    paths:
+      - "apps/workspace-shell/**"
+      - "content/canonical/**"
+      - "content/fixtures/phase3_retrieval/**"
+      - "content/fixtures/phase4_interaction/**"
+      - "content/fixtures/phase4_workspace/**"
+      - "docs/phase-4/**"
+      - "tools/phase2_kernel/**"
+      - "tools/phase3_retrieval/**"
+      - "tools/phase4_browser/**"
+      - "tools/phase4_workspace/**"
+      - "tools/phase4_workspace_browser/**"
+      - ".github/workflows/phase4-workspace-browser-evidence.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  workspace-browser-evidence:
+    name: Pinned Chromium workspace evidence
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: tools/phase4_browser/package-lock.json
+
+      - name: Install pinned Python dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+
+      - name: Install locked Playwright dependency graph
+        working-directory: tools/phase4_browser
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: Install pinned Chromium and Linux dependencies
+        working-directory: tools/phase4_browser
+        run: npx playwright install chromium --with-deps
+
+      - name: Check browser evidence source
+        working-directory: tools/phase4_browser
+        run: npm run check
+
+      - name: Build accepted local workspace package
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf phase4-workspace-browser-shell
+          mkdir -p phase4-workspace-browser-shell
+          cp apps/workspace-shell/index.html phase4-workspace-browser-shell/index.html
+          cp apps/workspace-shell/styles.css phase4-workspace-browser-shell/styles.css
+          cp apps/workspace-shell/app.js phase4-workspace-browser-shell/app.js
+          cp apps/workspace-shell/README.md phase4-workspace-browser-shell/README.md
+          python -m tools.phase4_workspace.build_shell \
+            --output-dir phase4-workspace-browser-shell \
+            --report-output phase4-workspace-browser-shell-report.json
+          sha256sum \
+            phase4-workspace-browser-shell/index.html \
+            phase4-workspace-browser-shell/styles.css \
+            phase4-workspace-browser-shell/app.js \
+            phase4-workspace-browser-shell/README.md \
+            phase4-workspace-browser-shell/data/workspace-shell-data.json \
+            phase4-workspace-browser-shell/data/workspace-export.json \
+            phase4-workspace-browser-shell/data/workspace-manifest.json \
+            phase4-workspace-browser-shell-report.json \
+            | tee phase4-workspace-browser-static-sha256.txt
+
+      - name: Start isolated loopback server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m http.server 8768 --bind 127.0.0.1 --directory phase4-workspace-browser-shell >phase4-workspace-browser-server.log 2>&1 &
+          echo $! > phase4-workspace-browser-server.pid
+          for attempt in {1..40}; do
+            if curl --fail --silent http://127.0.0.1:8768/ >/dev/null; then
+              exit 0
+            fi
+            sleep 0.25
+          done
+          cat phase4-workspace-browser-server.log
+          exit 1
+
+      - name: Generate workspace browser evidence twice
+        working-directory: tools/phase4_browser
+        env:
+          CI: "true"
+        shell: bash
+        run: |
+          set -o pipefail
+          rm -rf "${{ github.workspace }}/phase4-workspace-browser-evidence-a" "${{ github.workspace }}/phase4-workspace-browser-evidence-b"
+          npm run workspace-evidence -- \
+            --base-url http://127.0.0.1:8768 \
+            --repo-root "${{ github.workspace }}" \
+            --shell-dir "${{ github.workspace }}/phase4-workspace-browser-shell" \
+            --output-dir "${{ github.workspace }}/phase4-workspace-browser-evidence-a" \
+            2>&1 | tee "${{ github.workspace }}/phase4-workspace-browser-run-a.log"
+          npm run workspace-evidence -- \
+            --base-url http://127.0.0.1:8768 \
+            --repo-root "${{ github.workspace }}" \
+            --shell-dir "${{ github.workspace }}/phase4-workspace-browser-shell" \
+            --output-dir "${{ github.workspace }}/phase4-workspace-browser-evidence-b" \
+            2>&1 | tee "${{ github.workspace }}/phase4-workspace-browser-run-b.log"
+
+      - name: Verify repeated-run byte identity
+        run: diff -ru phase4-workspace-browser-evidence-a phase4-workspace-browser-evidence-b
+
+      - name: Validate workspace browser evidence independently
+        run: |
+          python -m tools.phase4_workspace_browser.validate phase4-workspace-browser-evidence-a | tee phase4-workspace-browser-validation.json
+          python -m tools.phase4_workspace_browser.validate phase4-workspace-browser-evidence-b >/dev/null
+
+      - name: Run workspace browser tamper tests
+        env:
+          ATLAS_WORKSPACE_BROWSER_EVIDENCE_DIR: phase4-workspace-browser-evidence-a
+        run: python -m unittest tools.phase4_workspace_browser.tests.test_validate -v
+
+      - name: Verify workspace browser evidence summary
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          root = Path('phase4-workspace-browser-evidence-a')
+          report_path = root / 'workspace-browser-report.json'
+          manifest_path = root / 'workspace-browser-manifest.json'
+          download_path = root / 'downloaded-workspace-export.json'
+          report_bytes = report_path.read_bytes()
+          manifest = json.loads(manifest_path.read_bytes())
+          report = json.loads(report_bytes)
+          download_bytes = download_path.read_bytes()
+
+          assert manifest['contract'] == 'atlas-phase4-workspace-browser-manifest/0.1'
+          assert manifest['engine_name'] == 'chromium'
+          assert manifest['engine_version'] == '151.0.7922.34'
+          assert manifest['playwright_version'] == '1.62.0'
+          assert manifest['external_network_allowed'] is False
+          assert manifest['browser_state_authority'] == 'ephemeral-only'
+          assert report['contract'] == 'atlas-phase4-workspace-browser-report/0.1'
+          assert report['state'] == 'workspace-browser-evidence-candidate'
+          assert report['route_count'] == 13
+          assert report['entry_route_count'] == 5
+          assert report['keyboard_route_count'] == 13
+          assert report['viewport_count'] == 2
+          assert report['accepted_failure_state_count'] == 2
+          assert report['external_request_count'] == 0
+          assert report['exact_revision_preserved'] is True
+          assert report['entry_order_preserved'] is True
+          assert report['decisions_read_only'] is True
+          assert report['candidates_unresolved'] is True
+          assert report['principia_status_separate'] is True
+          assert report['non_graph_workflow_complete'] is True
+          assert report['visible_focus_verified'] is True
+          assert report['deep_links_reload_and_history_verified'] is True
+          assert report['reduced_motion_verified'] is True
+          assert report['mobile_layout_verified'] is True
+          assert report['offline_after_local_boot_verified'] is True
+          assert report['unknown_route_preserved_previous_state'] is True
+          assert report['missing_artifact_failed_explicitly'] is True
+          assert report['local_download_byte_identical'] is True
+          assert report['zero_external_requests'] is True
+          assert report['human_verified'] is False
+          assert report['accessibility_certified'] is False
+          assert report['production_frontend_architecture_selected'] is False
+          assert report['live_principia_dependency'] is False
+          assert report['canonical_mutation'] is False
+          assert report['repository_mutation'] is False
+          assert report['download_artifact']['bytes'] == len(download_bytes)
+          assert report['download_artifact']['sha256'] == hashlib.sha256(download_bytes).hexdigest()
+          assert report['download_artifact']['accepted_export_sha256'] == report['download_artifact']['sha256']
+
+          print('workspace-browser-engine=' + manifest['engine_name'] + '@' + manifest['engine_version'])
+          print('workspace-browser-report-bytes=' + str(len(report_bytes)))
+          print('workspace-browser-report-sha256=' + hashlib.sha256(report_bytes).hexdigest())
+          print('workspace-browser-report-digest=' + report['report_digest'])
+          print('workspace-browser-download-bytes=' + str(len(download_bytes)))
+          print('workspace-browser-download-sha256=' + hashlib.sha256(download_bytes).hexdigest())
+          print('workspace-browser=evidence-candidate; routes=13; external-requests=0; human-verified=false')
+          PY
+
+      - name: Stop loopback server
+        if: always()
+        shell: bash
+        run: |
+          if [[ -f phase4-workspace-browser-server.pid ]]; then
+            kill "$(cat phase4-workspace-browser-server.pid)" || true
+          fi
+
+      - name: Upload workspace browser evidence and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase4-workspace-browser-evidence-candidate
+          path: |
+            phase4-workspace-browser-evidence-a/
+            phase4-workspace-browser-evidence-b/
+            phase4-workspace-browser-validation.json
+            phase4-workspace-browser-shell-report.json
+            phase4-workspace-browser-static-sha256.txt
+            phase4-workspace-browser-server.log
+            phase4-workspace-browser-run-a.log
+            phase4-workspace-browser-run-b.log
+            tools/phase4_browser/package-lock.json
+          if-no-files-found: error
+          retention-days: 30
