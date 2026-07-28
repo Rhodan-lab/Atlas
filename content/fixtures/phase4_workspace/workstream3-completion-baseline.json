@@ -1,0 +1,107 @@
+{
+  "accepted_evidence": {
+    "slice1_workspace_contracts": {
+      "baseline_contract": "atlas-phase4-workspace-contract-baseline/0.1",
+      "baseline_digest": "7c2bb278160eaa0a25886e9115881f625c7fdb6906a6ad970a3472852580fd24",
+      "merge_commit": "86c1f9f779172aa47d450022fc40357a93f2302f",
+      "tested_head": "6d556bde6c24a8313bece3074f6c5fc56c4c4ccd"
+    },
+    "slice2_browser_evidence": {
+      "baseline_contract": "atlas-phase4-workspace-browser-baseline/0.1",
+      "baseline_digest": "50c7af506892912d8b709ee041585d0b257364fabff2840a5456667a30e90fbd",
+      "engine": {
+        "name": "chromium",
+        "playwright_version": "1.62.0",
+        "version": "151.0.7922.34"
+      },
+      "merge_commit": "6fb5932c4a6dbe26aa005da280d80bac1e61ad18",
+      "tested_head": "f2a9eb6f4dce8ee770024127c795598e37335921"
+    },
+    "slice2_workspace_shell": {
+      "baseline_contract": "atlas-phase4-workspace-shell-baseline/0.1",
+      "baseline_digest": "347537dab04da19ae979e583595ce23d887ef23e967f1a68afbd8f18dfb2ba4e",
+      "merge_commit": "dcad8aaedbf9b212ed926c09bbb50690c8fae19b",
+      "tested_head": "f273c79b26d9b943a9b57a259645c8b0c6a5de48"
+    }
+  },
+  "authority": {
+    "accepted_export_only": true,
+    "account_required": false,
+    "automatic_merge_or_resolution": false,
+    "automatic_release_action": false,
+    "automatic_status_change": false,
+    "browser_state_authority": "ephemeral-only",
+    "candidates_unresolved": true,
+    "canonical_copy_authority": false,
+    "canonical_mutation": false,
+    "closure_authority": "evidence-and-recommendation-only",
+    "cloud_required": false,
+    "credentials_required": false,
+    "decisions_read_only": true,
+    "deterministic_export_required": true,
+    "entry_order_preserved": true,
+    "exact_revision_required": true,
+    "external_network_required": false,
+    "input_authority": "accepted-slice-1-and-slice-2-evidence-only",
+    "lifecycle_mutation": false,
+    "live_principia_dependency": false,
+    "local_first": true,
+    "non_graph_workflow_required": true,
+    "principia_status_separate": true,
+    "production_frontend_architecture_selected": false,
+    "repository_mutation": false,
+    "review_mutation": false,
+    "workspace_authority": "ephemeral-research-only"
+  },
+  "completion_report": {
+    "artifact": {
+      "bytes": 9098,
+      "sha256": "fe4798f27ed31f6a180c9cb7ec5df31ddc77b440585f0d26dd3cd82d26e23353"
+    },
+    "contract": "atlas-phase4-workstream3-completion-report/0.1",
+    "decision": "proceed-bounded-workspace-fixture-evaluation",
+    "exit_gate_count": 13,
+    "report_digest": "3f13809d1aba31a15af77ea7afae1062bac5b4a4274ec3794d9f6be389e3ecde",
+    "state": "closure-candidate"
+  },
+  "completion_validation": {
+    "artifact": {
+      "bytes": 380,
+      "sha256": "8bd6947a0be923ea6a6f6167a11fe059fc117c55538241a84ce41442f3e7d974"
+    },
+    "contract": "atlas-phase4-workstream3-completion-validation/0.1",
+    "decision": "valid-workstream3-closure-candidate",
+    "recommendation": "proceed-bounded-workspace-fixture-evaluation",
+    "report_digest": "3f13809d1aba31a15af77ea7afae1062bac5b4a4274ec3794d9f6be389e3ecde"
+  },
+  "contract": "atlas-phase4-workstream3-completion-baseline/0.1",
+  "exit_gates": [
+    "accepted_slice_identities_exact",
+    "bounded_recommendation_and_limitations_explicit",
+    "browser_state_disposable_and_reload_independent",
+    "completion_contract_deterministic_and_platform_neutral",
+    "failures_visible_and_previous_state_preserved",
+    "keyboard_and_non_graph_operation_pass",
+    "local_download_reproduces_accepted_export",
+    "local_operation_without_accounts_cloud_or_external_network",
+    "migration_and_rollback_boundaries_explicit",
+    "no_canonical_or_cross_repository_mutation",
+    "package_deterministic_and_replaceable",
+    "repeated_shell_and_browser_evidence_byte_identical",
+    "routes_preserve_exact_workspace_semantics"
+  ],
+  "limitations_count": 7,
+  "python_substantive_artifacts_byte_identical": true,
+  "recommendation": {
+    "decision": "proceed-bounded-workspace-fixture-evaluation",
+    "implementation_authorized": false,
+    "separate_governance_required": true
+  },
+  "replaceability": {
+    "browser_state_disposable": true,
+    "browser_storage_required": false,
+    "decision": "replaceable",
+    "generated_artifacts_disposable": true
+  },
+  "state": "closure-candidate"
+}
