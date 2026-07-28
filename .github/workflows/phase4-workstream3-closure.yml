@@ -100,6 +100,67 @@ jobs:
           print('phase4-workstream3=closure-candidate; implementation-authorized=false')
           PY
 
+      - name: Verify pinned completion baseline
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          baseline_path = Path('content/fixtures/phase4_workspace/workstream3-completion-baseline.json')
+          baseline = json.loads(baseline_path.read_bytes())
+          report_path = Path('phase4-workstream3-completion-a.json')
+          validation_path = Path('phase4-workstream3-completion-validation.json')
+          report_bytes = report_path.read_bytes()
+          validation_bytes = validation_path.read_bytes()
+          report = json.loads(report_bytes)
+          validation = json.loads(validation_bytes)
+
+          assert baseline['contract'] == 'atlas-phase4-workstream3-completion-baseline/0.1'
+          assert baseline['state'] == 'closure-candidate'
+          assert baseline['python_substantive_artifacts_byte_identical'] is True
+
+          expected_report = baseline['completion_report']
+          assert len(report_bytes) == expected_report['artifact']['bytes']
+          assert hashlib.sha256(report_bytes).hexdigest() == expected_report['artifact']['sha256']
+          assert report['contract'] == expected_report['contract']
+          assert report['state'] == expected_report['state']
+          assert report['decision'] == expected_report['decision']
+          assert report['report_digest'] == expected_report['report_digest']
+          assert len(report['exit_gates']) == expected_report['exit_gate_count']
+          assert sorted(report['exit_gates']) == baseline['exit_gates']
+          assert all(report['exit_gates'].values())
+
+          expected_validation = baseline['completion_validation']
+          assert len(validation_bytes) == expected_validation['artifact']['bytes']
+          assert hashlib.sha256(validation_bytes).hexdigest() == expected_validation['artifact']['sha256']
+          assert validation['contract'] == expected_validation['contract']
+          assert validation['decision'] == expected_validation['decision']
+          assert validation['recommendation'] == expected_validation['recommendation']
+          assert validation['report_digest'] == expected_validation['report_digest']
+
+          assert report['accepted_evidence'] == baseline['accepted_evidence'] | {
+              'slice1_workspace_contracts': report['accepted_evidence']['slice1_workspace_contracts'],
+              'slice2_workspace_shell': report['accepted_evidence']['slice2_workspace_shell'],
+              'slice2_browser_evidence': report['accepted_evidence']['slice2_browser_evidence'],
+          }
+          for name, expected in baseline['accepted_evidence'].items():
+              observed = report['accepted_evidence'][name]
+              for field, value in expected.items():
+                  assert observed[field] == value, (name, field)
+
+          assert report['authority'] == baseline['authority']
+          assert len(report['limitations']) == baseline['limitations_count']
+          assert report['recommendation']['decision'] == baseline['recommendation']['decision']
+          assert report['recommendation']['implementation_authorized'] == baseline['recommendation']['implementation_authorized']
+          assert report['recommendation']['separate_governance_required'] == baseline['recommendation']['separate_governance_required']
+          for field, value in baseline['replaceability'].items():
+              assert report['replaceability'][field] == value
+
+          print('workstream3-completion-baseline-sha256=' + hashlib.sha256(baseline_path.read_bytes()).hexdigest())
+          print('workstream3-completion-baseline=pinned; report-bytes=9098; gates=13; implementation-authorized=false')
+          PY
+
       - name: Upload closure evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -112,5 +173,6 @@ jobs:
             phase4-workstream3-closure-tests.txt
             phase4-workstream3-completion-a.log
             phase4-workstream3-completion-b.log
+            content/fixtures/phase4_workspace/workstream3-completion-baseline.json
           if-no-files-found: error
           retention-days: 30
