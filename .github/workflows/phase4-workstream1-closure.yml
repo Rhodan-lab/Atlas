@@ -1,0 +1,128 @@
+name: Phase 4 Workstream 1 Closure
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/reference-shell/**"
+      - "content/canonical/**"
+      - "content/fixtures/phase4_interaction/**"
+      - "docs/phase-4/**"
+      - "tools/phase2_kernel/**"
+      - "tools/phase4_interaction/**"
+      - ".github/workflows/phase4-workstream1-closure.yml"
+  pull_request:
+    paths:
+      - "apps/reference-shell/**"
+      - "content/canonical/**"
+      - "content/fixtures/phase4_interaction/**"
+      - "docs/phase-4/**"
+      - "tools/phase2_kernel/**"
+      - "tools/phase4_interaction/**"
+      - ".github/workflows/phase4-workstream1-closure.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  closure:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+
+      - name: Install pinned dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+
+      - name: Run Workstream 1 closure tests
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m unittest tools.phase4_interaction.tests.test_completion -v 2>&1 | tee phase4-workstream1-tests.txt
+
+      - name: Generate Workstream 1 completion report
+        run: |
+          python -m tools.phase4_interaction.completion \
+            --output phase4-workstream1-completion-report.json
+
+      - name: Verify closure semantics
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          path = Path('phase4-workstream1-completion-report.json')
+          payload = path.read_bytes()
+          report = json.loads(payload)
+
+          assert report['contract'] == 'atlas-phase4-workstream1-completion-report/0.1'
+          assert report['mode'] == 'interactive-experience-foundation'
+          assert report['phase'] == 4
+          assert report['workstream'] == 1
+          assert report['state'] == 'closure-candidate'
+          assert report['decision'] == 'proceed-workstream2-browser-accessibility-evidence'
+          assert report['implementation_expansion'] == 'bounded-browser-evidence-only'
+          assert len(report['exit_gates']) == 10
+          assert all(report['exit_gates'].values())
+          assert report['entity_count'] == 34
+          assert report['counts'] == {
+              'failure_states': 5,
+              'impact_warnings': 1,
+              'negative_cases': 6,
+              'principia_references': 1,
+              'states': 8,
+              'views': 8,
+          }
+          boundary = report['workstream2_entry_boundary']
+          assert boundary['browser_automation_required'] is True
+          assert boundary['keyboard_workflows_required'] is True
+          assert boundary['focus_visibility_required'] is True
+          assert boundary['non_graph_workflow_equivalence_required'] is True
+          assert boundary['external_network_requests'] is False
+          assert boundary['production_frontend_architecture_selected'] is False
+          assert boundary['live_principia_dependency'] is False
+          assert boundary['canonical_mutation'] is False
+          assert boundary['repository_mutation'] is False
+          assert report['local_first'] is True
+          assert report['exact_revision_required'] is True
+          assert report['principia_status_separate'] is True
+          assert report['retrieval_authority'] == 'advisory-only'
+          assert report['production_retrieval_quality_claim'] is False
+          assert report['external_services'] is False
+          assert report['embeddings'] is False
+          assert report['vector_database'] is False
+          assert report['live_principia_dependency'] is False
+          assert report['canonical_mutation'] is False
+          assert report['automatic_status_change'] is False
+          assert report['automatic_release_action'] is False
+          assert report['live'] is False
+          assert report['repository_mutation'] is False
+
+          print('phase4-workstream1-report-sha256=' + hashlib.sha256(payload).hexdigest())
+          print('phase4-workstream1-report-digest=' + report['report_digest'])
+          print('phase4-workstream1-exit-gates=' + str(len(report['exit_gates'])))
+          print('phase4-workstream1=closure-candidate; next=browser-accessibility-evidence')
+          PY
+
+      - name: Upload Workstream 1 closure evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase4-workstream1-closure-python-${{ matrix.python-version }}
+          path: |
+            phase4-workstream1-completion-report.json
+            phase4-workstream1-tests.txt
+          if-no-files-found: error
+          retention-days: 30
