@@ -51,15 +51,18 @@ jobs:
           set -o pipefail
           python -m unittest tools.phase3_retrieval.tests.test_closure -v 2>&1 | tee phase3-closure-tests.txt
 
-      - name: Generate Phase 3 completion report
+      - name: Generate and verify Phase 3 completion report
         run: |
           python -m tools.phase3_retrieval.closure \
             --output phase3-completion-report.json
           python - <<'PY'
+          import hashlib
           import json
           from pathlib import Path
 
-          report = json.loads(Path('phase3-completion-report.json').read_text(encoding='utf-8'))
+          report_path = Path('phase3-completion-report.json')
+          report_bytes = report_path.read_bytes()
+          report = json.loads(report_bytes)
           assert report['contract'] == 'atlas-phase3-completion-report/0.1'
           assert report['mode'] == 'retrieval-evaluation'
           assert report['phase'] == 3
@@ -88,10 +91,13 @@ jobs:
           assert report['vector_database'] is False
           assert report['live'] is False
           assert report['repository_mutation'] is False
+          assert report['report_digest'] == '3823a2283bbecdc7a407c720e7ef60898a734253f0738442b365036e20401a70'
+          assert hashlib.sha256(report_bytes).hexdigest() == '7b2029987c3fd1adf926df33bdf0232967260ad1c1b0332d88abd52cc7051de5'
           print('phase3-completion-report-digest=' + report['report_digest'])
+          print('phase3-completion-artifact-sha256=' + hashlib.sha256(report_bytes).hexdigest())
           print('phase3-exit-gates=' + json.dumps(report['exit_gates'], sort_keys=True, separators=(',', ':')))
           print('phase3-decision=' + report['decision'])
-          print('phase3-closure=candidate; preferred=structured-field-baseline; semantic-infrastructure=deferred; live=false')
+          print('phase3-closure=accepted-evidence-candidate; preferred=structured-field-baseline; semantic-infrastructure=deferred; live=false')
           PY
 
       - name: Upload Phase 3 closure evidence
