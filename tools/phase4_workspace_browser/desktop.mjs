@@ -23,9 +23,9 @@ export async function desktopEvidence(browser, baseUrl, shellData, workspaceExpo
   const skipFocus = await focusEvidence(page);
   assertEvidence(skipFocus.descriptor === "skip-link" && skipFocus.visible, "E-WS-BROWSER-SKIP", "first focus must be the visible skip link");
   await page.keyboard.press("Enter");
-  await page.waitForFunction(() => document.activeElement?.id === "main-content");
+  await page.waitForFunction(() => document.activeElement?.id === "overview" && location.hash === "#overview");
   const mainFocus = await focusEvidence(page);
-  assertEvidence(mainFocus.descriptor === "main-content" && mainFocus.visible, "E-WS-BROWSER-SKIP", "skip link must visibly focus main content");
+  assertEvidence(mainFocus.descriptor === "overview" && mainFocus.visible, "E-WS-BROWSER-SKIP", "skip link must visibly focus the route-safe workspace content target");
 
   await page.reload({ waitUntil: "networkidle" });
   await waitReady(page);
