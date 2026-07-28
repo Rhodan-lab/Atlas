@@ -149,7 +149,7 @@ export function routeHash(routeId) {
 export async function currentView(page) {
   return page.evaluate(() => ({
     hash: location.hash,
-    heading: document.querySelector("#content-panel #active-view-title, #error-panel h2")?.textContent?.trim() ?? null,
+    heading: document.querySelector("#content-panel:not([hidden]) #active-view-title, #error-panel:not([hidden]) h2")?.textContent?.trim() ?? null,
     current_route: document.querySelector('a[aria-current="page"]')?.dataset.routeId ?? null,
     error_hidden: document.querySelector("#error-panel")?.hidden ?? null,
     status: document.querySelector("#runtime-status")?.textContent ?? null,
