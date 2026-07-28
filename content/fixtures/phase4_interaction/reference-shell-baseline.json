@@ -1,0 +1,52 @@
+{
+  "account_required": false,
+  "api_required": false,
+  "cloud_required": false,
+  "contract": "atlas-phase4-reference-shell-baseline/0.1",
+  "decision": "reference-shell-candidate",
+  "fixture_sha256": "6b0508ed6c14f95ce3d11c3cd081cb79cbeea2c32b6442461982f191ce4628df",
+  "graph_required": false,
+  "interaction_report_digest": "9cbaa5f4675d995a183a6be5bee0b364eb7b6ae1da2ab9affc59b6d5fc452296",
+  "keyboard_navigation_required": true,
+  "local_first": true,
+  "local_server_smoke_test": true,
+  "mode": "interactive-experience-foundation",
+  "non_graph_navigation_required": true,
+  "python_substantive_artifacts_byte_identical": true,
+  "replaceable": true,
+  "repository_mutation": false,
+  "shell_build_report": {
+    "artifact_bytes": 1131,
+    "artifact_sha256": "c9ca4259944bc4a90c42df26c4927c3f546a8358235b4e08a40715c692fa1eff",
+    "contract": "atlas-reference-shell-build-report/0.1",
+    "report_digest": "cfa4e37b07ed95337bb1fd1cb9e795656da78020d31b46eaf19828332c74d696"
+  },
+  "shell_data": {
+    "artifact_bytes": 24054,
+    "artifact_sha256": "e0f9fcbff9b86cbd4fffcb43d9c2aff64c2eb602f9b2fa0a02b8804bd18eb762",
+    "build_digest": "ebc90a5781b7e974fe30034898364d87ebb5ed00ac05ce6cf0c27d6ded32b223",
+    "contract": "atlas-reference-shell-data/0.1"
+  },
+  "source_digest": "684d08f23db50c2d994ea07293c6aaea2cbcb24492b062663b2e43144f07d3b1",
+  "state": "reference-shell-candidate",
+  "static_assets": {
+    "app.js": {
+      "bytes": 11280,
+      "sha256": "2ac8f4343d8fe1d52d22a416897103bc7b231416d0214c7449f3cbb627d3b854"
+    },
+    "index.html": {
+      "bytes": 2786,
+      "sha256": "dd3854ea5e5dfd10a43ba7f28dbbac24a33acf3ca309b646e9256cd6cd52955d"
+    },
+    "styles.css": {
+      "bytes": 8273,
+      "sha256": "95d18d801687489e18edd7bee3a9ea43e40bf80607c586de2915ff35a6853579"
+    }
+  },
+  "view_count": 8,
+  "state_count": 8,
+  "principia_reference_count": 1,
+  "impact_warning_count": 1,
+  "failure_state_count": 5,
+  "live": false
+}

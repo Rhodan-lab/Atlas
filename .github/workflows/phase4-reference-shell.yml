@@ -1,0 +1,180 @@
+name: Phase 4 Reference Shell
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/reference-shell/**"
+      - "content/canonical/**"
+      - "content/fixtures/phase4_interaction/**"
+      - "docs/phase-4/**"
+      - "tools/phase2_kernel/**"
+      - "tools/phase4_interaction/**"
+      - ".github/workflows/phase4-reference-shell.yml"
+  pull_request:
+    paths:
+      - "apps/reference-shell/**"
+      - "content/canonical/**"
+      - "content/fixtures/phase4_interaction/**"
+      - "docs/phase-4/**"
+      - "tools/phase2_kernel/**"
+      - "tools/phase4_interaction/**"
+      - ".github/workflows/phase4-reference-shell.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  reference-shell:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install pinned dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+
+      - name: Run reference-shell tests
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m unittest tools.phase4_interaction.tests.test_shell -v 2>&1 | tee phase4-reference-shell-tests.txt
+
+      - name: Check JavaScript syntax
+        run: node --check apps/reference-shell/app.js
+
+      - name: Build local reference shell
+        run: |
+          mkdir -p phase4-reference-shell
+          cp apps/reference-shell/index.html phase4-reference-shell/index.html
+          cp apps/reference-shell/styles.css phase4-reference-shell/styles.css
+          cp apps/reference-shell/app.js phase4-reference-shell/app.js
+          cp apps/reference-shell/README.md phase4-reference-shell/README.md
+          python -m tools.phase4_interaction.build_shell \
+            --output-dir phase4-reference-shell \
+            --report-output phase4-reference-shell-report.json
+
+      - name: Verify pinned shell evidence
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          baseline = json.loads(Path('content/fixtures/phase4_interaction/reference-shell-baseline.json').read_text(encoding='utf-8'))
+          data_path = Path('phase4-reference-shell/data/reference-shell-data.json')
+          report_path = Path('phase4-reference-shell-report.json')
+          data_bytes = data_path.read_bytes()
+          report_bytes = report_path.read_bytes()
+          data = json.loads(data_bytes)
+          report = json.loads(report_bytes)
+
+          assert baseline['contract'] == 'atlas-phase4-reference-shell-baseline/0.1'
+          assert data['contract'] == baseline['shell_data']['contract']
+          assert data['mode'] == baseline['mode']
+          assert data['source_digest'] == baseline['source_digest']
+          assert data['fixture_sha256'] == baseline['fixture_sha256']
+          assert data['interaction_report_digest'] == baseline['interaction_report_digest']
+          assert data['build_digest'] == baseline['shell_data']['build_digest']
+          assert len(data['views']) == baseline['view_count']
+          assert len(data['states']) == baseline['state_count']
+          assert len(data['principia_references']) == baseline['principia_reference_count']
+          assert len(data['impact_warnings']) == baseline['impact_warning_count']
+          assert len(data['failure_states']) == baseline['failure_state_count']
+          assert data['authority']['exact_revision_required'] is True
+          assert data['authority']['principia_status_separate'] is True
+          assert data['authority']['offline_capable'] is True
+          assert data['authority']['graph_visualization_optional'] is True
+          assert data['authority']['canonical_mutation'] is False
+          assert data['authority']['live_principia_dependency'] is False
+          assert data['authority']['repository_mutation'] is False
+
+          assert report['contract'] == baseline['shell_build_report']['contract']
+          assert report['mode'] == baseline['mode']
+          assert report['state'] == baseline['state']
+          assert report['decision'] == baseline['decision']
+          assert report['source_digest'] == baseline['source_digest']
+          assert report['fixture_sha256'] == baseline['fixture_sha256']
+          assert report['interaction_report_digest'] == baseline['interaction_report_digest']
+          assert report['shell_build_digest'] == baseline['shell_data']['build_digest']
+          assert report['report_digest'] == baseline['shell_build_report']['report_digest']
+          assert report['view_count'] == baseline['view_count']
+          assert report['state_count'] == baseline['state_count']
+          assert report['principia_reference_count'] == baseline['principia_reference_count']
+          assert report['impact_warning_count'] == baseline['impact_warning_count']
+          assert report['failure_state_count'] == baseline['failure_state_count']
+          assert report['static_assets'] == ['index.html', 'styles.css', 'app.js']
+          assert report['api_required'] == baseline['api_required']
+          assert report['cloud_required'] == baseline['cloud_required']
+          assert report['account_required'] == baseline['account_required']
+          assert report['graph_required'] == baseline['graph_required']
+          assert report['keyboard_navigation_required'] == baseline['keyboard_navigation_required']
+          assert report['non_graph_navigation_required'] == baseline['non_graph_navigation_required']
+          assert report['local_first'] == baseline['local_first']
+          assert report['replaceable'] == baseline['replaceable']
+          assert report['live'] == baseline['live']
+          assert report['repository_mutation'] == baseline['repository_mutation']
+
+          data_sha = hashlib.sha256(data_bytes).hexdigest()
+          report_sha = hashlib.sha256(report_bytes).hexdigest()
+          assert len(data_bytes) == baseline['shell_data']['artifact_bytes']
+          assert data_sha == baseline['shell_data']['artifact_sha256']
+          assert len(report_bytes) == baseline['shell_build_report']['artifact_bytes']
+          assert report_sha == baseline['shell_build_report']['artifact_sha256']
+
+          for name, expected in baseline['static_assets'].items():
+              payload = Path('phase4-reference-shell', name).read_bytes()
+              assert len(payload) == expected['bytes']
+              assert hashlib.sha256(payload).hexdigest() == expected['sha256']
+
+          print('phase4-reference-shell-data-sha256=' + data_sha)
+          print('phase4-reference-shell-report-sha256=' + report_sha)
+          print('phase4-reference-shell-build-digest=' + data['build_digest'])
+          print('phase4-reference-shell-report-digest=' + report['report_digest'])
+          print('phase4-reference-shell=accepted-evidence-candidate; api=false; cloud=false; live=false; canonical-mutation=false')
+          PY
+
+      - name: Smoke-test local static server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m http.server 8765 --directory phase4-reference-shell >phase4-reference-shell-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          for attempt in {1..20}; do
+            if curl --fail --silent http://127.0.0.1:8765/ >phase4-reference-shell-index-response.html; then
+              break
+            fi
+            sleep 0.25
+          done
+          curl --fail --silent http://127.0.0.1:8765/data/reference-shell-data.json >phase4-reference-shell-data-response.json
+          grep -q "Atlas × Principia" phase4-reference-shell-index-response.html
+          grep -q '"contract": "atlas-reference-shell-data/0.1"' phase4-reference-shell-data-response.json
+
+      - name: Upload reference-shell evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase4-reference-shell-python-${{ matrix.python-version }}
+          path: |
+            phase4-reference-shell/
+            phase4-reference-shell-report.json
+            phase4-reference-shell-tests.txt
+            phase4-reference-shell-server.log
+          if-no-files-found: error
+          retention-days: 30
