@@ -1,26 +1,32 @@
-# Phase 3 — Retrieval Evaluation
+# Phase 3 — Retrieval and Research Trails
 
 ## Status
+
+**Accepted and closed through PR #40.**
 
 ```yaml
 phase: 3
 mode: retrieval-evaluation
-accepted_workstreams: [1, 2, 3]
-workstream_4_candidate_1: evaluated-rejected
-active_workstream: 5
-workstream_5_state: research-foundation-candidate
-preferred_bounded_ranking: structured-field-baseline
+state: accepted
+accepted_pr: 40
+tested_head: 4f69697065f66ecb8f797616523673d39c8976e1
+accepted_merge_commit: 52f51558a9188f049f4b4b838bc6acfd1a991e96
+accepted_workstreams: [1, 2, 3, 5]
+evaluated_rejected_workstream_4_candidate: equal-weight-reciprocal-rank-fusion
+preferred_bounded_retrieval: structured-field-baseline
+semantic_infrastructure_decision: defer-until-broader-benchmark-and-architecture-approval
 retrieval_authority: advisory-only
 exact_revision_required: true
+replaceable: true
 live: false
-canonical_mutation: false
+repository_mutation: false
 ```
 
-Phase 3 is not a production-search launch. It is a bounded evidence phase over a 34-entity English reference corpus.
+Phase 3 was a bounded evidence phase over a 34-entity English reference corpus. It did not launch production search.
 
-## Workstream 1 — accepted evaluation contract
+## Accepted Workstream 1 — evaluation contract
 
-PR #30 established the retrieval evaluation boundary, and PR #31 finalized its governance record.
+PR #30 established the query, result, and metric contracts; PR #31 finalized their governance record.
 
 ```yaml
 query_set_contract: atlas-retrieval-query-set/0.1
@@ -28,29 +34,25 @@ result_set_contract: atlas-retrieval-result-set/0.1
 metric_report_contract: atlas-retrieval-metric-report/0.1
 query_set_id: retrieval-query-set:phase3-reference-en-v1
 query_set_version: 1
+entity_count: 34
 query_count: 13
 ranked_query_count: 12
 expected_error_query_count: 1
-entity_count: 34
 positive_judgment_count: 26
 implicit_grade_zero_judgment_count: 382
-state: accepted
+judgment_authority: evaluation-only
 ```
 
-The fixture includes direct, compositional, ambiguous, cross-slice, contested-normative, and exact-revision-error cases. See [`evaluation-contract.md`](evaluation-contract.md).
+The fixture includes direct, compositional, ambiguous, cross-slice, contested-normative, and unavailable-revision cases.
 
-## Workstream 2 — accepted lexical baseline
+## Accepted Workstream 2 — lexical baseline
 
-PR #32 established the lexical baseline, and PR #33 finalized its governance record.
+PR #32 established deterministic lexical BM25F retrieval; PR #33 finalized the accepted record.
 
 ```yaml
 index_contract: atlas-lexical-index/0.1
 tokenizer_contract: atlas-english-tokenizer/0.1
 scoring_contract: atlas-bm25f-scoring/0.1
-state: accepted
-accepted_pr: 32
-tested_head: 2fb6a5cb31cc98b9daac942a1745a9bd9effe9ff
-accepted_merge_commit: 444011821969285da78e6c7fc4ceadec1efca322
 entity_count: 34
 term_count: 424
 precision_at_5: 0.3
@@ -60,26 +62,20 @@ ndcg_at_5: 0.589071924873
 zero_result_rate: 0.0
 unavailable_revision_rate: 1.0
 tie_count: 0
-replaceable: true
 rebuild_verified: true
-quality_claim: bounded-reference-fixture-only
+replaceable: true
+external_services: false
+embeddings: false
+vector_database: false
 ```
 
-The tokenizer uses NFKC case folding, `[a-z0-9]+`, a fixed English stopword list, no stemming, and no query expansion. BM25F scores body, stable ID, title, and type with fixed public weights.
+## Accepted Workstream 3 — structured-field baseline
 
-Evidence: `content/fixtures/phase3_retrieval/lexical-baseline.json` and [`lexical-baseline.md`](lexical-baseline.md).
-
-## Workstream 3 — accepted structured-field baseline
-
-PR #34 established the structured baseline, and PR #35 finalized its governance record.
+PR #34 established deterministic structured-field BM25F retrieval; PR #35 finalized the accepted record.
 
 ```yaml
 index_contract: atlas-structured-index/0.1
 scoring_contract: atlas-structured-bm25f-scoring/0.1
-state: accepted
-accepted_pr: 34
-tested_head: d7b7c10338ff68121f7fb7532f3799adfa72c404
-accepted_merge_commit: a8212512261ed3d718ee14c1fa40e30277f62b75
 entity_count: 34
 term_count: 868
 canonical_body_indexed: false
@@ -94,20 +90,17 @@ precision_delta_from_lexical: 0.066666666667
 recall_delta_from_lexical: 0.145833333334
 mrr_delta_from_lexical: 0.118055555555
 ndcg_delta_from_lexical: 0.165705459938
-replaceable: true
 rebuild_verified: true
-quality_claim: bounded-reference-fixture-only
+replaceable: true
 ```
 
-The structured index scores stable identity, title, type, substantive front-matter values, lifecycle and review fields, outbound graph references and relations, inbound dependents, and provenance-linked source identity. Canonical body text is excluded.
+The structured method indexes identity, title, type, substantive metadata, lifecycle and review fields, graph neighborhood, and provenance-linked source identity. Canonical body text is excluded.
 
-This is the preferred accepted ranking baseline for the current fixture. It is not a production-quality claim.
+It is the preferred bounded method for the accepted fixture. This is not a production-quality claim.
 
-Evidence: `content/fixtures/phase3_retrieval/structured-baseline.json` and [`structured-baseline.md`](structured-baseline.md).
+## Workstream 4 candidate 1 — evaluated and rejected
 
-## Workstream 4 candidate 1 — reciprocal-rank fusion — evaluated and rejected
-
-PR #36 evaluated the predeclared equal-weight RRF method.
+PR #36 evaluated equal-weight reciprocal-rank fusion over the accepted lexical and structured rankings. PR #37 recorded the rejection and activated Workstream 5.
 
 ```yaml
 method: reciprocal-rank-fusion
@@ -115,9 +108,6 @@ rrf_k: 60
 lexical_weight: 1.0
 structured_weight: 1.0
 state: evaluated-rejected
-tested_head: cec57a7a090dbdc8238a19a21f9d84e38a836917
-evidence_merge_commit: e6010893112b10362a15392d8635a0297b055267
-recommendation: reject-candidate-no-quality-gain-over-structured
 precision_at_5: 0.35
 recall_at_5: 0.791666666667
 mean_reciprocal_rank: 0.736111111111
@@ -130,18 +120,14 @@ query_gains_vs_structured: 2
 query_mixed_vs_structured: 1
 query_regressions_vs_structured: 7
 query_unchanged_vs_structured: 2
-tie_count: 9
+recommendation: reject-candidate-no-quality-gain-over-structured
 ```
 
-Fusion improves all four core metrics over lexical retrieval but loses all four to structured retrieval. Under the predeclared rule, the added layer is rejected. No post-hoc weight or judgment change is permitted.
+The negative result is retained. No post-hoc tuning was accepted.
 
-Evidence: `content/fixtures/phase3_retrieval/rank-fusion.json` and [`rank-fusion.md`](rank-fusion.md).
+## Accepted Workstream 5 — research trails and candidate discovery
 
-## Workstream 5 — research trails and candidate discovery — candidate
-
-PR #38 defines the remaining research foundations required by the Phase 3 gate.
-
-### Contracts
+PR #38 established the remaining research-foundation contracts.
 
 ```yaml
 filter_contract: atlas-retrieval-filter/0.1
@@ -149,21 +135,6 @@ filtered_result_contract: atlas-filtered-result-set/0.1
 research_trail_contract: atlas-research-trail/0.1
 contradiction_candidate_contract: atlas-contradiction-candidate/0.1
 duplicate_candidate_contract: atlas-duplicate-candidate/0.1
-```
-
-Filters support entity type, status, canonical domain collection, inclusive updated-date bounds, and explicit evidence relation role. They preserve exact revisions, provenance, review level, lifecycle status, and staleness.
-
-Saved trails bind accepted query text, an exact filter revision, accepted structured-baseline identity, exact entity revisions, original ranks, include/exclude/context actions, rationales, dates, and open questions. Trails are research references, not canonical copies.
-
-Contradiction and duplicate records are advisory candidates. A candidate does not prove a contradiction or duplicate and cannot resolve, merge, deprecate, or alter either entity automatically.
-
-### Pinned candidate evidence
-
-```yaml
-state: research-foundation-candidate
-fixture_id: research-foundations:phase3-reference-en-v1
-fixture_version: 1
-entity_count: 34
 filters: 4
 filter_result_items: 9
 trails: 1
@@ -172,101 +143,41 @@ contradiction_candidates: 1
 duplicate_candidates: 1
 negative_cases: 5
 report_digest: 733aeb28a3147a36d1cc7d3406ab98fa81522cb4b4e87e3aa792aaf54893a394
-report_artifact_sha256: bdf56d085025e624b80fd7e0b35a362e16331e593185184d5500c7603b3910bd
-filter_result_artifact_sha256: 3f25421b72350be1d8d820baaa9b549ead5d9d8caa5bb61538cd0ecc545c3f67
-python_substantive_artifacts_byte_identical: true
 exact_revision_preserved: true
 provenance_visible: true
 review_and_staleness_visible: true
 canonical_copy_authority: false
 automatic_merge_or_resolution: false
-embeddings: false
-vector_database: false
-live: false
-repository_mutation: false
 ```
 
-The reference trail contains five exact-revision decisions for the cross-platform recommender query.
+The contradiction candidate is assessed `scope-difference-likely`; the duplicate candidate is assessed `related-not-duplicate`. Candidate output remains advisory and never resolves or mutates canonical knowledge automatically.
 
-The contradiction candidate is assessed `scope-difference-likely`; the duplicate candidate is assessed `related-not-duplicate`. These results prove that discovery remains a request for inspection rather than a forced assertion.
+## Closure evidence
 
-Pinned negative errors:
+PR #40 added the deterministic completion report and pinned baseline.
 
-```text
-E-FILTER-DOMAIN
-E-FILTER-DATE
-E-REVISION-MISSING
-E-CANDIDATE-PAIR
-E-DUPLICATE-AUTHORITY
+```yaml
+completion_contract: atlas-phase3-completion-report/0.1
+completion_baseline_contract: atlas-phase3-completion-baseline/0.1
+source_digest: 684d08f23db50c2d994ea07293c6aaea2cbcb24492b062663b2e43144f07d3b1
+decision: proceed-phase4-interactive-experience
+accepted_workstreams: [1, 2, 3, 5]
+preferred_bounded_retrieval: structured-field-baseline
+semantic_infrastructure_decision: defer-until-broader-benchmark-and-architecture-approval
 ```
 
-Evidence: `content/fixtures/phase3_retrieval/research-foundations.v01.json`, `content/fixtures/phase3_retrieval/research-foundations-baseline.json`, and [`research-foundations.md`](research-foundations.md).
+Passed exit gates:
 
-## Semantic infrastructure decision
-
-Embedding, vector, learned-ranking, and external semantic-service experiments remain deferred until:
-
-1. Workstream 5 contracts are accepted;
-2. the relevance collection is broadened beyond 34 entities and 13 queries;
-3. hard negatives and candidate-discovery cases are included;
-4. any semantic architecture is compared on quality, determinism, inspectability, storage, latency, failure behavior, and replaceability.
-
-No vector database is selected by the current evidence.
-
-## Evidence files
-
-### Workstream 1 — accepted
-
-- `content/fixtures/phase3_retrieval/reference-query-set.v01.json`;
-- `content/fixtures/phase3_retrieval/contract-baseline.json`;
-- `tools/phase3_retrieval/contracts.py`;
-- `.github/workflows/phase3-retrieval-contract.yml`;
-- `docs/phase-3/evaluation-contract.md`.
-
-### Workstream 2 — accepted
-
-- `content/fixtures/phase3_retrieval/lexical-baseline.json`;
-- `tools/phase3_retrieval/lexical.py`;
-- `.github/workflows/phase3-lexical-baseline.yml`;
-- `docs/phase-3/lexical-baseline.md`.
-
-### Workstream 3 — accepted
-
-- `content/fixtures/phase3_retrieval/structured-baseline.json`;
-- `tools/phase3_retrieval/structured.py`;
-- `.github/workflows/phase3-structured-baseline.yml`;
-- `docs/phase-3/structured-baseline.md`.
-
-### Workstream 4 candidate 1 — evaluated and rejected
-
-- `content/fixtures/phase3_retrieval/rank-fusion.json`;
-- `tools/phase3_retrieval/fusion.py`;
-- `.github/workflows/phase3-rank-fusion.yml`;
-- `docs/phase-3/rank-fusion.md`.
-
-### Workstream 5 — candidate
-
-- `content/fixtures/phase3_retrieval/research-foundations.v01.json`;
-- `content/fixtures/phase3_retrieval/research-foundations-baseline.json`;
-- `tools/phase3_retrieval/research.py`;
-- `tools/phase3_retrieval/tests/test_research.py`;
-- `.github/workflows/phase3-research-foundations.yml`;
-- `docs/phase-3/research-foundations.md`.
-
-## Non-goals
-
-Still out of scope:
-
-- production search-quality claims;
-- polished search UI;
-- personalized ranking or user profiling;
-- autonomous agents changing knowledge state;
-- live Principia synchronization;
-- retrieval-generated canonical content;
-- automatic review, lifecycle, promotion, merge, or release mutation;
-- active multilingual retrieval;
-- post-hoc tuning against accepted judgments;
-- vector database selection without broader comparative evidence.
+```yaml
+documented_relevance_collection: true
+review_status_and_provenance_visible: true
+ranking_behavior_explainable: true
+specialized_boundaries_pass_policy: true
+retrieval_failure_cannot_corrupt_authority: true
+filters_and_research_trails_operational: true
+candidate_discovery_advisory: true
+generated_artifacts_replaceable: true
+```
 
 ## Authority boundary
 
@@ -284,16 +195,34 @@ automatic_release_action: false
 repository_mutation: false
 ```
 
-## Exit criteria
+## Deferred work
 
-Phase 3 closes only when:
+Phase 3 did not justify:
 
-- the query-and-judgment set is versioned and validated;
-- lexical and structured baselines are accepted;
-- comparative candidates are measured against both accepted baselines;
-- filtering preserves exact revisions and visible authority metadata;
-- saved research trails are exact-revision and inspectable;
-- contradiction and duplicate candidates remain advisory and evidence-linked;
-- deterministic metrics, ties, failures, and rebuild behavior are recorded;
-- the completion report recommends or rejects entry into Phase 4;
-- no retrieval result, trail, or candidate is granted canonical or lifecycle authority.
+- production retrieval-quality claims;
+- embeddings or learned ranking;
+- a vector database;
+- external semantic services;
+- post-hoc judgment tuning;
+- live Principia synchronization;
+- retrieval-generated canonical writes;
+- automatic lifecycle or review mutation;
+- a polished product UI.
+
+A future semantic experiment requires a broader corpus, more queries, hard negatives, candidate-discovery benchmarks, and a separate architecture decision.
+
+## Evidence files
+
+- `content/fixtures/phase3_retrieval/reference-query-set.v01.json`;
+- `content/fixtures/phase3_retrieval/contract-baseline.json`;
+- `content/fixtures/phase3_retrieval/lexical-baseline.json`;
+- `content/fixtures/phase3_retrieval/structured-baseline.json`;
+- `content/fixtures/phase3_retrieval/rank-fusion.json`;
+- `content/fixtures/phase3_retrieval/research-foundations.v01.json`;
+- `content/fixtures/phase3_retrieval/research-foundations-baseline.json`;
+- `content/fixtures/phase3_retrieval/phase3-completion-baseline.json`;
+- `tools/phase3_retrieval/`;
+- `.github/workflows/phase3-*.yml`;
+- `docs/phase-3/completion-report.md`.
+
+**Phase 3 is complete. Phase 4 may expose the accepted semantics through a local-first, accessible, failure-visible interactive experience while keeping Atlas and Principia status separate.**
