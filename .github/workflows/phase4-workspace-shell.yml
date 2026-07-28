@@ -1,0 +1,224 @@
+name: Phase 4 Workspace Shell
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/workspace-shell/**"
+      - "content/canonical/**"
+      - "content/fixtures/phase3_retrieval/**"
+      - "content/fixtures/phase4_interaction/**"
+      - "content/fixtures/phase4_workspace/**"
+      - "docs/phase-4/**"
+      - "tools/phase2_kernel/**"
+      - "tools/phase3_retrieval/**"
+      - "tools/phase4_workspace/**"
+      - ".github/workflows/phase4-workspace-shell.yml"
+  pull_request:
+    paths:
+      - "apps/workspace-shell/**"
+      - "content/canonical/**"
+      - "content/fixtures/phase3_retrieval/**"
+      - "content/fixtures/phase4_interaction/**"
+      - "content/fixtures/phase4_workspace/**"
+      - "docs/phase-4/**"
+      - "tools/phase2_kernel/**"
+      - "tools/phase3_retrieval/**"
+      - "tools/phase4_workspace/**"
+      - ".github/workflows/phase4-workspace-shell.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  workspace-shell:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install pinned dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+
+      - name: Run workspace-shell tests
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m unittest tools.phase4_workspace.tests.test_shell -v 2>&1 | tee phase4-workspace-shell-tests.txt
+
+      - name: Check JavaScript syntax
+        run: node --check apps/workspace-shell/app.js
+
+      - name: Build deterministic workspace package twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          for suffix in a b; do
+            package="phase4-workspace-shell-${suffix}"
+            report="phase4-workspace-shell-report-${suffix}.json"
+            rm -rf "${package}"
+            mkdir -p "${package}"
+            cp apps/workspace-shell/index.html "${package}/index.html"
+            cp apps/workspace-shell/styles.css "${package}/styles.css"
+            cp apps/workspace-shell/app.js "${package}/app.js"
+            cp apps/workspace-shell/README.md "${package}/README.md"
+            python -m tools.phase4_workspace.build_shell \
+              --output-dir "${package}" \
+              --report-output "${report}"
+          done
+
+      - name: Verify repeated-run byte identity
+        run: |
+          diff -ru phase4-workspace-shell-a phase4-workspace-shell-b
+          diff -u phase4-workspace-shell-report-a.json phase4-workspace-shell-report-b.json
+
+      - name: Verify workspace-shell candidate semantics
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          root = Path('phase4-workspace-shell-a')
+          data_path = root / 'data' / 'workspace-shell-data.json'
+          export_path = root / 'data' / 'workspace-export.json'
+          manifest_path = root / 'data' / 'workspace-manifest.json'
+          report_path = Path('phase4-workspace-shell-report-a.json')
+          baseline_path = Path('content/fixtures/phase4_workspace/workspace-contract-baseline.json')
+
+          data_bytes = data_path.read_bytes()
+          export_bytes = export_path.read_bytes()
+          manifest_bytes = manifest_path.read_bytes()
+          report_bytes = report_path.read_bytes()
+          data = json.loads(data_bytes)
+          export = json.loads(export_bytes)
+          manifest = json.loads(manifest_bytes)
+          report = json.loads(report_bytes)
+          baseline = json.loads(baseline_path.read_bytes())
+
+          assert data['contract'] == 'atlas-workspace-shell-data/0.1'
+          assert data['mode'] == 'interactive-experience-foundation'
+          assert data['phase'] == 4
+          assert data['workstream'] == 3
+          assert data['slice'] == 2
+          assert data['state'] == 'workspace-shell-candidate'
+          assert data['counts'] == {
+              'candidates': 2,
+              'entries': 5,
+              'limitations': 5,
+              'open_questions': 2,
+              'principia_references': 1,
+              'routes': 13,
+              'warnings': 1,
+          }
+          assert [route['position'] for route in data['routes'] if route['kind'] == 'entry'] == [1, 2, 3, 4, 5]
+          assert all('latest' not in route['hash'].lower() for route in data['routes'])
+          authority = data['authority']
+          assert authority['workspace_authority'] == 'ephemeral-research-only'
+          assert authority['browser_state_authority'] == 'ephemeral-only'
+          assert authority['accepted_export_only'] is True
+          assert authority['entry_order_preserved'] is True
+          assert authority['decisions_read_only'] is True
+          assert authority['candidates_unresolved'] is True
+          assert authority['principia_status_separate'] is True
+          assert authority['canonical_mutation'] is False
+          assert authority['repository_mutation'] is False
+          assert authority['production_frontend_architecture_selected'] is False
+          assert authority['live_principia_dependency'] is False
+
+          assert len(export_bytes) == baseline['export']['artifact']['bytes']
+          assert hashlib.sha256(export_bytes).hexdigest() == baseline['export']['artifact']['sha256']
+          assert export['report_digest'] == baseline['export']['report_digest']
+          assert len(manifest_bytes) == baseline['manifest']['artifact']['bytes']
+          assert hashlib.sha256(manifest_bytes).hexdigest() == baseline['manifest']['artifact']['sha256']
+          assert manifest['report_digest'] == baseline['manifest']['report_digest']
+          assert data['accepted_export']['artifact'] == baseline['export']['artifact']
+          assert data['accepted_manifest']['artifact'] == baseline['manifest']['artifact']
+          assert data['download']['bytes'] == len(export_bytes)
+          assert data['download']['sha256'] == hashlib.sha256(export_bytes).hexdigest()
+          assert data['download']['local_only'] is True
+          assert data['download']['canonical_write'] is False
+
+          assert report['contract'] == 'atlas-workspace-shell-build-report/0.1'
+          assert report['decision'] == 'workspace-shell-candidate'
+          assert report['route_count'] == 13
+          assert report['entry_route_count'] == 5
+          assert report['replaceable'] is True
+          assert report['local_first'] is True
+          assert report['api_required'] is False
+          assert report['account_required'] is False
+          assert report['cloud_required'] is False
+          assert report['external_network_required'] is False
+          assert report['canonical_mutation'] is False
+          assert report['repository_mutation'] is False
+          assert report['production_frontend_architecture_selected'] is False
+          assert report['live_principia_dependency'] is False
+
+          assets = [
+              root / 'index.html',
+              root / 'styles.css',
+              root / 'app.js',
+              data_path,
+              export_path,
+              manifest_path,
+              report_path,
+          ]
+          for path in assets:
+              payload = path.read_bytes()
+              print(path.name + '-bytes=' + str(len(payload)))
+              print(path.name + '-sha256=' + hashlib.sha256(payload).hexdigest())
+          print('workspace-shell-build-digest=' + data['build_digest'])
+          print('workspace-shell-report-digest=' + report['report_digest'])
+          print('phase4-workspace-shell=candidate; routes=13; accepted-export-only=true; live=false')
+          PY
+
+      - name: Smoke-test local static server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m http.server 8767 --bind 127.0.0.1 --directory phase4-workspace-shell-a >phase4-workspace-shell-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:8767/ >phase4-workspace-shell-index-response.html; then
+              break
+            fi
+            sleep 0.25
+          done
+          curl --fail --silent http://127.0.0.1:8767/data/workspace-shell-data.json >phase4-workspace-shell-data-response.json
+          curl --fail --silent http://127.0.0.1:8767/data/workspace-export.json >phase4-workspace-export-response.json
+          curl --fail --silent http://127.0.0.1:8767/data/workspace-manifest.json >phase4-workspace-manifest-response.json
+          grep -q "Atlas Research Workspace" phase4-workspace-shell-index-response.html
+          grep -q '"contract": "atlas-workspace-shell-data/0.1"' phase4-workspace-shell-data-response.json
+          grep -q '"contract": "atlas-research-workspace-export/0.1"' phase4-workspace-export-response.json
+          grep -q '"contract": "atlas-research-workspace-manifest/0.1"' phase4-workspace-manifest-response.json
+
+      - name: Upload workspace-shell evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase4-workspace-shell-python-${{ matrix.python-version }}
+          path: |
+            phase4-workspace-shell-a/
+            phase4-workspace-shell-b/
+            phase4-workspace-shell-report-a.json
+            phase4-workspace-shell-report-b.json
+            phase4-workspace-shell-tests.txt
+            phase4-workspace-shell-server.log
+          if-no-files-found: error
+          retention-days: 30
