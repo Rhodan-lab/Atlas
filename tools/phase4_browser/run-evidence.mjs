@@ -240,7 +240,11 @@ async function runDesktopEvidence(browser, baseUrl, shellData, networkRecords) {
   assertEvidence(failureFocus.visible, "E-BROWSER-FOCUS", "failure button focus must be visible");
   focusSequence.push(failureFocus);
   await page.keyboard.press("Enter");
-  await page.waitForFunction(() => location.hash === "#failures");
+  await page.waitForFunction(() => (
+    location.hash === "#failures"
+    && document.querySelector("#failure-panel")?.hidden === false
+    && document.querySelectorAll("#failure-panel .failure-item code").length === 5
+  ));
   const failureCodes = await page.locator("#failure-panel .failure-item code").allTextContents();
   assertEvidence(failureCodes.length === 5, "E-BROWSER-FAILURES", "all five accepted failure states must be visible");
 
@@ -397,6 +401,7 @@ async function main() {
   assertEvidence(shellData.build_digest === shellBaseline.shell_data.build_digest, "E-BROWSER-SHELL-DATA", "shell build digest differs from accepted baseline");
 
   const browser = await chromium.launch({ headless: true });
+  const engineVersion = browser.version();
   const networkRecords = [];
   let desktop;
   let mobile;
@@ -422,7 +427,7 @@ async function main() {
     workstream: 2,
     state: "browser-evidence-candidate",
     engine_name: "chromium",
-    engine_version: browser.version(),
+    engine_version: engineVersion,
     engine_source: `playwright@${packageRecord.version}`,
     playwright_version: packageRecord.version,
     operating_system: "ubuntu-24.04",
