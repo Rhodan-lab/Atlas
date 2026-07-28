@@ -1,0 +1,227 @@
+{
+  "browser_implementation_authorized": false,
+  "candidate_records": [
+    {
+      "assessment": "scope-difference-likely",
+      "id": "candidate:contradiction:catalase-optimum-and-neutral-ph-assay",
+      "kind": "contradiction",
+      "left": {"id": "claim:en:catalase-optimum-requires-assay-scope", "revision": 1},
+      "right": {"id": "evidence:en:fluorescent-catalase-assay-neutral-ph", "revision": 1}
+    },
+    {
+      "assessment": "related-not-duplicate",
+      "id": "candidate:duplicate:catalase-scope-claim-and-synthesis",
+      "kind": "duplicate",
+      "left": {"id": "claim:en:catalase-optimum-requires-assay-scope", "revision": 1},
+      "right": {"id": "synthesis:en:catalase-assay-conditions", "revision": 1}
+    }
+  ],
+  "contract": "atlas-phase4-workspace-generalization-fixtures/0.1",
+  "id": "workspace-generalization-fixtures:catalase-en-v1",
+  "mode": "interactive-experience-foundation",
+  "negative_cases": [
+    {"expected_error": "E-GENERALIZATION-LATEST", "id": "negative:catalase-implicit-latest", "mutation": "implicit-latest"},
+    {"expected_error": "E-GENERALIZATION-DOMAIN", "id": "negative:catalase-domain-leakage", "mutation": "domain-leakage"},
+    {"expected_error": "E-GENERALIZATION-DUPLICATE", "id": "negative:catalase-duplicate-entry", "mutation": "duplicate-entry"},
+    {"expected_error": "E-GENERALIZATION-REVISION", "id": "negative:catalase-unavailable-revision", "mutation": "unavailable-revision"},
+    {"expected_error": "E-GENERALIZATION-CONTRACT", "id": "negative:catalase-contract-drift", "mutation": "contract-drift"},
+    {"expected_error": "E-GENERALIZATION-AUTHORITY", "id": "negative:catalase-copied-authority", "mutation": "copied-authority"},
+    {"expected_error": "E-GENERALIZATION-CANDIDATE", "id": "negative:catalase-resolved-candidate", "mutation": "resolve-candidate"},
+    {"expected_error": "E-GENERALIZATION-PRINCIPIA", "id": "negative:catalase-live-principia", "mutation": "live-principia"},
+    {"expected_error": "E-GENERALIZATION-NON-GRAPH", "id": "negative:catalase-missing-non-graph", "mutation": "missing-non-graph"},
+    {"expected_error": "E-GENERALIZATION-DETERMINISM", "id": "negative:catalase-nondeterministic-timestamp", "mutation": "nondeterministic-timestamp"},
+    {"expected_error": "E-GENERALIZATION-NETWORK", "id": "negative:catalase-external-network", "mutation": "external-network"},
+    {"expected_error": "E-GENERALIZATION-AUTHORITY", "id": "negative:catalase-lifecycle-mutation", "mutation": "lifecycle-mutation"},
+    {"expected_error": "E-GENERALIZATION-BROWSER", "id": "negative:catalase-browser-implementation", "mutation": "browser-implementation"}
+  ],
+  "new_canonical_authoring_authorized": false,
+  "principia_records": [
+    {
+      "atlas_references": [
+        {"id": "question:en:how-assay-conditions-affect-catalase", "revision": 1},
+        {"id": "model:en:catalase-assay-observation", "revision": 1},
+        {"id": "claim:en:catalase-optimum-requires-assay-scope", "revision": 1}
+      ],
+      "automatic_release_action": false,
+      "automatic_status_change": false,
+      "automatic_status_inheritance": false,
+      "canonical_mutation": false,
+      "contract": "atlas-principia-reference-envelope/0.1",
+      "fixture_only": true,
+      "id": "principia-reference:catalase:assay-scope",
+      "impact_state": "fixture-only",
+      "implicit_latest": false,
+      "live": false,
+      "principia_artifact_id": "principia:investigation:catalase-assay-scope",
+      "principia_artifact_revision": 1,
+      "principia_status": "draft",
+      "principia_status_separate": true,
+      "reference_purpose": "Explain how assay conditions constrain comparison without inheriting Atlas lifecycle status.",
+      "repository_mutation": false,
+      "revision": 1
+    }
+  ],
+  "prior_accepted_workspace": {
+    "baseline_contract": "atlas-phase4-workspace-contract-baseline/0.1",
+    "export_report_digest": "82f08c18ae76b4b4d091fe0d8be7d54cf5d10d989443132a26e550056af3f56a",
+    "export_sha256": "43f28738c4678dfcd0f7a3e4d31480f891112a8c9bd220929f8f32cd80edb98a",
+    "preserved_as_previous_valid_state": true
+  },
+  "production_implementation_authorized": false,
+  "selection": {
+    "contract": "atlas-phase4-workspace-generalization-selection/0.1",
+    "filter": {
+      "allowed_types": ["claim", "concept", "evidence", "model", "question", "source", "synthesis"],
+      "id": "filter:en:catalase-assay-methodology",
+      "revision": 1
+    },
+    "query_snapshot": {
+      "id": "query:workspace:catalase-assay-scope",
+      "text": "Under what assay conditions may catalase activity be compared without treating one reported optimum as universal?"
+    },
+    "ranking_reference": {
+      "baseline_contract": "atlas-phase4-workspace-generalization-selection/0.1",
+      "index_build_digest": "684d08f23db50c2d994ea07293c6aaea2cbcb24492b062663b2e43144f07d3b1",
+      "index_contract": "atlas-kernel-runtime/0.1",
+      "result_set_sha256": "ce2db090fe0432a9b52194b3d981285cfcf388717db05bd23dc3d86caaa37f23"
+    },
+    "source_pool": [
+      {"id": "question:en:how-assay-conditions-affect-catalase", "revision": 1},
+      {"id": "concept:en:catalase", "revision": 1},
+      {"id": "model:en:catalase-assay-observation", "revision": 1},
+      {"id": "evidence:en:fluorescent-catalase-assay-neutral-ph", "revision": 1},
+      {"id": "claim:en:catalase-optimum-requires-assay-scope", "revision": 1},
+      {"id": "synthesis:en:catalase-assay-conditions", "revision": 1},
+      {"id": "src:aebi-1984-catalase-in-vitro", "revision": 1},
+      {"id": "src:wu-lin-wolfbeis-2003-catalase-assay", "revision": 1}
+    ],
+    "trail": {
+      "entries": [
+        {"action": "include", "id": "question:en:how-assay-conditions-affect-catalase", "original_rank": 1, "rationale": "Frames the methodological comparison and prevents an unscoped universal optimum claim.", "revision": 1},
+        {"action": "include", "id": "claim:en:catalase-optimum-requires-assay-scope", "original_rank": 2, "rationale": "Provides the load-bearing claim that reported optima require explicit assay scope.", "revision": 1},
+        {"action": "include", "id": "synthesis:en:catalase-assay-conditions", "original_rank": 3, "rationale": "Integrates the sources while preserving method-specific interpretation and uncertainty.", "revision": 1},
+        {"action": "context", "id": "model:en:catalase-assay-observation", "original_rank": 4, "rationale": "Makes the measurement proxy, temperature, pH, substrate, and timing dependencies explicit.", "revision": 1},
+        {"action": "context", "id": "evidence:en:fluorescent-catalase-assay-neutral-ph", "original_rank": 5, "rationale": "Supplies a concrete neutral-pH fluorescent assay without converting one method into a universal optimum.", "revision": 1}
+      ],
+      "id": "trail:en:catalase-assay-scope-review",
+      "open_questions": [
+        "Which measurement proxies must be normalized before catalase activity values can be compared quantitatively?",
+        "Which source-specific temperature, pH, substrate, and timing ranges are required before discussing an optimum?"
+      ],
+      "revision": 1
+    }
+  },
+  "source_digest": "684d08f23db50c2d994ea07293c6aaea2cbcb24492b062663b2e43144f07d3b1",
+  "version": 1,
+  "warning_records": [
+    {
+      "automatic_release_action": false,
+      "automatic_status_change": false,
+      "automatic_update": false,
+      "available_revisions": [1],
+      "canonical_mutation": false,
+      "contract": "atlas-cross-repository-impact-warning/0.1",
+      "id": "impact-warning:catalase:model-revision-two-unavailable",
+      "impact_state": "unavailable",
+      "implicit_latest": false,
+      "live": false,
+      "message": "The requested Catalase assay model revision 2 is unavailable; the workspace must not substitute revision 1 silently.",
+      "recovery_actions": ["show-available-revisions", "return-to-pinned-reference", "open-impact-details"],
+      "repository_mutation": false,
+      "revision": 1,
+      "severity": "blocking",
+      "target": {"id": "model:en:catalase-assay-observation", "revision": 2}
+    }
+  ],
+  "workspace": {
+    "authority": {
+      "account_required": false,
+      "automatic_merge_or_resolution": false,
+      "canonical_copy_authority": false,
+      "canonical_mutation": false,
+      "cloud_required": false,
+      "deterministic_export_required": true,
+      "exact_revision_required": true,
+      "external_network_required": false,
+      "lifecycle_mutation": false,
+      "live_principia_dependency": false,
+      "local_first": true,
+      "non_graph_workflow_required": true,
+      "principia_status_separate": true,
+      "production_frontend_architecture_selected": false,
+      "repository_mutation": false,
+      "review_mutation": false,
+      "workspace_authority": "ephemeral-research-only"
+    },
+    "candidate_references": [
+      {"advisory_only": true, "assessment": "scope-difference-likely", "automatic_resolution": false, "id": "candidate:contradiction:catalase-optimum-and-neutral-ph-assay", "kind": "contradiction", "resolution": "unresolved"},
+      {"advisory_only": true, "assessment": "related-not-duplicate", "automatic_resolution": false, "id": "candidate:duplicate:catalase-scope-claim-and-synthesis", "kind": "duplicate", "resolution": "unresolved"}
+    ],
+    "contract": "atlas-research-workspace/0.1",
+    "entries": [
+      {
+        "contract": "atlas-research-workspace-entry/0.1",
+        "decision": {"action": "include", "advisory_only": true, "canonical_mutation": false, "contract": "atlas-research-workspace-decision/0.1", "id": "workspace-decision:en:include-catalase-scope-question", "rationale": "Frames the methodological comparison and prevents an unscoped universal optimum claim."},
+        "exact_reference": {"id": "question:en:how-assay-conditions-affect-catalase", "revision": 1},
+        "id": "workspace-entry:en:catalase-scope-question",
+        "original_rank": 1,
+        "position": 1
+      },
+      {
+        "contract": "atlas-research-workspace-entry/0.1",
+        "decision": {"action": "include", "advisory_only": true, "canonical_mutation": false, "contract": "atlas-research-workspace-decision/0.1", "id": "workspace-decision:en:include-catalase-scope-claim", "rationale": "Provides the load-bearing claim that reported optima require explicit assay scope."},
+        "exact_reference": {"id": "claim:en:catalase-optimum-requires-assay-scope", "revision": 1},
+        "id": "workspace-entry:en:catalase-scope-claim",
+        "original_rank": 2,
+        "position": 2
+      },
+      {
+        "contract": "atlas-research-workspace-entry/0.1",
+        "decision": {"action": "include", "advisory_only": true, "canonical_mutation": false, "contract": "atlas-research-workspace-decision/0.1", "id": "workspace-decision:en:include-catalase-synthesis", "rationale": "Integrates the sources while preserving method-specific interpretation and uncertainty."},
+        "exact_reference": {"id": "synthesis:en:catalase-assay-conditions", "revision": 1},
+        "id": "workspace-entry:en:catalase-synthesis",
+        "original_rank": 3,
+        "position": 3
+      },
+      {
+        "contract": "atlas-research-workspace-entry/0.1",
+        "decision": {"action": "context", "advisory_only": true, "canonical_mutation": false, "contract": "atlas-research-workspace-decision/0.1", "id": "workspace-decision:en:context-catalase-model", "rationale": "Makes the measurement proxy, temperature, pH, substrate, and timing dependencies explicit."},
+        "exact_reference": {"id": "model:en:catalase-assay-observation", "revision": 1},
+        "id": "workspace-entry:en:catalase-model-context",
+        "original_rank": 4,
+        "position": 4
+      },
+      {
+        "contract": "atlas-research-workspace-entry/0.1",
+        "decision": {"action": "context", "advisory_only": true, "canonical_mutation": false, "contract": "atlas-research-workspace-decision/0.1", "id": "workspace-decision:en:context-catalase-neutral-ph-evidence", "rationale": "Supplies a concrete neutral-pH fluorescent assay without converting one method into a universal optimum."},
+        "exact_reference": {"id": "evidence:en:fluorescent-catalase-assay-neutral-ph", "revision": 1},
+        "id": "workspace-entry:en:catalase-neutral-ph-evidence",
+        "original_rank": 5,
+        "position": 5
+      }
+    ],
+    "filter_reference": {"id": "filter:en:catalase-assay-methodology", "revision": 1},
+    "id": "workspace:en:catalase-assay-scope-review",
+    "mode": "interactive-experience-foundation",
+    "non_graph_summary": [
+      "Include the Catalase assay question as the boundary for methodological comparison.",
+      "Include the assay-scope claim as the primary limit on universal optimum language.",
+      "Include the synthesis as the integrated method-aware interpretation.",
+      "Use the assay-observation model as context for proxy, temperature, pH, substrate, and timing choices.",
+      "Use the neutral-pH fluorescent assay as method-specific evidence rather than a universal optimum."
+    ],
+    "open_questions": [
+      "Which measurement proxies must be normalized before catalase activity values can be compared quantitatively?",
+      "Which source-specific temperature, pH, substrate, and timing ranges are required before discussing an optimum?"
+    ],
+    "principia_references": [
+      {"automatic_status_inheritance": false, "fixture_only": true, "id": "principia-reference:catalase:assay-scope", "implicit_latest": false, "live": false, "principia_status": "draft", "principia_status_separate": true, "revision": 1}
+    ],
+    "query_snapshot": {"id": "query:workspace:catalase-assay-scope", "text": "Under what assay conditions may catalase activity be compared without treating one reported optimum as universal?"},
+    "ranking_reference": {"baseline_contract": "atlas-phase4-workspace-generalization-selection/0.1", "index_build_digest": "684d08f23db50c2d994ea07293c6aaea2cbcb24492b062663b2e43144f07d3b1", "index_contract": "atlas-kernel-runtime/0.1", "result_set_sha256": "ce2db090fe0432a9b52194b3d981285cfcf388717db05bd23dc3d86caaa37f23"},
+    "revision": 1,
+    "source_digest": "684d08f23db50c2d994ea07293c6aaea2cbcb24492b062663b2e43144f07d3b1",
+    "trail_reference": {"id": "trail:en:catalase-assay-scope-review", "revision": 1},
+    "warning_references": [{"id": "impact-warning:catalase:model-revision-two-unavailable", "revision": 1}]
+  }
+}
