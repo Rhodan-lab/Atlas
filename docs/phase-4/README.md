@@ -2,13 +2,12 @@
 
 ## Status
 
-Active after accepted Phase 3 closure evidence.
-
 ```yaml
 phase: 4
 mode: interactive-experience-foundation
-active_workstream: 1
-workstream_name: interaction-contract-and-reference-shell
+active_workstream: 2
+workstream_name: browser-accessibility-and-workflow-evidence
+workstream_1: accepted
 atlas_semantics_authoritative: true
 principia_status_separate: true
 exact_cross_repository_references: true
@@ -20,15 +19,11 @@ canonical_mutation: false
 repository_mutation: false
 ```
 
-## Purpose
-
-Build a unified user experience over proven Atlas and Principia semantics without erasing repository ownership, lifecycle status, provenance, revision identity, or authority boundaries.
-
-Phase 4 is an experience phase. It may expose accepted semantics, but it may not redefine them.
+Phase 4 builds a unified experience over proven Atlas and Principia semantics without erasing repository ownership, lifecycle status, provenance, revision identity, or authority boundaries. It may expose accepted semantics but may not redefine them.
 
 ## Entry evidence
 
-Phase 4 entry is authorized by the accepted Phase 3 completion baseline:
+Phase 4 entry was authorized by the accepted Phase 3 completion evidence:
 
 ```yaml
 completion_contract: atlas-phase3-completion-report/0.1
@@ -36,20 +31,14 @@ completion_baseline_contract: atlas-phase3-completion-baseline/0.1
 accepted_pr: 40
 accepted_merge_commit: 52f51558a9188f049f4b4b838bc6acfd1a991e96
 decision: proceed-phase4-interactive-experience
-accepted_workstreams: [1, 2, 3, 5]
 preferred_bounded_retrieval: structured-field-baseline
-semantic_infrastructure_decision: defer-until-broader-benchmark-and-architecture-approval
 ```
 
-## Workstream 1 — interaction contract and reference shell
+## Workstream 1 — accepted interaction contract and reference shell
 
-### Objective
+Workstream 1 defined the smallest versioned interaction model and local reference shell capable of exercising accepted knowledge, retrieval, trail, candidate, and bridge semantics.
 
-Define the smallest versioned interaction model and local reference shell that can exercise the accepted knowledge, retrieval, trail, candidate, and bridge semantics.
-
-### Required contracts
-
-Workstream 1 must define at least:
+### Accepted contracts
 
 ```yaml
 interaction_state_contract: atlas-interaction-state/0.1
@@ -57,180 +46,176 @@ view_result_contract: atlas-interaction-view/0.1
 principia_reference_contract: atlas-principia-reference-envelope/0.1
 impact_warning_contract: atlas-cross-repository-impact-warning/0.1
 failure_state_contract: atlas-interaction-failure/0.1
+shell_data_contract: atlas-reference-shell-data/0.1
+shell_build_report_contract: atlas-reference-shell-build-report/0.1
 ```
 
-Contract names are candidates until executable fixtures and CI evidence are accepted.
-
-### Interaction-state invariants
-
-Every state must:
-
-- identify the active view and stable state version;
-- reference Atlas entities by exact ID and revision;
-- expose canonical status, review level, staleness, and provenance where applicable;
-- identify generated retrieval, filter, trail, or candidate evidence by exact contract and digest;
-- distinguish Atlas state from Principia state;
-- expose whether a Principia reference is available, stale, unavailable, or fixture-only;
-- preserve deterministic back, forward, and deep-link behavior;
-- remain disposable and reconstructible from canonical content and accepted fixtures;
-- remain `live: false` and `repository_mutation: false` during Workstream 1.
-
-### Reference workflows
-
-The first fixture set must cover:
-
-1. **Atlas entity inspection** — open a question, source, evidence, claim, model, concept, or synthesis at an exact revision.
-2. **Provenance trace** — move from synthesis or claim to evidence and source locators without hiding lifecycle or review metadata.
-3. **Explainable retrieval** — run the accepted structured baseline and inspect matched fields, score explanation, provenance, review, lifecycle, and staleness.
-4. **Deterministic filtering** — apply entity-type, status, domain, date, and evidence-role filters while preserving exact revisions.
-5. **Research trail** — save include, exclude, and context decisions as exact-revision references rather than copied canonical knowledge.
-6. **Candidate inspection** — inspect contradiction and duplicate candidates without presenting them as confirmed or resolved.
-7. **Principia bridge envelope** — follow a pinned offline reference that names an exact Atlas revision and preserves separate Principia readiness.
-8. **Impact warning** — show an explicit warning when an Atlas revision is unavailable, stale, superseded in a fixture, or referenced by a Principia artifact with a different status.
-
-### Required failure fixtures
-
-Workstream 1 must include deterministic states for:
-
-- malformed interaction state;
-- unknown view type;
-- missing Atlas entity;
-- unavailable exact revision;
-- stale review or staleness warning;
-- missing provenance target;
-- malformed retrieval or filter artifact;
-- unavailable Principia reference;
-- Principia status mismatch;
-- offline package missing a generated artifact;
-- attempted canonical or lifecycle mutation from interface state.
-
-No failure state may silently substitute `latest`, hide authority metadata, or mutate canonical content.
-
-## Reference shell boundary
-
-The reference shell may be implemented only after the interaction contracts and fixtures are executable.
-
-The first shell should be deliberately minimal:
-
-- local-first and static-start capable;
-- no mandatory account, cloud database, or external API;
-- keyboard-accessible navigation;
-- semantic HTML or equivalent accessible structure;
-- graph visualization optional, never required for core navigation;
-- deterministic URLs or local state identifiers;
-- visible loading, empty, warning, error, and offline states;
-- no design-system or animation expansion before contract acceptance.
-
-A polished product interface is not a Workstream 1 requirement.
-
-## Atlas views
-
-Allowed Atlas views include:
-
-- entity identity and exact revision;
-- source and locator details;
-- evidence appraisal and limitations;
-- claim scope and disagreement;
-- concept and model relations;
-- synthesis provenance;
-- review level, findings, lifecycle, and staleness;
-- dependency and revision-impact warnings;
-- structured retrieval explanations;
-- filters, research trails, and advisory candidates.
-
-Every visual relation must map to an accepted relation, provenance, dependency, review, lifecycle, retrieval, or trail semantic.
-
-## Principia reference boundary
-
-Principia remains a separate repository and authority domain.
-
-A Phase 4 Principia reference envelope may contain:
+### Accepted evidence
 
 ```yaml
-principia_artifact_id: required
-principia_artifact_revision: required
-principia_status: required
-atlas_references:
-  - atlas_id: required
-    atlas_revision: required
-reference_purpose: required
-impact_state: required
-fixture_only: true
-live: false
+interaction_contracts:
+  accepted_pr: 42
+  tested_head: 8172a46cd400fbcf0bce225ca908275c0d1edfdf
+  accepted_merge_commit: 1f15cee1f0ed86c5a85750659b4d35e1d535564f
+  report_digest: 9cbaa5f4675d995a183a6be5bee0b364eb7b6ae1da2ab9affc59b6d5fc452296
+reference_shell:
+  accepted_pr: 43
+  tested_head: ae6e662656c40c2108c0ef52dd2c1d7f0e2f1c0f
+  accepted_merge_commit: 4992d0caa0eb37db5b58158a9dd53a8ca10f1405
+  shell_build_digest: ebc90a5781b7e974fe30034898364d87ebb5ed00ac05ce6cf0c27d6ded32b223
+  shell_report_digest: cfa4e37b07ed95337bb1fd1cb9e795656da78020d31b46eaf19828332c74d696
+workstream_1_closure:
+  accepted_pr: 44
+  tested_head: 265c44d3b39091bf6dcf1263b9cb3092d3ea4568
+  accepted_merge_commit: 37b013ce1b3c8c45230feaf4c1cd6bfd0ba48735
+  completion_contract: atlas-phase4-workstream1-completion-report/0.1
+  completion_baseline_contract: atlas-phase4-workstream1-completion-baseline/0.1
+  report_artifact_sha256: 03ba1f02d7ca2cfb7432919c7bdca110edbd497fc8c2be2c2216b099abe0cb23
+  report_digest: a3167ee2dc7a02c47468a1b850e15b495f3ed6058399205fc2cdf906d922aaa3
+  exit_gate_count: 10
+  decision: proceed-workstream2-browser-accessibility-evidence
 ```
 
-The envelope may support navigation and impact warnings. It may not:
+### Accepted capabilities
 
-- import Principia publication status into Atlas;
-- promote or deprecate Atlas entities;
-- treat a synthetic bridge event as canonical history;
-- silently follow newer Atlas revisions;
-- activate live cross-repository synchronization.
+- eight exact-revision workflow views and deterministic routes;
+- visible provenance, review level, lifecycle, staleness, and advisory authority;
+- fixture-only Principia references with separate Principia status;
+- explicit impact warnings and five deterministic failure categories;
+- keyboard and non-graph navigation requirements;
+- a static local package requiring no account, API, cloud service, or graph view;
+- deterministic and replaceable generated artifacts;
+- negative tests preventing implicit `latest`, hidden fallback, authority escalation, and canonical mutation.
 
-## Accessibility and non-graph navigation
+See [`interaction-contract.md`](interaction-contract.md), [`reference-shell.md`](reference-shell.md), and [`workstream-1-completion.md`](workstream-1-completion.md).
 
-Workstream 1 acceptance requires:
+## Workstream 2 — active browser accessibility and workflow evidence
 
-- complete keyboard traversal of every reference workflow;
-- visible focus state in the future shell;
-- readable headings, landmarks, labels, and error summaries;
-- a non-graph route for every relation or dependency workflow;
-- no information encoded only by color, position, motion, or hover;
-- reduced-motion compatibility if motion is later introduced;
-- deterministic text alternatives for diagrams and graph views.
+### Objective
 
-## Testing policy
+Use a real browser against the accepted static shell to determine whether the required workflows are genuinely operable, perceivable, deterministic, offline-capable, and authority-safe.
 
-The Workstream 1 matrix must include:
+Workstream 2 is an evidence phase. It is not permission for broad visual redesign, productization, deployment architecture selection, or live repository integration.
 
-- contract and fixture validation on Python 3.11 and 3.13;
-- exact-state digest checks;
-- deterministic repeated builds;
-- deletion and rebuild of generated interaction artifacts;
-- authority-escalation negatives;
-- offline and missing-artifact tests;
-- accessibility fixture checks before shell expansion;
-- complete Atlas CI and end-to-end regression.
+### Candidate evidence contracts
 
-Browser automation is not required until a runnable shell exists.
+```yaml
+browser_workflow_contract: atlas-browser-workflow-evidence/0.1
+browser_accessibility_contract: atlas-browser-accessibility-report/0.1
+browser_network_contract: atlas-browser-network-report/0.1
+browser_failure_contract: atlas-browser-failure-evidence/0.1
+browser_evidence_manifest: atlas-phase4-browser-evidence-manifest/0.1
+```
 
-## Non-goals
+These names remain candidates until executable fixtures and CI evidence are accepted.
 
-Workstream 1 does not:
+### Required browser workflows
 
-- claim production retrieval quality;
-- select a vector database;
-- add embeddings or learned ranking;
-- activate live Principia synchronization;
-- write canonical content from UI state;
-- automate review, lifecycle, promotion, merge, or release decisions;
-- create a public social or collaborative platform;
-- implement accounts, permissions, cloud sync, or plugins;
-- activate multilingual authoring;
-- require graph visualization;
-- certify human verification.
+A pinned browser harness must exercise:
 
-## Workstream 1 exit criteria
+1. loading the local shell and reaching the primary content through the skip link;
+2. traversing the workflow selector and every workflow by keyboard;
+3. opening exact-revision deep links and preserving them through reload;
+4. using browser back and forward navigation deterministically;
+5. inspecting entity, provenance, retrieval, filter, research-trail, candidate, Principia-reference, and impact-warning views;
+6. reaching equivalent list or text routes without graph visualization;
+7. exposing authority metadata and separate Atlas and Principia status;
+8. displaying warnings and all accepted failure categories;
+9. operating from the generated local package with no external network request;
+10. proving that browser interactions cannot write canonical, review, lifecycle, merge, or release state.
 
-Workstream 1 closes only when:
+### Accessibility evidence
 
-- the interaction, view, Principia-reference, impact-warning, and failure contracts are versioned and executable;
-- representative positive and negative workflows are pinned;
-- every state preserves exact revisions and authority metadata;
-- Atlas and Principia statuses remain separate;
-- generated interaction artifacts are deterministic and replaceable;
-- offline and missing-reference failures are explicit;
-- interface state cannot mutate canonical or lifecycle authority;
-- accessibility and non-graph requirements are machine-checkable where possible;
-- a completion report recommends or rejects implementation of the minimal reference shell.
+The browser report must inspect:
+
+- keyboard reachability and deterministic focus order;
+- visible focus indication;
+- skip-link operation;
+- main, navigation, header, and footer landmarks;
+- heading hierarchy;
+- accessible names and labels for interactive controls;
+- live status and error announcements where required;
+- text equivalents for relation and graph-capable workflows;
+- information that remains understandable without color, hover, position, or motion;
+- reduced-motion compatibility;
+- viewport behavior at a bounded desktop and mobile size.
+
+Automated accessibility evidence is necessary but not equivalent to human accessibility certification.
+
+### Network and offline evidence
+
+The harness must:
+
+- start from a deterministically generated shell package;
+- serve only from loopback;
+- record every browser request;
+- reject any non-loopback request;
+- require no account, credential, API key, remote font, image, stylesheet, script, analytics endpoint, or cloud service;
+- verify that the package remains usable after the test server is isolated from external networking.
+
+### Browser boundary
+
+The first candidate may use one pinned Chromium engine as a controlled test instrument. This does not select a production browser or frontend architecture. Additional engines are justified only if they affect a documented decision.
+
+Screenshots may assist debugging but are not authoritative evidence. The accepted evidence must be deterministic, machine-readable records of workflows, focus, semantics, requests, failures, and decisions.
+
+## Atlas and Principia authority boundary
+
+- Atlas owns canonical knowledge identity, sources, evidence, claims, models, provenance, revision, review level, lifecycle, and staleness.
+- Principia owns explanation, pathways, investigations, simulations, dossiers, failure analysis, design experiences, and its own readiness.
+- Principia may reference exact Atlas revisions.
+- Neither repository inherits the other repository's status.
+- Browser state and offline fixtures have no canonical or lifecycle authority.
+- No live cross-repository dependency is active.
+
+## Phase 4 boundary
+
+Allowed:
+
+- local-first interaction contracts, static shells, and bounded browser evidence harnesses;
+- exact-revision Atlas views and pinned offline Principia references;
+- deterministic keyboard, focus, semantic, deep-link, history, warning, failure, offline, responsive, and network-isolation tests;
+- accessibility corrections required by evidence, provided accepted semantics and authority remain unchanged;
+- optional graph visualization only with complete equivalent non-graph navigation.
+
+Still frozen:
+
+- production retrieval-quality claims;
+- vector database commitment, embeddings, or learned ranking;
+- implicit `latest` references;
+- live Principia synchronization;
+- canonical writes from browser, interface, retrieval, trail, or candidate state;
+- automatic review, lifecycle, promotion, merge, or release mutation;
+- synthetic bridge events as canonical lifecycle history;
+- accounts, permissions, cloud synchronization, plugins, or autonomous agents;
+- active multilingual authoring;
+- automatic conversion of AI review into human verification;
+- production frontend, hosting, or deployment architecture selection from bounded evidence.
+
+## Workstream 2 exit criteria
+
+Workstream 2 closes only when:
+
+- browser evidence contracts and fixtures are versioned and executable;
+- required workflows pass in the pinned browser environment;
+- keyboard traversal, focus visibility, landmarks, headings, labels, and announcements are recorded;
+- exact-revision deep links and browser history are deterministic;
+- every workflow has a non-graph route;
+- warnings and failure states remain visible and authority-safe;
+- no external request occurs;
+- local and offline package behavior is recorded;
+- generated evidence is deterministic, replaceable, and pinned;
+- a completion report recommends or rejects broader interface implementation.
 
 ## Immediate next actions
 
-1. implement `atlas-interaction-state/0.1` and `atlas-interaction-view/0.1`;
-2. implement the offline Principia reference and impact-warning contracts;
-3. create representative workflow and failure fixtures;
-4. add deterministic validators and Python 3.11/3.13 CI;
-5. produce a Workstream 1 evidence report;
-6. keep UI implementation, live synchronization, semantic infrastructure, canonical writes, and automatic authority frozen until contract acceptance.
+1. define the browser evidence manifest and report contracts;
+2. add a pinned Chromium harness against the generated local package;
+3. execute keyboard, focus, landmark, heading, label, live-region, and error-summary checks;
+4. execute exact-route reload and history checks;
+5. execute every non-graph workflow and failure-state path;
+6. block and record external requests;
+7. emit deterministic machine-readable evidence;
+8. keep production architecture, live synchronization, canonical writes, and automatic authority frozen.
 
-**Phase 4 is active, but implementation begins with interaction semantics and failure contracts—not visual polish.**
+**Phase 4 Workstream 1 is accepted. Workstream 2 — Browser Accessibility and Workflow Evidence — is active.**
