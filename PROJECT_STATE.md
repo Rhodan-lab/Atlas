@@ -4,15 +4,18 @@
 
 **Phase 4 — Principia & Atlas Interactive Experience (active)**
 
-Phase 0 established the knowledge foundation. Phase 1 accepted the bounded English reference corpus under an explicitly AI-reviewed, non-human policy. Phase 2 accepted the deterministic read-only knowledge kernel. Phase 3 accepted bounded retrieval and research-trail foundations. Phase 4 Workstream 1 accepted the interaction contracts and minimal local reference shell. Workstream 2 accepted pinned real-browser accessibility and workflow evidence. Workstream 3 now composes those accepted exact-revision views into a deterministic read-only research workspace.
+Phase 0 established the knowledge foundation. Phase 1 accepted the bounded English reference corpus under an explicitly AI-reviewed, non-human policy. Phase 2 accepted the deterministic read-only knowledge kernel. Phase 3 accepted bounded retrieval and research-trail foundations. Phase 4 Workstream 1 accepted the interaction contracts and minimal local reference shell. Workstream 2 accepted pinned real-browser accessibility and workflow evidence. Workstream 3 Slice 1 now accepts deterministic read-only workspace data and export contracts. Slice 2 is active and may compose those accepted artifacts into a bounded local browser workspace.
 
 ```yaml
 phase: 4
 mode: interactive-experience-foundation
 active_workstream: 3
 workstream_name: read-only-research-workspace-composition
+active_slice: 2
+slice_name: local-browser-workspace-composition
 workstream_1: accepted
 workstream_2: accepted
+workstream_3_slice_1: accepted
 workspace_authority: ephemeral-research-only
 atlas_semantics_authoritative: true
 principia_status_separate: true
@@ -21,6 +24,7 @@ preferred_bounded_retrieval: structured-field-baseline
 retrieval_authority: advisory-only
 local_first: true
 deterministic_export_required: true
+browser_state_authority: ephemeral-only
 canonical_copy_authority: false
 canonical_mutation: false
 lifecycle_mutation: false
@@ -75,9 +79,11 @@ No human or expert verification is claimed. Automated Chromium evidence is not a
 - Phase 4 Workstream 1 closure evidence — PR #44, commit `37b013ce1b3c8c45230feaf4c1cd6bfd0ba48735`;
 - Workstream 1 governance acceptance and Workstream 2 activation — PR #45, commit `6ad1e57d8ac2698a27c17032216335581e3b3fa8`;
 - pinned Chromium accessibility and workflow evidence — PR #46, commit `d5577d9664a16b89d4c2597229f418a7f4a8f849`;
-- Phase 4 Workstream 2 closure evidence — PR #47, commit `dca6dd1bf8b8445bb4101ad7a3503dd79a57ea74`.
+- Phase 4 Workstream 2 closure evidence — PR #47, commit `dca6dd1bf8b8445bb4101ad7a3503dd79a57ea74`;
+- Workstream 2 governance acceptance and Workstream 3 activation — PR #48, commit `8749db379ffc23a72abef1750354c43e2a06da44`;
+- deterministic read-only workspace contracts and exports — PR #50, commit `86c1f9f779172aa47d450022fc40357a93f2302f`.
 
-PR #39 was a superseded, unmerged Phase 3 closure draft and is not accepted history.
+PR #39 was a superseded, unmerged Phase 3 closure draft and is not accepted history. PR #49 was closed as a duplicate of the accepted PR #48 transition.
 
 ## Language policy
 
@@ -218,28 +224,69 @@ Accepted evidence includes deterministic keyboard operation, visible focus, land
 
 ## Phase 4 Workstream 3 — active read-only research workspace composition
 
-### Objective
-
-Compose accepted exact-revision views, research trails, advisory candidates, warnings, and pinned offline Principia references into a deterministic multi-step research workspace without granting the workspace any canonical or lifecycle authority.
-
-### Candidate contracts
+### Slice 1 — accepted deterministic workspace contracts and export
 
 ```yaml
+state: accepted
+accepted_pr: 50
+tested_head: 6d556bde6c24a8313bece3074f6c5fc56c4c4ccd
+accepted_merge_commit: 86c1f9f779172aa47d450022fc40357a93f2302f
+baseline_contract: atlas-phase4-workspace-contract-baseline/0.1
+fixture_contract: atlas-phase4-workspace-fixtures/0.1
 workspace_contract: atlas-research-workspace/0.1
 workspace_entry_contract: atlas-research-workspace-entry/0.1
 workspace_decision_contract: atlas-research-workspace-decision/0.1
 workspace_export_contract: atlas-research-workspace-export/0.1
 workspace_manifest_contract: atlas-research-workspace-manifest/0.1
 workspace_failure_contract: atlas-research-workspace-failure/0.1
+workspace_report_contract: atlas-phase4-workspace-contract-report/0.1
+fixture_artifact_bytes: 8961
+fixture_artifact_sha256: 3493c963163a2ba52d6de92fdf8193f9c7f9d7eb967211d7e13ef7b596b24f86
+report_artifact_bytes: 4186
+report_artifact_sha256: 41d555a077e63b47da5159e48a5aa37d93bc6cbd149b86baf372ff932b7e5a94
+report_digest: 6aec854b297b51b0dde2e65a944453d7af2a8e36b77bd78302cbb0e2f405b402
+export_artifact_bytes: 11347
+export_artifact_sha256: 43f28738c4678dfcd0f7a3e4d31480f891112a8c9bd220929f8f32cd80edb98a
+export_digest: 82f08c18ae76b4b4d091fe0d8be7d54cf5d10d989443132a26e550056af3f56a
+manifest_artifact_bytes: 1094
+manifest_artifact_sha256: 8240d78b29f610cb7c566dfad50432473949c5a63b9de9c522ab28751d80fd09
+manifest_digest: 9aefaf24b130718f284eecb5502b3c1dd144347f6fdcfc85b47d8ec6ce3fda68
+python_substantive_artifacts_byte_identical: true
 ```
 
-### Initial bounded slice
+Accepted Slice 1 composes five ordered exact-revision decisions, two unresolved advisory candidates, one fixture-only Principia reference with separate status, one explicit impact warning, two open questions, and deterministic export and manifest artifacts. It rejects implicit `latest`, duplicate entries, copied authority, automatic candidate resolution, unavailable revisions, lifecycle mutation, live Principia dependency, nondeterministic fields, external-network requirements, and missing non-graph equivalents while preserving the previous valid workspace.
 
-The first fixture must contain five ordered include, exclude, or context decisions; two advisory contradiction or duplicate candidates; one pinned offline Principia reference; explicit rationales and open questions; deterministic export and manifest artifacts; and complete authority and limitation metadata.
+The export contains exact references and visible metadata rather than copied canonical body authority. It remains replaceable, local-first, non-live, and non-mutating.
 
-The validator must reject implicit `latest`, duplicate entry identifiers, copied canonical authority, automatic candidate resolution, unavailable revisions without explicit failure, lifecycle or review mutation, live Principia dependencies, nondeterministic export fields, external-network requirements, and missing non-graph equivalents.
+### Slice 2 — active local browser workspace composition
 
-See [`docs/phase-4/workstream-3.md`](docs/phase-4/workstream-3.md).
+Slice 2 may expose the accepted Slice 1 export through a bounded static local experience. It must not redefine workspace semantics or regenerate research decisions in the browser.
+
+```yaml
+state: active
+input_authority: accepted-workspace-export-only
+browser_state_authority: ephemeral-only
+exact_revision_required: true
+entry_order_preserved: true
+decisions_read_only: true
+candidates_unresolved: true
+principia_status_separate: true
+warning_visibility_required: true
+keyboard_workflow_required: true
+non_graph_workflow_required: true
+reduced_motion_required: true
+zero_external_requests_required: true
+local_export_allowed: true
+canonical_mutation: false
+lifecycle_mutation: false
+review_mutation: false
+repository_mutation: false
+production_frontend_architecture_selected: false
+```
+
+The first browser slice should provide deterministic routes for workspace overview, ordered entries, advisory candidates, separate Principia status, warnings, open questions, limitations, and local export identity. State restoration may use only bounded URL or in-memory state and must never become canonical persistence. A local download may reproduce the accepted export bytes but may not create an Atlas or Principia write.
+
+See [`docs/phase-4/workstream-3.md`](docs/phase-4/workstream-3.md) and [`docs/phase-4/workspace-contracts.md`](docs/phase-4/workspace-contracts.md).
 
 ## Phase 4 boundary
 
@@ -247,9 +294,9 @@ Allowed:
 
 - local-first interaction contracts, static shells, browser evidence harnesses, and read-only workspace fixtures;
 - exact-revision Atlas views and pinned offline Principia references;
-- deterministic keyboard, focus, semantic, deep-link, history, warning, failure, offline, responsive, and network-isolation tests;
+- deterministic keyboard, focus, semantic, deep-link, history, warning, failure, offline, responsive, export, and network-isolation tests;
 - ephemeral research notes, questions, rationales, and include, exclude, or context decisions;
-- deterministic read-only workspace exports;
+- deterministic read-only workspace exports and bounded local views over accepted exports;
 - optional graph visualization only when equivalent non-graph navigation is complete;
 - accessibility fixes required by evidence, provided semantic and authority contracts remain unchanged.
 
@@ -276,15 +323,16 @@ Still frozen:
 - Principia may reference exact Atlas revisions.
 - Neither repository inherits the other repository's status automatically.
 - Workspaces may include pinned offline Principia references, but no live cross-repository dependency is active.
+- Browser state and downloaded workspace packages remain research artifacts with no canonical, review, lifecycle, merge, or release authority.
 
 ## Immediate next actions
 
-1. define the workspace, entry, decision, export, manifest, and failure contracts;
-2. construct the first bounded exact-revision workspace fixture from accepted research-trail evidence;
-3. implement deterministic validation and export;
-4. add negative fixtures for every authority and determinism boundary;
-5. pin substantive Python 3.11 and 3.13 artifacts;
-6. only after the data contracts are accepted, add a bounded browser composition;
+1. build a replaceable static workspace package from the accepted `workspace-export.json` and manifest;
+2. expose overview, ordered entries, unresolved candidates, Principia status, warnings, open questions, limitations, and export identity through deterministic routes;
+3. preserve exact revisions, entry order, decisions, and all accepted digests without browser-side reinterpretation;
+4. add complete keyboard, visible-focus, non-graph, reduced-motion, deep-link, reload, and history evidence;
+5. restore only bounded ephemeral URL or in-memory state and prove that no canonical persistence occurs;
+6. reject every external request and verify a local download reproduces the accepted export bytes;
 7. keep production architecture, live synchronization, accounts, cloud persistence, canonical writes, and automatic authority frozen.
 
-**Phase 0, Phase 1, Phase 2, and Phase 3 are complete. Phase 4 Workstreams 1 and 2 are accepted. Workstream 3 — Read-Only Research Workspace Composition — is active.**
+**Phase 0, Phase 1, Phase 2, and Phase 3 are complete. Phase 4 Workstreams 1 and 2 and Workstream 3 Slice 1 are accepted. Workstream 3 Slice 2 — Local Browser Workspace Composition — is active.**
