@@ -32,9 +32,40 @@ The shell is a reader and navigator. Python rebuilds and validates the accepted 
 workspace_shell_data_contract: atlas-workspace-shell-data/0.1
 workspace_shell_validation_contract: atlas-workspace-shell-validation/0.1
 workspace_shell_build_report_contract: atlas-workspace-shell-build-report/0.1
+workspace_shell_baseline_contract: atlas-phase4-workspace-shell-baseline/0.1
 ```
 
-These contracts remain candidates until exact package artifacts are pinned and accepted through an immutable-head merge.
+The candidate artifacts are pinned. These contracts remain candidates until accepted through an immutable-head merge.
+
+## Pinned static evidence
+
+Python 3.11 and Python 3.13 produced byte-identical substantive package artifacts.
+
+```yaml
+index_html:
+  artifact_bytes: 3161
+  artifact_sha256: 38020c61287a50536e40ad330d43e934066cafae852e28dd2ea850e73c95ed93
+styles_css:
+  artifact_bytes: 8427
+  artifact_sha256: 6016098e9461be50f6b5346d76b58d0111dfae8d42355884bf25e9885546e98f
+app_js:
+  artifact_bytes: 23359
+  artifact_sha256: 0f44b35ccd3a6c59abc9eecdcf176dbc3bbf53cc155ddedb32fb518003d5c50f
+readme:
+  artifact_bytes: 2950
+  artifact_sha256: cf96c6641d773a68aadd8595ac1d77c7feef548a830ab0c214608c504d5e70e4
+shell_data:
+  artifact_bytes: 5955
+  artifact_sha256: a2dd3979c35cee4d081511cadf98499e325dfd22d814cae097cfd3e98f3f5c0c
+  build_digest: b4aa3fab14ecc66ee602c9c40dc88b10add23d3391915a72c31968c681edcaee
+build_report:
+  artifact_bytes: 1448
+  artifact_sha256: b8b29a61495ecfc420de9324006b6f8efac455905c7b2b69f03639d995e7f932
+  report_digest: f1b13c7c202f93a1682d9366fcbef5265a7ae36f335d4e10ddff71ce216e955b
+python_substantive_artifacts_byte_identical: true
+```
+
+The baseline binds the complete route registry, authority block, accepted export and manifest identities, static asset bytes, generated shell-data record, and package-build report.
 
 ## Accepted inputs
 
@@ -100,7 +131,7 @@ Browser automation must later prove the downloaded file is byte-identical to the
 
 ## Static evidence requirements
 
-The candidate workflow must prove on Python 3.11 and 3.13:
+The pinned candidate workflow proves on Python 3.11 and 3.13:
 
 - deterministic shell data and build report;
 - deterministic package bytes across two builds;
@@ -114,7 +145,7 @@ The candidate workflow must prove on Python 3.11 and 3.13:
 
 ## Browser evidence deferred
 
-This PR does not claim keyboard, focus, route-history, responsive, reduced-motion, zero-external-request, or download evidence in a real browser. Those claims require a separate pinned Chromium evidence candidate after the static package bytes are accepted.
+This PR does not claim keyboard, focus, route-history, responsive, reduced-motion, zero-external-request, or download evidence in a real browser. Those claims require a separate pinned Chromium evidence candidate after the static package is accepted.
 
 ## Non-goals
 
