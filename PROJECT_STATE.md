@@ -2,25 +2,27 @@
 
 ## Current status
 
-**Phase 3 — Retrieval Evaluation (active)**
+**Phase 4 — Principia & Atlas Interactive Experience (active)**
 
-Phase 1 is complete under an explicitly **AI-reviewed** policy. Phase 2 is complete under deterministic kernel, compatibility, failure, scale, replay, replaceability, and rollback evidence.
-
-Phase 3 status:
+Phase 0 established the knowledge foundation. Phase 1 accepted the bounded English reference corpus under an explicitly AI-reviewed, non-human policy. Phase 2 accepted the deterministic read-only knowledge kernel. Phase 3 accepted bounded retrieval and research-trail foundations.
 
 ```yaml
-workstream_1_evaluation_contract: accepted
-workstream_2_lexical_baseline: accepted
-workstream_3_structured_baseline: accepted
-workstream_4_comparative_retrieval: first-candidate-evaluated-rejected
-workstream_5_research_trails_and_candidate_discovery: active
+phase: 4
+mode: interactive-experience-foundation
+active_workstream: 1
+workstream_name: interaction-contract-and-reference-shell
+atlas_semantics_authoritative: true
+principia_status_separate: true
+exact_cross_repository_references: true
+preferred_bounded_retrieval: structured-field-baseline
 retrieval_authority: advisory-only
-exact_revision_required: true
-live: false
+local_first: true
+live_principia_dependency: false
+canonical_mutation: false
 repository_mutation: false
 ```
 
-No human or expert verification is claimed. No live Principia dependency, vector database, production retrieval claim, or autonomous knowledge mutation is active.
+No human or expert verification is claimed. No production retrieval-quality claim, vector database, live Principia synchronization, autonomous knowledge mutation, or automatic lifecycle authority is active.
 
 ## Accepted history
 
@@ -50,8 +52,13 @@ No human or expert verification is claimed. No live Principia dependency, vector
 - deterministic lexical retrieval baseline — PR #32, commit `444011821969285da78e6c7fc4ceadec1efca322`;
 - accepted lexical-baseline governance record — PR #33, commit `c3fee229dd5c0e6e3d006dd50d4004dff84923e0`;
 - deterministic structured-field retrieval baseline — PR #34, commit `a8212512261ed3d718ee14c1fa40e30277f62b75`;
-- accepted structured-baseline governance record and Workstream 4 activation — PR #35, commit `0dd8c8d73db279aae04076a6b3ad1e2e59fa4f9c`;
-- evaluated and rejected reciprocal-rank-fusion candidate — PR #36, commit `e6010893112b10362a15392d8635a0297b055267`.
+- accepted structured-baseline governance record — PR #35, commit `0dd8c8d73db279aae04076a6b3ad1e2e59fa4f9c`;
+- evaluated and rejected reciprocal-rank-fusion candidate — PR #36, commit `e6010893112b10362a15392d8635a0297b055267`;
+- rejected-candidate governance and Workstream 5 activation — PR #37, commit `9614541ba35570a888f50005d2602cccc24bd4d4`;
+- research trails and candidate-discovery contracts — PR #38, commit `12cb0e218dbbc1101253e8f070d4cf77111a7500`;
+- Phase 3 closure and Phase 4 recommendation — PR #40, commit `52f51558a9188f049f4b4b838bc6acfd1a991e96`.
+
+PR #39 was a superseded, unmerged closure draft and is not accepted history.
 
 ## Language policy
 
@@ -67,13 +74,21 @@ Atlas distinguishes review levels instead of presenting all review as equivalent
 
 An AI-reviewed artifact has an identified AI reviewer and model family, explicit non-human status, exact entity revisions, source-use checks, reproducibility or mathematical checks where applicable, recorded findings and corrections, explicit limitations, and `human_verified: false`.
 
-AI review is sufficient for current Atlas development and is not human verification.
+AI review is sufficient for the current bounded development program. It is not human verification.
 
 ### Human-verified
 
-Human verification remains an optional stronger layer. Historical handoff, intake, admission, coverage, and promotion tools remain available, but they are not active Phase 3 gates.
+Human verification remains an optional stronger layer. Atlas must never convert AI review into human review or invent reviewer identity, credentials, independence, or accountability.
 
-Atlas must never convert an AI review into a human review or invent reviewer identity, credentials, independence, or accountability.
+## Authority order
+
+1. `PROJECT_STATE.md`;
+2. accepted foundation documents in `docs/foundation/`;
+3. accepted phase completion reports and ADRs;
+4. canonical authored content;
+5. identified review records and reports, with review level visible;
+6. generated manifests and operational artifacts;
+7. experimental runtime, retrieval, bridge, and interface code.
 
 ## Phase 1 completion
 
@@ -116,261 +131,146 @@ Accepted capabilities include deterministic compilation, strict runtime admissio
 
 Generated runtimes, indexes, caches, and portable snapshots remain disposable. Canonical Markdown and pinned external fixtures remain authoritative.
 
-## Authority order
+## Phase 3 completion
 
-1. `PROJECT_STATE.md`;
-2. accepted foundation documents in `docs/foundation/`;
-3. accepted phase completion reports and ADRs;
-4. canonical authored content;
-5. identified review records and reports, with review level visible;
-6. generated manifests and operational artifacts;
-7. experimental runtime, retrieval, adapter, and index code.
-
-## Phase 3 objective
-
-Phase 3 helps users find relevant knowledge and inspect why it was retrieved without weakening identity, provenance, review, lifecycle, or replaceability guarantees.
-
-Required outcomes include:
-
-1. a versioned relevance test collection;
-2. deterministic lexical and structured ranking baselines;
-3. visible exact revisions, provenance, review, lifecycle, and staleness;
-4. inspectable ranking explanations and safe failures;
-5. filters by entity, status, domain, date, and evidence role;
-6. saved exact-revision research trails;
-7. advisory contradiction and duplicate candidates;
-8. comparative evidence before specialized indexing, embedding, or vector-store commitment;
-9. a Phase 3 completion report recommending or rejecting entry into Phase 4.
-
-Phase 3 is an evaluation phase, not a production-search deployment phase.
-
-## Workstream 1 — accepted evaluation contract
+Phase 3 established bounded, explainable retrieval and research workflows without granting retrieval any canonical or lifecycle authority.
 
 ```yaml
-query_set_contract: atlas-retrieval-query-set/0.1
-result_set_contract: atlas-retrieval-result-set/0.1
-metric_report_contract: atlas-retrieval-metric-report/0.1
+completion_contract: atlas-phase3-completion-report/0.1
+completion_baseline_contract: atlas-phase3-completion-baseline/0.1
 state: accepted
-accepted_pr: 30
-governance_pr: 31
-tested_head: 3cd4c103da12c140e1a4d0b7bf2bdb8cca5e9727
-accepted_merge_commit: 973827e6e7644f79437f3705c73f9e6d83e9a477
-governance_merge_commit: bbf8f3e79518473fc929b0d1f9363484146205db
-query_set_id: retrieval-query-set:phase3-reference-en-v1
-query_set_version: 1
+accepted_pr: 40
+tested_head: 4f69697065f66ecb8f797616523673d39c8976e1
+accepted_merge_commit: 52f51558a9188f049f4b4b838bc6acfd1a991e96
+accepted_workstreams: [1, 2, 3, 5]
+evaluated_rejected_workstream_4_candidate: equal-weight-reciprocal-rank-fusion
+source_digest: 684d08f23db50c2d994ea07293c6aaea2cbcb24492b062663b2e43144f07d3b1
 entity_count: 34
 query_count: 13
-ranked_query_count: 12
-expected_error_query_count: 1
 positive_judgment_count: 26
-implicit_grade_zero_judgment_count: 382
-judgment_authority: evaluation-only
+preferred_bounded_retrieval: structured-field-baseline
+semantic_infrastructure_decision: defer-until-broader-benchmark-and-architecture-approval
 retrieval_authority: advisory-only
 exact_revision_required: true
-live: false
-repository_mutation: false
-```
-
-Every unlisted exact entity in the pinned corpus receives grade 0 for each ranked query. Listed targets receive grades 1–3 with explicit rationales. These judgments are evaluation fixtures, not canonical scientific claims or human relevance consensus.
-
-## Workstream 2 — accepted lexical baseline
-
-```yaml
-index_contract: atlas-lexical-index/0.1
-tokenizer_contract: atlas-english-tokenizer/0.1
-scoring_contract: atlas-bm25f-scoring/0.1
-baseline_contract: atlas-phase3-lexical-baseline/0.1
-state: accepted
-accepted_pr: 32
-governance_pr: 33
-tested_head: 2fb6a5cb31cc98b9daac942a1745a9bd9effe9ff
-accepted_merge_commit: 444011821969285da78e6c7fc4ceadec1efca322
-governance_merge_commit: c3fee229dd5c0e6e3d006dd50d4004dff84923e0
-entity_count: 34
-term_count: 424
-cutoff: 5
-result_limit: 10
-precision_at_5: 0.3
-recall_at_5: 0.708333333333
-mean_reciprocal_rank: 0.652777777778
-ndcg_at_5: 0.589071924873
-zero_result_rate: 0.0
-unavailable_revision_rate: 1.0
-tie_count: 0
-deterministic_index: true
-rebuild_verified: true
 replaceable: true
-quality_claim: bounded-reference-fixture-only
 external_services: false
 embeddings: false
 vector_database: false
-judgment_specific_tuning: false
-retrieval_authority: advisory-only
 live: false
 repository_mutation: false
 ```
 
-## Workstream 3 — accepted structured baseline
+### Accepted retrieval evidence
 
 ```yaml
-index_contract: atlas-structured-index/0.1
-scoring_contract: atlas-structured-bm25f-scoring/0.1
-baseline_contract: atlas-phase3-structured-baseline/0.1
-state: accepted
-accepted_pr: 34
-governance_pr: 35
-tested_head: d7b7c10338ff68121f7fb7532f3799adfa72c404
-accepted_merge_commit: a8212512261ed3d718ee14c1fa40e30277f62b75
-governance_merge_commit: 0dd8c8d73db279aae04076a6b3ad1e2e59fa4f9c
-entity_count: 34
-term_count: 868
-cutoff: 5
-result_limit: 10
-canonical_body_indexed: false
-accepted_judgments_unchanged: true
-precision_at_5: 0.366666666667
-recall_at_5: 0.854166666667
-mean_reciprocal_rank: 0.770833333333
-ndcg_at_5: 0.754777384811
-zero_result_rate: 0.0
-unavailable_revision_rate: 1.0
-tie_count: 0
-precision_delta_from_lexical: 0.066666666667
-recall_delta_from_lexical: 0.145833333334
-mrr_delta_from_lexical: 0.118055555555
-ndcg_delta_from_lexical: 0.165705459938
-python_evidence_artifacts_byte_identical: true
-deterministic_index: true
-rebuild_verified: true
-replaceable: true
-quality_claim: bounded-reference-fixture-only
-external_services: false
-embeddings: false
-vector_database: false
-judgment_specific_tuning: false
-retrieval_authority: advisory-only
-live: false
-repository_mutation: false
+lexical:
+  precision_at_5: 0.3
+  recall_at_5: 0.708333333333
+  mean_reciprocal_rank: 0.652777777778
+  ndcg_at_5: 0.589071924873
+structured:
+  precision_at_5: 0.366666666667
+  recall_at_5: 0.854166666667
+  mean_reciprocal_rank: 0.770833333333
+  ndcg_at_5: 0.754777384811
+rank_fusion:
+  decision: rejected
+  recommendation: reject-candidate-no-quality-gain-over-structured
 ```
 
-The structured index excludes canonical body text and uses stable identity, title, type, substantive metadata, lifecycle and review fields, exact graph neighborhood, and provenance-linked source identity.
+The structured index excludes canonical body text and uses stable identity, title, type, substantive metadata, lifecycle and review fields, graph neighborhood, and provenance-linked source identity. It is the preferred bounded baseline for the accepted fixture, not a production-quality claim.
 
-It is the preferred accepted ranking baseline for the current bounded fixture. This is not a production-quality claim.
-
-## Workstream 4 — comparative retrieval candidate 1 evaluated and rejected
-
-PR #36 evaluated the predeclared equal-weight reciprocal-rank-fusion candidate.
+### Accepted research foundations
 
 ```yaml
-candidate_contract: atlas-phase3-rank-fusion-candidate/0.1
-manifest_contract: atlas-rank-fusion-manifest/0.1
-scoring_contract: atlas-reciprocal-rank-fusion/0.1
-state: evaluated-rejected
-accepted_evidence_pr: 36
-tested_head: cec57a7a090dbdc8238a19a21f9d84e38a836917
-evidence_merge_commit: e6010893112b10362a15392d8635a0297b055267
-rrf_k: 60
-lexical_weight: 1.0
-structured_weight: 1.0
-input_limit: 10
-output_limit: 10
-manifest_build_digest: 1ad4dbab8ab538d44a3e09e263b9c116687c9d4cfb5d4254ca88305565b64d6e
-result_set_sha256: 7193a359331d06205695798716452b91955029f5cd904181ea1f96913b1aef1c
-precision_at_5: 0.35
-recall_at_5: 0.791666666667
-mean_reciprocal_rank: 0.736111111111
-ndcg_at_5: 0.678019431236
-zero_result_rate: 0.0
-unavailable_revision_rate: 1.0
-tie_count: 9
-precision_delta_from_structured: -0.016666666667
-recall_delta_from_structured: -0.0625
-mrr_delta_from_structured: -0.034722222222
-ndcg_delta_from_structured: -0.076757953575
-query_gains_vs_structured: 2
-query_mixed_vs_structured: 1
-query_regressions_vs_structured: 7
-query_unchanged_vs_structured: 2
-recommendation: reject-candidate-no-quality-gain-over-structured
-python_evidence_artifacts_byte_identical: true
-additional_index_documents: 0
-additional_index_terms: 0
-external_services: false
-embeddings: false
-vector_database: false
-learned_weights: false
-judgment_specific_tuning: false
-retrieval_authority: advisory-only
-live: false
-repository_mutation: false
+filter_contract: atlas-retrieval-filter/0.1
+filtered_result_contract: atlas-filtered-result-set/0.1
+research_trail_contract: atlas-research-trail/0.1
+contradiction_candidate_contract: atlas-contradiction-candidate/0.1
+duplicate_candidate_contract: atlas-duplicate-candidate/0.1
+filters: 4
+filter_result_items: 9
+trails: 1
+trail_entries: 5
+contradiction_candidates: 1
+duplicate_candidates: 1
+negative_cases: 5
+research_report_digest: 733aeb28a3147a36d1cc7d3406ab98fa81522cb4b4e87e3aa792aaf54893a394
+canonical_copy_authority: false
+automatic_merge_or_resolution: false
 ```
 
-Fusion improved all four core metrics over lexical retrieval but lost all four to the structured baseline. Under the rule declared before evaluation, the extra layer is rejected as the preferred method.
+The contradiction candidate is assessed `scope-difference-likely`; the duplicate candidate is assessed `related-not-duplicate`. Candidate discovery remains a request for inspection, not a forced assertion.
 
-The negative evidence is retained. It demonstrates that global equal weighting can repair specific failures while diluting stronger structured rankings on more queries. It does not justify post-hoc weight tuning or a vector database commitment.
-
-## Workstream 5 — active research trails and candidate discovery
-
-Purpose: complete the remaining Phase 3 foundation scope before any semantic infrastructure decision.
-
-Required contracts and fixtures:
+### Phase 3 exit gates
 
 ```yaml
-filter_contract:
-  dimensions: [entity-type, status, domain, date, evidence-role]
-  exact_revision_preserved: true
-  hidden_authority: false
-research_trail_contract:
-  entries: exact-entity-revisions
-  query_and_filter_snapshot: required
-  ranking_explanation_snapshot: required
-  canonical_copy: forbidden
-  lifecycle_authority: none
-candidate_discovery_contracts:
-  contradiction_candidate: advisory-only
-  duplicate_candidate: advisory-only
-  automatic_merge_or_resolution: forbidden
+documented_relevance_collection: true
+review_status_and_provenance_visible: true
+ranking_behavior_explainable: true
+specialized_boundaries_pass_policy: true
+retrieval_failure_cannot_corrupt_authority: true
+filters_and_research_trails_operational: true
+candidate_discovery_advisory: true
+generated_artifacts_replaceable: true
 ```
 
-Workstream 5 must:
+## Phase 4 objective
 
-- define deterministic filter semantics over accepted runtime fields;
-- preserve exact entity revisions, provenance, review, lifecycle, and staleness after filtering;
-- define saved research trails as versioned references and decisions, not copied canonical knowledge;
-- make query, filters, selected results, exclusions, notes, and timestamps inspectable;
-- identify contradiction and duplicate candidates without asserting that a contradiction or duplicate is proven;
-- require explicit rationale and evidence paths for every candidate;
-- prevent automatic merge, deprecation, lifecycle, or canonical mutation;
-- include valid, invalid, ambiguity, stale-revision, and unavailable-revision fixtures;
-- evaluate deterministic behavior before expanding the relevance benchmark.
+Phase 4 builds a unified interactive experience over proven Atlas and Principia semantics without erasing repository ownership, lifecycle status, or authority boundaries.
 
-Embedding, vector, learned-ranking, and external semantic-service experiments remain deferred until Workstream 5 contracts exist and the test collection is broadened beyond the current 34-entity, 13-query reference fixture.
+Phase 4 is not permission to redesign the ontology, claim production search quality, or activate live synchronization.
 
-## Phase 3 boundary
+## Phase 4 Workstream 1 — active interaction contract and reference shell
+
+Workstream 1 must define the smallest interface contract and local reference shell capable of exercising the accepted semantics.
+
+Required outcomes:
+
+1. a versioned interaction-state contract;
+2. exact Atlas entity-revision references in every knowledge view;
+3. a non-live Principia reference envelope with separate Principia status;
+4. visible provenance, review level, lifecycle, staleness, and retrieval explanation;
+5. explicit impact warnings for stale or unavailable cross-repository references;
+6. keyboard-accessible, non-graph-dependent navigation;
+7. deterministic loading, empty, malformed, unavailable-revision, and offline failure states;
+8. local-first packaging with no required cloud service;
+9. tests proving that interface state cannot mutate canonical knowledge;
+10. a Workstream 1 report recommending or rejecting implementation expansion.
+
+Reference workflows:
+
+- inspect an Atlas question, source, evidence, claim, model, or synthesis at an exact revision;
+- trace claim-to-source provenance;
+- run the accepted structured retrieval and inspect why a result ranked;
+- apply accepted deterministic filters;
+- open and revise a research trail as references and decisions only;
+- inspect contradiction or duplicate candidates without treating them as resolved;
+- follow a bounded Principia reference envelope while preserving separate status and unavailable-reference warnings.
+
+## Phase 4 boundary
 
 Allowed:
 
-- bounded lexical, structured, filtering, trail, and candidate-discovery evaluation;
-- versioned query and relevance fixtures;
-- deterministic ranking, filtering, and tie-breaking;
-- advisory result sets with exact revisions and provenance;
-- replaceable generated indexes and comparison artifacts;
-- separately proposed semantic experiments only after broader evidence and explicit architecture approval.
+- local-first interaction contracts and reference shells;
+- Atlas evidence, claim, model, provenance, review, revision, retrieval, filter, trail, and candidate views;
+- offline Principia bridge fixtures with exact Atlas references;
+- concept, prerequisite, timeline, scale, and system views where canonical semantics support them;
+- optional graph visualization with equivalent non-graph navigation;
+- accessibility, typography, and deterministic failure-state testing.
 
 Still frozen:
 
 - production retrieval-quality claims;
 - vector database commitment;
-- post-hoc tuning against the accepted judgment set;
-- unversioned or implicit `latest` lookup;
-- retrieval-generated canonical writes;
-- retrieval-driven lifecycle, review, promotion, merge, or release mutation;
+- implicit `latest` cross-repository references;
 - live Principia synchronization;
-- accepting external synthetic events as canonical lifecycle history;
-- polished product UI;
-- plugins and autonomous synchronization;
-- active translated corpus;
-- hidden or autonomous authority claims;
+- canonical writes from interface or retrieval state;
+- automatic review, lifecycle, promotion, merge, or release mutation;
+- accepting synthetic bridge events as canonical lifecycle history;
+- autonomous agents changing knowledge state;
+- plugins or permissionless extensions;
+- active multilingual authoring;
 - automatic conversion of AI review into human verification.
 
 ## Principia & Atlas boundary
@@ -379,16 +279,15 @@ Still frozen:
 - Principia owns causal explanation, pathways, investigations, simulations, system dossiers, failure analysis, design experiences, and its own publication readiness.
 - Principia may reference exact Atlas revisions.
 - Neither repository inherits the other repository's status automatically.
-- No live cross-repository dependency is activated by Phase 3 evaluation.
+- Phase 4 may demonstrate the bridge through pinned offline fixtures, but no live cross-repository dependency is active.
 
 ## Immediate next actions
 
-1. define the versioned retrieval-filter contract and deterministic field semantics;
-2. define the saved research-trail contract with exact-revision entries and inspectable decisions;
-3. define advisory contradiction-candidate and duplicate-candidate contracts;
-4. create bounded valid, invalid, ambiguity, stale, and unavailable-revision fixtures;
-5. add machine validation and Python 3.11/3.13 evidence;
-6. keep the accepted structured method as the preferred bounded ranking baseline;
-7. keep embeddings, vector infrastructure, live synchronization, canonical writes, and automatic authority frozen.
+1. define `atlas-interaction-state/0.1` and the exact view-state invariants;
+2. define the non-live Principia reference envelope and impact-warning contract;
+3. create reference workflows and negative interface fixtures;
+4. implement a minimal local shell only after the contracts are executable;
+5. test keyboard navigation, non-graph alternatives, offline behavior, and authority isolation;
+6. keep semantic infrastructure, live synchronization, canonical writes, and automatic authority frozen.
 
-**Phase 1 and Phase 2 are complete. Phase 3 Workstreams 1–3 are accepted. Workstream 4 candidate 1 is evaluated and rejected. Workstream 5 — Research Trails and Candidate Discovery — is active. Retrieval remains advisory, exact-revision, provenance-visible, replaceable, and `live: false`.**
+**Phase 0, Phase 1, Phase 2, and Phase 3 are complete. Phase 4 — Principia & Atlas Interactive Experience — is active at Workstream 1.**
