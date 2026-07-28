@@ -16,7 +16,6 @@ from .contracts import (
     validate_state,
     validate_view,
 )
-from .fixtures import MANIFEST_CONTRACT, load_fixture_manifest
 
 __all__ = [
     "FAILURE_STATE_CONTRACT",
@@ -24,11 +23,9 @@ __all__ = [
     "IMPACT_WARNING_CONTRACT",
     "INTERACTION_STATE_CONTRACT",
     "INTERACTION_VIEW_CONTRACT",
-    "MANIFEST_CONTRACT",
     "MODE",
     "PRINCIPIA_REFERENCE_CONTRACT",
     "REPORT_CONTRACT",
-    "load_fixture_manifest",
     "validate_failure_state",
     "validate_fixture_bundle",
     "validate_impact_warning",
