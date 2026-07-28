@@ -44,8 +44,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: npm
-          cache-dependency-path: tools/phase4_browser/package-lock.json
 
       - name: Install pinned Python dependencies
         run: python -m pip install -r tools/foundation-validator/requirements.txt
