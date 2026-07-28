@@ -17,17 +17,19 @@ INTERACTION_BASELINE = (
     ROOT / "content" / "fixtures" / "phase4_interaction" / "interaction-contract-baseline.json"
 )
 SHELL_BASELINE = ROOT / "content" / "fixtures" / "phase4_interaction" / "reference-shell-baseline.json"
+SHELL_PATCH = ROOT / "content" / "fixtures" / "phase4_interaction" / "reference-shell-accessibility-patch.json"
 SHELL_ROOT = ROOT / "apps" / "reference-shell"
 
 
 class Workstream1CompletionTests(unittest.TestCase):
-    def _run(self, interaction=None, shell=None):
+    def _run(self, interaction=None, shell=None, patch=None):
         return run_workstream1_closure(
             CANONICAL_ROOT,
             MANIFEST,
             interaction or load_json(INTERACTION_BASELINE),
             shell or load_json(SHELL_BASELINE),
             SHELL_ROOT,
+            patch or load_json(SHELL_PATCH),
         )
 
     def test_completion_report_is_deterministic_and_valid(self):
@@ -45,6 +47,18 @@ class Workstream1CompletionTests(unittest.TestCase):
         shell["repository_mutation"] = True
         with self.assertRaisesRegex(KernelError, "E-PHASE4-W1-SHELL"):
             self._run(shell=shell)
+
+    def test_shell_patch_asset_drift_is_rejected(self):
+        patch = copy.deepcopy(load_json(SHELL_PATCH))
+        patch["current_static_assets"]["app.js"]["sha256"] = "0" * 64
+        with self.assertRaisesRegex(KernelError, "E-PHASE4-W1-SHELL-PATCH"):
+            self._run(patch=patch)
+
+    def test_shell_patch_cannot_select_production_architecture(self):
+        patch = copy.deepcopy(load_json(SHELL_PATCH))
+        patch["production_frontend_architecture_selected"] = True
+        with self.assertRaisesRegex(KernelError, "E-PHASE4-W1-SHELL-PATCH"):
+            self._run(patch=patch)
 
     def test_interaction_report_identity_drift_is_rejected(self):
         interaction = copy.deepcopy(load_json(INTERACTION_BASELINE))

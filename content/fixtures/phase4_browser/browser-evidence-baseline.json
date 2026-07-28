@@ -1,0 +1,90 @@
+{
+  "accessibility_certified": false,
+  "browser_engine": {
+    "name": "chromium",
+    "playwright_version": "1.62.0",
+    "version": "151.0.7922.34"
+  },
+  "contract": "atlas-phase4-browser-evidence-baseline/0.1",
+  "decision": "browser-evidence-candidate",
+  "evidence_files": {
+    "browser-accessibility.json": {
+      "artifact_bytes": 5007,
+      "artifact_sha256": "d950709b605d82ec3f5c37f1ba0df377a1533d0fce1a1947fc86117383912e9c",
+      "contract": "atlas-browser-accessibility-report/0.1",
+      "report_digest": "10d45e37e222f103939d1a607f6d0aac3250f1c8ef150fdb836ca654198222f3"
+    },
+    "browser-evidence-report.json": {
+      "artifact_bytes": 2350,
+      "artifact_sha256": "b3e72b7969802edf75b96870ec283dde597fb12723fb7f56c297e86bf502f855",
+      "contract": "atlas-phase4-browser-evidence-report/0.1",
+      "report_digest": "dd1242387ff68024b478c81c74cc7b11308a4c37aeb1b23dd1859be8caafb5e1"
+    },
+    "browser-failures.json": {
+      "artifact_bytes": 711,
+      "artifact_sha256": "f28af2b19f30cb9a3e4caf7566d6310f7f8cdab5406e75a27fb763973bdca662",
+      "contract": "atlas-browser-failure-evidence/0.1",
+      "report_digest": "d53524e315bc12fa461a219f940404348614f9154e83acae64dfb11773ca0156"
+    },
+    "browser-manifest.json": {
+      "artifact_bytes": 1459,
+      "artifact_sha256": "afaf4eece4b8cf423271510b7e6032bcf961063e7ecac4482d037d8cba461290",
+      "contract": "atlas-phase4-browser-evidence-manifest/0.1",
+      "report_digest": "caa1c1e401047975ce546c6e9a953e5542b50b28bbcdcaa253881f1a50fb0694"
+    },
+    "browser-network.json": {
+      "artifact_bytes": 1142,
+      "artifact_sha256": "28cb130e99715efd3e7a849d639e3bdea4c4b45b27fcd2e662a190240f6df954",
+      "contract": "atlas-browser-network-report/0.1",
+      "report_digest": "59f5344bc3768b462c4ac0c862bc019c05755d64283b5832ee19adccddc96580"
+    },
+    "browser-workflows.json": {
+      "artifact_bytes": 6825,
+      "artifact_sha256": "e0f7f56f4a25fcd44b0f21a783f83fe5c939a2dcb59d548d8f928632fd1c18e3",
+      "contract": "atlas-browser-workflow-evidence/0.1",
+      "report_digest": "840293431f65bc2a5687df560240a07b275234dd7e06f92998760a28f3a9651d"
+    }
+  },
+  "exact_revision_preserved": true,
+  "external_request_count": 0,
+  "human_verified": false,
+  "keyboard_workflow_count": 9,
+  "live": false,
+  "live_principia_dependency": false,
+  "mode": "interactive-experience-foundation",
+  "network_evidence": {
+    "loopback_request_count": 4,
+    "request_count": 4,
+    "resources": [
+      "/",
+      "/app.js",
+      "/data/reference-shell-data.json",
+      "/styles.css"
+    ]
+  },
+  "non_graph_workflow_equivalence": true,
+  "offline_after_local_boot_verified": true,
+  "package_lock": {
+    "artifact_bytes": 1824,
+    "artifact_sha256": "7d889a57ab2d7f5855f7ea31184b7da5808efc896c65ab3de01e2d7ab0ac8510"
+  },
+  "phase": 4,
+  "principia_status_separate": true,
+  "production_frontend_architecture_selected": false,
+  "python_validation": {
+    "artifact_bytes": 463,
+    "artifact_sha256": "4298f75e90782ee706655e8e432db3217664da40d8f0b64fe7ee0f5cc57eb2ab",
+    "contract": "atlas-phase4-browser-evidence-validation/0.1",
+    "decision": "valid-browser-evidence-candidate"
+  },
+  "reduced_motion_verified": true,
+  "repeated_run_substantive_artifacts_byte_identical": true,
+  "repository_mutation": false,
+  "shell_compatibility_patch_contract": "atlas-phase4-reference-shell-accessibility-patch/0.1",
+  "shell_generated_artifacts_unchanged": true,
+  "state": "browser-evidence-candidate",
+  "viewport_count": 2,
+  "visible_focus_verified": true,
+  "workflow_count": 8,
+  "workstream": 2
+}

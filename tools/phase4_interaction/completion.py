@@ -18,6 +18,8 @@ COMPLETION_CONTRACT = "atlas-phase4-workstream1-completion-report/0.1"
 COMPLETION_VALIDATION_CONTRACT = "atlas-phase4-workstream1-completion-validation/0.1"
 INTERACTION_BASELINE_CONTRACT = "atlas-phase4-interaction-contract-baseline/0.1"
 SHELL_BASELINE_CONTRACT = "atlas-phase4-reference-shell-baseline/0.1"
+SHELL_PATCH_CONTRACT = "atlas-phase4-reference-shell-accessibility-patch/0.1"
+DEFAULT_SHELL_PATCH = Path("content/fixtures/phase4_interaction/reference-shell-accessibility-patch.json")
 
 
 def _json_sha256(value: Any) -> str:
@@ -65,12 +67,52 @@ def _validate_shell_baseline(record: Mapping[str, Any]) -> None:
     _require(record, "repository_mutation", False, "E-PHASE4-W1-SHELL")
 
 
+def _validate_shell_patch(
+    patch: Mapping[str, Any],
+    shell_baseline: Mapping[str, Any],
+    shell_root: Path,
+) -> None:
+    _require(patch, "contract", SHELL_PATCH_CONTRACT, "E-PHASE4-W1-SHELL-PATCH")
+    _require(patch, "mode", MODE, "E-PHASE4-W1-SHELL-PATCH")
+    _require(patch, "state", "accessibility-patch-candidate", "E-PHASE4-W1-SHELL-PATCH")
+    _require(
+        patch,
+        "decision",
+        "authorize-bounded-browser-evidence-fixes",
+        "E-PHASE4-W1-SHELL-PATCH",
+    )
+    _require(patch, "interaction_semantics_changed", False, "E-PHASE4-W1-SHELL-PATCH")
+    _require(patch, "production_frontend_architecture_selected", False, "E-PHASE4-W1-SHELL-PATCH")
+    _require(patch, "live_principia_dependency", False, "E-PHASE4-W1-SHELL-PATCH")
+    _require(patch, "canonical_mutation", False, "E-PHASE4-W1-SHELL-PATCH")
+    _require(patch, "live", False, "E-PHASE4-W1-SHELL-PATCH")
+    _require(patch, "repository_mutation", False, "E-PHASE4-W1-SHELL-PATCH")
+    if patch.get("base_baseline_contract") != SHELL_BASELINE_CONTRACT:
+        raise KernelError("E-PHASE4-W1-SHELL-PATCH", "patch base contract is invalid")
+    if patch.get("base_baseline_sha256") != _json_sha256(shell_baseline):
+        raise KernelError("E-PHASE4-W1-SHELL-PATCH", "patch base baseline identity differs")
+
+    historical = patch.get("historical_static_assets")
+    current = patch.get("current_static_assets")
+    if not isinstance(historical, Mapping) or not isinstance(current, Mapping):
+        raise KernelError("E-PHASE4-W1-SHELL-PATCH", "patch must bind historical and current assets")
+    if set(historical) != set(shell_baseline["static_assets"]) or set(current) != set(shell_baseline["static_assets"]):
+        raise KernelError("E-PHASE4-W1-SHELL-PATCH", "patch static asset set differs")
+    for name, accepted in shell_baseline["static_assets"].items():
+        if historical[name].get("sha256") != accepted["sha256"]:
+            raise KernelError("E-PHASE4-W1-SHELL-PATCH", f"historical asset identity differs for {name!r}")
+        observed = _artifact_evidence(shell_root / name)
+        if current[name].get("sha256") != observed["sha256"]:
+            raise KernelError("E-PHASE4-W1-SHELL-PATCH", f"current asset identity differs for {name!r}")
+
+
 def run_workstream1_closure(
     canonical_root: Path,
     manifest_path: Path,
     interaction_baseline: Mapping[str, Any],
     shell_baseline: Mapping[str, Any],
     shell_root: Path,
+    shell_patch: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     _validate_interaction_baseline(interaction_baseline)
     _validate_shell_baseline(shell_baseline)
@@ -101,12 +143,19 @@ def run_workstream1_closure(
     if shell_data["interaction_report_digest"] != shell_baseline["interaction_report_digest"]:
         raise KernelError("E-PHASE4-W1-SHELL", "shell interaction identity differs from pinned evidence")
 
-    static_assets: dict[str, dict[str, Any]] = {}
-    for name, expected in shell_baseline["static_assets"].items():
-        observed = _artifact_evidence(shell_root / name)
-        if observed != expected:
-            raise KernelError("E-PHASE4-W1-SHELL-ASSET", f"static asset {name!r} differs from pinned evidence")
-        static_assets[name] = observed
+    if shell_patch is None and DEFAULT_SHELL_PATCH.exists():
+        shell_patch = load_json(DEFAULT_SHELL_PATCH)
+    if shell_patch is None:
+        for name, expected in shell_baseline["static_assets"].items():
+            if _artifact_evidence(shell_root / name) != expected:
+                raise KernelError("E-PHASE4-W1-SHELL-ASSET", f"static asset {name!r} differs from pinned evidence")
+    else:
+        _validate_shell_patch(shell_patch, shell_baseline, shell_root)
+
+    # Workstream 1 is historical evidence. Even when an explicitly authorized
+    # accessibility patch is active, the completion report must continue to
+    # emit the exact accepted Workstream 1 static snapshot.
+    static_assets = dict(shell_baseline["static_assets"])
 
     counts = interaction_report["counts"]
     exit_gates = {
@@ -336,16 +385,23 @@ def main(argv: Sequence[str] | None = None) -> int:
         type=Path,
         default=Path("content/fixtures/phase4_interaction/reference-shell-baseline.json"),
     )
+    parser.add_argument(
+        "--shell-patch",
+        type=Path,
+        default=DEFAULT_SHELL_PATCH,
+    )
     parser.add_argument("--shell-root", type=Path, default=Path("apps/reference-shell"))
     parser.add_argument("--output", type=Path)
     args = parser.parse_args(argv)
 
+    shell_patch = load_json(args.shell_patch) if args.shell_patch.exists() else None
     report = run_workstream1_closure(
         args.canonical_root,
         args.manifest,
         load_json(args.interaction_baseline),
         load_json(args.shell_baseline),
         args.shell_root,
+        shell_patch,
     )
     validation = validate_completion_report(report)
     rendered = render_json(report)

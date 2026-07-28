@@ -191,11 +191,12 @@ function renderView(view) {
   updateCurrentNavigation(exactKey(view));
   const panel = elements.viewPanel;
   panel.replaceChildren();
+  panel.setAttribute("aria-labelledby", "active-view-title");
 
   const heading = node("div");
   heading.append(
     node("p", { className: "eyebrow", text: label(view.kind) }),
-    node("h2", { text: view.title }),
+    node("h2", { id: "active-view-title", text: view.title }),
   );
   const metadata = node("div", { className: "meta-row" }, [
     pill(`View revision ${view.revision}`, "good"),
@@ -230,9 +231,10 @@ function renderView(view) {
 function renderFailures() {
   updateCurrentNavigation("failures");
   const panel = elements.failurePanel;
+  panel.setAttribute("aria-labelledby", "failure-state-title");
   panel.replaceChildren(
     node("p", { className: "eyebrow", text: "DETERMINISTIC FAILURE STATES" }),
-    node("h2", { text: "Failure is visible, bounded, and non-mutating" }),
+    node("h2", { id: "failure-state-title", text: "Failure is visible, bounded, and non-mutating" }),
     node("p", { text: "Each failure preserves the previous state, refuses silent fallback, and offers explicit recovery actions." }),
   );
   const list = node("ul", { className: "failure-list" });
@@ -251,16 +253,53 @@ function renderFailures() {
   document.title = "Failure states · Atlas Reference Shell";
 }
 
+function renderRouteFailure(value) {
+  updateCurrentNavigation("");
+  elements.errorPanel.setAttribute("aria-labelledby", "route-error-title");
+  elements.errorPanel.replaceChildren(
+    node("p", { className: "eyebrow", text: "EXPLICIT ROUTE FAILURE" }),
+    node("h2", { id: "route-error-title", text: "Exact view route unavailable" }),
+    node("code", { text: value || "missing route" }),
+    node("p", { text: "No fallback to the first view or to an implicit latest revision is allowed." }),
+    node("p", { text: "Choose a versioned reference view from the navigation. Canonical knowledge and lifecycle state remain unchanged." }),
+  );
+  showOnly(elements.errorPanel);
+  document.title = "Route unavailable · Atlas Reference Shell";
+}
+
 function renderRoute() {
   if (!shellData) return;
   const fragment = location.hash.slice(1);
+  if (!fragment) {
+    const first = shellData.views[0];
+    if (!first) {
+      renderRouteFailure("no reference views available");
+      return;
+    }
+    history.replaceState(null, "", `#view=${encodeURIComponent(exactKey(first))}`);
+    renderView(first);
+    return;
+  }
   if (fragment === "failures") {
     renderFailures();
     return;
   }
-  const value = fragment.startsWith("view=") ? decodeURIComponent(fragment.slice(5)) : "";
-  const view = shellData.views.find(candidate => exactKey(candidate) === value) ?? shellData.views[0];
-  if (!value && view) history.replaceState(null, "", `#view=${encodeURIComponent(exactKey(view))}`);
+  if (!fragment.startsWith("view=")) {
+    renderRouteFailure(fragment);
+    return;
+  }
+  let value;
+  try {
+    value = decodeURIComponent(fragment.slice(5));
+  } catch {
+    renderRouteFailure(fragment.slice(5));
+    return;
+  }
+  const view = shellData.views.find(candidate => exactKey(candidate) === value);
+  if (!view) {
+    renderRouteFailure(value);
+    return;
+  }
   renderView(view);
 }
 
@@ -268,9 +307,10 @@ function showError(error) {
   elements.statusCard.classList.add("error");
   elements.runtimeStatus.textContent = "Local fixture unavailable";
   elements.runtimeDetail.textContent = "Canonical knowledge remains unchanged";
+  elements.errorPanel.setAttribute("aria-labelledby", "artifact-error-title");
   elements.errorPanel.replaceChildren(
     node("p", { className: "eyebrow", text: "EXPLICIT FAILURE" }),
-    node("h2", { text: "The generated local artifact could not be loaded" }),
+    node("h2", { id: "artifact-error-title", text: "The generated local artifact could not be loaded" }),
     node("p", { text: error instanceof Error ? error.message : String(error) }),
     node("p", { text: "Run the deterministic shell builder, then serve this directory through a local static server. No fallback to a live service is attempted." }),
   );

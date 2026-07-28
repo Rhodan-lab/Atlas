@@ -1,0 +1,243 @@
+name: Phase 4 Browser Evidence
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/reference-shell/**"
+      - "content/canonical/**"
+      - "content/fixtures/phase4_interaction/**"
+      - "content/fixtures/phase4_browser/**"
+      - "docs/phase-4/**"
+      - "tools/phase2_kernel/**"
+      - "tools/phase4_interaction/**"
+      - "tools/phase4_browser/**"
+      - ".github/workflows/phase4-browser-evidence.yml"
+  pull_request:
+    paths:
+      - "apps/reference-shell/**"
+      - "content/canonical/**"
+      - "content/fixtures/phase4_interaction/**"
+      - "content/fixtures/phase4_browser/**"
+      - "docs/phase-4/**"
+      - "tools/phase2_kernel/**"
+      - "tools/phase4_interaction/**"
+      - "tools/phase4_browser/**"
+      - ".github/workflows/phase4-browser-evidence.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  browser-evidence:
+    name: Pinned Chromium evidence
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: tools/phase4_browser/package-lock.json
+
+      - name: Install pinned Python dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+
+      - name: Install locked Playwright dependency graph
+        working-directory: tools/phase4_browser
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: Install pinned Chromium and Linux dependencies
+        working-directory: tools/phase4_browser
+        run: npx playwright install chromium --with-deps
+
+      - name: Check browser evidence source
+        working-directory: tools/phase4_browser
+        run: npm run check
+
+      - name: Build deterministic local shell package
+        run: |
+          rm -rf phase4-browser-shell
+          mkdir -p phase4-browser-shell
+          cp apps/reference-shell/index.html phase4-browser-shell/index.html
+          cp apps/reference-shell/styles.css phase4-browser-shell/styles.css
+          cp apps/reference-shell/app.js phase4-browser-shell/app.js
+          cp apps/reference-shell/README.md phase4-browser-shell/README.md
+          python -m tools.phase4_interaction.build_shell \
+            --output-dir phase4-browser-shell \
+            --report-output phase4-browser-shell-report.json
+          sha256sum \
+            phase4-browser-shell/index.html \
+            phase4-browser-shell/styles.css \
+            phase4-browser-shell/app.js \
+            phase4-browser-shell/data/reference-shell-data.json \
+            phase4-browser-shell-report.json \
+            | tee phase4-browser-static-sha256.txt
+
+      - name: Start isolated loopback server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m http.server 8766 --bind 127.0.0.1 --directory phase4-browser-shell >phase4-browser-server.log 2>&1 &
+          echo $! > phase4-browser-server.pid
+          for attempt in {1..40}; do
+            if curl --fail --silent http://127.0.0.1:8766/ >/dev/null; then
+              exit 0
+            fi
+            sleep 0.25
+          done
+          cat phase4-browser-server.log
+          exit 1
+
+      - name: Generate browser evidence twice
+        working-directory: tools/phase4_browser
+        env:
+          CI: "true"
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run evidence -- \
+            --base-url http://127.0.0.1:8766 \
+            --repo-root "${{ github.workspace }}" \
+            --shell-dir "${{ github.workspace }}/phase4-browser-shell" \
+            --output-dir "${{ github.workspace }}/phase4-browser-evidence-a" \
+            2>&1 | tee "${{ github.workspace }}/phase4-browser-run-a.log"
+          npm run evidence -- \
+            --base-url http://127.0.0.1:8766 \
+            --repo-root "${{ github.workspace }}" \
+            --shell-dir "${{ github.workspace }}/phase4-browser-shell" \
+            --output-dir "${{ github.workspace }}/phase4-browser-evidence-b" \
+            2>&1 | tee "${{ github.workspace }}/phase4-browser-run-b.log"
+
+      - name: Verify repeated-run byte identity
+        run: diff -ru phase4-browser-evidence-a phase4-browser-evidence-b
+
+      - name: Validate browser evidence independently
+        run: |
+          python -m tools.phase4_browser.validate phase4-browser-evidence-a | tee phase4-browser-validation.json
+          python -m tools.phase4_browser.validate phase4-browser-evidence-b >/dev/null
+
+      - name: Run browser evidence tamper tests
+        env:
+          ATLAS_BROWSER_EVIDENCE_DIR: phase4-browser-evidence-a
+        run: python -m unittest tools.phase4_browser.tests.test_validate -v
+
+      - name: Verify pinned browser evidence baseline
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          root = Path('phase4-browser-evidence-a')
+          baseline = json.loads(Path('content/fixtures/phase4_browser/browser-evidence-baseline.json').read_text(encoding='utf-8'))
+          patch = json.loads(Path('content/fixtures/phase4_interaction/reference-shell-accessibility-patch.json').read_text(encoding='utf-8'))
+          report = json.loads((root / 'browser-evidence-report.json').read_text(encoding='utf-8'))
+          manifest = json.loads((root / 'browser-manifest.json').read_text(encoding='utf-8'))
+
+          assert baseline['contract'] == 'atlas-phase4-browser-evidence-baseline/0.1'
+          assert baseline['state'] == 'browser-evidence-candidate'
+          assert baseline['decision'] == 'browser-evidence-candidate'
+          assert baseline['browser_engine'] == {
+              'name': 'chromium',
+              'playwright_version': '1.62.0',
+              'version': '151.0.7922.34',
+          }
+          assert manifest['engine_name'] == baseline['browser_engine']['name']
+          assert manifest['engine_version'] == baseline['browser_engine']['version']
+          assert manifest['playwright_version'] == baseline['browser_engine']['playwright_version']
+          assert manifest['external_network_allowed'] is False
+          assert report['report_digest'] == baseline['evidence_files']['browser-evidence-report.json']['report_digest']
+          assert report['workflow_count'] == baseline['workflow_count']
+          assert report['keyboard_workflow_count'] == baseline['keyboard_workflow_count']
+          assert report['accepted_failure_state_count'] == 5
+          assert report['viewport_count'] == baseline['viewport_count']
+          assert report['external_request_count'] == baseline['external_request_count']
+          assert report['exact_revision_preserved'] == baseline['exact_revision_preserved']
+          assert report['principia_status_separate'] == baseline['principia_status_separate']
+          assert report['non_graph_workflow_equivalence'] == baseline['non_graph_workflow_equivalence']
+          assert report['visible_focus_verified'] == baseline['visible_focus_verified']
+          assert report['reduced_motion_verified'] == baseline['reduced_motion_verified']
+          assert report['offline_after_local_boot_verified'] == baseline['offline_after_local_boot_verified']
+          assert report['production_frontend_architecture_selected'] == baseline['production_frontend_architecture_selected']
+          assert report['live_principia_dependency'] == baseline['live_principia_dependency']
+          assert report['human_verified'] == baseline['human_verified']
+          assert report['accessibility_certified'] == baseline['accessibility_certified']
+          assert report['live'] == baseline['live']
+          assert report['repository_mutation'] == baseline['repository_mutation']
+
+          for filename, expected in baseline['evidence_files'].items():
+              payload = (root / filename).read_bytes()
+              record = json.loads(payload)
+              assert record['contract'] == expected['contract']
+              assert len(payload) == expected['artifact_bytes']
+              assert hashlib.sha256(payload).hexdigest() == expected['artifact_sha256']
+              assert record['report_digest'] == expected['report_digest']
+
+          validation_bytes = Path('phase4-browser-validation.json').read_bytes()
+          validation = json.loads(validation_bytes)
+          assert len(validation_bytes) == baseline['python_validation']['artifact_bytes']
+          assert hashlib.sha256(validation_bytes).hexdigest() == baseline['python_validation']['artifact_sha256']
+          assert validation['contract'] == baseline['python_validation']['contract']
+          assert validation['decision'] == baseline['python_validation']['decision']
+
+          lock_bytes = Path('tools/phase4_browser/package-lock.json').read_bytes()
+          assert len(lock_bytes) == baseline['package_lock']['artifact_bytes']
+          assert hashlib.sha256(lock_bytes).hexdigest() == baseline['package_lock']['artifact_sha256']
+
+          network = json.loads((root / 'browser-network.json').read_text(encoding='utf-8'))
+          assert network['request_count'] == baseline['network_evidence']['request_count']
+          assert network['loopback_request_count'] == baseline['network_evidence']['loopback_request_count']
+          assert network['external_request_count'] == 0
+          assert sorted(record['url'] for record in network['request_records']) == baseline['network_evidence']['resources']
+
+          assert baseline['repeated_run_substantive_artifacts_byte_identical'] is True
+          assert baseline['shell_generated_artifacts_unchanged'] is True
+          assert patch['contract'] == baseline['shell_compatibility_patch_contract']
+          for name, expected in patch['current_static_assets'].items():
+              payload = Path('phase4-browser-shell', name).read_bytes()
+              assert hashlib.sha256(payload).hexdigest() == expected['sha256']
+          assert hashlib.sha256(Path('phase4-browser-shell/data/reference-shell-data.json').read_bytes()).hexdigest() == patch['generated_artifacts_unchanged']['shell_data_sha256']
+          assert hashlib.sha256(Path('phase4-browser-shell-report.json').read_bytes()).hexdigest() == patch['generated_artifacts_unchanged']['shell_build_report_sha256']
+
+          print('phase4-browser-engine=' + manifest['engine_name'] + '@' + manifest['engine_version'])
+          print('phase4-browser-report-bytes=' + str(baseline['evidence_files']['browser-evidence-report.json']['artifact_bytes']))
+          print('phase4-browser-report-sha256=' + baseline['evidence_files']['browser-evidence-report.json']['artifact_sha256'])
+          print('phase4-browser-report-digest=' + report['report_digest'])
+          print('phase4-browser-evidence=pinned-candidate; external-requests=0; human-verified=false')
+          PY
+
+      - name: Stop loopback server
+        if: always()
+        shell: bash
+        run: |
+          if [[ -f phase4-browser-server.pid ]]; then
+            kill "$(cat phase4-browser-server.pid)" || true
+          fi
+
+      - name: Upload browser evidence and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase4-browser-evidence-candidate
+          path: |
+            phase4-browser-evidence-a/
+            phase4-browser-evidence-b/
+            phase4-browser-validation.json
+            phase4-browser-shell-report.json
+            phase4-browser-static-sha256.txt
+            phase4-browser-server.log
+            phase4-browser-run-a.log
+            phase4-browser-run-b.log
+            tools/phase4_browser/package-lock.json
+          if-no-files-found: error
+          retention-days: 30
