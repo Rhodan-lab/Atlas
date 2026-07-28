@@ -1,0 +1,132 @@
+name: Phase 4 Interaction Contract
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "content/canonical/**"
+      - "content/fixtures/phase3_retrieval/**"
+      - "content/fixtures/phase4_interaction/**"
+      - "docs/phase-4/**"
+      - "tools/phase2_kernel/**"
+      - "tools/phase4_interaction/**"
+      - ".github/workflows/phase4-interaction-contract.yml"
+  pull_request:
+    paths:
+      - "content/canonical/**"
+      - "content/fixtures/phase3_retrieval/**"
+      - "content/fixtures/phase4_interaction/**"
+      - "docs/phase-4/**"
+      - "tools/phase2_kernel/**"
+      - "tools/phase4_interaction/**"
+      - ".github/workflows/phase4-interaction-contract.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  interaction-contract:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+
+      - name: Install pinned dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+
+      - name: Run Phase 4 interaction tests
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m unittest tools.phase4_interaction.tests.test_contracts -v 2>&1 | tee phase4-interaction-tests.txt
+
+      - name: Assemble fixtures and generate evidence
+        run: |
+          python -m tools.phase4_interaction.fixtures \
+            --manifest content/fixtures/phase4_interaction/reference-interactions.v01.json \
+            --assembled-output phase4-interaction-fixtures.json \
+            --report-output phase4-interaction-report.json
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          assembled_path = Path('phase4-interaction-fixtures.json')
+          report_path = Path('phase4-interaction-report.json')
+          assembled_bytes = assembled_path.read_bytes()
+          report_bytes = report_path.read_bytes()
+          assembled = json.loads(assembled_bytes)
+          report = json.loads(report_bytes)
+
+          assert assembled['contract'] == 'atlas-phase4-interaction-fixtures/0.1'
+          assert report['contract'] == 'atlas-phase4-interaction-contract-report/0.1'
+          assert report['mode'] == 'interactive-experience-foundation'
+          assert report['state'] == 'interaction-contract-candidate'
+          assert report['decision'] == 'interaction-contract-candidate'
+          assert report['entity_count'] == 34
+          assert report['counts'] == {
+              'views': 8,
+              'states': 8,
+              'principia_references': 1,
+              'impact_warnings': 1,
+              'failure_states': 5,
+              'negative_cases': 6,
+          }
+          assert report['workflow_kinds'] == [
+              'candidate',
+              'entity',
+              'filter',
+              'impact-warning',
+              'principia-reference',
+              'provenance',
+              'research-trail',
+              'retrieval',
+          ]
+          assert report['exact_revision_preserved'] is True
+          assert report['authority_metadata_visible'] is True
+          assert report['keyboard_paths_required'] is True
+          assert report['non_graph_paths_required'] is True
+          assert report['principia_status_separate'] is True
+          assert report['impact_warnings_required'] is True
+          assert report['offline_capable'] is True
+          assert report['graph_visualization_optional'] is True
+          assert report['canonical_copy_authority'] is False
+          assert report['automatic_status_change'] is False
+          assert report['automatic_release_action'] is False
+          assert report['live_principia_dependency'] is False
+          assert report['external_services'] is False
+          assert report['embeddings'] is False
+          assert report['vector_database'] is False
+          assert report['live'] is False
+          assert report['repository_mutation'] is False
+          assert len(report['negative_validations']) == 6
+
+          print('phase4-interaction-fixture-sha256=' + hashlib.sha256(assembled_bytes).hexdigest())
+          print('phase4-interaction-report-sha256=' + hashlib.sha256(report_bytes).hexdigest())
+          print('phase4-interaction-report-digest=' + report['report_digest'])
+          print('phase4-interaction-counts=' + json.dumps(report['counts'], sort_keys=True, separators=(',', ':')))
+          print('phase4-interaction=contract-candidate; live=false; canonical-mutation=false; principia-status-separate=true')
+          PY
+
+      - name: Upload Phase 4 interaction evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase4-interaction-python-${{ matrix.python-version }}
+          path: |
+            phase4-interaction-tests.txt
+            phase4-interaction-fixtures.json
+            phase4-interaction-report.json
+          if-no-files-found: error
+          retention-days: 30
