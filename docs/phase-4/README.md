@@ -7,8 +7,11 @@ phase: 4
 mode: interactive-experience-foundation
 active_workstream: 3
 workstream_name: read-only-research-workspace-composition
+active_slice: 2
+slice_name: local-browser-workspace-composition
 workstream_1: accepted
 workstream_2: accepted
+workstream_3_slice_1: accepted
 workspace_authority: ephemeral-research-only
 atlas_semantics_authoritative: true
 principia_status_separate: true
@@ -17,6 +20,7 @@ preferred_bounded_retrieval: structured-field-baseline
 retrieval_authority: advisory-only
 local_first: true
 deterministic_export_required: true
+browser_state_authority: ephemeral-only
 canonical_copy_authority: false
 canonical_mutation: false
 lifecycle_mutation: false
@@ -161,54 +165,106 @@ See [`browser-evidence.md`](browser-evidence.md) and [`workstream-2-completion.m
 
 Compose accepted exact-revision Atlas views and pinned offline Principia references into a deterministic read-only multi-step research workspace. The workspace may organize evidence, questions, decisions, candidates, comparisons, and exports, but has no canonical, review, lifecycle, merge, release, or repository authority.
 
-### Candidate contracts
+### Slice 1 — accepted workspace data and export contracts
 
 ```yaml
+state: accepted
+accepted_pr: 50
+tested_head: 6d556bde6c24a8313bece3074f6c5fc56c4c4ccd
+accepted_merge_commit: 86c1f9f779172aa47d450022fc40357a93f2302f
+fixture_contract: atlas-phase4-workspace-fixtures/0.1
 workspace_contract: atlas-research-workspace/0.1
 workspace_entry_contract: atlas-research-workspace-entry/0.1
 workspace_decision_contract: atlas-research-workspace-decision/0.1
 workspace_export_contract: atlas-research-workspace-export/0.1
 workspace_manifest_contract: atlas-research-workspace-manifest/0.1
 workspace_failure_contract: atlas-research-workspace-failure/0.1
+workspace_report_contract: atlas-phase4-workspace-contract-report/0.1
+workspace_baseline_contract: atlas-phase4-workspace-contract-baseline/0.1
 ```
 
-Contract names remain candidates until executable fixtures, deterministic export, negative tests, and CI evidence are accepted.
+### Pinned Slice 1 evidence
 
-### First bounded fixture
+```yaml
+fixture:
+  artifact_bytes: 8961
+  artifact_sha256: 3493c963163a2ba52d6de92fdf8193f9c7f9d7eb967211d7e13ef7b596b24f86
+report:
+  artifact_bytes: 4186
+  artifact_sha256: 41d555a077e63b47da5159e48a5aa37d93bc6cbd149b86baf372ff932b7e5a94
+  report_digest: 6aec854b297b51b0dde2e65a944453d7af2a8e36b77bd78302cbb0e2f405b402
+export:
+  artifact_bytes: 11347
+  artifact_sha256: 43f28738c4678dfcd0f7a3e4d31480f891112a8c9bd220929f8f32cd80edb98a
+  report_digest: 82f08c18ae76b4b4d091fe0d8be7d54cf5d10d989443132a26e550056af3f56a
+manifest:
+  artifact_bytes: 1094
+  artifact_sha256: 8240d78b29f610cb7c566dfad50432473949c5a63b9de9c522ab28751d80fd09
+  report_digest: 9aefaf24b130718f284eecb5502b3c1dd144347f6fdcfc85b47d8ec6ce3fda68
+python_substantive_artifacts_byte_identical: true
+```
 
-The first fixture must include:
+The accepted fixture contains five ordered include, exclude, or context decisions; two unresolved advisory candidates; one fixture-only Principia reference with separate status; one explicit impact warning; two open questions; and complete authority and limitation metadata.
 
-- five ordered include, exclude, or context decisions;
-- two advisory contradiction or duplicate candidates;
-- one pinned offline Principia reference;
-- explicit rationales and open questions;
-- deterministic export and manifest artifacts;
-- complete authority and limitation metadata.
+The accepted validator rejects implicit `latest`, duplicate entries, copied canonical authority, automatic candidate resolution, unavailable revisions, lifecycle mutation, live Principia dependency, nondeterministic export fields, external-network requirements, and missing non-graph equivalents. Every failure preserves the previous valid workspace.
 
-It must be small enough for complete inspection and test coverage. It is not evidence of production corpus scale or production workspace quality.
+The accepted export preserves exact revision keys, stable order, source and upstream digests, decisions, rationales, open questions, separate Principia status, warnings, limitations, and visible metadata. It contains no canonical body authority and reproduces byte-identically on Python 3.11 and 3.13.
 
-### Required failures
+See [`workspace-contracts.md`](workspace-contracts.md).
 
-The first validator must reject:
+### Slice 2 — active local browser workspace composition
 
-1. implicit `latest` references;
-2. duplicate workspace entry identifiers;
-3. copied canonical-authority claims;
-4. automatic contradiction or duplicate resolution;
-5. unavailable exact revisions without explicit failure records;
-6. lifecycle, review, merge, release, or repository mutation;
-7. live or unpinned Principia dependencies;
-8. nondeterministic export fields;
-9. external-network or cloud requirements;
-10. missing non-graph or text-equivalent workflow information.
+Slice 2 may expose the accepted export through a bounded static local experience. It may not reinterpret, reorder, mutate, or regenerate accepted workspace decisions in the browser.
 
-### Deterministic export
+```yaml
+state: active
+input_authority: accepted-workspace-export-only
+browser_state_authority: ephemeral-only
+exact_revision_required: true
+entry_order_preserved: true
+decisions_read_only: true
+candidates_unresolved: true
+principia_status_separate: true
+warning_visibility_required: true
+keyboard_workflow_required: true
+non_graph_workflow_required: true
+reduced_motion_required: true
+zero_external_requests_required: true
+local_export_allowed: true
+canonical_mutation: false
+lifecycle_mutation: false
+review_mutation: false
+repository_mutation: false
+production_frontend_architecture_selected: false
+```
 
-The export must preserve stable ordering, exact revision keys, source digests, authority, limitations, rationales, open questions, and separate Principia status. It must contain no uncontrolled timestamps, random identifiers, machine-specific paths, credentials, or mutable URLs, and must reproduce byte-identically from the same accepted inputs.
+The bounded browser package should expose deterministic routes for:
 
-### Browser boundary
+- workspace overview and authority;
+- five ordered entry decisions with exact revision keys;
+- unresolved contradiction and duplicate candidates;
+- the separate-status fixture-only Principia reference;
+- the explicit impact warning;
+- open questions, limitations, provenance, review, lifecycle, and staleness;
+- accepted export and manifest identities;
+- a local download that reproduces the accepted export bytes.
 
-A later browser slice may expose the workspace through the accepted local shell only after the data and export contracts are accepted. It must retain keyboard operation, non-graph equivalence, visible focus, explicit failures, zero external requests, and non-mutating authority.
+Browser restoration may use only bounded URL or in-memory state. No local or session storage becomes authority, and no browser state may create canonical persistence.
+
+### Browser evidence requirements
+
+Slice 2 must prove:
+
+1. complete keyboard operation and visible focus;
+2. complete non-graph and text-equivalent navigation;
+3. exact entry order, decisions, revisions, and digests;
+4. deterministic deep links, reload, and back/forward behavior;
+5. unresolved candidate and separate Principia status visibility;
+6. explicit warnings, limitations, and non-mutation authority;
+7. reduced-motion and bounded desktop/mobile behavior;
+8. zero external requests after local boot;
+9. local download byte identity with the accepted export;
+10. no account, cloud service, live dependency, canonical write, or production architecture.
 
 See [`workstream-3.md`](workstream-3.md).
 
@@ -227,9 +283,9 @@ Allowed:
 
 - local-first interaction contracts, static shells, bounded browser evidence harnesses, and read-only workspace fixtures;
 - exact-revision Atlas views and pinned offline Principia references;
-- deterministic keyboard, focus, semantic, deep-link, history, warning, failure, offline, responsive, and network-isolation tests;
+- deterministic keyboard, focus, semantic, deep-link, history, warning, failure, offline, responsive, export, and network-isolation tests;
 - ephemeral research notes, questions, rationales, and include, exclude, or context decisions;
-- deterministic read-only exports;
+- deterministic read-only exports and bounded local views over accepted exports;
 - accessibility corrections required by evidence, provided accepted semantics and authority remain unchanged;
 - optional graph visualization only with complete equivalent non-graph navigation.
 
@@ -259,17 +315,17 @@ Workstream 3 closes only when:
 - deterministic exports reproduce byte-identically across supported Python versions;
 - no workspace action can mutate canonical, review, lifecycle, merge, release, Principia, or repository state;
 - the workspace operates locally without accounts, cloud services, or external network access;
-- a browser evidence slice proves keyboard and non-graph multi-step operation, if implemented;
+- a browser evidence slice proves keyboard and non-graph multi-step operation;
 - a completion report recommends or rejects broader workspace implementation.
 
 ## Immediate next actions
 
-1. define the workspace, entry, decision, export, manifest, and failure contracts;
-2. construct the bounded exact-revision workspace fixture from accepted research-trail evidence;
-3. implement deterministic validation and export;
-4. add negative fixtures for every authority and determinism boundary;
-5. pin substantive Python 3.11 and 3.13 artifacts;
-6. only after data-contract acceptance, add a bounded browser composition;
+1. build a replaceable static workspace package from the accepted export and manifest;
+2. expose deterministic overview, entry, candidate, Principia, warning, question, limitation, and export routes;
+3. preserve exact revisions, order, decisions, and all accepted digests without browser-side reinterpretation;
+4. add keyboard, visible-focus, non-graph, reduced-motion, deep-link, reload, and history evidence;
+5. prove browser restoration remains ephemeral and non-canonical;
+6. reject every external request and verify local download byte identity;
 7. keep production architecture, live synchronization, accounts, cloud persistence, canonical writes, and automatic authority frozen.
 
-**Phase 4 Workstreams 1 and 2 are accepted. Workstream 3 — Read-Only Research Workspace Composition — is active.**
+**Phase 4 Workstreams 1 and 2 and Workstream 3 Slice 1 are accepted. Workstream 3 Slice 2 — Local Browser Workspace Composition — is active.**
