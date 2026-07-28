@@ -120,7 +120,7 @@ async function focusEvidence(page) {
 async function activeView(page) {
   return page.evaluate(() => {
     const current = document.querySelector('button[aria-current="page"]');
-    const heading = document.querySelector("#view-panel h2, #failure-panel h2, #error-panel h2");
+    const heading = document.querySelector("#view-panel:not([hidden]) h2, #failure-panel:not([hidden]) h2, #error-panel:not([hidden]) h2");
     return {
       current_key: current?.dataset.key ?? (current?.id === "failure-button" ? "failures" : null),
       heading: heading?.textContent?.trim() ?? null,
