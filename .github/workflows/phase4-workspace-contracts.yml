@@ -63,7 +63,7 @@ jobs:
       - name: Verify repeated-run byte identity
         run: diff -ru phase4-workspace-evidence-a phase4-workspace-evidence-b
 
-      - name: Verify workspace evidence semantics
+      - name: Verify pinned workspace evidence baseline
         run: |
           python - <<'PY'
           import hashlib
@@ -74,19 +74,48 @@ jobs:
           report_path = root / 'workspace-report.json'
           export_path = root / 'workspace-export.json'
           manifest_path = root / 'workspace-manifest.json'
+          fixture_path = Path('content/fixtures/phase4_workspace/research-workspace.v01.json')
+          baseline_path = Path('content/fixtures/phase4_workspace/workspace-contract-baseline.json')
+
           report_bytes = report_path.read_bytes()
           export_bytes = export_path.read_bytes()
           manifest_bytes = manifest_path.read_bytes()
+          fixture_bytes = fixture_path.read_bytes()
           report = json.loads(report_bytes)
           export = json.loads(export_bytes)
           manifest = json.loads(manifest_bytes)
+          fixture = json.loads(fixture_bytes)
+          baseline = json.loads(baseline_path.read_bytes())
 
-          assert report['contract'] == 'atlas-phase4-workspace-contract-report/0.1'
-          assert report['mode'] == 'interactive-experience-foundation'
-          assert report['phase'] == 4
-          assert report['workstream'] == 3
-          assert report['state'] == 'workspace-contract-candidate'
-          assert report['decision'] == 'workspace-contract-candidate'
+          assert baseline['contract'] == 'atlas-phase4-workspace-contract-baseline/0.1'
+          assert baseline['python_substantive_artifacts_byte_identical'] is True
+
+          assert fixture['contract'] == baseline['fixture']['contract']
+          assert fixture['id'] == baseline['fixture']['id']
+          assert fixture['version'] == baseline['fixture']['version']
+          assert len(fixture_bytes) == baseline['fixture']['bytes']
+          assert hashlib.sha256(fixture_bytes).hexdigest() == baseline['fixture']['sha256']
+
+          assert report == baseline['report']['record']
+          assert len(report_bytes) == baseline['report']['artifact']['bytes']
+          assert hashlib.sha256(report_bytes).hexdigest() == baseline['report']['artifact']['sha256']
+          assert report['report_digest'] == baseline['report']['report_digest']
+
+          assert export['contract'] == baseline['export']['contract']
+          assert len(export_bytes) == baseline['export']['artifact']['bytes']
+          assert hashlib.sha256(export_bytes).hexdigest() == baseline['export']['artifact']['sha256']
+          assert export['report_digest'] == baseline['export']['report_digest']
+          assert len(export['entries']) == baseline['export']['entry_count']
+          assert len(export['candidate_references']) == baseline['export']['candidate_count']
+          assert len(export['principia_references']) == baseline['export']['principia_reference_count']
+          assert len(export['warning_references']) == baseline['export']['warning_count']
+
+          assert manifest['contract'] == baseline['manifest']['contract']
+          assert len(manifest_bytes) == baseline['manifest']['artifact']['bytes']
+          assert hashlib.sha256(manifest_bytes).hexdigest() == baseline['manifest']['artifact']['sha256']
+          assert manifest['report_digest'] == baseline['manifest']['report_digest']
+          assert len(manifest['files']) == baseline['manifest']['file_count']
+
           assert report['counts'] == {
               'candidates': 2,
               'entries': 5,
@@ -130,15 +159,12 @@ jobs:
           ]
           assert all(item['preserved_previous_valid_workspace'] is True for item in report['negative_validations'])
 
-          assert export['contract'] == 'atlas-research-workspace-export/0.1'
-          assert len(export['entries']) == 5
-          assert len(export['candidate_references']) == 2
           assert all(item['resolution'] == 'unresolved' for item in export['candidate_references'])
           assert export['principia_references'][0]['principia_status_separate'] is True
           assert export['authority']['canonical_copy_authority'] is False
           assert '"body"' not in export_bytes.decode('utf-8')
+          assert '"content"' not in export_bytes.decode('utf-8')
 
-          assert manifest['contract'] == 'atlas-research-workspace-manifest/0.1'
           assert manifest['deterministic_export'] is True
           assert manifest['replaceable'] is True
           assert manifest['files'] == [{
@@ -149,6 +175,7 @@ jobs:
               'sha256': hashlib.sha256(export_bytes).hexdigest(),
           }]
 
+          print('phase4-workspace-baseline-sha256=' + hashlib.sha256(baseline_path.read_bytes()).hexdigest())
           print('phase4-workspace-report-bytes=' + str(len(report_bytes)))
           print('phase4-workspace-report-sha256=' + hashlib.sha256(report_bytes).hexdigest())
           print('phase4-workspace-report-digest=' + report['report_digest'])
@@ -158,7 +185,7 @@ jobs:
           print('phase4-workspace-manifest-bytes=' + str(len(manifest_bytes)))
           print('phase4-workspace-manifest-sha256=' + hashlib.sha256(manifest_bytes).hexdigest())
           print('phase4-workspace-manifest-digest=' + manifest['report_digest'])
-          print('phase4-workspace=contract-candidate; entries=5; negatives=10; live=false')
+          print('phase4-workspace=pinned-contract-candidate; entries=5; negatives=10; live=false')
           PY
 
       - name: Upload workspace contract evidence
@@ -171,5 +198,6 @@ jobs:
             phase4-workspace-evidence-b/
             phase4-workspace-tests.txt
             content/fixtures/phase4_workspace/research-workspace.v01.json
+            content/fixtures/phase4_workspace/workspace-contract-baseline.json
           if-no-files-found: error
           retention-days: 30
