@@ -15,7 +15,7 @@
       <h1>Atlas × Principia</h1>
       <p class="lede">Inspect exact knowledge revisions, evidence paths, retrieval explanations, research decisions, and offline bridge warnings without granting the interface authority.</p>
     </div>
-    <div class="status-card" aria-live="polite">
+    <div class="status-card" role="status" aria-live="polite" aria-atomic="true">
       <span class="status-dot" aria-hidden="true"></span>
       <div>
         <strong id="runtime-status">Loading local fixture…</strong>
@@ -40,15 +40,15 @@
       </section>
     </aside>
 
-    <main id="main-content" class="content" tabindex="-1">
-      <section id="loading-panel" class="panel" aria-live="polite">
+    <main id="main-content" class="content" tabindex="-1" aria-label="Reference content">
+      <section id="loading-panel" class="panel" aria-live="polite" aria-atomic="true" aria-labelledby="loading-title">
         <p class="eyebrow">LOADING</p>
-        <h2>Assembling the local reference state</h2>
+        <h2 id="loading-title">Assembling the local reference state</h2>
         <p>The shell reads one deterministic generated file. It does not call an API.</p>
       </section>
-      <section id="view-panel" class="panel" hidden aria-live="polite"></section>
-      <section id="failure-panel" class="panel" hidden aria-live="polite"></section>
-      <section id="error-panel" class="panel error-panel" hidden role="alert"></section>
+      <section id="view-panel" class="panel" hidden aria-live="polite" aria-atomic="true"></section>
+      <section id="failure-panel" class="panel" hidden aria-live="polite" aria-atomic="true"></section>
+      <section id="error-panel" class="panel error-panel" hidden role="alert" aria-atomic="true"></section>
     </main>
   </div>
 
