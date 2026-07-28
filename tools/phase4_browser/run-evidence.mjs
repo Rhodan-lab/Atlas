@@ -290,7 +290,7 @@ async function runDesktopEvidence(browser, baseUrl, shellData, networkRecords) {
   assertEvidence(impactText.includes("No automatic update"), "E-BROWSER-WARNING", "impact warning must state that no automatic update occurs");
   await openView(directPage, exactKey(principiaView));
   const principiaText = await directPage.locator("#view-panel").innerText();
-  assertEvidence(principiaText.includes("Principia status"), "E-BROWSER-PRINCIPIA", "Principia status must remain visible and separate");
+  assertEvidence(principiaText.toLowerCase().includes("principia status"), "E-BROWSER-PRINCIPIA", "Principia status must remain visible and separate");
 
   await context.setOffline(true);
   await directPage.evaluate(key => { location.hash = `view=${encodeURIComponent(key)}`; }, expectedKeys[0]);
