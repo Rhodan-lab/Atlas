@@ -1,0 +1,12 @@
+{
+  "name": "@atlas/phase4-workspace-browser-evidence",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.0.0" },
+  "scripts": {
+    "evidence": "node run-evidence.mjs",
+    "check": "node --check common.mjs && node --check desktop.mjs && node --check failure-mobile.mjs && node --check emit.mjs && node --check run-evidence.mjs"
+  },
+  "devDependencies": { "playwright": "1.62.0" }
+}

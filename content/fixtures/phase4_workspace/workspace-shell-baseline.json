@@ -1,24 +1,52 @@
 {
+  "build_report": {
+    "artifact": {
+      "bytes": 1448,
+      "sha256": "b8b29a61495ecfc420de9324006b6f8efac455905c7b2b69f03639d995e7f932"
+    },
+    "record": {
+      "account_required": false,
+      "api_required": false,
+      "canonical_mutation": false,
+      "cloud_required": false,
+      "contract": "atlas-workspace-shell-build-report/0.1",
+      "decision": "workspace-shell-candidate",
+      "entry_route_count": 5,
+      "export_digest": "82f08c18ae76b4b4d091fe0d8be7d54cf5d10d989443132a26e550056af3f56a",
+      "external_network_required": false,
+      "generated_files": [
+        "data/workspace-shell-data.json",
+        "data/workspace-export.json",
+        "data/workspace-manifest.json"
+      ],
+      "live_principia_dependency": false,
+      "local_first": true,
+      "manifest_digest": "9aefaf24b130718f284eecb5502b3c1dd144347f6fdcfc85b47d8ec6ce3fda68",
+      "mode": "interactive-experience-foundation",
+      "phase": 4,
+      "production_frontend_architecture_selected": false,
+      "replaceable": true,
+      "report_digest": "f1b13c7c202f93a1682d9366fcbef5265a7ae36f335d4e10ddff71ce216e955b",
+      "repository_mutation": false,
+      "route_count": 13,
+      "shell_build_digest": "b4aa3fab14ecc66ee602c9c40dc88b10add23d3391915a72c31968c681edcaee",
+      "slice": 2,
+      "source_digest": "684d08f23db50c2d994ea07293c6aaea2cbcb24492b062663b2e43144f07d3b1",
+      "state": "workspace-shell-candidate",
+      "static_assets": [
+        "index.html",
+        "styles.css",
+        "app.js"
+      ],
+      "validation_digest": "b4aa3fab14ecc66ee602c9c40dc88b10add23d3391915a72c31968c681edcaee",
+      "workspace_id": "workspace:en:recommender-cross-platform-effect-review",
+      "workspace_revision": 1,
+      "workstream": 3
+    },
+    "report_digest": "f1b13c7c202f93a1682d9366fcbef5265a7ae36f335d4e10ddff71ce216e955b"
+  },
   "contract": "atlas-phase4-workspace-shell-baseline/0.1",
   "python_substantive_artifacts_byte_identical": true,
-  "static_assets": {
-    "README.md": {
-      "bytes": 2950,
-      "sha256": "cf96c6641d773a68aadd8595ac1d77c7feef548a830ab0c214608c504d5e70e4"
-    },
-    "app.js": {
-      "bytes": 23359,
-      "sha256": "0f44b35ccd3a6c59abc9eecdcf176dbc3bbf53cc155ddedb32fb518003d5c50f"
-    },
-    "index.html": {
-      "bytes": 3161,
-      "sha256": "38020c61287a50536e40ad330d43e934066cafae852e28dd2ea850e73c95ed93"
-    },
-    "styles.css": {
-      "bytes": 8427,
-      "sha256": "6016098e9461be50f6b5346d76b58d0111dfae8d42355884bf25e9885546e98f"
-    }
-  },
   "shell_data": {
     "artifact": {
       "bytes": 5955,
@@ -210,50 +238,22 @@
       "workstream": 3
     }
   },
-  "build_report": {
-    "artifact": {
-      "bytes": 1448,
-      "sha256": "b8b29a61495ecfc420de9324006b6f8efac455905c7b2b69f03639d995e7f932"
+  "static_assets": {
+    "README.md": {
+      "bytes": 2950,
+      "sha256": "cf96c6641d773a68aadd8595ac1d77c7feef548a830ab0c214608c504d5e70e4"
     },
-    "record": {
-      "account_required": false,
-      "api_required": false,
-      "canonical_mutation": false,
-      "cloud_required": false,
-      "contract": "atlas-workspace-shell-build-report/0.1",
-      "decision": "workspace-shell-candidate",
-      "entry_route_count": 5,
-      "export_digest": "82f08c18ae76b4b4d091fe0d8be7d54cf5d10d989443132a26e550056af3f56a",
-      "external_network_required": false,
-      "generated_files": [
-        "data/workspace-shell-data.json",
-        "data/workspace-export.json",
-        "data/workspace-manifest.json"
-      ],
-      "live_principia_dependency": false,
-      "local_first": true,
-      "manifest_digest": "9aefaf24b130718f284eecb5502b3c1dd144347f6fdcfc85b47d8ec6ce3fda68",
-      "mode": "interactive-experience-foundation",
-      "phase": 4,
-      "production_frontend_architecture_selected": false,
-      "replaceable": true,
-      "report_digest": "f1b13c7c202f93a1682d9366fcbef5265a7ae36f335d4e10ddff71ce216e955b",
-      "repository_mutation": false,
-      "route_count": 13,
-      "shell_build_digest": "b4aa3fab14ecc66ee602c9c40dc88b10add23d3391915a72c31968c681edcaee",
-      "slice": 2,
-      "source_digest": "684d08f23db50c2d994ea07293c6aaea2cbcb24492b062663b2e43144f07d3b1",
-      "state": "workspace-shell-candidate",
-      "static_assets": [
-        "index.html",
-        "styles.css",
-        "app.js"
-      ],
-      "validation_digest": "b4aa3fab14ecc66ee602c9c40dc88b10add23d3391915a72c31968c681edcaee",
-      "workspace_id": "workspace:en:recommender-cross-platform-effect-review",
-      "workspace_revision": 1,
-      "workstream": 3
+    "app.js": {
+      "bytes": 23359,
+      "sha256": "0f44b35ccd3a6c59abc9eecdcf176dbc3bbf53cc155ddedb32fb518003d5c50f"
     },
-    "report_digest": "f1b13c7c202f93a1682d9366fcbef5265a7ae36f335d4e10ddff71ce216e955b"
+    "index.html": {
+      "bytes": 3232,
+      "sha256": "ae7eafc4dccae669f25ed4f6e6e5bc8e81bce8dcabcc81b5d585d4d09fb5e921"
+    },
+    "styles.css": {
+      "bytes": 8427,
+      "sha256": "6016098e9461be50f6b5346d76b58d0111dfae8d42355884bf25e9885546e98f"
+    }
   }
 }

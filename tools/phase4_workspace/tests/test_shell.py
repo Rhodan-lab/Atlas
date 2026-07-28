@@ -134,6 +134,7 @@ class Phase4WorkspaceShellTests(unittest.TestCase):
             self.assertIn(tag, parser.tags)
         for element_id in (
             "main-content",
+            "overview",
             "route-list",
             "authority-summary",
             "download-export",
@@ -142,7 +143,7 @@ class Phase4WorkspaceShellTests(unittest.TestCase):
             "error-panel",
         ):
             self.assertIn(element_id, parser.ids)
-        self.assertEqual(parser.skip_href, "#main-content")
+        self.assertEqual(parser.skip_href, "#overview")
         self.assertEqual(len(parser.scripts), 1)
         self.assertEqual(parser.scripts[0].get("type"), "module")
         self.assertEqual(parser.scripts[0].get("src"), "./app.js")
