@@ -113,10 +113,16 @@ export async function desktopEvidence(browser, baseUrl, shellData, workspaceExpo
   await page.evaluate(() => { location.hash = "#unknown-workspace-route"; });
   await page.waitForFunction(() => document.querySelector("#error-panel")?.hidden === false);
   const invalidView = await currentView(page);
-  const invalidText = await page.locator("#error-panel").innerText();
+  const failureFields = await page.locator("#error-panel dl > div").evaluateAll(nodes => Object.fromEntries(nodes.map(node => [
+    node.querySelector("dt")?.textContent?.trim() ?? "",
+    node.querySelector("dd")?.textContent?.trim() ?? "",
+  ])));
   const recoveryHref = await page.locator("#error-panel a.route-link").getAttribute("href");
   assertEvidence(invalidView.heading === "Workspace route unavailable", "E-WS-BROWSER-FAILURE-PRESERVE", "unknown route must show an explicit failure view");
-  assertEvidence(invalidText.includes("Fallback") && invalidText.includes("refused") && invalidText.includes("Previous valid route"), "E-WS-BROWSER-FAILURE-PRESERVE", "unknown route must refuse fallback and record the prior route");
+  assertEvidence(failureFields["Requested route"] === "#unknown-workspace-route", "E-WS-BROWSER-FAILURE-PRESERVE", "unknown route must expose the requested route");
+  assertEvidence(failureFields.Fallback === "refused", "E-WS-BROWSER-FAILURE-PRESERVE", "unknown route must refuse fallback");
+  assertEvidence(failureFields["Previous valid route"] === "#overview", "E-WS-BROWSER-FAILURE-PRESERVE", "unknown route must preserve the previous valid route");
+  assertEvidence(failureFields["Workspace mutation"] === "none", "E-WS-BROWSER-FAILURE-PRESERVE", "unknown route must not mutate workspace state");
   assertEvidence(recoveryHref === "#overview", "E-WS-BROWSER-FAILURE-PRESERVE", "unknown route must provide deterministic recovery to the previous valid route");
 
   await openRoute(page, "evidence");
@@ -139,7 +145,17 @@ export async function desktopEvidence(browser, baseUrl, shellData, workspaceExpo
     warning_heading: warning.heading,
     history: { routes: historyRoutes, before_back: beforeBack, after_back: afterBack, after_forward: afterForward, outcome: "pass" },
     deep_link: { route_id: directRoute, before_reload: directBefore.hash, after_reload: directAfter.hash, outcome: "pass" },
-    unknown_route: { attempted: "#unknown-workspace-route", failure_heading: invalidView.heading, previous_valid_route: "#overview", recovery_href: recoveryHref, fallback_refused: true, status: invalidView.status, outcome: "rejected-preserved" },
+    unknown_route: {
+      attempted: "#unknown-workspace-route",
+      failure_heading: invalidView.heading,
+      requested_route: failureFields["Requested route"],
+      previous_valid_route: failureFields["Previous valid route"],
+      recovery_href: recoveryHref,
+      fallback_refused: failureFields.Fallback === "refused",
+      workspace_mutation: failureFields["Workspace mutation"],
+      status: invalidView.status,
+      outcome: "rejected-preserved",
+    },
     download: {
       filename: download.suggestedFilename(),
       bytes: downloaded.length,
