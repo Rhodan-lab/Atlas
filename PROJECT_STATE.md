@@ -4,26 +4,37 @@
 
 **Phase 4 — Principia & Atlas Interactive Experience (active)**
 
-Phase 0 established the knowledge foundation. Phase 1 accepted the bounded English reference corpus under an explicitly AI-reviewed, non-human policy. Phase 2 accepted the deterministic read-only knowledge kernel. Phase 3 accepted bounded retrieval and research-trail foundations. Phase 4 Workstream 1 accepted the interaction contracts and minimal local reference shell.
+Phase 0 established the knowledge foundation. Phase 1 accepted the bounded English reference corpus under an explicitly AI-reviewed, non-human policy. Phase 2 accepted the deterministic read-only knowledge kernel. Phase 3 accepted bounded retrieval and research-trail foundations. Phase 4 Workstream 1 accepted the interaction contracts and minimal local reference shell. Workstream 2 accepted pinned real-browser accessibility and workflow evidence. Workstream 3 now composes those accepted exact-revision views into a deterministic read-only research workspace.
 
 ```yaml
 phase: 4
 mode: interactive-experience-foundation
-active_workstream: 2
-workstream_name: browser-accessibility-and-workflow-evidence
+active_workstream: 3
+workstream_name: read-only-research-workspace-composition
 workstream_1: accepted
+workstream_2: accepted
+workspace_authority: ephemeral-research-only
 atlas_semantics_authoritative: true
 principia_status_separate: true
 exact_cross_repository_references: true
 preferred_bounded_retrieval: structured-field-baseline
 retrieval_authority: advisory-only
 local_first: true
-live_principia_dependency: false
+deterministic_export_required: true
+canonical_copy_authority: false
 canonical_mutation: false
+lifecycle_mutation: false
+review_mutation: false
+automatic_merge_or_resolution: false
+account_required: false
+cloud_required: false
+external_network_required: false
+production_frontend_architecture_selected: false
+live_principia_dependency: false
 repository_mutation: false
 ```
 
-No human or expert verification is claimed. No production retrieval-quality claim, production frontend architecture, vector database, live Principia synchronization, autonomous knowledge mutation, or automatic lifecycle authority is active.
+No human or expert verification is claimed. Automated Chromium evidence is not accessibility certification. No production retrieval-quality claim, production frontend architecture, vector database, live Principia synchronization, autonomous knowledge mutation, or automatic lifecycle authority is active.
 
 ## Accepted history
 
@@ -61,7 +72,10 @@ No human or expert verification is claimed. No production retrieval-quality clai
 - Phase 3 governance closure and Phase 4 activation — PR #41, commit `01f950fd187c22751712c78dc90feb6b3da15bbb`;
 - Phase 4 interaction and bridge contracts — PR #42, commit `1f15cee1f0ed86c5a85750659b4d35e1d535564f`;
 - minimal local reference shell — PR #43, commit `4992d0caa0eb37db5b58158a9dd53a8ca10f1405`;
-- Phase 4 Workstream 1 closure evidence — PR #44, commit `37b013ce1b3c8c45230feaf4c1cd6bfd0ba48735`.
+- Phase 4 Workstream 1 closure evidence — PR #44, commit `37b013ce1b3c8c45230feaf4c1cd6bfd0ba48735`;
+- Workstream 1 governance acceptance and Workstream 2 activation — PR #45, commit `6ad1e57d8ac2698a27c17032216335581e3b3fa8`;
+- pinned Chromium accessibility and workflow evidence — PR #46, commit `d5577d9664a16b89d4c2597229f418a7f4a8f849`;
+- Phase 4 Workstream 2 closure evidence — PR #47, commit `dca6dd1bf8b8445bb4101ad7a3503dd79a57ea74`.
 
 PR #39 was a superseded, unmerged Phase 3 closure draft and is not accepted history.
 
@@ -75,7 +89,7 @@ Atlas distinguishes review levels instead of presenting all review as equivalent
 
 An AI-reviewed artifact has an identified AI reviewer and model family, explicit non-human status, exact entity revisions, source-use checks, reproducibility or mathematical checks where applicable, recorded findings and corrections, explicit limitations, and `human_verified: false`.
 
-AI review is sufficient for the current bounded development program. It is not human verification. Human verification remains an optional stronger layer and must never be invented or inferred.
+AI review is sufficient for the current bounded development program. It is not human verification. Human verification remains an optional stronger layer and must never be invented or inferred. Automated browser evidence also remains distinct from assistive-technology user review, human usability review, and accessibility certification.
 
 ## Authority order
 
@@ -85,7 +99,7 @@ AI review is sufficient for the current bounded development program. It is not h
 4. canonical authored content;
 5. identified review records and reports, with review level visible;
 6. generated manifests and operational artifacts;
-7. experimental runtime, retrieval, bridge, browser-evidence, and interface code.
+7. experimental runtime, retrieval, bridge, browser-evidence, workspace, and interface code.
 
 ## Phase 1 completion
 
@@ -163,63 +177,79 @@ report_digest: a3167ee2dc7a02c47468a1b850e15b495f3ed6058399205fc2cdf906d922aaa3
 exit_gate_count: 10
 python_substantive_artifacts_byte_identical: true
 decision: proceed-workstream2-browser-accessibility-evidence
-implementation_expansion: bounded-browser-evidence-only
 ```
 
-Accepted capabilities include:
+Accepted capabilities include exact-revision views, deterministic routes without implicit `latest`, separate Atlas and Principia status, explicit warnings and failures, keyboard and non-graph navigation requirements, a replaceable local shell, and tests proving interface state cannot mutate canonical or lifecycle authority.
 
-- exact-revision entity, provenance, retrieval, filter, trail, candidate, Principia-reference, and impact-warning views;
-- deterministic state routes without implicit `latest`;
-- separate Atlas and Principia status;
-- explicit offline, malformed, unavailable-revision, and authority failure states;
-- keyboard and non-graph navigation requirements;
-- a static, local-first, replaceable shell with no required account, API, cloud service, or graph view;
-- byte-pinned static assets and generated shell data;
-- tests proving interface state cannot mutate canonical or lifecycle authority.
+## Phase 4 Workstream 2 — accepted
 
-## Phase 4 Workstream 2 — active browser accessibility and workflow evidence
+Workstream 2 established pinned real-browser evidence over the accepted local shell and closed with twelve passing gates.
+
+```yaml
+browser_evidence:
+  accepted_pr: 46
+  tested_head: 05e829dcf0c331188f4e75a7ffe8e9b1434b2aab
+  accepted_merge_commit: d5577d9664a16b89d4c2597229f418a7f4a8f849
+  engine: chromium
+  engine_version: 151.0.7922.34
+  playwright_version: 1.62.0
+  workflow_count: 8
+  keyboard_workflow_count: 9
+  viewport_count: 2
+  external_request_count: 0
+  human_verified: false
+  accessibility_certified: false
+closure:
+  completion_contract: atlas-phase4-workstream2-completion-report/0.1
+  completion_baseline_contract: atlas-phase4-workstream2-completion-baseline/0.1
+  state: accepted
+  accepted_pr: 47
+  tested_head: f15e085317ed898cfca545f1492f53b4882e4045
+  accepted_merge_commit: dca6dd1bf8b8445bb4101ad7a3503dd79a57ea74
+  report_artifact_bytes: 4070
+  report_artifact_sha256: 4cccee425316ed329979cb9f5eb900a7a7ee3656c72822ecffa8f4f15ef76786
+  report_digest: 926eb576fb216fca2d1f5a52d11f977f7c743c058d9a8a31d81ffc265f2d9913
+  exit_gate_count: 12
+  python_substantive_artifacts_byte_identical: true
+  decision: proceed-workstream3-read-only-research-workspace
+```
+
+Accepted evidence includes deterministic keyboard operation, visible focus, landmarks, headings, labels, live regions, exact-revision deep links, reload and history behavior, non-graph equivalence, explicit warnings and failures, reduced-motion and bounded responsive checks, byte-identical repeated runs, and zero external requests. These results are bounded automated evidence, not production readiness or accessibility certification.
+
+## Phase 4 Workstream 3 — active read-only research workspace composition
 
 ### Objective
 
-Collect real-browser evidence that the accepted static shell can be operated and understood through the required workflows without external network access, hidden authority, graph-only navigation, or state mutation.
+Compose accepted exact-revision views, research trails, advisory candidates, warnings, and pinned offline Principia references into a deterministic multi-step research workspace without granting the workspace any canonical or lifecycle authority.
 
-### Required evidence contracts
+### Candidate contracts
 
 ```yaml
-browser_workflow_contract: atlas-browser-workflow-evidence/0.1
-browser_accessibility_contract: atlas-browser-accessibility-report/0.1
-browser_network_contract: atlas-browser-network-report/0.1
-browser_failure_contract: atlas-browser-failure-evidence/0.1
+workspace_contract: atlas-research-workspace/0.1
+workspace_entry_contract: atlas-research-workspace-entry/0.1
+workspace_decision_contract: atlas-research-workspace-decision/0.1
+workspace_export_contract: atlas-research-workspace-export/0.1
+workspace_manifest_contract: atlas-research-workspace-manifest/0.1
+workspace_failure_contract: atlas-research-workspace-failure/0.1
 ```
 
-Contract names remain candidates until executable fixtures and CI evidence are accepted.
+### Initial bounded slice
 
-### Required browser evidence
+The first fixture must contain five ordered include, exclude, or context decisions; two advisory contradiction or duplicate candidates; one pinned offline Principia reference; explicit rationales and open questions; deterministic export and manifest artifacts; and complete authority and limitation metadata.
 
-Workstream 2 must prove:
+The validator must reject implicit `latest`, duplicate entry identifiers, copied canonical authority, automatic candidate resolution, unavailable revisions without explicit failure, lifecycle or review mutation, live Principia dependencies, nondeterministic export fields, external-network requirements, and missing non-graph equivalents.
 
-1. every core workflow is reachable with keyboard input;
-2. focus movement is visible and deterministic;
-3. landmarks, headings, labels, status messages, and error summaries are exposed;
-4. exact-revision deep links and browser history are deterministic;
-5. every graph-capable workflow has a complete non-graph route;
-6. warnings and all five failure categories are visible and distinguishable without color alone;
-7. the generated package operates locally and offline;
-8. no external network request is required or silently attempted;
-9. Atlas and Principia status remain visibly separate;
-10. browser state cannot mutate canonical, review, lifecycle, merge, or release authority.
-
-### Initial browser boundary
-
-The first candidate may use one pinned Chromium engine solely as a test instrument. That does not select a production browser, frontend framework, deployment platform, or product architecture. Cross-engine expansion requires evidence that it changes a decision.
+See [`docs/phase-4/workstream-3.md`](docs/phase-4/workstream-3.md).
 
 ## Phase 4 boundary
 
 Allowed:
 
-- local-first interaction contracts, static shells, and browser evidence harnesses;
+- local-first interaction contracts, static shells, browser evidence harnesses, and read-only workspace fixtures;
 - exact-revision Atlas views and pinned offline Principia references;
-- deterministic keyboard, focus, landmark, deep-link, history, warning, failure, offline, and network-isolation tests;
+- deterministic keyboard, focus, semantic, deep-link, history, warning, failure, offline, responsive, and network-isolation tests;
+- ephemeral research notes, questions, rationales, and include, exclude, or context decisions;
+- deterministic read-only workspace exports;
 - optional graph visualization only when equivalent non-graph navigation is complete;
 - accessibility fixes required by evidence, provided semantic and authority contracts remain unchanged.
 
@@ -227,16 +257,17 @@ Still frozen:
 
 - production retrieval-quality claims;
 - vector database commitment, embeddings, or learned ranking;
-- implicit `latest` cross-repository references;
+- implicit `latest` references;
 - live Principia synchronization;
-- canonical writes from browser, interface, retrieval, trail, or candidate state;
-- automatic review, lifecycle, promotion, merge, or release mutation;
+- canonical writes from browser, interface, workspace, retrieval, trail, or candidate state;
+- automatic candidate resolution, review, lifecycle, promotion, merge, or release mutation;
 - synthetic bridge events as canonical lifecycle history;
 - autonomous agents changing knowledge state;
 - accounts, permissions, cloud sync, plugins, or permissionless extensions;
 - active multilingual authoring;
 - automatic conversion of AI review into human verification;
-- selection of a production frontend architecture from bounded browser evidence.
+- accessibility certification without qualified human evidence;
+- production frontend, hosting, or deployment architecture selection.
 
 ## Principia & Atlas boundary
 
@@ -244,17 +275,16 @@ Still frozen:
 - Principia owns causal explanation, pathways, investigations, simulations, system dossiers, failure analysis, design experiences, and its own publication readiness.
 - Principia may reference exact Atlas revisions.
 - Neither repository inherits the other repository's status automatically.
-- Phase 4 may demonstrate the bridge through pinned offline fixtures, but no live cross-repository dependency is active.
+- Workspaces may include pinned offline Principia references, but no live cross-repository dependency is active.
 
 ## Immediate next actions
 
-1. define the versioned real-browser workflow and evidence manifest;
-2. add a pinned Chromium test harness against the generated static package;
-3. test keyboard traversal, focus visibility, landmarks, labels, status announcements, and error summaries;
-4. test deterministic exact-revision deep links and browser back/forward behavior;
-5. test all non-graph workflow routes and warning/failure visibility;
-6. reject every external network request and prove offline package operation;
-7. emit deterministic machine-readable browser evidence without screenshots as authority;
-8. keep live synchronization, canonical writes, production architecture selection, and automatic authority frozen.
+1. define the workspace, entry, decision, export, manifest, and failure contracts;
+2. construct the first bounded exact-revision workspace fixture from accepted research-trail evidence;
+3. implement deterministic validation and export;
+4. add negative fixtures for every authority and determinism boundary;
+5. pin substantive Python 3.11 and 3.13 artifacts;
+6. only after the data contracts are accepted, add a bounded browser composition;
+7. keep production architecture, live synchronization, accounts, cloud persistence, canonical writes, and automatic authority frozen.
 
-**Phase 0, Phase 1, Phase 2, and Phase 3 are complete. Phase 4 Workstream 1 is accepted. Workstream 2 — Browser Accessibility and Workflow Evidence — is active.**
+**Phase 0, Phase 1, Phase 2, and Phase 3 are complete. Phase 4 Workstreams 1 and 2 are accepted. Workstream 3 — Read-Only Research Workspace Composition — is active.**
