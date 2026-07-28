@@ -178,7 +178,7 @@ button { color: inherit; }
 .compact-list dd { margin: 0; font-weight: 700; }
 
 .content { min-width: 0; padding: clamp(1rem, 4vw, 3.5rem); }
-.content:focus { outline: none; }
+.content:focus:not(:focus-visible) { outline: none; }
 
 .panel {
   max-width: 72rem;
