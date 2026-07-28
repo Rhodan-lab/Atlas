@@ -87,7 +87,7 @@ jobs:
           diff -ru phase4-workspace-shell-a phase4-workspace-shell-b
           diff -u phase4-workspace-shell-report-a.json phase4-workspace-shell-report-b.json
 
-      - name: Verify workspace-shell candidate semantics
+      - name: Verify pinned workspace-shell baseline
         run: |
           python - <<'PY'
           import hashlib
@@ -99,7 +99,8 @@ jobs:
           export_path = root / 'data' / 'workspace-export.json'
           manifest_path = root / 'data' / 'workspace-manifest.json'
           report_path = Path('phase4-workspace-shell-report-a.json')
-          baseline_path = Path('content/fixtures/phase4_workspace/workspace-contract-baseline.json')
+          accepted_baseline_path = Path('content/fixtures/phase4_workspace/workspace-contract-baseline.json')
+          shell_baseline_path = Path('content/fixtures/phase4_workspace/workspace-shell-baseline.json')
 
           data_bytes = data_path.read_bytes()
           export_bytes = export_path.read_bytes()
@@ -109,7 +110,35 @@ jobs:
           export = json.loads(export_bytes)
           manifest = json.loads(manifest_bytes)
           report = json.loads(report_bytes)
-          baseline = json.loads(baseline_path.read_bytes())
+          accepted = json.loads(accepted_baseline_path.read_bytes())
+          baseline = json.loads(shell_baseline_path.read_bytes())
+
+          assert baseline['contract'] == 'atlas-phase4-workspace-shell-baseline/0.1'
+          assert baseline['python_substantive_artifacts_byte_identical'] is True
+
+          assert data == baseline['shell_data']['record']
+          assert len(data_bytes) == baseline['shell_data']['artifact']['bytes']
+          assert hashlib.sha256(data_bytes).hexdigest() == baseline['shell_data']['artifact']['sha256']
+          assert data['build_digest'] == baseline['shell_data']['build_digest']
+
+          assert report == baseline['build_report']['record']
+          assert len(report_bytes) == baseline['build_report']['artifact']['bytes']
+          assert hashlib.sha256(report_bytes).hexdigest() == baseline['build_report']['artifact']['sha256']
+          assert report['report_digest'] == baseline['build_report']['report_digest']
+
+          for name, expected in baseline['static_assets'].items():
+              payload = (root / name).read_bytes()
+              assert len(payload) == expected['bytes']
+              assert hashlib.sha256(payload).hexdigest() == expected['sha256']
+
+          assert len(export_bytes) == accepted['export']['artifact']['bytes']
+          assert hashlib.sha256(export_bytes).hexdigest() == accepted['export']['artifact']['sha256']
+          assert export['report_digest'] == accepted['export']['report_digest']
+          assert len(manifest_bytes) == accepted['manifest']['artifact']['bytes']
+          assert hashlib.sha256(manifest_bytes).hexdigest() == accepted['manifest']['artifact']['sha256']
+          assert manifest['report_digest'] == accepted['manifest']['report_digest']
+          assert data['accepted_export']['artifact'] == accepted['export']['artifact']
+          assert data['accepted_manifest']['artifact'] == accepted['manifest']['artifact']
 
           assert data['contract'] == 'atlas-workspace-shell-data/0.1'
           assert data['mode'] == 'interactive-experience-foundation'
@@ -140,15 +169,6 @@ jobs:
           assert authority['repository_mutation'] is False
           assert authority['production_frontend_architecture_selected'] is False
           assert authority['live_principia_dependency'] is False
-
-          assert len(export_bytes) == baseline['export']['artifact']['bytes']
-          assert hashlib.sha256(export_bytes).hexdigest() == baseline['export']['artifact']['sha256']
-          assert export['report_digest'] == baseline['export']['report_digest']
-          assert len(manifest_bytes) == baseline['manifest']['artifact']['bytes']
-          assert hashlib.sha256(manifest_bytes).hexdigest() == baseline['manifest']['artifact']['sha256']
-          assert manifest['report_digest'] == baseline['manifest']['report_digest']
-          assert data['accepted_export']['artifact'] == baseline['export']['artifact']
-          assert data['accepted_manifest']['artifact'] == baseline['manifest']['artifact']
           assert data['download']['bytes'] == len(export_bytes)
           assert data['download']['sha256'] == hashlib.sha256(export_bytes).hexdigest()
           assert data['download']['local_only'] is True
@@ -169,22 +189,14 @@ jobs:
           assert report['production_frontend_architecture_selected'] is False
           assert report['live_principia_dependency'] is False
 
-          assets = [
-              root / 'index.html',
-              root / 'styles.css',
-              root / 'app.js',
-              data_path,
-              export_path,
-              manifest_path,
-              report_path,
-          ]
-          for path in assets:
-              payload = path.read_bytes()
-              print(path.name + '-bytes=' + str(len(payload)))
-              print(path.name + '-sha256=' + hashlib.sha256(payload).hexdigest())
+          print('workspace-shell-baseline-sha256=' + hashlib.sha256(shell_baseline_path.read_bytes()).hexdigest())
+          print('workspace-shell-data-bytes=' + str(len(data_bytes)))
+          print('workspace-shell-data-sha256=' + hashlib.sha256(data_bytes).hexdigest())
           print('workspace-shell-build-digest=' + data['build_digest'])
+          print('workspace-shell-report-bytes=' + str(len(report_bytes)))
+          print('workspace-shell-report-sha256=' + hashlib.sha256(report_bytes).hexdigest())
           print('workspace-shell-report-digest=' + report['report_digest'])
-          print('phase4-workspace-shell=candidate; routes=13; accepted-export-only=true; live=false')
+          print('phase4-workspace-shell=pinned-candidate; routes=13; accepted-export-only=true; live=false')
           PY
 
       - name: Smoke-test local static server
@@ -220,5 +232,6 @@ jobs:
             phase4-workspace-shell-report-b.json
             phase4-workspace-shell-tests.txt
             phase4-workspace-shell-server.log
+            content/fixtures/phase4_workspace/workspace-shell-baseline.json
           if-no-files-found: error
           retention-days: 30
