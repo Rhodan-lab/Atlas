@@ -1,0 +1,259 @@
+{
+  "contract": "atlas-phase4-workspace-shell-baseline/0.1",
+  "python_substantive_artifacts_byte_identical": true,
+  "static_assets": {
+    "README.md": {
+      "bytes": 2950,
+      "sha256": "cf96c6641d773a68aadd8595ac1d77c7feef548a830ab0c214608c504d5e70e4"
+    },
+    "app.js": {
+      "bytes": 23359,
+      "sha256": "0f44b35ccd3a6c59abc9eecdcf176dbc3bbf53cc155ddedb32fb518003d5c50f"
+    },
+    "index.html": {
+      "bytes": 3161,
+      "sha256": "38020c61287a50536e40ad330d43e934066cafae852e28dd2ea850e73c95ed93"
+    },
+    "styles.css": {
+      "bytes": 8427,
+      "sha256": "6016098e9461be50f6b5346d76b58d0111dfae8d42355884bf25e9885546e98f"
+    }
+  },
+  "shell_data": {
+    "artifact": {
+      "bytes": 5955,
+      "sha256": "a2dd3979c35cee4d081511cadf98499e325dfd22d814cae097cfd3e98f3f5c0c"
+    },
+    "build_digest": "b4aa3fab14ecc66ee602c9c40dc88b10add23d3391915a72c31968c681edcaee",
+    "record": {
+      "accepted_export": {
+        "artifact": {
+          "bytes": 11347,
+          "sha256": "43f28738c4678dfcd0f7a3e4d31480f891112a8c9bd220929f8f32cd80edb98a"
+        },
+        "contract": "atlas-research-workspace-export/0.1",
+        "file": "data/workspace-export.json",
+        "report_digest": "82f08c18ae76b4b4d091fe0d8be7d54cf5d10d989443132a26e550056af3f56a"
+      },
+      "accepted_manifest": {
+        "artifact": {
+          "bytes": 1094,
+          "sha256": "8240d78b29f610cb7c566dfad50432473949c5a63b9de9c522ab28751d80fd09"
+        },
+        "contract": "atlas-research-workspace-manifest/0.1",
+        "file": "data/workspace-manifest.json",
+        "report_digest": "9aefaf24b130718f284eecb5502b3c1dd144347f6fdcfc85b47d8ec6ce3fda68"
+      },
+      "authority": {
+        "accepted_export_only": true,
+        "browser_state_authority": "ephemeral-only",
+        "candidates_unresolved": true,
+        "canonical_mutation": false,
+        "decisions_read_only": true,
+        "entry_order_preserved": true,
+        "exact_revision_required": true,
+        "keyboard_workflow_required": true,
+        "lifecycle_mutation": false,
+        "live_principia_dependency": false,
+        "non_graph_workflow_required": true,
+        "principia_status_separate": true,
+        "production_frontend_architecture_selected": false,
+        "reduced_motion_required": true,
+        "repository_mutation": false,
+        "review_mutation": false,
+        "workspace_authority": "ephemeral-research-only",
+        "zero_external_requests_required": true
+      },
+      "build_digest": "b4aa3fab14ecc66ee602c9c40dc88b10add23d3391915a72c31968c681edcaee",
+      "contract": "atlas-workspace-shell-data/0.1",
+      "counts": {
+        "candidates": 2,
+        "entries": 5,
+        "limitations": 5,
+        "open_questions": 2,
+        "principia_references": 1,
+        "routes": 13,
+        "warnings": 1
+      },
+      "download": {
+        "bytes": 11347,
+        "canonical_write": false,
+        "file": "workspace-export.json",
+        "local_only": true,
+        "sha256": "43f28738c4678dfcd0f7a3e4d31480f891112a8c9bd220929f8f32cd80edb98a"
+      },
+      "mode": "interactive-experience-foundation",
+      "phase": 4,
+      "routes": [
+        {
+          "hash": "#overview",
+          "id": "overview",
+          "kind": "overview",
+          "label": "Workspace overview"
+        },
+        {
+          "decision": "include",
+          "entry_id": "workspace-entry:en:recommender-scope-claim",
+          "exact_reference": {
+            "id": "claim:en:recommender-effects-are-context-dependent",
+            "revision": 1
+          },
+          "hash": "#entry=workspace-entry%3Aen%3Arecommender-scope-claim",
+          "id": "entry:workspace-entry:en:recommender-scope-claim",
+          "kind": "entry",
+          "label": "1. Recommender effects are context-dependent",
+          "position": 1
+        },
+        {
+          "decision": "include",
+          "entry_id": "workspace-entry:en:recommender-governance-synthesis",
+          "exact_reference": {
+            "id": "synthesis:en:recommender-exposure-and-governance",
+            "revision": 1
+          },
+          "hash": "#entry=workspace-entry%3Aen%3Arecommender-governance-synthesis",
+          "id": "entry:workspace-entry:en:recommender-governance-synthesis",
+          "kind": "entry",
+          "label": "2. Recommender effects are scoped, while governance conclusions require explicit values",
+          "position": 2
+        },
+        {
+          "decision": "context",
+          "entry_id": "workspace-entry:en:twitter-amplification-context",
+          "exact_reference": {
+            "id": "claim:en:twitter-ranking-changed-relative-political-amplification",
+            "revision": 1
+          },
+          "hash": "#entry=workspace-entry%3Aen%3Atwitter-amplification-context",
+          "id": "entry:workspace-entry:en:twitter-amplification-context",
+          "kind": "entry",
+          "label": "3. Twitter ranking changed relative political amplification in the experiment",
+          "position": 3
+        },
+        {
+          "decision": "exclude",
+          "entry_id": "workspace-entry:en:explanation-choice-policy",
+          "exact_reference": {
+            "id": "claim:en:users-should-have-recommender-explanation-and-choice",
+            "revision": 1
+          },
+          "hash": "#entry=workspace-entry%3Aen%3Aexplanation-choice-policy",
+          "id": "entry:workspace-entry:en:explanation-choice-policy",
+          "kind": "entry",
+          "label": "4. Users should have meaningful recommender explanation and choice",
+          "position": 4
+        },
+        {
+          "decision": "context",
+          "entry_id": "workspace-entry:en:facebook-exposure-context",
+          "exact_reference": {
+            "id": "claim:en:facebook-exposure-reflects-network-ranking-and-clicks",
+            "revision": 1
+          },
+          "hash": "#entry=workspace-entry%3Aen%3Afacebook-exposure-context",
+          "id": "entry:workspace-entry:en:facebook-exposure-context",
+          "kind": "entry",
+          "label": "5. Facebook exposure reflected network, ranking, and click pathways",
+          "position": 5
+        },
+        {
+          "hash": "#candidates",
+          "id": "candidates",
+          "kind": "candidates",
+          "label": "Advisory candidates"
+        },
+        {
+          "hash": "#principia",
+          "id": "principia",
+          "kind": "principia",
+          "label": "Principia reference"
+        },
+        {
+          "hash": "#warnings",
+          "id": "warnings",
+          "kind": "warnings",
+          "label": "Warnings"
+        },
+        {
+          "hash": "#questions",
+          "id": "questions",
+          "kind": "questions",
+          "label": "Open questions"
+        },
+        {
+          "hash": "#limitations",
+          "id": "limitations",
+          "kind": "limitations",
+          "label": "Limitations"
+        },
+        {
+          "hash": "#evidence",
+          "id": "evidence",
+          "kind": "evidence",
+          "label": "Export evidence"
+        },
+        {
+          "hash": "#summary",
+          "id": "summary",
+          "kind": "summary",
+          "label": "Text summary"
+        }
+      ],
+      "slice": 2,
+      "source_digest": "684d08f23db50c2d994ea07293c6aaea2cbcb24492b062663b2e43144f07d3b1",
+      "state": "workspace-shell-candidate",
+      "workspace": {
+        "id": "workspace:en:recommender-cross-platform-effect-review",
+        "revision": 1,
+        "validation_digest": "2fb3b233a33475ade5355932cae9e22eee0eb173b942e5eb72cf8659ae53ade2"
+      },
+      "workstream": 3
+    }
+  },
+  "build_report": {
+    "artifact": {
+      "bytes": 1448,
+      "sha256": "b8b29a61495ecfc420de9324006b6f8efac455905c7b2b69f03639d995e7f932"
+    },
+    "record": {
+      "account_required": false,
+      "api_required": false,
+      "canonical_mutation": false,
+      "cloud_required": false,
+      "contract": "atlas-workspace-shell-build-report/0.1",
+      "decision": "workspace-shell-candidate",
+      "entry_route_count": 5,
+      "export_digest": "82f08c18ae76b4b4d091fe0d8be7d54cf5d10d989443132a26e550056af3f56a",
+      "external_network_required": false,
+      "generated_files": [
+        "data/workspace-shell-data.json",
+        "data/workspace-export.json",
+        "data/workspace-manifest.json"
+      ],
+      "live_principia_dependency": false,
+      "local_first": true,
+      "manifest_digest": "9aefaf24b130718f284eecb5502b3c1dd144347f6fdcfc85b47d8ec6ce3fda68",
+      "mode": "interactive-experience-foundation",
+      "phase": 4,
+      "production_frontend_architecture_selected": false,
+      "replaceable": true,
+      "report_digest": "f1b13c7c202f93a1682d9366fcbef5265a7ae36f335d4e10ddff71ce216e955b",
+      "repository_mutation": false,
+      "route_count": 13,
+      "shell_build_digest": "b4aa3fab14ecc66ee602c9c40dc88b10add23d3391915a72c31968c681edcaee",
+      "slice": 2,
+      "source_digest": "684d08f23db50c2d994ea07293c6aaea2cbcb24492b062663b2e43144f07d3b1",
+      "state": "workspace-shell-candidate",
+      "static_assets": [
+        "index.html",
+        "styles.css",
+        "app.js"
+      ],
+      "validation_digest": "b4aa3fab14ecc66ee602c9c40dc88b10add23d3391915a72c31968c681edcaee",
+      "workspace_id": "workspace:en:recommender-cross-platform-effect-review",
+      "workspace_revision": 1,
+      "workstream": 3
+    },
+    "report_digest": "f1b13c7c202f93a1682d9366fcbef5265a7ae36f335d4e10ddff71ce216e955b"
+  }
+}
