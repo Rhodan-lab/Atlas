@@ -1,0 +1,175 @@
+name: Phase 4 Workspace Contracts
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "content/canonical/**"
+      - "content/fixtures/phase3_retrieval/**"
+      - "content/fixtures/phase4_interaction/**"
+      - "content/fixtures/phase4_workspace/**"
+      - "docs/phase-4/**"
+      - "tools/phase2_kernel/**"
+      - "tools/phase3_retrieval/**"
+      - "tools/phase4_workspace/**"
+      - ".github/workflows/phase4-workspace-contracts.yml"
+  pull_request:
+    paths:
+      - "content/canonical/**"
+      - "content/fixtures/phase3_retrieval/**"
+      - "content/fixtures/phase4_interaction/**"
+      - "content/fixtures/phase4_workspace/**"
+      - "docs/phase-4/**"
+      - "tools/phase2_kernel/**"
+      - "tools/phase3_retrieval/**"
+      - "tools/phase4_workspace/**"
+      - ".github/workflows/phase4-workspace-contracts.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  workspace-contracts:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+
+      - name: Install pinned dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+
+      - name: Run workspace contract tests
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m unittest tools.phase4_workspace.tests.test_contracts -v 2>&1 | tee phase4-workspace-tests.txt
+
+      - name: Generate deterministic workspace evidence twice
+        run: |
+          python -m tools.phase4_workspace.contracts --output-dir phase4-workspace-evidence-a
+          python -m tools.phase4_workspace.contracts --output-dir phase4-workspace-evidence-b
+
+      - name: Verify repeated-run byte identity
+        run: diff -ru phase4-workspace-evidence-a phase4-workspace-evidence-b
+
+      - name: Verify workspace evidence semantics
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          root = Path('phase4-workspace-evidence-a')
+          report_path = root / 'workspace-report.json'
+          export_path = root / 'workspace-export.json'
+          manifest_path = root / 'workspace-manifest.json'
+          report_bytes = report_path.read_bytes()
+          export_bytes = export_path.read_bytes()
+          manifest_bytes = manifest_path.read_bytes()
+          report = json.loads(report_bytes)
+          export = json.loads(export_bytes)
+          manifest = json.loads(manifest_bytes)
+
+          assert report['contract'] == 'atlas-phase4-workspace-contract-report/0.1'
+          assert report['mode'] == 'interactive-experience-foundation'
+          assert report['phase'] == 4
+          assert report['workstream'] == 3
+          assert report['state'] == 'workspace-contract-candidate'
+          assert report['decision'] == 'workspace-contract-candidate'
+          assert report['counts'] == {
+              'candidates': 2,
+              'entries': 5,
+              'negative_cases': 10,
+              'open_questions': 2,
+              'principia_references': 1,
+              'warnings': 1,
+          }
+          assert report['decision_counts'] == {'context': 2, 'exclude': 1, 'include': 2}
+          assert report['exact_revision_preserved'] is True
+          assert report['deterministic_export'] is True
+          assert report['replaceable'] is True
+          assert report['workspace_authority'] == 'ephemeral-research-only'
+          assert report['canonical_copy_authority'] is False
+          assert report['canonical_mutation'] is False
+          assert report['lifecycle_mutation'] is False
+          assert report['review_mutation'] is False
+          assert report['automatic_merge_or_resolution'] is False
+          assert report['principia_status_separate'] is True
+          assert report['non_graph_workflow_complete'] is True
+          assert report['account_required'] is False
+          assert report['cloud_required'] is False
+          assert report['external_network_required'] is False
+          assert report['production_frontend_architecture_selected'] is False
+          assert report['live_principia_dependency'] is False
+          assert report['live'] is False
+          assert report['repository_mutation'] is False
+
+          observed_errors = [item['observed_error'] for item in report['negative_validations']]
+          assert observed_errors == [
+              'E-WORKSPACE-LATEST',
+              'E-WORKSPACE-DUPLICATE-ENTRY',
+              'E-WORKSPACE-COPIED-AUTHORITY',
+              'E-WORKSPACE-CANDIDATE-AUTHORITY',
+              'E-WORKSPACE-UNAVAILABLE-REVISION',
+              'E-WORKSPACE-LIFECYCLE-MUTATION',
+              'E-WORKSPACE-PRINCIPIA-STATUS',
+              'E-WORKSPACE-DETERMINISM',
+              'E-WORKSPACE-NETWORK',
+              'E-WORKSPACE-NON-GRAPH',
+          ]
+          assert all(item['preserved_previous_valid_workspace'] is True for item in report['negative_validations'])
+
+          assert export['contract'] == 'atlas-research-workspace-export/0.1'
+          assert len(export['entries']) == 5
+          assert len(export['candidate_references']) == 2
+          assert all(item['resolution'] == 'unresolved' for item in export['candidate_references'])
+          assert export['principia_references'][0]['principia_status_separate'] is True
+          assert export['authority']['canonical_copy_authority'] is False
+          assert '"body"' not in export_bytes.decode('utf-8')
+
+          assert manifest['contract'] == 'atlas-research-workspace-manifest/0.1'
+          assert manifest['deterministic_export'] is True
+          assert manifest['replaceable'] is True
+          assert manifest['files'] == [{
+              'bytes': len(export_bytes),
+              'contract': 'atlas-research-workspace-export/0.1',
+              'file': 'workspace-export.json',
+              'report_digest': export['report_digest'],
+              'sha256': hashlib.sha256(export_bytes).hexdigest(),
+          }]
+
+          print('phase4-workspace-report-bytes=' + str(len(report_bytes)))
+          print('phase4-workspace-report-sha256=' + hashlib.sha256(report_bytes).hexdigest())
+          print('phase4-workspace-report-digest=' + report['report_digest'])
+          print('phase4-workspace-export-bytes=' + str(len(export_bytes)))
+          print('phase4-workspace-export-sha256=' + hashlib.sha256(export_bytes).hexdigest())
+          print('phase4-workspace-export-digest=' + export['report_digest'])
+          print('phase4-workspace-manifest-bytes=' + str(len(manifest_bytes)))
+          print('phase4-workspace-manifest-sha256=' + hashlib.sha256(manifest_bytes).hexdigest())
+          print('phase4-workspace-manifest-digest=' + manifest['report_digest'])
+          print('phase4-workspace=contract-candidate; entries=5; negatives=10; live=false')
+          PY
+
+      - name: Upload workspace contract evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase4-workspace-contracts-python-${{ matrix.python-version }}
+          path: |
+            phase4-workspace-evidence-a/
+            phase4-workspace-evidence-b/
+            phase4-workspace-tests.txt
+            content/fixtures/phase4_workspace/research-workspace.v01.json
+          if-no-files-found: error
+          retention-days: 30
