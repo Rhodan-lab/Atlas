@@ -31,9 +31,35 @@ workspace_export_contract: atlas-research-workspace-export/0.1
 workspace_manifest_contract: atlas-research-workspace-manifest/0.1
 workspace_failure_contract: atlas-research-workspace-failure/0.1
 workspace_report_contract: atlas-phase4-workspace-contract-report/0.1
+workspace_baseline_contract: atlas-phase4-workspace-contract-baseline/0.1
 ```
 
-These contracts remain candidates until exact artifacts are pinned and accepted through an immutable-head merge.
+These contracts remain candidates until accepted through an immutable-head merge.
+
+## Pinned evidence
+
+Python 3.11 and Python 3.13 produced byte-identical substantive artifacts.
+
+```yaml
+fixture:
+  artifact_bytes: 8961
+  artifact_sha256: 3493c963163a2ba52d6de92fdf8193f9c7f9d7eb967211d7e13ef7b596b24f86
+report:
+  artifact_bytes: 4186
+  artifact_sha256: 41d555a077e63b47da5159e48a5aa37d93bc6cbd149b86baf372ff932b7e5a94
+  report_digest: 6aec854b297b51b0dde2e65a944453d7af2a8e36b77bd78302cbb0e2f405b402
+export:
+  artifact_bytes: 11347
+  artifact_sha256: 43f28738c4678dfcd0f7a3e4d31480f891112a8c9bd220929f8f32cd80edb98a
+  report_digest: 82f08c18ae76b4b4d091fe0d8be7d54cf5d10d989443132a26e550056af3f56a
+manifest:
+  artifact_bytes: 1094
+  artifact_sha256: 8240d78b29f610cb7c566dfad50432473949c5a63b9de9c522ab28751d80fd09
+  report_digest: 9aefaf24b130718f284eecb5502b3c1dd144347f6fdcfc85b47d8ec6ce3fda68
+python_substantive_artifacts_byte_identical: true
+```
+
+The workflow regenerates every artifact twice per Python version, compares the complete directories byte-for-byte, then enforces the pinned baseline record.
 
 ## Composition source
 
@@ -110,7 +136,7 @@ Each run produces:
 - `workspace-manifest.json` — byte count, SHA-256, semantic digest, replaceability, and non-mutation boundaries;
 - `workspace-report.json` — validation counts, negative-case outcomes, upstream and child digests, and candidate status.
 
-The workflow produces the directory twice and requires byte identity. Python 3.11 and 3.13 artifacts must later be compared and pinned before acceptance.
+The export contains references and visible metadata rather than copied canonical body authority. Generated artifacts are replaceable and require no account, cloud service, external request, or live dependency.
 
 ## Required rejection cases
 
