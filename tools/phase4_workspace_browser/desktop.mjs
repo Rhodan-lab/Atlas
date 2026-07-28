@@ -82,9 +82,8 @@ export async function desktopEvidence(browser, baseUrl, shellData, workspaceExpo
   const warningText = (await page.locator("#content-panel").innerText()).toLowerCase();
   assertEvidence(warningText.includes("automatic update") && warningText.includes("blocked"), "E-WS-BROWSER-WARNING", "warning route must refuse automatic updates");
   await openRoute(page, "summary");
-  const textSummary = await page.locator("#content-panel").innerText();
-  for (const entry of workspaceExport.entries) assertEvidence(textSummary.includes(entry.visible_metadata.title), "E-WS-BROWSER-NON-GRAPH", `text route must cover ${entry.entry_id}`);
-  for (const candidate of workspaceExport.candidate_references) assertEvidence(textSummary.includes(candidate.id), "E-WS-BROWSER-NON-GRAPH", `text route must cover ${candidate.id}`);
+  const summaryItems = await page.locator("#content-panel .summary-list li").allTextContents();
+  assertEvidence(JSON.stringify(summaryItems) === JSON.stringify(workspaceExport.non_graph_summary), "E-WS-BROWSER-NON-GRAPH", "text route must preserve the accepted complete decision summary");
 
   const historyPage = await context.newPage();
   await historyPage.goto(`${baseUrl}/`, { waitUntil: "networkidle" });
