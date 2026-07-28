@@ -57,7 +57,7 @@ Generated files are replaceable and non-authoritative. Deleting and rebuilding t
 
 The shell provides routes for overview, five ordered decisions, advisory candidates, separate Principia status, warnings, open questions, limitations, export evidence, and a complete text-only summary.
 
-Unknown routes fail explicitly and do not silently fall back. Browser state is limited to the current URL hash and in-memory navigation state. The app does not use `localStorage`, `sessionStorage`, accounts, cloud persistence, analytics, plugins, or repository credentials.
+Unknown routes fail explicitly and do not silently fall back. No fallback is permitted. Browser state is limited to the current URL hash and in-memory navigation state. The app does not use `localStorage`, `sessionStorage`, accounts, cloud persistence, analytics, plugins, or repository credentials.
 
 The download button creates a local file from the already verified export bytes. It does not call an API or write to Atlas or Principia.
 
