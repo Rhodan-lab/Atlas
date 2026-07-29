@@ -1,0 +1,126 @@
+name: Phase 4 Workstream 4 Generalization
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "content/fixtures/phase4_workspace_generalization/**"
+      - "docs/phase-4/workstream-4*"
+      - "tools/phase4_workspace/**"
+      - "tools/phase4_workspace_generalization/**"
+      - "tools/phase3_retrieval/**"
+      - "tools/phase2_kernel/**"
+      - ".github/workflows/phase4-workstream4-generalization.yml"
+  pull_request:
+    paths:
+      - "content/fixtures/phase4_workspace_generalization/**"
+      - "docs/phase-4/workstream-4*"
+      - "tools/phase4_workspace/**"
+      - "tools/phase4_workspace_generalization/**"
+      - "tools/phase3_retrieval/**"
+      - "tools/phase2_kernel/**"
+      - ".github/workflows/phase4-workstream4-generalization.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  generalization:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+
+      - name: Install pinned dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+
+      - name: Run Workstream 4 generalization tests
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m unittest tools.phase4_workspace_generalization.tests.test_generalization -v \
+            2>&1 | tee workstream4-generalization-tests.txt
+
+      - name: Build evidence twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m tools.phase4_workspace_generalization.cli \
+            --output-dir workstream4-evidence-a \
+            | tee workstream4-evidence-a.log
+          python -m tools.phase4_workspace_generalization.cli \
+            --output-dir workstream4-evidence-b \
+            | tee workstream4-evidence-b.log
+
+      - name: Verify repeated-run byte identity
+        run: diff -ru workstream4-evidence-a workstream4-evidence-b
+
+      - name: Independently validate summary
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          from tools.phase4_workspace_generalization.evaluation import validate_evaluation_report
+
+          root = Path("workstream4-evidence-a")
+          report_path = root / "workstream4-generalization-report.json"
+          payload = report_path.read_bytes()
+          report = json.loads(payload)
+          validation = validate_evaluation_report(report)
+
+          assert validation["decision"] == "valid-workstream4-generalization-candidate"
+          assert validation["recommendation"] == "proceed-static-reader-reuse-evaluation"
+          assert validation["exit_gate_count"] == 13
+          assert validation["entry_count"] == 5
+          assert validation["negative_case_count"] == 21
+          assert report["implementation_authorized"] is False
+          assert report["separate_governance_required"] is True
+          assert report["authority"]["browser_implementation_authorized"] is False
+          assert report["authority"]["canonical_mutation"] is False
+          assert report["authority"]["repository_mutation"] is False
+
+          print("workstream4-report-bytes=" + str(len(payload)))
+          print("workstream4-report-sha256=" + hashlib.sha256(payload).hexdigest())
+          print("workstream4-report-digest=" + report["report_digest"])
+          print("workstream4-exit-gates=" + str(validation["exit_gate_count"]))
+          print("workstream4-negative-cases=" + str(validation["negative_case_count"]))
+          print("workstream4-recommendation=" + validation["recommendation"])
+          PY
+
+      - name: Verify pinned baseline when present
+        shell: bash
+        run: |
+          if [ -f content/fixtures/phase4_workspace_generalization/catalase-generalization-baseline.json ]; then
+            python -m tools.phase4_workspace_generalization.verify_baseline \
+              --evidence-dir workstream4-evidence-a
+          else
+            echo "exploratory-run=true; baseline-not-yet-pinned"
+          fi
+
+      - name: Upload generalization evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase4-workstream4-generalization-python-${{ matrix.python-version }}
+          path: |
+            workstream4-evidence-a/
+            workstream4-evidence-b/
+            workstream4-generalization-tests.txt
+            workstream4-evidence-a.log
+            workstream4-evidence-b.log
+          if-no-files-found: error
+          retention-days: 30
