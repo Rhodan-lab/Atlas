@@ -115,6 +115,9 @@ jobs:
           print('workstream4-completion=closure-candidate; gates=14; implementation-authorized=false')
           PY
 
+      - name: Verify pinned completion baseline
+        run: python -m tools.phase4_workstream4_completion.verify_baseline
+
       - name: Upload closure evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -126,6 +129,7 @@ jobs:
             phase4-workstream4-closure-tests.txt
             phase4-workstream4-closure-a.log
             phase4-workstream4-closure-b.log
+            content/fixtures/phase4_workstream4_completion/workstream4-completion-baseline.json
           if-no-files-found: error
           retention-days: 30
 
@@ -150,4 +154,7 @@ jobs:
           diff -u \
             python-3.11/phase4-workstream4-closure-a/workstream4-completion-validation.json \
             python-3.13/phase4-workstream4-closure-a/workstream4-completion-validation.json
+          diff -u \
+            python-3.11/content/fixtures/phase4_workstream4_completion/workstream4-completion-baseline.json \
+            python-3.13/content/fixtures/phase4_workstream4_completion/workstream4-completion-baseline.json
           echo "phase4-workstream4-python-3.11-and-3.13=byte-identical"
