@@ -88,6 +88,8 @@ jobs:
           server_pid=$!
           trap 'kill "$server_pid"' EXIT
           python - <<'PY'
+          import time
+          from urllib.error import URLError
           from urllib.request import urlopen
 
           urls = [
@@ -98,7 +100,17 @@ jobs:
               "http://127.0.0.1:8765/packages/catalase/index.html",
               "http://127.0.0.1:8765/packages/catalase/data/workspace-export.json",
           ]
-          for url in urls:
+          for attempt in range(50):
+              try:
+                  with urlopen(urls[0], timeout=1) as response:
+                      assert response.status == 200
+                      response.read()
+                  break
+              except URLError:
+                  if attempt == 49:
+                      raise
+                  time.sleep(0.1)
+          for url in urls[1:]:
               with urlopen(url, timeout=5) as response:
                   assert response.status == 200, (url, response.status)
                   assert response.read(), url
