@@ -4,7 +4,7 @@ import copy
 import unittest
 from pathlib import Path
 
-from tools.phase2_kernel import KernelError, KernelRepository, compile_canonical, load_json, render_json
+from tools.phase2_kernel import KernelError, KernelRepository, compile_canonical, render_json
 from tools.phase4_workspace.contracts import (
     DECISION_CONTRACT,
     ENTRY_CONTRACT,
@@ -21,17 +21,17 @@ from tools.phase4_workspace_generalization.contracts import (
     render_bundle,
     validate_generalization_bundle,
 )
+from tools.phase4_workspace_generalization.fixture import build_fixture
 
 ROOT = Path(__file__).resolve().parents[3]
 CANONICAL = ROOT / "content" / "canonical"
-FIXTURE = ROOT / "content" / "fixtures" / "phase4_workspace_generalization" / "catalase.v01.json"
 
 
 class CatalaseWorkspaceGeneralizationTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.repository = KernelRepository(compile_canonical(CANONICAL))
-        cls.fixture = load_json(FIXTURE)
+        cls.fixture = build_fixture()
 
     def test_all_thirteen_acceptance_gates_pass(self) -> None:
         report, core_report, export, manifest = validate_generalization_bundle(self.fixture, self.repository)
@@ -42,7 +42,7 @@ class CatalaseWorkspaceGeneralizationTests(unittest.TestCase):
         self.assertEqual(report["counts"]["canonical_source_pool"], 8)
         self.assertEqual(report["counts"]["workspace_entries"], 5)
         self.assertEqual(report["counts"]["unresolved_candidates"], 2)
-        self.assertGreaterEqual(report["counts"]["total_negative_cases"], 22)
+        self.assertEqual(report["counts"]["total_negative_cases"], 24)
         self.assertEqual(report["recommendation"], "proceed-static-reader-reuse-evaluation")
         self.assertFalse(report["implementation_authorized"])
         self.assertEqual(export["contract"], EXPORT_CONTRACT)
@@ -72,11 +72,12 @@ class CatalaseWorkspaceGeneralizationTests(unittest.TestCase):
 
     def test_outputs_are_byte_deterministic(self) -> None:
         first = render_bundle(self.fixture, self.repository)
-        second = render_bundle(self.fixture, self.repository)
+        second = render_bundle(build_fixture(), self.repository)
         self.assertEqual(first, second)
+        self.assertIn("catalase-fixture.json", first)
         self.assertEqual(
             [render_json(item) for item in validate_generalization_bundle(self.fixture, self.repository)],
-            [render_json(item) for item in validate_generalization_bundle(self.fixture, self.repository)],
+            [render_json(item) for item in validate_generalization_bundle(build_fixture(), self.repository)],
         )
 
     def test_unavailable_revision_warning_does_not_substitute(self) -> None:
