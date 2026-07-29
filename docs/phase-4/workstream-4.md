@@ -6,16 +6,20 @@
 phase: 4
 workstream: 4
 state: active
-active_slice: 1
-slice_name: catalase-fixture-selection-and-contract-reuse
+active_slice: 2
+slice_name: catalase-static-reader-reuse-evaluation
 fixture_count_authorized: 1
 previous_fixture_domain: recommender-systems
-candidate_fixture_domain: catalase-assay-methodology
+active_fixture_domain: catalase-assay-methodology
 cross_domain_required: true
 existing_canonical_revisions_only: true
 new_canonical_authoring_authorized: false
 accepted_contract_reuse_required: true
-browser_implementation_authorized: false
+workstream_4_slice_1: accepted
+existing_static_reader_reuse_authorized: true
+browser_implementation_scope: existing-static-reader-reuse-only
+browser_evidence_authorized: true
+new_frontend_architecture_authorized: false
 production_implementation_authorized: false
 workspace_authority: ephemeral-research-only
 canonical_mutation: false
@@ -26,7 +30,7 @@ production_frontend_architecture_selected: false
 live_principia_dependency: false
 ```
 
-## Authorization source
+## Authorization chain
 
 Workstream 3 closed through PR #56 with thirteen passing gates and the bounded recommendation `proceed-bounded-workspace-fixture-evaluation`.
 
@@ -43,19 +47,19 @@ implementation_authorized_by_report: false
 separate_governance_required: true
 ```
 
-This governance record supplies that separate authorization. It permits exactly one non-production fixture evaluation and nothing broader.
+The original Workstream 4 governance record authorized exactly one non-production Catalase fixture evaluation and nothing broader.
 
-## Objective
+## Accepted Slice 1 — Catalase fixture selection and contract reuse
+
+### Objective
 
 Test whether the accepted Workstream 3 workspace contracts can represent a materially different subject without contract changes, canonical authoring, hidden fallback, or authority expansion.
 
-The candidate question is:
+The evaluated question was:
 
 > Under what assay conditions may catalase activity be compared without treating one reported optimum as universal?
 
-The Catalase domain is selected because the accepted corpus already contains enough exact-revision records for a bounded cross-domain test.
-
-## Candidate exact-revision source pool
+### Accepted exact-revision source pool
 
 ```yaml
 - question:en:how-assay-conditions-affect-catalase@1
@@ -68,11 +72,9 @@ The Catalase domain is selected because the accepted corpus already contains eno
 - src:wu-lin-wolfbeis-2003-catalase-assay@1
 ```
 
-The source pool is not itself a workspace. Slice 1 must select and justify exactly five ordered workspace entries from these records.
+### Reused contracts
 
-## Required contract reuse
-
-Slice 1 must reuse these accepted contracts unchanged:
+Slice 1 reused these accepted contracts unchanged:
 
 ```yaml
 workspace: atlas-research-workspace/0.1
@@ -83,15 +85,15 @@ manifest: atlas-research-workspace-manifest/0.1
 failure: atlas-research-workspace-failure/0.1
 ```
 
-The candidate may define new fixture identifiers and research-only records, but it may not change accepted contract names, required authority fields, exact-revision semantics, export determinism, or failure behavior.
+No accepted contract name, authority field, exact-revision semantic, export rule, or failure behavior was changed.
 
-## Required bounded fixture
+### Accepted bounded fixture
 
-The candidate must contain:
+The accepted fixture contains:
 
-- one exact five-entry trail using include, exclude, or context decisions;
-- two unresolved advisory candidates, including at least one scope-difference assessment;
-- one fixture-only pinned offline Principia envelope with separate Principia status;
+- one exact five-entry trail using include, exclude, and context decisions;
+- two unresolved advisory candidates, including a scope-difference assessment;
+- one fixture-only pinned offline Principia envelope with separate status;
 - one explicit unavailable-revision warning;
 - explicit rationales and open questions;
 - a complete non-graph summary;
@@ -100,70 +102,159 @@ The candidate must contain:
 
 Every candidate, decision, warning, and Principia reference remains non-authoritative and non-mutating.
 
-## Slice 1 acceptance gates
+### Acceptance result
 
-Slice 1 passes only if:
+```yaml
+state: accepted
+accepted_pr: 58
+accepted_candidate_head: 4b25e0ac7e5b31f05629b19cef6388ca823ad9fa
+accepted_merge_commit: a7e04f377389cb003aec8faadcd3eccdfd78ba2b
+evidence_baseline_contract: atlas-phase4-workspace-generalization-baseline/0.1
+fixture_id: generalization-fixture:phase4-catalase-en-v1
+canonical_source_pool_count: 8
+workspace_entry_count: 5
+unresolved_candidate_count: 2
+principia_reference_count: 1
+unavailable_revision_warning_count: 1
+acceptance_gate_count: 13
+core_negative_case_count: 10
+generalization_negative_case_count: 14
+total_negative_case_count: 24
+python_3_11_and_3_13_byte_identical: true
+recommendation: proceed-static-reader-reuse-evaluation
+implementation_authorized_by_report: false
+separate_governance_required: true
+```
 
-1. all referenced canonical records exist at exact revision 1;
-2. no recommender-system entity is reused as a workspace entry;
-3. exactly five ordered entries are selected from the Catalase source pool;
-4. accepted workspace contracts validate without modification;
-5. two candidates remain unresolved and advisory;
-6. Principia status remains fixture-only, separate, and non-live;
-7. unavailable revisions fail visibly without substitution;
-8. the non-graph summary covers every entry;
-9. fixture, report, export, and manifest artifacts are deterministic;
-10. Python 3.11 and 3.13 produce byte-identical substantive artifacts;
-11. no account, cloud service, credential, or external network is required;
-12. no canonical, review, lifecycle, candidate-resolution, release, or repository authority is introduced;
-13. one bounded recommendation is issued without implementing it.
+All thirteen Slice 1 gates passed:
 
-## Required negative cases
+1. every canonical record resolved at the exact accepted revision;
+2. no recommender-system entity became a Catalase workspace entry;
+3. exactly five ordered Catalase entries were selected;
+4. accepted workspace contracts validated unchanged;
+5. both candidates remained unresolved and advisory;
+6. Principia status remained fixture-only, separate, and non-live;
+7. the unavailable revision failed visibly without substitution;
+8. the non-graph summary covered every entry;
+9. fixture, report, export, and manifest artifacts were deterministic;
+10. Python 3.11 and 3.13 produced byte-identical substantive artifacts;
+11. no account, cloud service, credential, or external network was required;
+12. no canonical, review, lifecycle, candidate-resolution, release, or repository authority was introduced;
+13. one bounded recommendation was issued without implementing it.
 
-The validator must reject at least:
+The validator rejected implicit latest, domain leakage, duplicate or reordered entries, unavailable revisions, contract drift, copied authority, candidate auto-resolution, live or inherited Principia status, missing non-graph coverage, nondeterminism, account or cloud requirements, credentials, external network access, mutation, a second fixture, browser implementation, and production architecture selection.
 
-- an implicit `latest` reference;
-- a non-Catalase workspace entry;
-- a duplicate entry or reordered accepted trail;
-- an unavailable exact revision;
-- a modified accepted contract name;
-- copied canonical authority;
-- candidate auto-resolution or automatic merge;
-- inherited or live Principia status;
-- missing non-graph coverage;
-- nondeterministic fields;
-- account, cloud, credential, or external-network requirements;
-- canonical, review, lifecycle, release, or repository mutation;
-- browser implementation or production architecture selection.
+Pinned identities are stored in `content/fixtures/phase4_workspace_generalization/catalase-generalization-baseline.json`. The acceptance decision and Slice 2 scope are recorded in `docs/phase-4/workstream-4-slice-1-governance.md`.
 
-Every failure preserves the accepted Workstream 3 workspace as the previous valid state.
+## Active Slice 2 — Catalase static reader reuse evaluation
 
-## Allowed Slice 1 recommendation
+### Objective
+
+Evaluate whether the existing accepted Workstream 3 static reader can render the accepted Catalase fixture without changing Atlas semantics, the accepted workspace contracts, or the reader’s authority model.
+
+Slice 2 is a reuse evaluation, not a redesign. It may add only the minimum deterministic fixture-selection and packaging logic required to pass the accepted Catalase artifacts through the existing reader.
+
+### Authorized implementation scope
+
+Slice 2 may:
+
+- generate the accepted Catalase fixture and export from the pinned Slice 1 baseline;
+- reuse the existing static-reader route, view, export, warning, failure, and non-graph conventions;
+- add local fixture-selection plumbing that is deterministic, replaceable, and read-only;
+- preserve the existing recommender-system package as the regression baseline;
+- run keyboard, focus, semantic, responsive, history, deep-link, download-identity, warning, failure, and zero-network evidence;
+- run pinned Chromium automation twice at accepted desktop and mobile viewports;
+- emit deterministic package, report, manifest, browser evidence, and validation artifacts.
+
+Slice 2 may not:
+
+- create a new reader or frontend architecture;
+- alter any accepted workspace contract;
+- add or edit canonical Atlas content;
+- replace or mutate the accepted recommender-system workspace;
+- add a second generalized fixture;
+- resolve candidates automatically;
+- add accounts, permissions, cloud state, collaboration, plugins, credentials, or external network dependencies;
+- introduce live Principia synchronization or inherited cross-repository status;
+- mutate review, lifecycle, promotion, merge, release, or repository state;
+- claim production readiness, broad retrieval quality, universal contract generality, human verification, or accessibility certification.
+
+### Required Slice 2 package
+
+The reused reader must expose, at minimum:
+
+1. a deterministic index or selector that distinguishes the accepted recommender package from the Catalase package without changing either fixture;
+2. the five ordered Catalase entries with exact revisions, decisions, rationales, original ranks, and visible metadata;
+3. both unresolved advisory candidates with their assessments and non-authoritative status;
+4. the pinned non-live Principia reference and separate draft status;
+5. the unavailable-revision warning with no fallback or implicit latest;
+6. both open questions and the complete five-item non-graph summary;
+7. the existing authority and limitation disclosures;
+8. a local export whose downloaded bytes exactly match the generated Catalase export artifact;
+9. explicit unknown-fixture, unknown-route, missing-artifact, and tampered-artifact failures;
+10. a rollback path that restores the unchanged accepted Workstream 3 reader package.
+
+### Slice 2 acceptance gates
+
+Slice 2 passes only if:
+
+1. the pinned Slice 1 baseline verifies before reader packaging;
+2. the existing recommender reader package remains byte-identical or semantically identical under its accepted baseline;
+3. the Catalase package is deterministic across repeated builds;
+4. the same accepted reader contracts render both fixtures without semantic branching that changes authority;
+5. all Catalase entries, candidates, warnings, Principia status, questions, and non-graph content are visible and correct;
+6. exact routes, deep links, history, keyboard, focus, responsive layout, and explicit failures pass;
+7. the downloaded Catalase export is byte-identical to the generated export;
+8. browser state remains disposable and non-authoritative;
+9. pinned Chromium evidence is repeatable at desktop and mobile viewports;
+10. all substantive package and evidence artifacts are byte-identical across repeated runs;
+11. external request count remains zero;
+12. negative tests reject fallback, implicit latest, hidden resolution, credentials, network access, mutation, and authority escalation;
+13. one bounded recommendation is issued without closing Workstream 4 or authorizing production.
+
+### Required negative cases
+
+The Slice 2 evaluator must reject at least:
+
+- an unknown fixture selector that silently falls back to the recommender package;
+- an unknown route that silently redirects to a valid entry;
+- a missing or tampered Catalase fixture, export, report, or baseline;
+- any revision substitution or implicit latest;
+- any candidate resolution or status inheritance;
+- any mismatch between visible download and generated export bytes;
+- any external request, credential, account, cloud, or live synchronization requirement;
+- any canonical, review, lifecycle, release, or repository mutation;
+- any attempt to activate a second generalized fixture;
+- any new production reader or frontend architecture.
+
+Every failure must preserve the accepted Workstream 3 reader and accepted Slice 1 evidence as the previous valid states.
+
+### Allowed Slice 2 recommendation
 
 Exactly one decision may be issued:
 
 ```yaml
 allowed_decisions:
-  - proceed-static-reader-reuse-evaluation
-  - hold-for-contract-review
-  - reject-catalase-generalization
+  - proceed-workstream4-closure-evaluation
+  - hold-static-reader-reuse
+  - reject-static-reader-reuse
 ```
 
-A proceed decision authorizes only a separate governance proposal for static-reader reuse. It does not authorize browser code, Chromium evidence, deployment, production architecture, accounts, cloud persistence, live synchronization, or canonical editing.
+A proceed decision authorizes only a separate Workstream 4 closure proposal. It does not close the workstream or authorize deployment, production architecture, accounts, cloud persistence, live synchronization, canonical editing, or broader fixture generalization.
 
-## Immediate implementation sequence
+### Immediate implementation sequence
 
-1. define the Catalase fixture and validation bundle;
-2. bind the eight candidate exact revisions;
-3. create and justify the five-entry trail;
-4. create two unresolved advisory candidates;
-5. create one pinned offline Principia envelope and one unavailable-revision warning;
-6. build deterministic export and manifest artifacts using accepted contracts;
-7. add positive and negative tests;
-8. run Python 3.11 and 3.13 repeated-build evidence;
-9. pin exact artifact identities;
-10. produce one bounded Slice 1 recommendation.
+1. inspect the accepted Workstream 3 static-reader package and identify the minimum reusable seams;
+2. generate and verify the pinned Catalase fixture, report, export, and manifest;
+3. add deterministic fixture selection without altering accepted contracts;
+4. package the Catalase artifacts through the existing reader;
+5. preserve and regression-test the accepted recommender package;
+6. add positive and negative reader tests;
+7. generate repeated local browser evidence at accepted desktop and mobile viewports;
+8. prove exact download identity, disposable state, and zero external requests;
+9. pin Slice 2 artifact identities;
+10. issue one bounded recommendation without implementing closure.
 
 ## Frozen boundaries
 
-Workstream 4 does not authorize new canonical content, a second active fixture, replacement of the accepted recommender workspace, browser implementation, production claims, deployment, accounts, cloud state, collaboration, live Principia synchronization, automatic candidate resolution, embeddings, vector databases, learned ranking, human-verification claims, or accessibility certification.
+Workstream 4 does not authorize new canonical content, a second generalized fixture, replacement of the accepted recommender workspace, a new reader or frontend architecture, production claims, deployment, accounts, cloud state, collaboration, live Principia synchronization, automatic candidate resolution, embeddings, vector databases, learned ranking, human-verification claims, or accessibility certification.

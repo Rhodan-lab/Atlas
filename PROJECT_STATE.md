@@ -9,19 +9,23 @@ phase: 4
 mode: interactive-experience-foundation
 active_workstream: 4
 workstream_name: bounded-workspace-fixture-generalization
-active_slice: 1
-slice_name: catalase-fixture-selection-and-contract-reuse
+active_slice: 2
+slice_name: catalase-static-reader-reuse-evaluation
 workstream_1: accepted
 workstream_2: accepted
 workstream_3: accepted
+workstream_4_slice_1: accepted
 fixture_count_authorized: 1
 previous_fixture_domain: recommender-systems
-candidate_fixture_domain: catalase-assay-methodology
+active_fixture_domain: catalase-assay-methodology
 cross_domain_required: true
 existing_canonical_revisions_only: true
 new_canonical_authoring_authorized: false
 accepted_contract_reuse_required: true
-browser_implementation_authorized: false
+existing_static_reader_reuse_authorized: true
+browser_implementation_scope: existing-static-reader-reuse-only
+browser_evidence_authorized: true
+new_frontend_architecture_authorized: false
 production_implementation_authorized: false
 workspace_authority: ephemeral-research-only
 browser_state_authority: ephemeral-only
@@ -44,7 +48,7 @@ live_principia_dependency: false
 repository_mutation: false
 ```
 
-No human or expert verification is claimed. Automated Chromium evidence is not accessibility certification. No production retrieval-quality claim, frontend architecture, deployment architecture, vector database, live Principia synchronization, autonomous knowledge mutation, account system, cloud persistence, or automatic lifecycle authority is active.
+No human or expert verification is claimed. Automated Chromium evidence is not accessibility certification. No production retrieval-quality claim, new frontend architecture, deployment architecture, vector database, live Principia synchronization, autonomous knowledge mutation, account system, cloud persistence, or automatic lifecycle authority is active.
 
 ## Authority order
 
@@ -77,6 +81,8 @@ phase_4_workstream_2:
   accepted_prs: [46, 47, 48]
 phase_4_workstream_3:
   accepted_prs: [50, 51, 52, 54, 55, 56]
+phase_4_workstream_4:
+  accepted_prs: [58]
 superseded_unmerged_prs: [39, 49, 53]
 ```
 
@@ -181,68 +187,95 @@ separate_governance_required: true
 
 Workstream 3 proved deterministic exact-revision composition, read-only decisions, unresolved advisory candidates, separate Principia status, visible warnings and failures, complete keyboard and non-graph operation, byte-identical local export, disposable browser state, replaceability, explicit migration and rollback boundaries, and zero external requests.
 
-The completion report could not authorize its own recommendation. This state record separately authorizes only Workstream 4 below.
+The completion report could not authorize its own recommendation. This state record separately authorized Workstream 4.
 
-## Phase 4 Workstream 4 — active bounded fixture generalization
+### Workstream 4 Slice 1 — Catalase fixture contract generalization
+
+```yaml
+state: accepted
+accepted_pr: 58
+accepted_candidate_head: 4b25e0ac7e5b31f05629b19cef6388ca823ad9fa
+accepted_merge_commit: a7e04f377389cb003aec8faadcd3eccdfd78ba2b
+evidence_baseline_contract: atlas-phase4-workspace-generalization-baseline/0.1
+fixture_id: generalization-fixture:phase4-catalase-en-v1
+fixture_domain: catalase-assay-methodology
+canonical_source_pool_count: 8
+workspace_entry_count: 5
+unresolved_candidate_count: 2
+principia_reference_count: 1
+unavailable_revision_warning_count: 1
+acceptance_gate_count: 13
+core_negative_case_count: 10
+generalization_negative_case_count: 14
+total_negative_case_count: 24
+python_3_11_and_3_13_byte_identical: true
+recommendation: proceed-static-reader-reuse-evaluation
+implementation_authorized_by_report: false
+separate_governance_required: true
+```
+
+Pinned Slice 1 artifact identities:
+
+```yaml
+catalase_fixture_sha256: 0a3c76134b72351b9e3c331d7058563f24cd9eef498af1053e60c4b96ef031cd
+generalization_report_sha256: 9028a6a4aa7d3841201d9273b42466ad217b283df93e84192933792ed1d6f2f6
+generalization_report_digest: 75e5b93d288bd459e7ccc4e134b042f50dc1ef4a4eab24889fdb29b0b7a67121
+workspace_contract_report_sha256: 5a8c307e858b348bc695e7dcffe0c5a3577e4ccf83d282631a25f1b623facb91
+workspace_contract_report_digest: 3390157fd3935cb3f17ea2519a006589e299bbb922d87e28315e13172dc8fc32
+workspace_export_sha256: b05617cac685873cd472b157efde835365b36d846db5eecf941db3495cc79893
+workspace_export_digest: d8280f4aa5cfbb5ba91569190ce7836676a5eabc22c113eccd4474ade6a25154
+workspace_manifest_sha256: 170a943ceecd306eb02251c92a143137d8f3dc6b047d52d5f5efcc9facf13a5f
+workspace_manifest_digest: 0e1d2ee3674457844740b17100be298924293f1a9f7b0fab93ecae478197ca21
+```
+
+Slice 1 demonstrated that the accepted Workstream 3 workspace contracts can represent one materially different domain without contract modification, hidden fallback, candidate resolution, or authority expansion. The result is bounded to the single Catalase fixture and is not a universal generality claim.
+
+## Phase 4 Workstream 4 — active Slice 2 static reader reuse evaluation
 
 ### Objective
 
-Evaluate whether the accepted Workstream 3 contracts generalize to exactly one additional non-production fixture in a materially different domain. The authorized candidate is Catalase assay methodology because accepted exact-revision records already provide a question, concept, model, evidence, methodological claim, synthesis, and two sources.
+Evaluate whether the existing accepted static workspace reader can render the accepted Catalase fixture without changing Atlas semantics, the accepted workspace contracts, or the reader’s authority model.
 
-### Active Slice 1
+### Active Slice 2
 
 ```yaml
 state: active
 fixture_count_authorized: 1
-candidate_fixture_id: workspace:en:catalase-assay-scope-review
-candidate_domain: catalase-assay-methodology
-candidate_question: Under what assay conditions may catalase activity be compared without treating one reported optimum as universal?
+fixture_id: generalization-fixture:phase4-catalase-en-v1
+fixture_domain: catalase-assay-methodology
+accepted_slice_1_baseline_required: true
+existing_static_reader_reuse_authorized: true
+new_static_reader_authorized: false
+new_frontend_architecture_authorized: false
+browser_evidence_authorized: true
+production_implementation_authorized: false
 existing_canonical_revisions_only: true
 new_canonical_authoring_authorized: false
-accepted_workspace_contract_reuse_required: true
-browser_implementation_authorized: false
-production_implementation_authorized: false
 ```
 
-Candidate exact-revision source pool:
+Slice 2 may add only the minimum deterministic fixture-selection and packaging logic required to reuse the existing reader. It must preserve the accepted recommender-system reader behavior, exact routes, visible metadata, warnings, failures, keyboard operation, non-graph operation, local-download identity, disposable state, and zero-network boundary.
 
-```yaml
-- question:en:how-assay-conditions-affect-catalase@1
-- concept:en:catalase@1
-- model:en:catalase-assay-observation@1
-- evidence:en:fluorescent-catalase-assay-neutral-ph@1
-- claim:en:catalase-optimum-requires-assay-scope@1
-- synthesis:en:catalase-assay-conditions@1
-- src:aebi-1984-catalase-in-vitro@1
-- src:wu-lin-wolfbeis-2003-catalase-assay@1
-```
+### Slice 2 required evidence
 
-Slice 1 must produce one five-entry trail, two unresolved advisory candidates, one fixture-only non-live Principia envelope with separate status, one unavailable-revision warning, open questions, complete non-graph coverage, and deterministic fixture, report, export, and manifest candidates using the accepted Workstream 3 contracts unchanged.
+1. generate the accepted Catalase fixture and export from the pinned Slice 1 baseline;
+2. package the fixture through the existing static-reader contract without changing accepted workspace semantics;
+3. preserve the existing recommender-system package and prove no regression;
+4. render the five Catalase entries, two unresolved candidates, pinned Principia status, unavailable-revision warning, open questions, and non-graph summary;
+5. test deterministic routes, deep links, history, keyboard, focus, responsive behavior, explicit failures, and exact local-download bytes;
+6. run pinned Chromium evidence twice with zero external requests;
+7. reject hidden fallback, implicit latest, account, cloud, credential, network, mutation, and authority escalation;
+8. issue a bounded Slice 2 recommendation without authorizing production.
 
-If the accepted contracts cannot represent the Catalase fixture unchanged, Slice 1 must fail explicitly and preserve Workstream 3 as the accepted state. Contract modification requires separate governance.
-
-### Slice 1 allowed decisions
+### Slice 2 allowed decisions
 
 ```yaml
 allowed_decisions:
-  - proceed-static-reader-reuse-evaluation
-  - hold-for-contract-review
-  - reject-catalase-generalization
+  - proceed-workstream4-closure-evaluation
+  - hold-static-reader-reuse
+  - reject-static-reader-reuse
 ```
 
-A proceed decision may recommend a later static-reader evaluation, but cannot implement or authorize browser code by itself.
-
-### Immediate next actions
-
-1. define the Catalase fixture-selection and contract-reuse evidence bundle;
-2. validate all eight candidate exact revisions;
-3. create and justify exactly five ordered entries;
-4. create two unresolved advisory candidates;
-5. create one pinned offline Principia envelope and one unavailable-revision warning;
-6. generate deterministic fixture, report, export, and manifest artifacts twice on Python 3.11 and 3.13;
-7. reject domain leakage, contract drift, hidden fallback, nondeterminism, and authority escalation;
-8. pin exact artifact identities;
-9. issue one bounded Slice 1 recommendation without implementing it.
+A proceed decision may recommend a separate Workstream 4 closure evaluation. It cannot close the workstream or authorize production by itself.
 
 ## Global frozen boundaries
 
@@ -251,15 +284,15 @@ Still frozen:
 - new canonical authoring for the Workstream 4 fixture;
 - a second additional fixture;
 - replacement or mutation of the accepted recommender workspace;
-- browser implementation before Slice 1 governance acceptance;
+- a new reader or frontend architecture;
 - production retrieval, frontend, hosting, deployment, or business-model claims;
 - vector databases, embeddings, or learned ranking;
 - implicit `latest` references;
 - live Principia synchronization or inherited cross-repository status;
-- canonical, review, lifecycle, promotion, merge, release, or repository authority from workspace state;
+- canonical, review, lifecycle, promotion, merge, release, or repository authority from workspace or browser state;
 - automatic contradiction or duplicate resolution;
 - accounts, permissions, cloud state, collaboration, plugins, or autonomous knowledge mutation;
 - conversion of AI review into human verification;
 - accessibility certification without qualified human evidence.
 
-**Phase 0, Phase 1, Phase 2, and Phase 3 are complete. Phase 4 Workstreams 1, 2, and 3 are accepted. Workstream 4 Slice 1 — Catalase Fixture Selection and Contract Reuse — is active.**
+**Phase 0, Phase 1, Phase 2, and Phase 3 are complete. Phase 4 Workstreams 1, 2, and 3 are accepted. Workstream 4 Slice 1 is accepted. Workstream 4 Slice 2 — Catalase Static Reader Reuse Evaluation — is active.**
