@@ -7,23 +7,19 @@ import hashlib
 from pathlib import Path
 from typing import Sequence
 
-from tools.phase2_kernel import KernelRepository, compile_canonical, load_json
+from tools.phase2_kernel import KernelRepository, compile_canonical
 from tools.phase4_workspace_generalization.contracts import render_bundle, validate_generalization_bundle
+from tools.phase4_workspace_generalization.fixture import build_fixture
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--canonical-root", type=Path, default=Path("content/canonical"))
-    parser.add_argument(
-        "--fixture",
-        type=Path,
-        default=Path("content/fixtures/phase4_workspace_generalization/catalase.v01.json"),
-    )
     parser.add_argument("--output-dir", type=Path)
     args = parser.parse_args(argv)
 
     repository = KernelRepository(compile_canonical(args.canonical_root))
-    fixture = load_json(args.fixture)
+    fixture = build_fixture()
     report, core_report, export, manifest = validate_generalization_bundle(fixture, repository)
     rendered = render_bundle(fixture, repository)
 
