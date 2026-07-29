@@ -2,53 +2,49 @@
 
 ## Current authority
 
-**Phase 4 — Principia & Atlas Interactive Experience (active)**
+**Atlas Phase 4 — Principia & Atlas Interactive Experience — accepted.**
 
 ```yaml
+repository: Rhodan-lab/Atlas
 phase: 4
-mode: interactive-experience-foundation
-active_workstream: 4
-workstream_name: bounded-workspace-fixture-generalization
-active_slice: 2
-slice_name: catalase-static-reader-reuse-evaluation
-workstream_1: accepted
-workstream_2: accepted
-workstream_3: accepted
-workstream_4_slice_1: accepted
-fixture_count_authorized: 1
-previous_fixture_domain: recommender-systems
-active_fixture_domain: catalase-assay-methodology
-cross_domain_required: true
-existing_canonical_revisions_only: true
-new_canonical_authoring_authorized: false
-accepted_contract_reuse_required: true
-existing_static_reader_reuse_authorized: true
-browser_implementation_scope: existing-static-reader-reuse-only
-browser_evidence_authorized: true
-new_frontend_architecture_authorized: false
+phase_name: principia-and-atlas-interactive-experience
+phase_state: accepted
+active_atlas_workstream: none
+atlas_operating_state: accepted-foundation-maintenance
+program_priority: principia
+next_transition: inspect-and-govern-principia-continuation
+atlas_expansion_authorized: false
+atlas_bridge_support_authorized: bounded-exact-revision-support-only
 production_implementation_authorized: false
+production_frontend_architecture_selected: false
+deployment_authorized: false
+live_principia_dependency: false
 workspace_authority: ephemeral-research-only
 browser_state_authority: ephemeral-only
+retrieval_authority: advisory-only
 atlas_semantics_authoritative: true
 principia_status_separate: true
 exact_cross_repository_references: true
-retrieval_authority: advisory-only
 local_first: true
 deterministic_export_required: true
 canonical_copy_authority: false
 canonical_mutation: false
 lifecycle_mutation: false
 review_mutation: false
+candidate_resolution_authorized: false
 automatic_merge_or_resolution: false
+automatic_release_action: false
 account_required: false
 cloud_required: false
 external_network_required: false
-production_frontend_architecture_selected: false
-live_principia_dependency: false
-repository_mutation: false
+repository_mutation_from_runtime: false
+human_verified: false
+accessibility_certified: false
 ```
 
-No human or expert verification is claimed. Automated Chromium evidence is not accessibility certification. No production retrieval-quality claim, new frontend architecture, deployment architecture, vector database, live Principia synchronization, autonomous knowledge mutation, account system, cloud persistence, or automatic lifecycle authority is active.
+Atlas has reached the end of its bounded foundation program. Further Atlas expansion is not the default next action. New Atlas work requires a separately governed need arising from an exact Principia bridge, a defect in accepted evidence, or a clearly bounded maintenance requirement.
+
+No human or expert verification is claimed. Automated Chromium evidence is not accessibility certification. No production retrieval-quality claim, production frontend, hosting or deployment architecture, vector database, live Principia synchronization, autonomous knowledge mutation, account system, cloud persistence, or automatic lifecycle authority is active.
 
 ## Authority order
 
@@ -62,11 +58,9 @@ No human or expert verification is claimed. Automated Chromium evidence is not a
 
 ## Language and review policy
 
-The active authored and review corpus is English-only. AI review is sufficient for this bounded development program but is not human verification. Human verification remains an optional stronger layer and must never be inferred. Browser automation remains distinct from human usability review, assistive-technology user review, and accessibility certification.
+The accepted authored and review corpus is English-only. AI review is sufficient for this bounded development program but is not human verification. Human verification remains an optional stronger layer and must never be inferred. Browser automation remains distinct from human usability review, assistive-technology user review, and accessibility certification.
 
 ## Accepted development history
-
-The repository preserves granular history through the merged pull requests and phase records. The accepted sequence is:
 
 ```yaml
 phase_0_and_phase_1:
@@ -80,9 +74,9 @@ phase_4_workstream_1:
 phase_4_workstream_2:
   accepted_prs: [46, 47, 48]
 phase_4_workstream_3:
-  accepted_prs: [50, 51, 52, 54, 55, 56]
+  accepted_prs: [50, 51, 52, 54, 55, 56, 57]
 phase_4_workstream_4:
-  accepted_prs: [58]
+  accepted_prs: [58, 59, 60, 61, 62, 63]
 superseded_unmerged_prs: [39, 49, 53]
 ```
 
@@ -139,7 +133,10 @@ The accepted structured baseline is bounded fixture evidence, not a production r
 
 ```yaml
 state: accepted
+interaction_pr: 42
+reference_shell_pr: 43
 completion_pr: 44
+governance_pr: 45
 completion_merge_commit: 37b013ce1b3c8c45230feaf4c1cd6bfd0ba48735
 completion_contract: atlas-phase4-workstream1-completion-report/0.1
 exit_gate_count: 10
@@ -151,6 +148,7 @@ exit_gate_count: 10
 state: accepted
 browser_pr: 46
 closure_pr: 47
+governance_pr: 48
 completion_contract: atlas-phase4-workstream2-completion-report/0.1
 engine: chromium-151.0.7922.34
 playwright: 1.62.0
@@ -168,6 +166,7 @@ workspace_contract_pr: 50
 workspace_shell_pr: 52
 workspace_browser_pr: 54
 closure_pr: 56
+governance_pr: 57
 closure_tested_head: f24777d4f52ca4dd8e9829fc929f3fb2c88d0115
 closure_merge_commit: b9e30959e3b9387c5132c804cccf9c1391a9ada6
 completion_contract: atlas-phase4-workstream3-completion-report/0.1
@@ -182,117 +181,99 @@ exit_gate_count: 13
 python_3_11_and_3_13_byte_identical: true
 recommendation: proceed-bounded-workspace-fixture-evaluation
 implementation_authorized_by_report: false
-separate_governance_required: true
 ```
 
 Workstream 3 proved deterministic exact-revision composition, read-only decisions, unresolved advisory candidates, separate Principia status, visible warnings and failures, complete keyboard and non-graph operation, byte-identical local export, disposable browser state, replaceability, explicit migration and rollback boundaries, and zero external requests.
 
-The completion report could not authorize its own recommendation. This state record separately authorized Workstream 4.
-
-### Workstream 4 Slice 1 — Catalase fixture contract generalization
+### Workstream 4 — bounded Catalase cross-domain generalization
 
 ```yaml
 state: accepted
-accepted_pr: 58
-accepted_candidate_head: 4b25e0ac7e5b31f05629b19cef6388ca823ad9fa
-accepted_merge_commit: a7e04f377389cb003aec8faadcd3eccdfd78ba2b
-evidence_baseline_contract: atlas-phase4-workspace-generalization-baseline/0.1
+slice_1_generalization_pr: 58
+slice_1_governance_pr: 59
+slice_2_static_package_pr: 60
+slice_2_browser_evidence_pr: 61
+slice_2_governance_pr: 62
+closure_pr: 63
+closure_tested_head: 38aa542eb234923d2ef8fae7168d6c814f8d8911
+closure_merge_commit: 8c2c0c159eb11fa4cd3138c14b17a42275674eb6
+completion_contract: atlas-phase4-workstream4-completion-report/0.1
+completion_validation_contract: atlas-phase4-workstream4-completion-validation/0.1
+completion_baseline_contract: atlas-phase4-workstream4-completion-baseline/0.1
+completion_report_bytes: 8684
+completion_report_sha256: ab204b145a0cddc5fccd708334acf18ed47b7b6e251fcde6a8cd935ccfc41013
+completion_report_digest: 4c5ae62ae4d4a795887ce1bcae63b89b0dd1e1ef4b80037b6cd17a611d320333
+completion_validation_bytes: 700
+completion_validation_sha256: 601efcb885347c25c03fea125d0385851892781f78a480b04f0bab954e119556
+completion_validation_digest: e115d521626ab2f78e7dc0f17dc7a79c7c65a1f1bb79c6ac2506011f3b069cc1
 fixture_id: generalization-fixture:phase4-catalase-en-v1
 fixture_domain: catalase-assay-methodology
-canonical_source_pool_count: 8
-workspace_entry_count: 5
-unresolved_candidate_count: 2
-principia_reference_count: 1
-unavailable_revision_warning_count: 1
-acceptance_gate_count: 13
-core_negative_case_count: 10
-generalization_negative_case_count: 14
-total_negative_case_count: 24
+fixture_packages: 2
+generalized_fixtures: 1
+workspace_entries: 5
+unresolved_candidates: 2
+principia_references: 1
+unavailable_revision_warnings: 1
+routes: 13
+keyboard_routes: 13
+external_requests: 0
+exit_gate_count: 14
+negative_case_count: 20
 python_3_11_and_3_13_byte_identical: true
-recommendation: proceed-static-reader-reuse-evaluation
+recommendation: proceed-phase4-completion-governance
 implementation_authorized_by_report: false
+phase4_closed_by_report: false
 separate_governance_required: true
 ```
 
-Pinned Slice 1 artifact identities:
+Workstream 4 demonstrated that the accepted Workstream 3 workspace contracts and unchanged static reader can represent one materially different Catalase assay-methodology fixture without contract weakening, hidden fallback, candidate resolution, inherited Principia status, canonical mutation, or authority expansion. This is bounded evidence for one additional fixture, not a universal generality claim.
+
+## Phase 4 acceptance decision
+
+This governance state accepts the Workstream 4 closure recommendation and marks Phase 4 complete because:
+
+1. all four workstreams have accepted deterministic evidence;
+2. exact Atlas revisions and separate Principia status remain visible;
+3. both workspace fixtures remain read-only and replaceable;
+4. the accepted recommender package remains the rollback baseline;
+5. local exports and browser evidence are byte-identical where required;
+6. browser evidence records zero external requests;
+7. failures reject unknown selectors, routes, missing artifacts, tampering, implicit `latest`, and authority escalation;
+8. no accepted report self-authorized implementation or production.
+
+Phase 4 acceptance does not begin Atlas Phase 5. It does not authorize another fixture, a production interface, deployment, accounts, cloud persistence, live Principia synchronization, canonical editing, candidate resolution, human-verification claims, or accessibility certification.
+
+## Program handoff to Principia
 
 ```yaml
-catalase_fixture_sha256: 0a3c76134b72351b9e3c331d7058563f24cd9eef498af1053e60c4b96ef031cd
-generalization_report_sha256: 9028a6a4aa7d3841201d9273b42466ad217b283df93e84192933792ed1d6f2f6
-generalization_report_digest: 75e5b93d288bd459e7ccc4e134b042f50dc1ef4a4eab24889fdb29b0b7a67121
-workspace_contract_report_sha256: 5a8c307e858b348bc695e7dcffe0c5a3577e4ccf83d282631a25f1b623facb91
-workspace_contract_report_digest: 3390157fd3935cb3f17ea2519a006589e299bbb922d87e28315e13172dc8fc32
-workspace_export_sha256: b05617cac685873cd472b157efde835365b36d846db5eecf941db3495cc79893
-workspace_export_digest: d8280f4aa5cfbb5ba91569190ce7836676a5eabc22c113eccd4474ade6a25154
-workspace_manifest_sha256: 170a943ceecd306eb02251c92a143137d8f3dc6b047d52d5f5efcc9facf13a5f
-workspace_manifest_digest: 0e1d2ee3674457844740b17100be298924293f1a9f7b0fab93ecae478197ca21
+priority_repository: Principia
+atlas_role: stable-evidence-and-identity-foundation
+principia_role: explanation-model-investigation-and-system-layer
+first_principia_requirement: inspect-current-repository-authority-before-writing
+bridge_rule: exact-atlas-revision-references-only
+atlas_status_inheritance: forbidden
+principia_status_inheritance: forbidden
+live_sync_authorized: false
+cross_repository_mutation_authorized: false
 ```
 
-Slice 1 demonstrated that the accepted Workstream 3 workspace contracts can represent one materially different domain without contract modification, hidden fallback, candidate resolution, or authority expansion. The result is bounded to the single Catalase fixture and is not a universal generality claim.
-
-## Phase 4 Workstream 4 — active Slice 2 static reader reuse evaluation
-
-### Objective
-
-Evaluate whether the existing accepted static workspace reader can render the accepted Catalase fixture without changing Atlas semantics, the accepted workspace contracts, or the reader’s authority model.
-
-### Active Slice 2
-
-```yaml
-state: active
-fixture_count_authorized: 1
-fixture_id: generalization-fixture:phase4-catalase-en-v1
-fixture_domain: catalase-assay-methodology
-accepted_slice_1_baseline_required: true
-existing_static_reader_reuse_authorized: true
-new_static_reader_authorized: false
-new_frontend_architecture_authorized: false
-browser_evidence_authorized: true
-production_implementation_authorized: false
-existing_canonical_revisions_only: true
-new_canonical_authoring_authorized: false
-```
-
-Slice 2 may add only the minimum deterministic fixture-selection and packaging logic required to reuse the existing reader. It must preserve the accepted recommender-system reader behavior, exact routes, visible metadata, warnings, failures, keyboard operation, non-graph operation, local-download identity, disposable state, and zero-network boundary.
-
-### Slice 2 required evidence
-
-1. generate the accepted Catalase fixture and export from the pinned Slice 1 baseline;
-2. package the fixture through the existing static-reader contract without changing accepted workspace semantics;
-3. preserve the existing recommender-system package and prove no regression;
-4. render the five Catalase entries, two unresolved candidates, pinned Principia status, unavailable-revision warning, open questions, and non-graph summary;
-5. test deterministic routes, deep links, history, keyboard, focus, responsive behavior, explicit failures, and exact local-download bytes;
-6. run pinned Chromium evidence twice with zero external requests;
-7. reject hidden fallback, implicit latest, account, cloud, credential, network, mutation, and authority escalation;
-8. issue a bounded Slice 2 recommendation without authorizing production.
-
-### Slice 2 allowed decisions
-
-```yaml
-allowed_decisions:
-  - proceed-workstream4-closure-evaluation
-  - hold-static-reader-reuse
-  - reject-static-reader-reuse
-```
-
-A proceed decision may recommend a separate Workstream 4 closure evaluation. It cannot close the workstream or authorize production by itself.
+The next development unit belongs in the Principia repository. It should first inspect Principia’s current phase, accepted contracts, unfinished work, and existing Atlas bridge seams. Atlas may be changed only if that inspection identifies a bounded bridge defect or missing exact-revision support that cannot be handled inside Principia.
 
 ## Global frozen boundaries
 
 Still frozen:
 
-- new canonical authoring for the Workstream 4 fixture;
-- a second additional fixture;
+- new Atlas canonical authoring merely to expand the Phase 4 fixture set;
+- a second generalized workspace fixture without new governance;
 - replacement or mutation of the accepted recommender workspace;
-- a new reader or frontend architecture;
 - production retrieval, frontend, hosting, deployment, or business-model claims;
 - vector databases, embeddings, or learned ranking;
 - implicit `latest` references;
 - live Principia synchronization or inherited cross-repository status;
-- canonical, review, lifecycle, promotion, merge, release, or repository authority from workspace or browser state;
+- canonical, review, lifecycle, promotion, merge, release, or repository authority from retrieval, workspace, browser, or bridge state;
 - automatic contradiction or duplicate resolution;
 - accounts, permissions, cloud state, collaboration, plugins, or autonomous knowledge mutation;
 - conversion of AI review into human verification;
 - accessibility certification without qualified human evidence.
 
-**Phase 0, Phase 1, Phase 2, and Phase 3 are complete. Phase 4 Workstreams 1, 2, and 3 are accepted. Workstream 4 Slice 1 is accepted. Workstream 4 Slice 2 — Catalase Static Reader Reuse Evaluation — is active.**
+**Phases 0 through 4 are accepted. Atlas now serves as the stable evidence, identity, provenance, and read-only interaction foundation while active program development moves to Principia.**
