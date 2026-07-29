@@ -1,0 +1,134 @@
+{
+  "accepted_static_package": {
+    "baseline_contract": "atlas-phase4-workspace-reader-reuse-baseline/0.1",
+    "file_count": 18,
+    "package_index": {
+      "bytes": 5922,
+      "report_digest": "209daa4d90de4271d2d09ea5942e561811a8f4d907553ff3eecb09943c6f5b18",
+      "sha256": "225aff2dd97b3fb0adfc528b10ac2a485eadb2db68758b8605fa633675810b53"
+    }
+  },
+  "authority": {
+    "accessibility_certified": false,
+    "browser_state_authority": "ephemeral-only",
+    "candidate_resolution_authorized": false,
+    "canonical_mutation": false,
+    "human_verified": false,
+    "implementation_authorized": false,
+    "lifecycle_mutation": false,
+    "live": false,
+    "live_principia_dependency": false,
+    "production_frontend_architecture_selected": false,
+    "repository_mutation": false,
+    "review_mutation": false,
+    "separate_governance_required": true
+  },
+  "claims": {
+    "candidates_unresolved": true,
+    "decisions_read_only": true,
+    "exact_entry_order_preserved": true,
+    "local_download_byte_identical": true,
+    "missing_artifact_failure_explicit": true,
+    "non_graph_workflow_complete": true,
+    "principia_status_separate": true,
+    "recommender_regression_preserved": true,
+    "reduced_motion_verified": true,
+    "selector_unknown_fixture_refused": true,
+    "unknown_route_preserved": true,
+    "visible_focus_verified": true,
+    "warning_visibility_verified": true
+  },
+  "contract": "atlas-phase4-workspace-reader-reuse-browser-baseline/0.1",
+  "counts": {
+    "candidates": 2,
+    "entries": 5,
+    "external_requests": 0,
+    "exit_gates": 13,
+    "keyboard_routes": 13,
+    "network_requests": 141,
+    "principia_references": 1,
+    "routes": 13,
+    "selector_choices": 2,
+    "viewports": 2,
+    "warnings": 1
+  },
+  "decision": "proceed-workstream4-closure-evaluation",
+  "engine": {
+    "name": "chromium",
+    "playwright_version": "1.62.0",
+    "version": "151.0.7922.34"
+  },
+  "evidence": {
+    "accessibility": {
+      "artifact": {
+        "bytes": 1283,
+        "sha256": "6f69665debcc22517a84872e36a546bd95850ee105f89fd5cfcf8ba7d03e1f9f"
+      },
+      "contract": "atlas-workspace-reader-reuse-browser-accessibility-report/0.1",
+      "file": "reader-reuse-browser-accessibility.json",
+      "report_digest": "aff85eb5c21835b812293f169219e79f90f42acd5434b88e56b7e2cbd48eca12"
+    },
+    "failure": {
+      "artifact": {
+        "bytes": 1512,
+        "sha256": "f06d60986526dead5bc84bc2d03b7312ce08af9d0b02d474ba57613ca6479786"
+      },
+      "contract": "atlas-workspace-reader-reuse-browser-failure-evidence/0.1",
+      "file": "reader-reuse-browser-failures.json",
+      "report_digest": "7b48fcdc97cdd1f1cec6a17d707a92bc6bfa5d6e9d153ccdaf5589887437f1fe"
+    },
+    "manifest": {
+      "artifact": {
+        "bytes": 2894,
+        "sha256": "529299543121252550d394c60b979b312d3cff905ca32ac6373d8a15c155e9ba"
+      },
+      "contract": "atlas-phase4-workspace-reader-reuse-browser-manifest/0.1",
+      "file": "reader-reuse-browser-manifest.json",
+      "report_digest": "0fbc6bbf7f3c60cfedb48559d2492d5a22037172fd0b0c5ab849c3ec2b3d724d"
+    },
+    "network": {
+      "artifact": {
+        "bytes": 22882,
+        "sha256": "318c5bd0d19ddf9f89aa59708c62c5c5f6fc368751e78476e0548473554f45b7"
+      },
+      "contract": "atlas-workspace-reader-reuse-browser-network-report/0.1",
+      "file": "reader-reuse-browser-network.json",
+      "report_digest": "7d0b5482a6471356d1bf25da551e0b4ee568cedba76af121c53fe45022abdfcd"
+    },
+    "report": {
+      "artifact": {
+        "bytes": 3343,
+        "sha256": "bb2d7c4f2d195a6161329ac2a62e96e733768007749d19e75b7574c6983dc8f9"
+      },
+      "contract": "atlas-phase4-workspace-reader-reuse-browser-report/0.1",
+      "file": "reader-reuse-browser-report.json",
+      "report_digest": "e367bb46d43e0de6886f3ce9dffa22624c65cdb45ba5470e4ec48f544ac57ced"
+    },
+    "workflow": {
+      "artifact": {
+        "bytes": 9593,
+        "sha256": "1c3fd948458cb46819a10d959e6d61e13092b778d1fc9c706225dfabecf6f709"
+      },
+      "contract": "atlas-workspace-reader-reuse-browser-workflow-evidence/0.1",
+      "file": "reader-reuse-browser-workflows.json",
+      "report_digest": "81dc4dea73d836ca118579b619a41695b091e70ae42820be0e7f167947ec8665"
+    }
+  },
+  "evidence_head": "50f80bc13d4584d13a1b65f4d2811ca329366ed1",
+  "phase": 4,
+  "repeated_run_substantive_artifacts_byte_identical": true,
+  "slice": 2,
+  "state": "reader-reuse-browser-candidate",
+  "validation": {
+    "artifact": {
+      "bytes": 694,
+      "sha256": "d83844150b1a20273d79f343d44421e8dba01e183243d4e44d003247731fdf29"
+    },
+    "contract": "atlas-phase4-workspace-reader-reuse-browser-validation/0.1",
+    "decision": "valid-reader-reuse-browser-candidate",
+    "file": "phase4-reader-reuse-browser-validation.json",
+    "report_digest": "e367bb46d43e0de6886f3ce9dffa22624c65cdb45ba5470e4ec48f544ac57ced"
+  },
+  "workflow_run": 30412809626,
+  "workstream": 4
+}
