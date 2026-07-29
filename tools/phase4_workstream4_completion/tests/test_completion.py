@@ -10,11 +10,13 @@ from tools.phase4_workstream4_completion.closure import (
     seal_record,
     validate_completion_report,
 )
+from tools.phase4_workstream4_completion.verify_baseline import verify_baseline
 
 ROOT = Path(__file__).resolve().parents[3]
 GENERALIZATION = ROOT / "content/fixtures/phase4_workspace_generalization/catalase-generalization-baseline.json"
 PACKAGE = ROOT / "content/fixtures/phase4_workspace_reader_reuse/reader-reuse-baseline.json"
 BROWSER = ROOT / "content/fixtures/phase4_workspace_reader_browser/reader-reuse-browser-baseline.json"
+BASELINE = ROOT / "content/fixtures/phase4_workstream4_completion/workstream4-completion-baseline.json"
 
 
 class Workstream4CompletionTests(unittest.TestCase):
@@ -22,6 +24,7 @@ class Workstream4CompletionTests(unittest.TestCase):
         self.generalization = load_json(GENERALIZATION)
         self.package = load_json(PACKAGE)
         self.browser = load_json(BROWSER)
+        self.baseline = load_json(BASELINE)
 
     def build(self, **kwargs):
         return build_completion_report(self.generalization, self.package, self.browser, **kwargs)
@@ -37,6 +40,19 @@ class Workstream4CompletionTests(unittest.TestCase):
         self.assertEqual(20, validation_first["negative_case_count"])
         self.assertEqual("proceed-phase4-completion-governance", validation_first["recommendation"])
         self.assertFalse(validation_first["implementation_authorized"])
+
+    def test_pinned_completion_baseline(self) -> None:
+        report = self.build()
+        validation = validate_completion_report(report)
+        verify_baseline(self.baseline, report, validation)
+
+    def test_tampered_completion_baseline_rejected(self) -> None:
+        report = self.build()
+        validation = validate_completion_report(report)
+        changed = copy.deepcopy(self.baseline)
+        changed["completion_report"]["artifact"]["sha256"] = "0" * 64
+        with self.assertRaises(KernelError):
+            verify_baseline(changed, report, validation)
 
     def test_other_bounded_decisions_validate(self) -> None:
         for decision in ("hold-accepted-workstream4", "reject-workstream4-generalization"):
