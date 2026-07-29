@@ -101,6 +101,7 @@ def validate_generalization_bundle(
 def render_bundle(fixture: Mapping[str, Any], repository: KernelRepository) -> dict[str, str]:
     report, core_report, export, manifest = validate_generalization_bundle(fixture, repository)
     return {
+        "catalase-fixture.json": render_json(fixture),
         "catalase-generalization-report.json": render_json(report),
         "workspace-contract-report.json": render_json(core_report),
         "workspace-export.json": render_json(export),
