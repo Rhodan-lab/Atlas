@@ -54,6 +54,64 @@ jobs:
           cd build/phase4-workstream4-a
           sha256sum *.json | sort > identities.sha256
           cat identities.sha256
+      - name: Verify pinned Slice 1 evidence baseline
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          root = Path("build/phase4-workstream4-a")
+          baseline_path = Path("content/fixtures/phase4_workspace_generalization/catalase-generalization-baseline.json")
+          baseline = json.loads(baseline_path.read_text(encoding="utf-8"))
+
+          def load(name):
+              payload = (root / name).read_bytes()
+              return payload, json.loads(payload)
+
+          fixture_bytes, fixture = load("catalase-fixture.json")
+          report_bytes, report = load("catalase-generalization-report.json")
+          core_bytes, core = load("workspace-contract-report.json")
+          export_bytes, export = load("workspace-export.json")
+          manifest_bytes, manifest = load("workspace-manifest.json")
+
+          assert baseline["contract"] == "atlas-phase4-workspace-generalization-baseline/0.1"
+          assert baseline["accepted_pr"] == 58
+          assert baseline["accepted_merge_commit"] == "a7e04f377389cb003aec8faadcd3eccdfd78ba2b"
+          assert baseline["workflow"]["python_substantive_artifacts_byte_identical"] is True
+
+          pairs = [
+              (fixture_bytes, fixture, baseline["fixture"]),
+              (report_bytes, report, baseline["report"]),
+              (core_bytes, core, baseline["workspace_contract_report"]),
+              (export_bytes, export, baseline["export"]),
+              (manifest_bytes, manifest, baseline["manifest"]),
+          ]
+          for payload, record, expected in pairs:
+              assert hashlib.sha256(payload).hexdigest() == expected["sha256"]
+              assert record["contract"] == expected["contract"]
+              if "report_digest" in expected:
+                  assert record["report_digest"] == expected["report_digest"]
+
+          assert fixture["id"] == baseline["fixture"]["id"]
+          assert fixture["version"] == baseline["fixture"]["version"]
+          assert fixture["source_digest"] == baseline["fixture"]["source_digest"]
+          assert report["all_acceptance_gates_pass"] is True
+          assert len(report["acceptance_gates"]) == baseline["counts"]["acceptance_gates"]
+          assert report["counts"]["workspace_entries"] == baseline["counts"]["workspace_entries"]
+          assert report["counts"]["unresolved_candidates"] == baseline["counts"]["unresolved_candidates"]
+          assert report["counts"]["core_negative_cases"] == baseline["counts"]["core_negative_cases"]
+          assert report["counts"]["generalization_negative_cases"] == baseline["counts"]["generalization_negative_cases"]
+          assert report["counts"]["total_negative_cases"] == baseline["counts"]["total_negative_cases"]
+          assert report["recommendation"] == baseline["report"]["recommendation"]
+          assert report["implementation_authorized"] is False
+          assert report["browser_implementation_authorized"] is False
+          assert report["production_implementation_authorized"] is False
+          assert report["repository_mutation"] is False
+
+          print("phase4-workstream4-baseline-sha256=" + hashlib.sha256(baseline_path.read_bytes()).hexdigest())
+          print("phase4-workstream4-baseline=accepted-slice1-evidence")
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: phase4-workstream4-python-${{ matrix.python-version }}
@@ -76,6 +134,6 @@ jobs:
       - name: Require byte-identical substantive artifacts
         run: |
           diff -u build/python-3.11/identities.sha256 build/python-3.13/identities.sha256
-          for file in catalase-generalization-report.json workspace-contract-report.json workspace-export.json workspace-manifest.json; do
+          for file in catalase-fixture.json catalase-generalization-report.json workspace-contract-report.json workspace-export.json workspace-manifest.json; do
             cmp "build/python-3.11/$file" "build/python-3.13/$file"
           done
