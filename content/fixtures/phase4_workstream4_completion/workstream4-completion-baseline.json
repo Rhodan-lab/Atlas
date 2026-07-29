@@ -1,0 +1,147 @@
+{
+  "accepted_evidence": {
+    "slice1_generalization": {
+      "accepted_merge_commit": "a7e04f377389cb003aec8faadcd3eccdfd78ba2b",
+      "accepted_pr": 58,
+      "accepted_tested_head": "4b25e0ac7e5b31f05629b19cef6388ca823ad9fa",
+      "baseline_contract": "atlas-phase4-workspace-generalization-baseline/0.1",
+      "baseline_sha256": "9b09955a411d865ab7a139c20c82ec04e185f2dfef60a7e4e1741ac4959eeb98",
+      "export_sha256": "b05617cac685873cd472b157efde835365b36d846db5eecf941db3495cc79893",
+      "fixture_sha256": "0a3c76134b72351b9e3c331d7058563f24cd9eef498af1053e60c4b96ef031cd",
+      "manifest_sha256": "170a943ceecd306eb02251c92a143137d8f3dc6b047d52d5f5efcc9facf13a5f",
+      "report_digest": "75e5b93d288bd459e7ccc4e134b042f50dc1ef4a4eab24889fdb29b0b7a67121",
+      "report_sha256": "9028a6a4aa7d3841201d9273b42466ad217b283df93e84192933792ed1d6f2f6"
+    },
+    "slice2_browser_evidence": {
+      "accepted_merge_commit": "8481b32cfa8fef538c5bd51833894d6ee52de64a",
+      "accepted_pr": 61,
+      "accepted_tested_head": "ee22fa0e999b8a863ca08f1511a3a54f9449d3b2",
+      "baseline_contract": "atlas-phase4-workspace-reader-reuse-browser-baseline/0.1",
+      "baseline_sha256": "46400e1d3bf8a908b4f0956d97d22d94e28d176c9c3661415bd978e751596194",
+      "engine": {
+        "name": "chromium",
+        "playwright_version": "1.62.0",
+        "version": "151.0.7922.34"
+      },
+      "report_digest": "e367bb46d43e0de6886f3ce9dffa22624c65cdb45ba5470e4ec48f544ac57ced",
+      "report_sha256": "bb2d7c4f2d195a6161329ac2a62e96e733768007749d19e75b7574c6983dc8f9",
+      "validation_sha256": "d83844150b1a20273d79f343d44421e8dba01e183243d4e44d003247731fdf29"
+    },
+    "slice2_static_package": {
+      "accepted_merge_commit": "694ee1346045e79a843b02242a51dcba0e5b3928",
+      "accepted_pr": 60,
+      "accepted_tested_head": "c5b76df4eb303bce5820044ebacc51a178938111",
+      "baseline_contract": "atlas-phase4-workspace-reader-reuse-baseline/0.1",
+      "baseline_sha256": "82e6d1bac619ae4291dfb0c5c1a0504fec1731cfbbf40971c0462ef6124ac985",
+      "package_index_digest": "209daa4d90de4271d2d09ea5942e561811a8f4d907553ff3eecb09943c6f5b18",
+      "package_index_sha256": "225aff2dd97b3fb0adfc528b10ac2a485eadb2db68758b8605fa633675810b53",
+      "report_digest": "cebaba8c4e9dfca355c2b771e86a53f95e18de6c2d88fead996f314c87b812f2",
+      "report_sha256": "c55e3a1ce55b735ed01c43eb47b3b7ca95fe7eee8914d8913133a6614ef1d752"
+    }
+  },
+  "authority": {
+    "accepted_evidence_only": true,
+    "accessibility_certified": false,
+    "account_required": false,
+    "automatic_merge_or_resolution": false,
+    "automatic_release_action": false,
+    "browser_state_authority": "ephemeral-only",
+    "candidate_resolution_authorized": false,
+    "candidates_unresolved": true,
+    "canonical_mutation": false,
+    "closure_authority": "evidence-and-recommendation-only",
+    "cloud_required": false,
+    "credentials_required": false,
+    "decisions_read_only": true,
+    "deployment_authorized": false,
+    "deterministic_export_required": true,
+    "exact_revision_required": true,
+    "external_network_required": false,
+    "human_verified": false,
+    "lifecycle_mutation": false,
+    "live_principia_dependency": false,
+    "local_first": true,
+    "new_canonical_authoring_authorized": false,
+    "principia_status_separate": true,
+    "production_frontend_architecture_selected": false,
+    "repository_mutation": false,
+    "review_mutation": false,
+    "second_generalized_fixture_authorized": false,
+    "workspace_authority": "ephemeral-research-only"
+  },
+  "completion_report": {
+    "artifact": {
+      "bytes": 8684,
+      "sha256": "ab204b145a0cddc5fccd708334acf18ed47b7b6e251fcde6a8cd935ccfc41013"
+    },
+    "contract": "atlas-phase4-workstream4-completion-report/0.1",
+    "decision": "proceed-phase4-completion-governance",
+    "exit_gate_count": 14,
+    "report_digest": "4c5ae62ae4d4a795887ce1bcae63b89b0dd1e1ef4b80037b6cd17a611d320333",
+    "state": "closure-candidate"
+  },
+  "completion_validation": {
+    "artifact": {
+      "bytes": 700,
+      "sha256": "601efcb885347c25c03fea125d0385851892781f78a480b04f0bab954e119556"
+    },
+    "contract": "atlas-phase4-workstream4-completion-validation/0.1",
+    "decision": "valid-workstream4-closure-candidate",
+    "recommendation": "proceed-phase4-completion-governance",
+    "report_digest": "e115d521626ab2f78e7dc0f17dc7a79c7c65a1f1bb79c6ac2506011f3b069cc1"
+  },
+  "contract": "atlas-phase4-workstream4-completion-baseline/0.1",
+  "evidence_head": "84ff9f475ba2065ae1003e6832fe7a35429d0eea",
+  "exit_gates": [
+    "advisory_candidates_principia_and_warning_boundaries_preserved",
+    "all_write_live_production_and_self_authority_frozen",
+    "cross_domain_contract_reuse_preserved",
+    "deterministic_browser_evidence_preserved",
+    "deterministic_package_evidence_preserved",
+    "download_and_zero_external_network_preserved",
+    "exact_revisions_and_methodological_scope_preserved",
+    "limitations_and_non_certification_explicit",
+    "replaceability_migration_and_rollback_proved",
+    "selector_route_and_artifact_failures_preserved",
+    "slice1_generalization_evidence_bound_exactly",
+    "slice2_chromium_evidence_bound_exactly",
+    "slice2_static_package_evidence_bound_exactly",
+    "workstream3_recommender_regression_preserved"
+  ],
+  "limitations_count": 7,
+  "mode": "interactive-experience-foundation",
+  "negative_case_count": 20,
+  "phase": 4,
+  "python_substantive_artifacts_byte_identical": true,
+  "python_versions": [
+    "3.11",
+    "3.13"
+  ],
+  "recommendation": {
+    "decision": "proceed-phase4-completion-governance",
+    "deployment_authorized": false,
+    "implementation_authorized": false,
+    "phase4_closed_by_report": false,
+    "phase5_authorized": false,
+    "production_authorized": false,
+    "separate_governance_required": true
+  },
+  "replaceability": {
+    "browser_state_disposable": true,
+    "canonical_migration_required": false,
+    "decision": "replaceable",
+    "generated_packages_disposable": true,
+    "generated_selector_disposable": true,
+    "live_data_migration_required": false
+  },
+  "rollback": {
+    "canonical_rollback_required": false,
+    "previous_valid_state_preserved": true,
+    "repository_mutation": false,
+    "rollback_target": "accepted-workstream-3-recommender-package"
+  },
+  "slice": 3,
+  "state": "pinned-closure-candidate",
+  "workflow_run": 30438640420,
+  "workstream": 4
+}
