@@ -1,0 +1,162 @@
+name: Phase 4 Workspace Reader Reuse
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/workspace-shell/**"
+      - "content/fixtures/phase4_workspace/**"
+      - "content/fixtures/phase4_workspace_generalization/**"
+      - "docs/phase-4/workstream-4*"
+      - "tools/phase2_kernel/**"
+      - "tools/phase4_workspace/**"
+      - "tools/phase4_workspace_generalization/**"
+      - "tools/phase4_workspace_reader_reuse/**"
+      - ".github/workflows/phase4-workspace-reader-reuse.yml"
+  pull_request:
+    paths:
+      - "apps/workspace-shell/**"
+      - "content/fixtures/phase4_workspace/**"
+      - "content/fixtures/phase4_workspace_generalization/**"
+      - "docs/phase-4/workstream-4*"
+      - "tools/phase2_kernel/**"
+      - "tools/phase4_workspace/**"
+      - "tools/phase4_workspace_generalization/**"
+      - "tools/phase4_workspace_reader_reuse/**"
+      - ".github/workflows/phase4-workspace-reader-reuse.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    name: Python ${{ matrix.python-version }} deterministic package
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+
+      - name: Install pinned dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+
+      - name: Run accepted reader and Catalase regressions
+        run: |
+          python -m unittest tools.phase4_workspace.tests.test_shell -v
+          python -m unittest tools.phase4_workspace_generalization.tests.test_catalase -v
+
+      - name: Run reader-reuse package tests
+        run: python -m unittest tools.phase4_workspace_reader_reuse.tests.test_reader_reuse -v
+
+      - name: Build deterministic package twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m tools.phase4_workspace_reader_reuse.cli \
+            --output-dir build/reader-reuse-a \
+            | tee build-reader-reuse-a.log
+          python -m tools.phase4_workspace_reader_reuse.cli \
+            --output-dir build/reader-reuse-b \
+            | tee build-reader-reuse-b.log
+          diff -ru build/reader-reuse-a build/reader-reuse-b
+
+      - name: Record substantive identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd build/reader-reuse-a
+          find . -type f ! -name identities.sha256 -print0 \
+            | sort -z \
+            | xargs -0 sha256sum > identities.sha256
+          cat identities.sha256
+
+      - name: Smoke-test both packages over loopback HTTP
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m http.server 8765 --bind 127.0.0.1 --directory build/reader-reuse-a \
+            > loopback-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          python - <<'PY'
+          from urllib.request import urlopen
+
+          urls = [
+              "http://127.0.0.1:8765/index.html",
+              "http://127.0.0.1:8765/package-index.json",
+              "http://127.0.0.1:8765/packages/recommender/index.html",
+              "http://127.0.0.1:8765/packages/recommender/data/workspace-export.json",
+              "http://127.0.0.1:8765/packages/catalase/index.html",
+              "http://127.0.0.1:8765/packages/catalase/data/workspace-export.json",
+          ]
+          for url in urls:
+              with urlopen(url, timeout=5) as response:
+                  assert response.status == 200, (url, response.status)
+                  assert response.read(), url
+          print("loopback-smoke=pass; external-network-required=false")
+          PY
+
+      - name: Verify pinned package baseline when present
+        shell: bash
+        run: |
+          if [ -f content/fixtures/phase4_workspace_reader_reuse/reader-reuse-baseline.json ]; then
+            python -m tools.phase4_workspace_reader_reuse.verify_baseline \
+              --package-dir build/reader-reuse-a
+          else
+            echo "exploratory-run=true; package-baseline-not-yet-pinned"
+          fi
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: phase4-workspace-reader-reuse-python-${{ matrix.python-version }}
+          path: |
+            build/reader-reuse-a/
+            build-reader-reuse-a.log
+            build-reader-reuse-b.log
+            loopback-server.log
+          if-no-files-found: error
+          retention-days: 30
+
+  compare-python-identities:
+    name: Compare Python 3.11 and 3.13 packages
+    needs: package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: phase4-workspace-reader-reuse-python-3.11
+          path: build/python-3.11
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: phase4-workspace-reader-reuse-python-3.13
+          path: build/python-3.13
+
+      - name: Require byte-identical package artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          root11=$(dirname "$(find build/python-3.11 -name package-index.json -print -quit)")
+          root13=$(dirname "$(find build/python-3.13 -name package-index.json -print -quit)")
+          test -n "$root11"
+          test -n "$root13"
+          diff -u "$root11/identities.sha256" "$root13/identities.sha256"
+          cmp "$root11/package-index.json" "$root13/package-index.json"
+          cmp "$root11/reader-reuse-report.json" "$root13/reader-reuse-report.json"
+          cmp "$root11/reader-reuse-validation.json" "$root13/reader-reuse-validation.json"
+          cmp "$root11/packages/recommender/data/workspace-shell-data.json" \
+              "$root13/packages/recommender/data/workspace-shell-data.json"
+          cmp "$root11/packages/catalase/data/workspace-shell-data.json" \
+              "$root13/packages/catalase/data/workspace-shell-data.json"
+          cmp "$root11/packages/catalase/data/workspace-export.json" \
+              "$root13/packages/catalase/data/workspace-export.json"
