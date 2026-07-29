@@ -1,0 +1,200 @@
+{
+  "allowed_decisions": [
+    "proceed-static-reader-reuse-evaluation",
+    "hold-for-contract-review",
+    "reject-catalase-generalization"
+  ],
+  "authority": {
+    "account_required": false,
+    "browser_implementation_authorized": false,
+    "canonical_mutation": false,
+    "cloud_required": false,
+    "existing_canonical_revisions_only": true,
+    "external_network_required": false,
+    "lifecycle_mutation": false,
+    "live_principia_dependency": false,
+    "new_canonical_authoring_authorized": false,
+    "production_frontend_architecture_selected": false,
+    "production_implementation_authorized": false,
+    "repository_mutation": false,
+    "review_mutation": false
+  },
+  "candidate_definitions": [
+    {
+      "assessment": "scope-difference-likely",
+      "compared_statements": [
+        "Reported catalase optima require enzyme-source and assay scope.",
+        "One fluorescent assay reported a neutral-pH result under its stated method."
+      ],
+      "id": "candidate:contradiction:catalase-universal-optimum-vs-scoped-assay",
+      "kind": "contradiction",
+      "left": {
+        "id": "claim:en:catalase-optimum-requires-assay-scope",
+        "revision": 1
+      },
+      "rationale": "A method-specific neutral-pH result can look inconsistent with a warning against universal optima only when assay scope is removed.",
+      "right": {
+        "id": "evidence:en:fluorescent-catalase-assay-neutral-ph",
+        "revision": 1
+      },
+      "scope_analysis": [
+        "The evidence record is method-specific.",
+        "The claim concerns interpretation discipline across methods.",
+        "No universal optimum is asserted by either accepted record."
+      ]
+    },
+    {
+      "assessment": "related-not-duplicate",
+      "id": "candidate:duplicate:catalase-concept-and-assay-synthesis",
+      "kind": "duplicate",
+      "left": {
+        "id": "concept:en:catalase",
+        "revision": 1
+      },
+      "rationale": "Both records discuss catalase and condition dependence, but one defines the concept while the other integrates evidence and methodological limits.",
+      "right": {
+        "id": "synthesis:en:catalase-assay-conditions",
+        "revision": 1
+      },
+      "semantic_differences": [
+        "The concept defines catalase and its boundaries.",
+        "The synthesis answers a scoped methodological question and records open questions."
+      ],
+      "similarity_basis": [
+        "Both records describe condition-dependent catalase measurement.",
+        "Both reference the observation model and methodological claim."
+      ]
+    }
+  ],
+  "contract": "atlas-phase4-workstream4-generalization-fixture/0.1",
+  "domain": "catalase-assay-methodology",
+  "eligible_exact_references": [
+    {
+      "id": "question:en:how-assay-conditions-affect-catalase",
+      "revision": 1
+    },
+    {
+      "id": "concept:en:catalase",
+      "revision": 1
+    },
+    {
+      "id": "model:en:catalase-assay-observation",
+      "revision": 1
+    },
+    {
+      "id": "evidence:en:fluorescent-catalase-assay-neutral-ph",
+      "revision": 1
+    },
+    {
+      "id": "claim:en:catalase-optimum-requires-assay-scope",
+      "revision": 1
+    },
+    {
+      "id": "synthesis:en:catalase-assay-conditions",
+      "revision": 1
+    },
+    {
+      "id": "src:aebi-1984-catalase-in-vitro",
+      "revision": 1
+    },
+    {
+      "id": "src:wu-lin-wolfbeis-2003-catalase-assay",
+      "revision": 1
+    }
+  ],
+  "fixture_count_authorized": 1,
+  "id": "workspace-generalization:phase4-catalase-en-v1",
+  "mode": "interactive-experience-foundation",
+  "open_questions": [
+    "Which assay fields must be mandatory before two catalase measurements may be compared?",
+    "When should calibration and protocol records become separate canonical entities?"
+  ],
+  "principia_reference": {
+    "atlas_references": [
+      {
+        "id": "model:en:catalase-assay-observation",
+        "revision": 1
+      },
+      {
+        "id": "claim:en:catalase-optimum-requires-assay-scope",
+        "revision": 1
+      },
+      {
+        "id": "synthesis:en:catalase-assay-conditions",
+        "revision": 1
+      }
+    ],
+    "id": "principia-reference:catalase:assay-observation-boundary",
+    "principia_artifact_id": "principia:investigation:catalase-assay-conditions",
+    "principia_artifact_revision": 1,
+    "principia_status": "draft",
+    "reference_purpose": "Explain how a catalase investigation separates reaction behavior from the measurement proxy without inheriting Atlas lifecycle status.",
+    "revision": 1
+  },
+  "query": {
+    "id": "query:retrieval:catalase-assay-comparison-scope",
+    "intent": "Compose exact-revision methodological evidence while preserving assay scope.",
+    "text": "Under what assay conditions may catalase activity be compared without treating one reported optimum as universal?"
+  },
+  "selected_entries": [
+    {
+      "action": "include",
+      "exact_reference": {
+        "id": "claim:en:catalase-optimum-requires-assay-scope",
+        "revision": 1
+      },
+      "rationale": "Use the methodological claim as the primary boundary against universalizing one assay result.",
+      "summary": "Include the assay-scope claim as the principal interpretation boundary."
+    },
+    {
+      "action": "include",
+      "exact_reference": {
+        "id": "synthesis:en:catalase-assay-conditions",
+        "revision": 1
+      },
+      "rationale": "Use the synthesis to connect enzyme source, protocol, measurement method, and generalization limits.",
+      "summary": "Include the synthesis as the integrated answer across assay conditions."
+    },
+    {
+      "action": "context",
+      "exact_reference": {
+        "id": "model:en:catalase-assay-observation",
+        "revision": 1
+      },
+      "rationale": "Use the observation model to separate catalytic activity from the assay signal used as a proxy.",
+      "summary": "Use the observation model as context for signal, calibration, and failure modes."
+    },
+    {
+      "action": "context",
+      "exact_reference": {
+        "id": "evidence:en:fluorescent-catalase-assay-neutral-ph",
+        "revision": 1
+      },
+      "rationale": "Use the fluorescent-assay record as a scoped result rather than a universal catalase optimum.",
+      "summary": "Use the fluorescent assay as method-specific context, not a universal optimum."
+    },
+    {
+      "action": "exclude",
+      "exact_reference": {
+        "id": "question:en:how-assay-conditions-affect-catalase",
+        "revision": 1
+      },
+      "rationale": "Exclude the question record from the evidentiary answer while retaining it as the workspace query snapshot.",
+      "summary": "Exclude the question entity from the answer evidence because it defines the inquiry rather than resolving it."
+    }
+  ],
+  "source_digest": "684d08f23db50c2d994ea07293c6aaea2cbcb24492b062663b2e43144f07d3b1",
+  "version": 1,
+  "warning": {
+    "available_revisions": [
+      1
+    ],
+    "id": "impact-warning:catalase:claim-revision-two-unavailable",
+    "message": "Catalase claim revision 2 is unavailable; the workspace must not substitute revision 1 silently.",
+    "revision": 1,
+    "target": {
+      "id": "claim:en:catalase-optimum-requires-assay-scope",
+      "revision": 2
+    }
+  }
+}
