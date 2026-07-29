@@ -1,0 +1,81 @@
+name: Phase 4 Workspace Generalization
+
+on:
+  pull_request:
+    paths:
+      - "content/fixtures/phase4_workspace_generalization/**"
+      - "tools/phase4_workspace_generalization/**"
+      - "tools/phase4_workspace/**"
+      - "content/canonical/**"
+      - "docs/phase-4/workstream-4*"
+      - ".github/workflows/phase4-workspace-generalization.yml"
+  push:
+    branches: [main]
+    paths:
+      - "content/fixtures/phase4_workspace_generalization/**"
+      - "tools/phase4_workspace_generalization/**"
+      - "tools/phase4_workspace/**"
+      - "content/canonical/**"
+      - "docs/phase-4/workstream-4*"
+      - ".github/workflows/phase4-workspace-generalization.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Python ${{ matrix.python-version }} deterministic evidence
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+      - name: Install pinned dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+      - name: Run accepted workspace regression tests
+        run: python -m unittest tools.phase4_workspace.tests.test_contracts -v
+      - name: Run Catalase generalization tests
+        run: python -m unittest tools.phase4_workspace_generalization.tests.test_catalase -v
+      - name: Build deterministic Catalase evidence twice
+        run: |
+          python -m tools.phase4_workspace_generalization.cli \
+            --output-dir build/phase4-workstream4-a
+          python -m tools.phase4_workspace_generalization.cli \
+            --output-dir build/phase4-workstream4-b
+          diff -ru build/phase4-workstream4-a build/phase4-workstream4-b
+          cd build/phase4-workstream4-a
+          sha256sum *.json | sort > identities.sha256
+          cat identities.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase4-workstream4-python-${{ matrix.python-version }}
+          path: build/phase4-workstream4-a
+          if-no-files-found: error
+
+  compare-python-identities:
+    name: Compare Python 3.11 and 3.13 artifacts
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: phase4-workstream4-python-3.11
+          path: build/python-3.11
+      - uses: actions/download-artifact@v4
+        with:
+          name: phase4-workstream4-python-3.13
+          path: build/python-3.13
+      - name: Require byte-identical substantive artifacts
+        run: |
+          diff -u build/python-3.11/identities.sha256 build/python-3.13/identities.sha256
+          for file in catalase-generalization-report.json workspace-contract-report.json workspace-export.json workspace-manifest.json; do
+            cmp "build/python-3.11/$file" "build/python-3.13/$file"
+          done
