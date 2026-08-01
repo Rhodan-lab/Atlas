@@ -102,3 +102,24 @@ jobs:
           path: /tmp/evidence-manifest-a.json
           if-no-files-found: error
           retention-days: 30
+
+  cross-version-identity:
+    needs: evidence-bridge
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Python 3.11 manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: principia-evidence-manifest-python-3.11
+          path: /tmp/python-3.11
+      - name: Download Python 3.13 manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: principia-evidence-manifest-python-3.13
+          path: /tmp/python-3.13
+      - name: Verify cross-version byte identity
+        run: |
+          cmp \
+            /tmp/python-3.11/evidence-manifest-a.json \
+            /tmp/python-3.13/evidence-manifest-a.json
+          echo "principia-evidence-manifest-cross-version=byte-identical"
