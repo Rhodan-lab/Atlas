@@ -1,0 +1,138 @@
+name: Principia Evidence Runtime Preflight
+
+on:
+  pull_request:
+    paths:
+      - "content/canonical/**"
+      - "content/reviews/ai/**"
+      - "content/fixtures/phase2_bridge/*.json"
+      - "docs/phase-2/evidence-preflight-v1.md"
+      - "tools/phase2_kernel/evidence_bridge.py"
+      - "tools/phase2_kernel/evidence_review.py"
+      - "tools/phase2_kernel/evidence_registry.py"
+      - "tools/phase2_kernel/evidence_impact.py"
+      - "tools/phase2_kernel/evidence_preflight.py"
+      - "tools/phase2_kernel/evidence_preflight_cli.py"
+      - "tools/phase2_kernel/tests/test_evidence_preflight.py"
+      - ".github/workflows/principia-evidence-preflight.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  evidence-preflight:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@v4
+      - name: Checkout exact base
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: baseline-atlas
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+      - name: Install pinned dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+      - name: Compile preflight modules
+        run: |
+          python -m py_compile \
+            tools/phase2_kernel/evidence_preflight.py \
+            tools/phase2_kernel/evidence_preflight_cli.py \
+            tools/phase2_kernel/tests/test_evidence_preflight.py
+      - name: Run evidence preflight tests
+        run: |
+          python -m unittest discover \
+            -s tools/phase2_kernel/tests \
+            -p 'test_evidence_preflight.py' \
+            -v
+      - name: Build exact-base preflight twice
+        run: |
+          python -m tools.phase2_kernel.evidence_preflight_cli \
+            --baseline-canonical-root baseline-atlas/content/canonical \
+            --candidate-canonical-root content/canonical \
+            --registry baseline-atlas/content/fixtures/phase2_bridge/accepted-evidence-registry.v01.json \
+            --review-root baseline-atlas/content/reviews/ai \
+            --repository-root baseline-atlas \
+            --output /tmp/evidence-preflight-a.json
+          python -m tools.phase2_kernel.evidence_preflight_cli \
+            --baseline-canonical-root baseline-atlas/content/canonical \
+            --candidate-canonical-root content/canonical \
+            --registry baseline-atlas/content/fixtures/phase2_bridge/accepted-evidence-registry.v01.json \
+            --review-root baseline-atlas/content/reviews/ai \
+            --repository-root baseline-atlas \
+            --output /tmp/evidence-preflight-b.json
+          cmp /tmp/evidence-preflight-a.json /tmp/evidence-preflight-b.json
+      - name: Verify current preflight decision and boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(
+              Path('/tmp/evidence-preflight-a.json').read_text(encoding='utf-8')
+          )
+          assert report['contract'] == 'atlas-principia-evidence-runtime-preflight/0.1'
+          assert report['source_impact_index_contract'] == 'atlas-principia-evidence-impact-index/0.1'
+          assert report['runtime_changed'] is False
+          assert report['accepted_exact_reference_count'] == 2
+          assert report['changed_accepted_exact_reference_count'] == 0
+          assert report['immutable_violation_count'] == 0
+          assert report['removed_exact_reference_count'] == 0
+          assert report['superseding_revision_count'] == 0
+          assert report['lifecycle_change_count'] == 0
+          assert report['baseline_affected_route_count'] == 0
+          assert report['projected_affected_route_count'] == 0
+          assert report['newly_affected_route_count'] == 0
+          assert report['escalated_route_count'] == 0
+          assert report['newly_blocked_route_count'] == 0
+          assert report['decision'] == 'preflight-clear'
+          assert len(report['routes']) == 1
+          assert report['routes'][0]['route_id'] == 'refrigerator'
+          assert report['live'] is False
+          assert report['status_inheritance'] == 'prohibited'
+          assert report['automatic_snapshot_acceptance'] is False
+          assert report['automatic_registry_update'] is False
+          assert report['automatic_status_change'] is False
+          assert report['automatic_release_action'] is False
+          assert report['canonical_mutation'] is False
+          assert report['repository_mutation'] is False
+          assert report['principia_publication_status_granted'] is False
+          assert report['learner_effectiveness_claimed'] is False
+          print('principia-evidence-preflight=pass; changed=0; decision=preflight-clear')
+          PY
+      - name: Upload deterministic preflight report
+        uses: actions/upload-artifact@v4
+        with:
+          name: principia-evidence-preflight-python-${{ matrix.python-version }}
+          path: /tmp/evidence-preflight-a.json
+          if-no-files-found: error
+          retention-days: 30
+
+  cross-version-identity:
+    needs: evidence-preflight
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Python 3.11 report
+        uses: actions/download-artifact@v4
+        with:
+          name: principia-evidence-preflight-python-3.11
+          path: /tmp/python-3.11
+      - name: Download Python 3.13 report
+        uses: actions/download-artifact@v4
+        with:
+          name: principia-evidence-preflight-python-3.13
+          path: /tmp/python-3.13
+      - name: Verify cross-version byte identity
+        run: |
+          cmp \
+            /tmp/python-3.11/evidence-preflight-a.json \
+            /tmp/python-3.13/evidence-preflight-a.json
+          echo "principia-evidence-preflight-cross-version=byte-identical"
