@@ -11,11 +11,16 @@ from tools.phase2_kernel.evidence_bridge import (
     build_evidence_manifest,
     validate_reference_snapshot,
 )
+from tools.phase2_kernel.evidence_review import (
+    build_review_aware_manifest,
+    load_review_index,
+)
 from tools.phase2_kernel.kernel import KernelError, load_json, render_json
 from tools.phase2_kernel.repository import KernelRepository
 
 ROOT = Path(__file__).resolve().parents[3]
 CANONICAL = ROOT / "content" / "canonical"
+REVIEWS = ROOT / "content" / "reviews" / "ai"
 SNAPSHOT = (
     ROOT
     / "content"
@@ -31,6 +36,7 @@ class PrincipiaEvidenceBridgeTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.repository = KernelRepository(compile_canonical(CANONICAL))
+        cls.review_index = load_review_index(REVIEWS)
         cls.snapshot = load_json(SNAPSHOT)
 
     def test_current_product_alpha_snapshot_is_pinned_and_non_live(self) -> None:
@@ -48,37 +54,75 @@ class PrincipiaEvidenceBridgeTests(unittest.TestCase):
         self.assertFalse(snapshot["live"])
         self.assertEqual(snapshot["status_inheritance"], "prohibited")
 
-    def test_manifest_resolves_exact_revisions_and_surfaces_review_drift(self) -> None:
-        manifest = build_evidence_manifest(self.snapshot, self.repository)
+    def test_review_index_binds_exact_claim_review_record(self) -> None:
+        review = self.review_index[CLAIM_KEY]
+        self.assertEqual(
+            review["record_id"], "ai-review:feedback-delayed-comprehensive"
+        )
+        self.assertEqual(review["review_level"], "ai-reviewed")
+        self.assertFalse(review["human_verified"])
+        self.assertEqual(review["outcome"], "pass")
+
+    def test_manifest_resolves_exact_revisions_and_review_authority(self) -> None:
+        manifest = build_review_aware_manifest(
+            self.snapshot, self.repository, self.review_index
+        )
         self.assertEqual(manifest["contract"], EVIDENCE_MANIFEST_CONTRACT)
         self.assertEqual(manifest["reference_count"], 2)
         self.assertEqual(manifest["resolved_count"], 2)
+        self.assertEqual(manifest["review_record_count"], 2)
         self.assertEqual(manifest["blocked_count"], 0)
-        self.assertEqual(manifest["revalidate_count"], 1)
+        self.assertEqual(manifest["revalidate_count"], 0)
         self.assertEqual(
-            manifest["decision"], "revalidate-principia-reference-metadata"
+            manifest["decision"], "verified-offline-reference-manifest"
         )
         entries = {entry["key"]: entry for entry in manifest["entries"]}
         self.assertEqual(entries[MODEL_KEY]["review_comparison"], "match")
         self.assertEqual(entries[MODEL_KEY]["required_action"], "inspect")
+        self.assertEqual(entries[CLAIM_KEY]["review_comparison"], "match")
+        self.assertEqual(entries[CLAIM_KEY]["required_action"], "inspect")
         self.assertEqual(
-            entries[CLAIM_KEY]["review_comparison"],
-            "declared-without-atlas-review-record",
+            entries[CLAIM_KEY]["review_authority"]["source"],
+            "machine-readable-review",
         )
-        self.assertEqual(entries[CLAIM_KEY]["required_action"], "revalidate")
+        self.assertEqual(
+            entries[CLAIM_KEY]["review_authority"]["record_id"],
+            "ai-review:feedback-delayed-comprehensive",
+        )
         self.assertFalse(manifest["automatic_status_change"])
         self.assertFalse(manifest["automatic_release_action"])
         self.assertFalse(manifest["repository_mutation"])
 
+    def test_base_manifest_keeps_missing_inline_review_visible(self) -> None:
+        manifest = build_evidence_manifest(self.snapshot, self.repository)
+        entries = {entry["key"]: entry for entry in manifest["entries"]}
+        self.assertEqual(
+            entries[CLAIM_KEY]["review_comparison"],
+            "declared-without-atlas-review-record",
+        )
+        self.assertEqual(
+            manifest["decision"], "revalidate-principia-reference-metadata"
+        )
+
     def test_manifest_is_byte_deterministic(self) -> None:
-        first = render_json(build_evidence_manifest(self.snapshot, self.repository))
-        second = render_json(build_evidence_manifest(self.snapshot, self.repository))
+        first = render_json(
+            build_review_aware_manifest(
+                self.snapshot, self.repository, self.review_index
+            )
+        )
+        second = render_json(
+            build_review_aware_manifest(
+                self.snapshot, self.repository, self.review_index
+            )
+        )
         self.assertEqual(first.encode("utf-8"), second.encode("utf-8"))
 
     def test_unavailable_revision_is_reported_without_silent_fallback(self) -> None:
         snapshot = copy.deepcopy(self.snapshot)
         snapshot["references"][0]["revision"] = 999
-        manifest = build_evidence_manifest(snapshot, self.repository)
+        manifest = build_review_aware_manifest(
+            snapshot, self.repository, self.review_index
+        )
         self.assertEqual(manifest["decision"], "block-principia-release")
         self.assertEqual(manifest["blocked_count"], 1)
         unavailable = next(
