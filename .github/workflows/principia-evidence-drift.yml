@@ -1,0 +1,131 @@
+name: Principia Evidence Drift
+
+on:
+  pull_request:
+    paths:
+      - "content/canonical/**"
+      - "content/reviews/ai/**"
+      - "content/fixtures/phase2_bridge/product-alpha-*.json"
+      - "docs/phase-2/evidence-bridge-v1.md"
+      - "docs/phase-2/evidence-drift-v1.md"
+      - "tools/phase2_kernel/evidence_bridge.py"
+      - "tools/phase2_kernel/evidence_review.py"
+      - "tools/phase2_kernel/evidence_drift.py"
+      - "tools/phase2_kernel/evidence_drift_cli.py"
+      - "tools/phase2_kernel/tests/test_evidence_bridge.py"
+      - "tools/phase2_kernel/tests/test_evidence_drift.py"
+      - ".github/workflows/principia-evidence-bridge.yml"
+      - ".github/workflows/principia-evidence-drift.yml"
+  push:
+    branches: [main]
+    paths:
+      - "content/canonical/**"
+      - "content/reviews/ai/**"
+      - "content/fixtures/phase2_bridge/product-alpha-*.json"
+      - "docs/phase-2/evidence-bridge-v1.md"
+      - "docs/phase-2/evidence-drift-v1.md"
+      - "tools/phase2_kernel/evidence_bridge.py"
+      - "tools/phase2_kernel/evidence_review.py"
+      - "tools/phase2_kernel/evidence_drift.py"
+      - "tools/phase2_kernel/evidence_drift_cli.py"
+      - "tools/phase2_kernel/tests/test_evidence_bridge.py"
+      - "tools/phase2_kernel/tests/test_evidence_drift.py"
+      - ".github/workflows/principia-evidence-bridge.yml"
+      - ".github/workflows/principia-evidence-drift.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  evidence-drift:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+      - name: Install pinned dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+      - name: Compile drift modules
+        run: |
+          python -m py_compile \
+            tools/phase2_kernel/evidence_drift.py \
+            tools/phase2_kernel/evidence_drift_cli.py \
+            tools/phase2_kernel/tests/test_evidence_drift.py
+      - name: Run evidence drift tests
+        run: |
+          python -m unittest discover \
+            -s tools/phase2_kernel/tests \
+            -p 'test_evidence_drift.py' \
+            -v
+      - name: Compile Atlas runtime
+        run: python -m tools.phase2_kernel.cli compile --output /tmp/atlas-runtime.json
+      - name: Build zero-drift control twice
+        run: |
+          python -m tools.phase2_kernel.evidence_drift_cli \
+            --runtime /tmp/atlas-runtime.json \
+            --candidate content/fixtures/phase2_bridge/product-alpha-refrigerator.references.v01.json \
+            --output evidence-drift-report-a.json
+          python -m tools.phase2_kernel.evidence_drift_cli \
+            --runtime /tmp/atlas-runtime.json \
+            --candidate content/fixtures/phase2_bridge/product-alpha-refrigerator.references.v01.json \
+            --output evidence-drift-report-b.json
+          cmp evidence-drift-report-a.json evidence-drift-report-b.json
+          mv evidence-drift-report-a.json evidence-drift-report.json
+      - name: Verify zero-drift decision and boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path('evidence-drift-report.json').read_text(encoding='utf-8'))
+          assert report['contract'] == 'atlas-principia-evidence-drift-report/0.1'
+          assert report['decision'] == 'no-refresh-needed'
+          assert report['change_classes'] == ['none']
+          assert report['candidate_manifest_decision'] == 'verified-offline-reference-manifest'
+          assert report['baseline_manifest_sha256'] == report['candidate_manifest_sha256']
+          assert all(value == 0 for value in report['change_counts'].values())
+          assert report['baseline_source']['commit'] == '047867f5b0a803c59b918738c45c24909ea998be'
+          assert report['candidate_source']['blob_sha'] == 'ec6195eb217efacf4d4e5d675ba1cf74b03f9600'
+          assert report['live'] is False
+          assert report['status_inheritance'] == 'prohibited'
+          assert report['automatic_snapshot_acceptance'] is False
+          assert report['automatic_status_change'] is False
+          assert report['automatic_release_action'] is False
+          assert report['repository_mutation'] is False
+          print('principia-evidence-drift=pass; decision=no-refresh-needed; mutation=false')
+          PY
+      - name: Upload deterministic drift report
+        uses: actions/upload-artifact@v4
+        with:
+          name: principia-evidence-drift-python-${{ matrix.python-version }}
+          path: evidence-drift-report.json
+          if-no-files-found: error
+          retention-days: 30
+
+  cross-version-identity:
+    needs: evidence-drift
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Python 3.11 report
+        uses: actions/download-artifact@v4
+        with:
+          name: principia-evidence-drift-python-3.11
+          path: /tmp/python-3.11
+      - name: Download Python 3.13 report
+        uses: actions/download-artifact@v4
+        with:
+          name: principia-evidence-drift-python-3.13
+          path: /tmp/python-3.13
+      - name: Verify cross-version byte identity
+        run: |
+          cmp \
+            /tmp/python-3.11/evidence-drift-report.json \
+            /tmp/python-3.13/evidence-drift-report.json
+          echo "evidence-drift-cross-version=pass"
