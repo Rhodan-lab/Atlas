@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import copy
+import json
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -21,6 +23,7 @@ from tools.phase2_kernel.repository import KernelRepository
 ROOT = Path(__file__).resolve().parents[3]
 CANONICAL = ROOT / "content" / "canonical"
 REVIEWS = ROOT / "content" / "reviews" / "ai"
+REVIEW_RECORD = REVIEWS / "feedback-delayed-comprehensive.json"
 SNAPSHOT = (
     ROOT
     / "content"
@@ -130,6 +133,32 @@ class PrincipiaEvidenceBridgeTests(unittest.TestCase):
         )
         self.assertEqual(unavailable["resolution"], "unavailable-revision")
         self.assertEqual(unavailable["required_action"], "block-release")
+
+    def test_non_passing_review_outcome_requires_revalidation(self) -> None:
+        review_index = copy.deepcopy(self.review_index)
+        review_index[CLAIM_KEY]["outcome"] = "fail"
+        manifest = build_review_aware_manifest(
+            self.snapshot, self.repository, review_index
+        )
+        entries = {entry["key"]: entry for entry in manifest["entries"]}
+        self.assertEqual(entries[CLAIM_KEY]["review_comparison"], "mismatch")
+        self.assertEqual(entries[CLAIM_KEY]["required_action"], "revalidate")
+        self.assertEqual(
+            manifest["decision"], "revalidate-principia-reference-metadata"
+        )
+
+    def test_duplicate_review_authority_is_rejected(self) -> None:
+        payload = load_json(REVIEW_RECORD)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "content" / "reviews" / "ai"
+            root.mkdir(parents=True)
+            rendered = json.dumps(payload, sort_keys=True)
+            (root / "review-a.json").write_text(rendered, encoding="utf-8")
+            (root / "review-b.json").write_text(rendered, encoding="utf-8")
+            with self.assertRaisesRegex(
+                KernelError, "E-EVIDENCE-REVIEW-DUPLICATE"
+            ):
+                load_review_index(root)
 
     def test_duplicate_exact_reference_is_rejected(self) -> None:
         snapshot = copy.deepcopy(self.snapshot)
