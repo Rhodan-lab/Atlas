@@ -1,0 +1,136 @@
+name: Principia Evidence Registry
+
+on:
+  pull_request:
+    paths:
+      - "content/canonical/**"
+      - "content/reviews/ai/**"
+      - "content/fixtures/phase2_bridge/*.json"
+      - "docs/phase-2/evidence-registry-v1.md"
+      - "tools/phase2_kernel/evidence_bridge.py"
+      - "tools/phase2_kernel/evidence_review.py"
+      - "tools/phase2_kernel/evidence_registry.py"
+      - "tools/phase2_kernel/evidence_registry_cli.py"
+      - "tools/phase2_kernel/tests/test_evidence_registry.py"
+      - ".github/workflows/principia-evidence-registry.yml"
+  push:
+    branches: [main]
+    paths:
+      - "content/canonical/**"
+      - "content/reviews/ai/**"
+      - "content/fixtures/phase2_bridge/*.json"
+      - "docs/phase-2/evidence-registry-v1.md"
+      - "tools/phase2_kernel/evidence_bridge.py"
+      - "tools/phase2_kernel/evidence_review.py"
+      - "tools/phase2_kernel/evidence_registry.py"
+      - "tools/phase2_kernel/evidence_registry_cli.py"
+      - "tools/phase2_kernel/tests/test_evidence_registry.py"
+      - ".github/workflows/principia-evidence-registry.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  evidence-registry:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+      - name: Install pinned dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+      - name: Compile registry modules
+        run: |
+          python -m py_compile \
+            tools/phase2_kernel/evidence_registry.py \
+            tools/phase2_kernel/evidence_registry_cli.py \
+            tools/phase2_kernel/tests/test_evidence_registry.py
+      - name: Validate registry JSON
+        run: python -m json.tool content/fixtures/phase2_bridge/accepted-evidence-registry.v01.json >/dev/null
+      - name: Run evidence registry tests
+        run: python -m unittest discover -s tools/phase2_kernel/tests -p 'test_evidence_registry.py' -v
+      - name: Compile Atlas runtime
+        run: python -m tools.phase2_kernel.cli compile --output /tmp/atlas-runtime.json
+      - name: Build registry catalog twice
+        run: |
+          python -m tools.phase2_kernel.evidence_registry_cli \
+            --runtime /tmp/atlas-runtime.json \
+            --output /tmp/evidence-registry-a.json
+          python -m tools.phase2_kernel.evidence_registry_cli \
+            --runtime /tmp/atlas-runtime.json \
+            --output /tmp/evidence-registry-b.json
+          cmp /tmp/evidence-registry-a.json /tmp/evidence-registry-b.json
+      - name: Verify current registry decision and boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          catalog = json.loads(Path('/tmp/evidence-registry-a.json').read_text(encoding='utf-8'))
+          assert catalog['contract'] == 'atlas-principia-evidence-registry-catalog/0.1'
+          assert catalog['registry_contract'] == 'atlas-principia-evidence-registry/0.1'
+          assert catalog['route_count'] == 1
+          assert catalog['route_ids'] == ['refrigerator']
+          assert catalog['verified_count'] == 1
+          assert catalog['revalidation_required_count'] == 0
+          assert catalog['blocked_count'] == 0
+          assert catalog['decision'] == 'registry-verified'
+          assert catalog['live'] is False
+          assert catalog['status_inheritance'] == 'prohibited'
+          assert catalog['automatic_snapshot_acceptance'] is False
+          assert catalog['automatic_status_change'] is False
+          assert catalog['automatic_release_action'] is False
+          assert catalog['repository_mutation'] is False
+          entry = catalog['entries'][0]
+          assert entry['route_id'] == 'refrigerator'
+          assert entry['state'] == 'repository-baseline'
+          assert entry['registration_basis'] == 'merged-evidence-bridge-pr-65'
+          assert entry['registration_commit'] == 'd446c97877e969f965562c94590a1305f138f631'
+          assert entry['source']['commit'] == '047867f5b0a803c59b918738c45c24909ea998be'
+          assert entry['source']['blob_sha'] == 'ec6195eb217efacf4d4e5d675ba1cf74b03f9600'
+          assert entry['reference_count'] == 2
+          assert entry['resolved_count'] == 2
+          assert entry['review_record_count'] == 2
+          assert entry['revalidate_count'] == 0
+          assert entry['blocked_count'] == 0
+          assert entry['manifest_decision'] == 'verified-offline-reference-manifest'
+          assert entry['health'] == 'verified'
+          assert len(entry['snapshot_sha256']) == 64
+          assert len(entry['manifest_sha256']) == 64
+          print('principia-evidence-registry=pass; routes=1; verified=1; live=false')
+          PY
+      - name: Upload deterministic registry catalog
+        uses: actions/upload-artifact@v4
+        with:
+          name: principia-evidence-registry-python-${{ matrix.python-version }}
+          path: /tmp/evidence-registry-a.json
+          if-no-files-found: error
+          retention-days: 30
+
+  cross-version-identity:
+    needs: evidence-registry
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Python 3.11 catalog
+        uses: actions/download-artifact@v4
+        with:
+          name: principia-evidence-registry-python-3.11
+          path: /tmp/python-3.11
+      - name: Download Python 3.13 catalog
+        uses: actions/download-artifact@v4
+        with:
+          name: principia-evidence-registry-python-3.13
+          path: /tmp/python-3.13
+      - name: Verify cross-version byte identity
+        run: |
+          cmp \
+            /tmp/python-3.11/evidence-registry-a.json \
+            /tmp/python-3.13/evidence-registry-a.json
+          echo "principia-evidence-registry-cross-version=byte-identical"
