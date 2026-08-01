@@ -1,0 +1,26 @@
+{
+  "contract": "principia-atlas-reference-snapshot/0.1",
+  "source_repository": "Rhodan-lab/principle-to-system",
+  "source_commit": "047867f5b0a803c59b918738c45c24909ea998be",
+  "source_path": "software/product_alpha/routes/refrigerator.json",
+  "source_blob_sha": "ec6195eb217efacf4d4e5d675ba1cf74b03f9600",
+  "route_id": "refrigerator",
+  "live": false,
+  "status_inheritance": "prohibited",
+  "references": [
+    {
+      "entity_id": "model:en:delayed-correction-recurrence",
+      "revision": 2,
+      "declared_review_level": "ai-reviewed",
+      "declared_human_verified": false,
+      "purpose": "Clarifies that repeated or periodic behavior is not, by itself, proof of instability."
+    },
+    {
+      "entity_id": "claim:en:model-oscillation-does-not-prove-real-system",
+      "revision": 1,
+      "declared_review_level": "ai-reviewed",
+      "declared_human_verified": false,
+      "purpose": "Preserves the boundary between a simplified model and evidence about a real refrigerator."
+    }
+  ]
+}
