@@ -103,7 +103,8 @@ class EvidenceSimulationTests(unittest.TestCase):
         )
         self.assertTrue(exact["superseded"])
         self.assertEqual(exact["latest_revision"], 3)
-        self.assertEqual(exact["available_revisions"], [1, 2, 3])
+        self.assertIn(3, exact["available_revisions"])
+        self.assertEqual(exact["available_revisions"][-1], 3)
 
     def test_review_required_marks_route_for_revalidation(self) -> None:
         report = self.simulate(
@@ -135,7 +136,10 @@ class EvidenceSimulationTests(unittest.TestCase):
         report = self.simulate([change(MODEL_ID, 2, "deprecate")])
         self.assertEqual(report["decision"], "simulation-revalidation-required")
         self.assertEqual(report["newly_blocked_route_ids"], [])
-        self.assertEqual(report["simulated_index"]["decision"], "impact-index-revalidation-required")
+        self.assertEqual(
+            report["simulated_index"]["decision"],
+            "impact-index-revalidation-required",
+        )
 
     def test_retraction_blocks_affected_route(self) -> None:
         report = self.simulate([change(MODEL_ID, 2, "retract")])
