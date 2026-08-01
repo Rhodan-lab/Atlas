@@ -1,0 +1,140 @@
+name: Principia Evidence Impact
+
+on:
+  pull_request:
+    paths:
+      - "content/canonical/**"
+      - "content/reviews/ai/**"
+      - "content/fixtures/phase2_bridge/*.json"
+      - "docs/phase-2/evidence-impact-v1.md"
+      - "tools/phase2_kernel/evidence_bridge.py"
+      - "tools/phase2_kernel/evidence_review.py"
+      - "tools/phase2_kernel/evidence_registry.py"
+      - "tools/phase2_kernel/evidence_impact.py"
+      - "tools/phase2_kernel/evidence_impact_cli.py"
+      - "tools/phase2_kernel/tests/test_evidence_impact.py"
+      - ".github/workflows/principia-evidence-impact.yml"
+  push:
+    branches: [main]
+    paths:
+      - "content/canonical/**"
+      - "content/reviews/ai/**"
+      - "content/fixtures/phase2_bridge/*.json"
+      - "docs/phase-2/evidence-impact-v1.md"
+      - "tools/phase2_kernel/evidence_bridge.py"
+      - "tools/phase2_kernel/evidence_review.py"
+      - "tools/phase2_kernel/evidence_registry.py"
+      - "tools/phase2_kernel/evidence_impact.py"
+      - "tools/phase2_kernel/evidence_impact_cli.py"
+      - "tools/phase2_kernel/tests/test_evidence_impact.py"
+      - ".github/workflows/principia-evidence-impact.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  evidence-impact:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+      - name: Install pinned dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+      - name: Compile impact modules
+        run: |
+          python -m py_compile \
+            tools/phase2_kernel/evidence_impact.py \
+            tools/phase2_kernel/evidence_impact_cli.py \
+            tools/phase2_kernel/tests/test_evidence_impact.py
+      - name: Run evidence impact tests
+        run: python -m unittest discover -s tools/phase2_kernel/tests -p 'test_evidence_impact.py' -v
+      - name: Compile Atlas runtime
+        run: python -m tools.phase2_kernel.cli compile --output /tmp/atlas-runtime.json
+      - name: Build impact index twice
+        run: |
+          python -m tools.phase2_kernel.evidence_impact_cli \
+            --runtime /tmp/atlas-runtime.json \
+            --output /tmp/evidence-impact-a.json
+          python -m tools.phase2_kernel.evidence_impact_cli \
+            --runtime /tmp/atlas-runtime.json \
+            --output /tmp/evidence-impact-b.json
+          cmp /tmp/evidence-impact-a.json /tmp/evidence-impact-b.json
+      - name: Query current exact dependency
+        run: |
+          python -m tools.phase2_kernel.evidence_impact_cli \
+            --runtime /tmp/atlas-runtime.json \
+            --entity model:en:delayed-correction-recurrence \
+            --revision 2 \
+            --output /tmp/evidence-impact-query.json
+      - name: Verify current impact decision and boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          index = json.loads(Path('/tmp/evidence-impact-a.json').read_text(encoding='utf-8'))
+          query = json.loads(Path('/tmp/evidence-impact-query.json').read_text(encoding='utf-8'))
+          assert index['contract'] == 'atlas-principia-evidence-impact-index/0.1'
+          assert index['route_count'] == 1
+          assert index['entity_count'] == 2
+          assert index['exact_reference_count'] == 2
+          assert index['dependency_count'] == 2
+          assert index['stable_exact_reference_count'] == 2
+          assert index['revalidation_required_exact_reference_count'] == 0
+          assert index['blocked_exact_reference_count'] == 0
+          assert index['affected_route_count'] == 0
+          assert index['affected_route_ids'] == []
+          assert index['decision'] == 'impact-index-clear'
+          assert index['live'] is False
+          assert index['status_inheritance'] == 'prohibited'
+          assert index['automatic_registry_update'] is False
+          assert index['automatic_status_change'] is False
+          assert index['automatic_release_action'] is False
+          assert index['repository_mutation'] is False
+          assert query['contract'] == 'atlas-principia-evidence-impact-query/0.1'
+          assert query['query'] == {
+              'entity_id': 'model:en:delayed-correction-recurrence',
+              'revision': 2,
+          }
+          assert query['match_count'] == 1
+          assert query['route_count'] == 1
+          assert query['route_ids'] == ['refrigerator']
+          assert query['impact_state'] == 'stable'
+          print('principia-evidence-impact=pass; routes=1; exact=2; affected=0')
+          PY
+      - name: Upload deterministic impact index
+        uses: actions/upload-artifact@v4
+        with:
+          name: principia-evidence-impact-python-${{ matrix.python-version }}
+          path: /tmp/evidence-impact-a.json
+          if-no-files-found: error
+          retention-days: 30
+
+  cross-version-identity:
+    needs: evidence-impact
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Python 3.11 index
+        uses: actions/download-artifact@v4
+        with:
+          name: principia-evidence-impact-python-3.11
+          path: /tmp/python-3.11
+      - name: Download Python 3.13 index
+        uses: actions/download-artifact@v4
+        with:
+          name: principia-evidence-impact-python-3.13
+          path: /tmp/python-3.13
+      - name: Verify cross-version byte identity
+        run: |
+          cmp \
+            /tmp/python-3.11/evidence-impact-a.json \
+            /tmp/python-3.13/evidence-impact-a.json
+          echo "principia-evidence-impact-cross-version=byte-identical"
