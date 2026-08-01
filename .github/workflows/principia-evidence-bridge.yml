@@ -47,7 +47,7 @@ jobs:
             tools/phase2_kernel/evidence_bridge_cli.py \
             tools/phase2_kernel/tests/test_evidence_bridge.py
       - name: Run evidence bridge tests
-        run: python -m unittest tools.phase2_kernel.tests.test_evidence_bridge -v
+        run: python -m unittest discover -s tools/phase2_kernel/tests -p 'test_evidence_bridge.py' -v
       - name: Compile Atlas runtime
         run: python -m tools.phase2_kernel.cli compile --output /tmp/atlas-runtime.json
       - name: Build manifest twice
