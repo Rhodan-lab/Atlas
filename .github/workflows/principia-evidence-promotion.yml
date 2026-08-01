@@ -1,0 +1,138 @@
+name: Principia Evidence Promotion
+
+on:
+  pull_request:
+    paths:
+      - "content/canonical/**"
+      - "content/reviews/ai/**"
+      - "content/fixtures/phase2_bridge/*.json"
+      - "docs/phase-2/evidence-promotion-v1.md"
+      - "tools/phase2_kernel/evidence_bridge.py"
+      - "tools/phase2_kernel/evidence_review.py"
+      - "tools/phase2_kernel/evidence_drift.py"
+      - "tools/phase2_kernel/evidence_registry.py"
+      - "tools/phase2_kernel/evidence_promotion.py"
+      - "tools/phase2_kernel/evidence_promotion_cli.py"
+      - "tools/phase2_kernel/tests/test_evidence_promotion.py"
+      - ".github/workflows/principia-evidence-promotion.yml"
+  push:
+    branches: [main]
+    paths:
+      - "content/canonical/**"
+      - "content/reviews/ai/**"
+      - "content/fixtures/phase2_bridge/*.json"
+      - "docs/phase-2/evidence-promotion-v1.md"
+      - "tools/phase2_kernel/evidence_bridge.py"
+      - "tools/phase2_kernel/evidence_review.py"
+      - "tools/phase2_kernel/evidence_drift.py"
+      - "tools/phase2_kernel/evidence_registry.py"
+      - "tools/phase2_kernel/evidence_promotion.py"
+      - "tools/phase2_kernel/evidence_promotion_cli.py"
+      - "tools/phase2_kernel/tests/test_evidence_promotion.py"
+      - ".github/workflows/principia-evidence-promotion.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  evidence-promotion:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+      - name: Install pinned dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+      - name: Compile promotion modules
+        run: |
+          python -m py_compile \
+            tools/phase2_kernel/evidence_promotion.py \
+            tools/phase2_kernel/evidence_promotion_cli.py \
+            tools/phase2_kernel/tests/test_evidence_promotion.py
+      - name: Run evidence promotion tests
+        run: |
+          python -m unittest discover \
+            -s tools/phase2_kernel/tests \
+            -p 'test_evidence_promotion.py' \
+            -v
+      - name: Compile Atlas runtime
+        run: python -m tools.phase2_kernel.cli compile --output /tmp/atlas-runtime.json
+      - name: Build zero-drift promotion control twice
+        run: |
+          python -m tools.phase2_kernel.evidence_promotion_cli \
+            --runtime /tmp/atlas-runtime.json \
+            --candidate content/fixtures/phase2_bridge/product-alpha-refrigerator.references.v01.json \
+            --submission-basis zero-drift-regression-control \
+            --output /tmp/evidence-promotion-a.json
+          python -m tools.phase2_kernel.evidence_promotion_cli \
+            --runtime /tmp/atlas-runtime.json \
+            --candidate content/fixtures/phase2_bridge/product-alpha-refrigerator.references.v01.json \
+            --submission-basis zero-drift-regression-control \
+            --output /tmp/evidence-promotion-b.json
+          cmp /tmp/evidence-promotion-a.json /tmp/evidence-promotion-b.json
+      - name: Verify current promotion decision and boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          packet = json.loads(Path('/tmp/evidence-promotion-a.json').read_text(encoding='utf-8'))
+          assert packet['contract'] == 'atlas-principia-evidence-promotion-packet/0.1'
+          assert packet['route_id'] == 'refrigerator'
+          assert packet['submission_basis'] == 'zero-drift-regression-control'
+          assert packet['drift_decision'] == 'no-refresh-needed'
+          assert packet['change_classes'] == ['none']
+          assert packet['gate_state'] == 'no-change'
+          assert packet['decision'] == 'candidate-redundant'
+          assert packet['candidate_evidence']['reference_count'] == 2
+          assert packet['candidate_evidence']['resolved_count'] == 2
+          assert packet['candidate_evidence']['review_record_count'] == 2
+          assert packet['candidate_evidence']['revalidate_count'] == 0
+          assert packet['candidate_evidence']['blocked_count'] == 0
+          assert packet['registry_update_eligible_after_review'] is False
+          assert packet['proposed_registry_replacement'] is None
+          assert packet['live'] is False
+          assert packet['status_inheritance'] == 'prohibited'
+          assert packet['automatic_snapshot_acceptance'] is False
+          assert packet['automatic_registry_update'] is False
+          assert packet['automatic_status_change'] is False
+          assert packet['automatic_release_action'] is False
+          assert packet['repository_mutation'] is False
+          assert all(len(value) == 64 for value in packet['hashes'].values())
+          print('principia-evidence-promotion=pass; decision=candidate-redundant; mutation=false')
+          PY
+      - name: Upload deterministic promotion packet
+        uses: actions/upload-artifact@v4
+        with:
+          name: principia-evidence-promotion-python-${{ matrix.python-version }}
+          path: /tmp/evidence-promotion-a.json
+          if-no-files-found: error
+          retention-days: 30
+
+  cross-version-identity:
+    needs: evidence-promotion
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Python 3.11 packet
+        uses: actions/download-artifact@v4
+        with:
+          name: principia-evidence-promotion-python-3.11
+          path: /tmp/python-3.11
+      - name: Download Python 3.13 packet
+        uses: actions/download-artifact@v4
+        with:
+          name: principia-evidence-promotion-python-3.13
+          path: /tmp/python-3.13
+      - name: Verify cross-version byte identity
+        run: |
+          cmp \
+            /tmp/python-3.11/evidence-promotion-a.json \
+            /tmp/python-3.13/evidence-promotion-a.json
+          echo "principia-evidence-promotion-cross-version=byte-identical"
