@@ -1,0 +1,14 @@
+{
+  "contract": "atlas-principia-evidence-registry/0.1",
+  "live": false,
+  "status_inheritance": "prohibited",
+  "entries": [
+    {
+      "route_id": "refrigerator",
+      "snapshot_path": "content/fixtures/phase2_bridge/product-alpha-refrigerator.references.v01.json",
+      "state": "repository-baseline",
+      "registration_basis": "merged-evidence-bridge-pr-65",
+      "registration_commit": "d446c97877e969f965562c94590a1305f138f631"
+    }
+  ]
+}
