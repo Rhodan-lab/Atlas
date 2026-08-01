@@ -1,0 +1,93 @@
+name: Principia Evidence Bridge
+
+on:
+  pull_request:
+    paths:
+      - "content/canonical/**"
+      - "content/fixtures/phase2_bridge/product-alpha-*.json"
+      - "docs/phase-2/evidence-bridge-v1.md"
+      - "tools/phase2_kernel/evidence_bridge.py"
+      - "tools/phase2_kernel/evidence_bridge_cli.py"
+      - "tools/phase2_kernel/tests/test_evidence_bridge.py"
+      - ".github/workflows/principia-evidence-bridge.yml"
+  push:
+    branches: [main]
+    paths:
+      - "content/canonical/**"
+      - "content/fixtures/phase2_bridge/product-alpha-*.json"
+      - "docs/phase-2/evidence-bridge-v1.md"
+      - "tools/phase2_kernel/evidence_bridge.py"
+      - "tools/phase2_kernel/evidence_bridge_cli.py"
+      - "tools/phase2_kernel/tests/test_evidence_bridge.py"
+      - ".github/workflows/principia-evidence-bridge.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  evidence-bridge:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+      - name: Install pinned dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+      - name: Compile bridge modules
+        run: |
+          python -m py_compile \
+            tools/phase2_kernel/evidence_bridge.py \
+            tools/phase2_kernel/evidence_bridge_cli.py \
+            tools/phase2_kernel/tests/test_evidence_bridge.py
+      - name: Run evidence bridge tests
+        run: python -m unittest tools.phase2_kernel.tests.test_evidence_bridge -v
+      - name: Compile Atlas runtime
+        run: python -m tools.phase2_kernel.cli compile --output /tmp/atlas-runtime.json
+      - name: Build manifest twice
+        run: |
+          python -m tools.phase2_kernel.evidence_bridge_cli \
+            --runtime /tmp/atlas-runtime.json \
+            --output /tmp/evidence-manifest-a.json
+          python -m tools.phase2_kernel.evidence_bridge_cli \
+            --runtime /tmp/atlas-runtime.json \
+            --output /tmp/evidence-manifest-b.json
+          cmp /tmp/evidence-manifest-a.json /tmp/evidence-manifest-b.json
+      - name: Verify current evidence decision and boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path('/tmp/evidence-manifest-a.json').read_text(encoding='utf-8'))
+          assert report['contract'] == 'atlas-principia-evidence-manifest/0.1'
+          assert report['source']['commit'] == '047867f5b0a803c59b918738c45c24909ea998be'
+          assert report['source']['blob_sha'] == 'ec6195eb217efacf4d4e5d675ba1cf74b03f9600'
+          assert report['reference_count'] == 2
+          assert report['resolved_count'] == 2
+          assert report['blocked_count'] == 0
+          assert report['revalidate_count'] == 1
+          assert report['decision'] == 'revalidate-principia-reference-metadata'
+          assert report['live'] is False
+          assert report['status_inheritance'] == 'prohibited'
+          assert report['automatic_status_change'] is False
+          assert report['automatic_release_action'] is False
+          assert report['repository_mutation'] is False
+          entries = {entry['key']: entry for entry in report['entries']}
+          assert entries['model:en:delayed-correction-recurrence@2']['review_comparison'] == 'match'
+          assert entries['claim:en:model-oscillation-does-not-prove-real-system@1']['review_comparison'] == 'declared-without-atlas-review-record'
+          print('principia-evidence-bridge=pass; resolved=2; revalidate=1; live=false')
+          PY
+      - name: Upload deterministic evidence manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: principia-evidence-manifest-python-${{ matrix.python-version }}
+          path: /tmp/evidence-manifest-a.json
+          if-no-files-found: error
+          retention-days: 30
