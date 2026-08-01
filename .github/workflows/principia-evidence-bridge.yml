@@ -4,9 +4,11 @@ on:
   pull_request:
     paths:
       - "content/canonical/**"
+      - "content/reviews/ai/**"
       - "content/fixtures/phase2_bridge/product-alpha-*.json"
       - "docs/phase-2/evidence-bridge-v1.md"
       - "tools/phase2_kernel/evidence_bridge.py"
+      - "tools/phase2_kernel/evidence_review.py"
       - "tools/phase2_kernel/evidence_bridge_cli.py"
       - "tools/phase2_kernel/tests/test_evidence_bridge.py"
       - ".github/workflows/principia-evidence-bridge.yml"
@@ -14,9 +16,11 @@ on:
     branches: [main]
     paths:
       - "content/canonical/**"
+      - "content/reviews/ai/**"
       - "content/fixtures/phase2_bridge/product-alpha-*.json"
       - "docs/phase-2/evidence-bridge-v1.md"
       - "tools/phase2_kernel/evidence_bridge.py"
+      - "tools/phase2_kernel/evidence_review.py"
       - "tools/phase2_kernel/evidence_bridge_cli.py"
       - "tools/phase2_kernel/tests/test_evidence_bridge.py"
       - ".github/workflows/principia-evidence-bridge.yml"
@@ -44,6 +48,7 @@ jobs:
         run: |
           python -m py_compile \
             tools/phase2_kernel/evidence_bridge.py \
+            tools/phase2_kernel/evidence_review.py \
             tools/phase2_kernel/evidence_bridge_cli.py \
             tools/phase2_kernel/tests/test_evidence_bridge.py
       - name: Run evidence bridge tests
@@ -67,22 +72,28 @@ jobs:
 
           report = json.loads(Path('/tmp/evidence-manifest-a.json').read_text(encoding='utf-8'))
           assert report['contract'] == 'atlas-principia-evidence-manifest/0.1'
+          assert report['review_authority_contract'] == 'atlas-ai-review/0.1'
           assert report['source']['commit'] == '047867f5b0a803c59b918738c45c24909ea998be'
           assert report['source']['blob_sha'] == 'ec6195eb217efacf4d4e5d675ba1cf74b03f9600'
           assert report['reference_count'] == 2
           assert report['resolved_count'] == 2
+          assert report['review_record_count'] == 2
           assert report['blocked_count'] == 0
-          assert report['revalidate_count'] == 1
-          assert report['decision'] == 'revalidate-principia-reference-metadata'
+          assert report['revalidate_count'] == 0
+          assert report['decision'] == 'verified-offline-reference-manifest'
           assert report['live'] is False
           assert report['status_inheritance'] == 'prohibited'
           assert report['automatic_status_change'] is False
           assert report['automatic_release_action'] is False
           assert report['repository_mutation'] is False
           entries = {entry['key']: entry for entry in report['entries']}
-          assert entries['model:en:delayed-correction-recurrence@2']['review_comparison'] == 'match'
-          assert entries['claim:en:model-oscillation-does-not-prove-real-system@1']['review_comparison'] == 'declared-without-atlas-review-record'
-          print('principia-evidence-bridge=pass; resolved=2; revalidate=1; live=false')
+          model = entries['model:en:delayed-correction-recurrence@2']
+          claim = entries['claim:en:model-oscillation-does-not-prove-real-system@1']
+          assert model['review_comparison'] == 'match'
+          assert claim['review_comparison'] == 'match'
+          assert claim['review_authority']['source'] == 'machine-readable-review'
+          assert claim['review_authority']['record_id'] == 'ai-review:feedback-delayed-comprehensive'
+          print('principia-evidence-bridge=pass; resolved=2; reviewed=2; live=false')
           PY
       - name: Upload deterministic evidence manifest
         uses: actions/upload-artifact@v4
