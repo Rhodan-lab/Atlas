@@ -7,18 +7,20 @@ import sys
 from pathlib import Path
 
 from .compiler import compile_canonical
-from .evidence_bridge import build_evidence_manifest
+from .evidence_review import build_review_aware_manifest, load_review_index
 from .kernel import KernelError, load_json, render_json
 from .repository import KernelRepository
 
 DEFAULT_SNAPSHOT = Path(
     "content/fixtures/phase2_bridge/product-alpha-refrigerator.references.v01.json"
 )
+DEFAULT_REVIEW_ROOT = Path("content/reviews/ai")
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--snapshot", type=Path, default=DEFAULT_SNAPSHOT)
+    parser.add_argument("--review-root", type=Path, default=DEFAULT_REVIEW_ROOT)
     parser.add_argument("--runtime", type=Path)
     parser.add_argument(
         "--canonical-root", type=Path, default=Path("content/canonical")
@@ -35,8 +37,10 @@ def main(argv: list[str] | None = None) -> int:
             if args.runtime
             else compile_canonical(args.canonical_root)
         )
-        manifest = build_evidence_manifest(
-            load_json(args.snapshot), KernelRepository(runtime)
+        manifest = build_review_aware_manifest(
+            load_json(args.snapshot),
+            KernelRepository(runtime),
+            load_review_index(args.review_root),
         )
         rendered = render_json(manifest)
         if args.output is None:
