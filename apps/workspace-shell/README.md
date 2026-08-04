@@ -25,30 +25,9 @@ live_principia_dependency: false
 
 The shell does not contain authored workspace data. Its generated `data/` directory is built from canonical Atlas content and pinned accepted fixtures by `python -m tools.phase4_workspace.build_shell`.
 
-## Principia & Atlas product input
-
-Atlas now provides one official command that creates the exact package consumed by the unified Principia & Atlas runtime:
-
-```bash
-python -m tools.phase4_workspace.package_product_input build \
-  --output /tmp/atlas-product-input
-python -m tools.phase4_workspace.package_product_input verify \
-  --package /tmp/atlas-product-input
-python -m tools.phase4_workspace.package_product_input check
-```
-
-The build is staged and published atomically to a previously absent destination. It includes:
-
-- the exact Atlas workspace-shell HTML, CSS, JavaScript, and README;
-- the exact accepted workspace export and manifest;
-- the deterministic workspace-shell data;
-- `workspace-shell-build-report.json` inside the package.
-
-Verification rejects missing or extra files, symlinks, static-asset drift from the Atlas repository, generated artifact drift, relaxed authority, live Principia dependencies, automatic status inheritance, and inconsistent workspace identity. The package remains an offline exact-revision input; it does not grant Atlas authority over Principia status.
-
 ## Local build
 
-The lower-level manual shell build remains available for workspace-shell development:
+From the repository root:
 
 ```bash
 rm -rf phase4-workspace-shell
