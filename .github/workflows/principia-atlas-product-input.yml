@@ -1,0 +1,90 @@
+name: Principia Atlas Product Input
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/workspace-shell/**"
+      - "content/canonical/**"
+      - "content/fixtures/phase3_retrieval/**"
+      - "content/fixtures/phase4_interaction/**"
+      - "content/fixtures/phase4_workspace/**"
+      - "docs/phase-4/principia-atlas-product-input.md"
+      - "tools/phase2_kernel/**"
+      - "tools/phase4_workspace/**"
+      - ".github/workflows/principia-atlas-product-input.yml"
+  pull_request:
+    paths:
+      - "apps/workspace-shell/**"
+      - "content/canonical/**"
+      - "content/fixtures/phase3_retrieval/**"
+      - "content/fixtures/phase4_interaction/**"
+      - "content/fixtures/phase4_workspace/**"
+      - "docs/phase-4/principia-atlas-product-input.md"
+      - "tools/phase2_kernel/**"
+      - "tools/phase4_workspace/**"
+      - ".github/workflows/principia-atlas-product-input.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  product-input:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: tools/foundation-validator/requirements.txt
+
+      - name: Install pinned dependencies
+        run: python -m pip install -r tools/foundation-validator/requirements.txt
+
+      - name: Compile Atlas product-input tools
+        run: |
+          python -m py_compile tools/phase4_workspace/build_shell.py
+          python -m py_compile tools/phase4_workspace/package_product_input.py
+          python -m py_compile tools/phase4_workspace/tests/test_product_input.py
+
+      - name: Run product-input regression tests
+        run: python -m unittest tools.phase4_workspace.tests.test_product_input -v
+
+      - name: Verify deterministic product input
+        run: python -m tools.phase4_workspace.package_product_input check
+
+      - name: Build and verify consumable package
+        run: |
+          python -m tools.phase4_workspace.package_product_input build \
+            --output atlas-principia-product-input
+          python -m tools.phase4_workspace.package_product_input verify \
+            --package atlas-principia-product-input
+          test -f atlas-principia-product-input/index.html
+          test -f atlas-principia-product-input/styles.css
+          test -f atlas-principia-product-input/app.js
+          test -f atlas-principia-product-input/README.md
+          test -f atlas-principia-product-input/data/workspace-shell-data.json
+          test -f atlas-principia-product-input/data/workspace-export.json
+          test -f atlas-principia-product-input/data/workspace-manifest.json
+          test -f atlas-principia-product-input/workspace-shell-build-report.json
+          test "$(find atlas-principia-product-input -type f | wc -l)" -eq 8
+
+      - name: Verify repository immutability
+        run: git diff --exit-code
+
+      - name: Upload product-input evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-principia-product-input-python-${{ matrix.python-version }}
+          path: atlas-principia-product-input/
+          if-no-files-found: error
+          retention-days: 30
